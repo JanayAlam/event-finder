@@ -3,14 +3,16 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import next from "next";
+import errorHandler from "./middlewares/errorHandler";
 import configMorgan from "./middlewares/morgan";
+import router from "./routers";
 import { NODE_ENV } from "./settings/config";
 import logger from "./utils/winston";
 
 const app = express();
 
-process.on("unhandledRejection", (error) => {
-  throw error;
+process.on("unhandledRejection", (err) => {
+  throw err;
 });
 
 app.use(express.json());
@@ -51,5 +53,9 @@ configMorgan(app);
 app.use("/api/v1/health", (_req: Request, res: Response) => {
   res.status(200).send("OK");
 });
+
+app.use("/api/v1", router);
+
+app.use(errorHandler);
 
 export default app;

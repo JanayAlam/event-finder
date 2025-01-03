@@ -14,14 +14,30 @@ enum USER_ROLE {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  email           String?   @unique
-  phone           String?   @unique
-  password        String?
-  profilePhoto    String?
-  isEmailVerified Boolean   @default(false)
-  isPhoneVerified Boolean   @default(false)
-  role            USER_ROLE @default(CUSTOMER)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  firstName     String?
+  lastName      String?
+  email         String?   @unique
+  phone         String?   @unique
+  password      String?
+  profilePhoto  String?
+  isUserBlocked Boolean   @default(false)
+  role          USER_ROLE @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum OTP_TYPE {
+  LOGIN_EMAIL_OTP
+  LOGIN_PHONE_OTP
+}
+
+model OTPDetails {
+  id         String   @id @default(cuid())
+  otpType    OTP_TYPE
+  identifier String
+  otp        String
+  expireAt   DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

@@ -11,12 +11,8 @@ import logger from "./utils/winston";
 
 const app = express();
 
-process.on("unhandledRejection", (err) => {
-  throw err;
-});
-
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: false }));
 
 app.use((_req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -117,7 +117,6 @@ const authProcessor = async (
         try {
           verified = jwt.verify(token, CUSTOMER_JWT_SECRET);
         } catch (err) {
-          console.log(verified);
           refreshController(req, res, next);
           return;
         }
@@ -169,9 +168,7 @@ const authProcessor = async (
           return;
         }
 
-        const { password: _, ...adminWithoutPassword } = admin;
-
-        req.user = adminWithoutPassword;
+        req.user = admin;
       }
       next();
     } else {

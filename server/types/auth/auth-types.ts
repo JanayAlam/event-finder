@@ -7,7 +7,9 @@ import {
   CustomerPhoneLoginDTOSchema,
   CustomerPhoneVerifyDTOSchema,
   OutletAdminCreateDTOSchema,
-  SuperAdminCreateDTOSchema
+  SuperAdminCreateDTOSchema,
+  UpdateUserInfoDTOSchema,
+  UpdateUserPasswordDTOSchema
 } from "../../validationSchemas/auth";
 
 export type TSuperAdminCreateRequest = z.infer<
@@ -41,3 +43,9 @@ export type TJWTPayload = {
   phone?: string | null;
   role: USER_ROLE;
 };
+
+export type TUpdateUserInfoRequest = z.infer<typeof UpdateUserInfoDTOSchema>;
+
+export type TUpdateUserPasswordRequest = z.infer<
+  typeof UpdateUserPasswordDTOSchema
+>;

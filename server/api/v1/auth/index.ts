@@ -1,7 +1,7 @@
 import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
-import inputValidator from "../../../middlewares/inputValidator";
+import inputValidator from "../../../middlewares/input-validator";
 import {
   CustomerEmailLoginDTOSchema,
   CustomerEmailVerifyDTOSchema,
@@ -15,16 +15,16 @@ import {
   getAuthUser,
   updateAuthUserInfo,
   updateAuthUserPassword
-} from "./controllers/authUserController";
+} from "./controllers/auth-user-controller";
 import {
   customerEmailLogin,
   customerPhoneLogin
-} from "./controllers/loginController";
-import { superAdminRegister } from "./controllers/registerController";
+} from "./controllers/login-controller";
+import { superAdminRegister } from "./controllers/register-controller";
 import {
   verifyCustomerEmailAndSendOTP,
   verifyCustomerPhoneAndSendOTP
-} from "./controllers/verifyController";
+} from "./controllers/verify-controller";
 
 const authRouter = Router();
 

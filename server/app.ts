@@ -3,7 +3,7 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import next from "next";
-import errorHandler from "./middlewares/errorHandler";
+import errorHandler from "./middlewares/error-handler";
 import configMorgan from "./middlewares/morgan";
 import router from "./routers";
 import { NODE_ENV } from "./settings/config";

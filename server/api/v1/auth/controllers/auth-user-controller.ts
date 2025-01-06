@@ -94,5 +94,3 @@ export const updateAuthUserPassword = async (
 
   res.status(200).json(getUserWithoutPassword(updatedUser));
 };
-
-export const forgetPassword = async (req: Request, res: Response) => {};

@@ -6,7 +6,7 @@ import { TAdminLoginRequest } from "../../../../types/admin";
 import { generateAccessAndRefreshToken } from "../../auth/utils";
 import { getUserWithoutPassword } from "../utils";
 
-export const adminLogin = async (
+export const adminLoginHandler = async (
   req: Request<any, any, TAdminLoginRequest, any>,
   res: Response
 ) => {

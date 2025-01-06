@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const SuperAdminCreateDTOSchema = z
+  .object({
+    email: z.string().email().optional(),
+    phone: z.string().min(1, "Required").optional(),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.email || data.phone, {
+    message: "Either email or phone is required",
+    path: ["email", "phone"]
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Confirm password did not match",
+    path: ["confirmPassword"]
+  });
+
 export const AdminLoginDTOSchema = z
   .object({
     email: z.string().email().optional(),
@@ -20,3 +36,21 @@ export const ForgetPasswordDTOSchema = z
     message: "Either email or phone is required",
     path: ["email", "phone"]
   });
+
+export const ResetPasswordDTOSchema = z
+  .object({
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters long")
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Confirm password did not match",
+    path: ["confirmPassword"]
+  });
+
+export const ResetPasswordDTOParamSchema = z.object({
+  userId: z.string().min(1, "User id is required"),
+  otp: z.string().trim().min(1, "OTP is required"),
+  identifierType: z.enum(["e", "p"])
+});

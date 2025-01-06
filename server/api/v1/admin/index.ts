@@ -2,12 +2,28 @@ import { Router } from "express";
 import inputValidator from "../../../middlewares/input-validator";
 import {
   AdminLoginDTOSchema,
-  ForgetPasswordDTOSchema
+  ForgetPasswordDTOSchema,
+  ResetPasswordDTOParamSchema,
+  ResetPasswordDTOSchema,
+  SuperAdminCreateDTOSchema
 } from "../../../validationSchemas/admin";
-import { forgetPasswordHandler } from "./controllers/forget-password-controller";
-import { adminLoginHandler } from "./controllers/login-controller";
+import {
+  forgetPasswordHandler,
+  resetPasswordHandler
+} from "./controllers/forget-password-controller";
+import {
+  adminLoginHandler,
+  superAdminRegisterHandler
+} from "./controllers/login-register-controller";
 
 const adminRouter = Router();
+
+// register super admin
+adminRouter.post(
+  "/register",
+  inputValidator(SuperAdminCreateDTOSchema),
+  superAdminRegisterHandler
+);
 
 // admin login [both super and outlet admin]
 adminRouter.post(
@@ -21,6 +37,13 @@ adminRouter.post(
   "/forget-password",
   inputValidator(ForgetPasswordDTOSchema),
   forgetPasswordHandler
+);
+
+// admin reset password
+adminRouter.post(
+  "/reset-password/u/:userId/o/:otp/:identifierType",
+  inputValidator(ResetPasswordDTOSchema, ResetPasswordDTOParamSchema),
+  resetPasswordHandler
 );
 
 export default adminRouter;

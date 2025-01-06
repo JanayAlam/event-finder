@@ -7,7 +7,6 @@ import {
   CustomerEmailVerifyDTOSchema,
   CustomerPhoneLoginDTOSchema,
   CustomerPhoneVerifyDTOSchema,
-  SuperAdminCreateDTOSchema,
   UpdateUserInfoDTOSchema,
   UpdateUserPasswordDTOSchema
 } from "../../../validationSchemas/auth";
@@ -20,7 +19,6 @@ import {
   customerEmailLogin,
   customerPhoneLogin
 } from "./controllers/login-controller";
-import { superAdminRegister } from "./controllers/register-controller";
 import {
   verifyCustomerEmailAndSendOTP,
   verifyCustomerPhoneAndSendOTP
@@ -32,8 +30,7 @@ const authRouter = Router();
  * - TODO -
  * 1. Block/Unblock any user (Super Admin)
  * 2. Change password of outlet admin (Super Admin)
- * 3. Forget/Reset Password
- * 4. Upload/Remove profile photo
+ * 3. Upload/Remove profile photo
  */
 
 // get auth user
@@ -65,13 +62,6 @@ authRouter.patch(
   authenticator([USER_ROLE.SUPER_ADMIN, USER_ROLE.OUTLET_ADMIN]),
   inputValidator(UpdateUserPasswordDTOSchema),
   updateAuthUserPassword
-);
-
-// register super admin
-authRouter.post(
-  "/register/super-admin",
-  inputValidator(SuperAdminCreateDTOSchema),
-  superAdminRegister
 );
 
 // customer login

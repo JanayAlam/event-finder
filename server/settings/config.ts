@@ -20,6 +20,9 @@ export const CUSTOMER_REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
   process.env.CUSTOMER_REFRESH_TOKEN_EXPIRATION_TIME_SECOND || "21600"
 );
 
+export const PUBLIC_SERVER_URL: string =
+  process.env.PUBLIC_SERVER_URL || "http://localhost:5000";
+
 export const SMTP_HOST: string =
   process.env.SMTP_HOST || "sandbox.smtp.mailtrap.io";
 export const SMTP_PORT: number = parseInt(process.env.SMTP_PORT || "2525");

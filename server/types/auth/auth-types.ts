@@ -5,14 +5,9 @@ import {
   CustomerEmailVerifyDTOSchema,
   CustomerPhoneLoginDTOSchema,
   CustomerPhoneVerifyDTOSchema,
-  SuperAdminCreateDTOSchema,
   UpdateUserInfoDTOSchema,
   UpdateUserPasswordDTOSchema
 } from "../../validationSchemas/auth";
-
-export type TSuperAdminCreateRequest = z.infer<
-  typeof SuperAdminCreateDTOSchema
->;
 
 export type TCustomerEmailVerifyRequest = z.infer<
   typeof CustomerEmailVerifyDTOSchema

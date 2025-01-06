@@ -3,12 +3,10 @@ import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/inputValidator";
 import {
-  AdminLoginDTOSchema,
   CustomerEmailLoginDTOSchema,
   CustomerEmailVerifyDTOSchema,
   CustomerPhoneLoginDTOSchema,
   CustomerPhoneVerifyDTOSchema,
-  OutletAdminCreateDTOSchema,
   SuperAdminCreateDTOSchema,
   UpdateUserInfoDTOSchema,
   UpdateUserPasswordDTOSchema
@@ -19,14 +17,10 @@ import {
   updateAuthUserPassword
 } from "./controllers/authUserController";
 import {
-  adminLogin,
   customerEmailLogin,
   customerPhoneLogin
 } from "./controllers/loginController";
-import {
-  outletAdminRegister,
-  superAdminRegister
-} from "./controllers/registerController";
+import { superAdminRegister } from "./controllers/registerController";
 import {
   verifyCustomerEmailAndSendOTP,
   verifyCustomerPhoneAndSendOTP
@@ -42,6 +36,7 @@ const authRouter = Router();
  * 4. Upload/Remove profile photo
  */
 
+// get auth user
 authRouter.get(
   "/user",
   authenticator([
@@ -52,6 +47,7 @@ authRouter.get(
   getAuthUser
 );
 
+// change names
 authRouter.patch(
   "/user/update/info",
   authenticator([
@@ -63,6 +59,7 @@ authRouter.patch(
   updateAuthUserInfo
 );
 
+// change password
 authRouter.patch(
   "/user/update/password",
   authenticator([USER_ROLE.SUPER_ADMIN, USER_ROLE.OUTLET_ADMIN]),
@@ -70,43 +67,35 @@ authRouter.patch(
   updateAuthUserPassword
 );
 
+// register super admin
 authRouter.post(
-  "/login/admin",
-  inputValidator(AdminLoginDTOSchema),
-  adminLogin
-);
-
-authRouter.post(
-  "/register/admin/super-admin",
+  "/register/super-admin",
   inputValidator(SuperAdminCreateDTOSchema),
   superAdminRegister
 );
 
-authRouter.post(
-  "/register/admin/outlet-admin",
-  authenticator([USER_ROLE.SUPER_ADMIN]),
-  inputValidator(OutletAdminCreateDTOSchema),
-  outletAdminRegister
-);
-
+// customer login
 authRouter.post(
   "/customer/verify/email",
   inputValidator(CustomerEmailVerifyDTOSchema),
   verifyCustomerEmailAndSendOTP
 );
 
+// customer login
 authRouter.post(
   "/customer/verify/phone",
   inputValidator(CustomerPhoneVerifyDTOSchema),
   verifyCustomerPhoneAndSendOTP
 );
 
+// customer login
 authRouter.post(
   "/login/customer/email",
   inputValidator(CustomerEmailLoginDTOSchema),
   customerEmailLogin
 );
 
+// customer login
 authRouter.post(
   "/login/customer/phone",
   inputValidator(CustomerPhoneLoginDTOSchema),

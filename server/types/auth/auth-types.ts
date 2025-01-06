@@ -1,12 +1,10 @@
 import { USER_ROLE } from "@prisma/client";
 import { z } from "zod";
 import {
-  AdminLoginDTOSchema,
   CustomerEmailLoginDTOSchema,
   CustomerEmailVerifyDTOSchema,
   CustomerPhoneLoginDTOSchema,
   CustomerPhoneVerifyDTOSchema,
-  OutletAdminCreateDTOSchema,
   SuperAdminCreateDTOSchema,
   UpdateUserInfoDTOSchema,
   UpdateUserPasswordDTOSchema
@@ -15,11 +13,6 @@ import {
 export type TSuperAdminCreateRequest = z.infer<
   typeof SuperAdminCreateDTOSchema
 >;
-export type TOutletAdminCreateRequest = z.infer<
-  typeof OutletAdminCreateDTOSchema
->;
-
-export type TAdminLoginRequest = z.infer<typeof AdminLoginDTOSchema>;
 
 export type TCustomerEmailVerifyRequest = z.infer<
   typeof CustomerEmailVerifyDTOSchema

@@ -26,13 +26,6 @@ import {
 
 const authRouter = Router();
 
-/**
- * - TODO -
- * 1. Block/Unblock any user (Super Admin)
- * 2. Change password of outlet admin (Super Admin)
- * 3. Upload/Remove profile photo
- */
-
 // get auth user
 authRouter.get(
   "/user",

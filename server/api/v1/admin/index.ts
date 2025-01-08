@@ -1,11 +1,15 @@
+import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
+import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import {
   AdminLoginDTOSchema,
+  BlockUserDTOSchema,
   ForgetPasswordDTOSchema,
   ResetPasswordDTOParamSchema,
   ResetPasswordDTOSchema,
-  SuperAdminCreateDTOSchema
+  SuperAdminCreateDTOSchema,
+  UnblockUserDTOSchema
 } from "../../../validationSchemas/admin";
 import {
   forgetPasswordHandler,
@@ -15,6 +19,10 @@ import {
   adminLoginHandler,
   superAdminRegisterHandler
 } from "./controllers/login-register-controller";
+import {
+  blockUserHandler,
+  unblockUserHandler
+} from "./controllers/user-restriction-controller";
 
 const adminRouter = Router();
 
@@ -37,6 +45,22 @@ adminRouter.post(
   "/forget-password",
   inputValidator(ForgetPasswordDTOSchema),
   forgetPasswordHandler
+);
+
+// block a user
+adminRouter.patch(
+  "/block-user",
+  authenticator([USER_ROLE.SUPER_ADMIN]),
+  inputValidator(BlockUserDTOSchema),
+  blockUserHandler
+);
+
+// unblock a user
+adminRouter.patch(
+  "/unblock-user",
+  authenticator([USER_ROLE.SUPER_ADMIN]),
+  inputValidator(UnblockUserDTOSchema),
+  unblockUserHandler
 );
 
 // admin reset password

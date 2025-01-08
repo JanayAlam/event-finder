@@ -1,10 +1,12 @@
 import { z } from "zod";
 import {
   AdminLoginDTOSchema,
+  BlockUserDTOSchema,
   ForgetPasswordDTOSchema,
   ResetPasswordDTOParamSchema,
   ResetPasswordDTOSchema,
-  SuperAdminCreateDTOSchema
+  SuperAdminCreateDTOSchema,
+  UnblockUserDTOSchema
 } from "../../validationSchemas/admin";
 
 export type TSuperAdminCreateRequest = z.infer<
@@ -22,3 +24,7 @@ export type TResetPasswordPasswordRequest = z.infer<
 export type TResetPasswordPasswordParam = z.infer<
   typeof ResetPasswordDTOParamSchema
 >;
+
+export type TBlockUserRequest = z.infer<typeof BlockUserDTOSchema>;
+
+export type TUnblockUserRequest = z.infer<typeof UnblockUserDTOSchema>;

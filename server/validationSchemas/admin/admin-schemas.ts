@@ -3,9 +3,12 @@ import { z } from "zod";
 export const SuperAdminCreateDTOSchema = z
   .object({
     email: z.string().email().optional(),
-    phone: z.string().min(1, "Required").optional(),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    confirmPassword: z.string()
+    phone: z.string().trim().min(1, "Required").optional(),
+    password: z
+      .string()
+      .trim()
+      .min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string().trim()
   })
   .refine((data) => data.email || data.phone, {
     message: "Either email or phone is required",
@@ -18,9 +21,12 @@ export const SuperAdminCreateDTOSchema = z
 
 export const AdminLoginDTOSchema = z
   .object({
-    email: z.string().email().optional(),
-    phone: z.string().min(1, "Phone number cannot be empty").optional(),
-    password: z.string().min(6, "Password must be at least 6 characters long")
+    email: z.string().trim().email().optional(),
+    phone: z.string().trim().min(1, "Phone number cannot be empty").optional(),
+    password: z
+      .string()
+      .trim()
+      .min(6, "Password must be at least 6 characters long")
   })
   .refine((data) => data.email || data.phone, {
     message: "Either email or phone is required",
@@ -30,7 +36,7 @@ export const AdminLoginDTOSchema = z
 export const ForgetPasswordDTOSchema = z
   .object({
     email: z.string().email().min(1, "Email is required").optional(),
-    phone: z.string().min(1, "Phone number cannot be empty").optional()
+    phone: z.string().trim().min(1, "Phone number cannot be empty").optional()
   })
   .refine((data) => data.email || data.phone, {
     message: "Either email or phone is required",
@@ -39,9 +45,13 @@ export const ForgetPasswordDTOSchema = z
 
 export const ResetPasswordDTOSchema = z
   .object({
-    password: z.string().min(6, "Password must be at least 6 characters long"),
+    password: z
+      .string()
+      .trim()
+      .min(6, "Password must be at least 6 characters long"),
     confirmPassword: z
       .string()
+      .trim()
       .min(6, "Confirm password must be at least 6 characters long")
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -54,5 +64,17 @@ export const ResetPasswordDTOParamSchema = z.object({
     .string({
       message: "Token is required"
     })
+    .trim()
     .min(1, "Token is required")
 });
+
+export const BlockUserDTOSchema = z.object({
+  userId: z
+    .string({
+      message: "User id is required"
+    })
+    .trim()
+    .min(1, "User id is required")
+});
+
+export const UnblockUserDTOSchema = BlockUserDTOSchema;

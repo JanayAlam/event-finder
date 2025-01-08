@@ -96,6 +96,13 @@ export const adminLoginHandler = async (
     return;
   }
 
+  if (user.isUserBlocked) {
+    res.status(403).json({
+      message: "User is blocked"
+    });
+    return;
+  }
+
   if (
     user.role !== USER_ROLE.SUPER_ADMIN &&
     user.role !== USER_ROLE.OUTLET_ADMIN

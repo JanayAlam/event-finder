@@ -94,3 +94,5 @@ export const updateAuthUserPassword = async (
 
   res.status(200).json(getUserWithoutPassword(updatedUser));
 };
+
+export const updateAuthUserPhoto = (req: Request, res: Response) => {};

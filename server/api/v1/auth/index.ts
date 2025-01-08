@@ -2,6 +2,7 @@ import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
+import { uploadSingleFile } from "../../../middlewares/multer-config";
 import {
   CustomerEmailLoginDTOSchema,
   CustomerEmailVerifyDTOSchema,
@@ -13,7 +14,8 @@ import {
 import {
   getAuthUser,
   updateAuthUserInfo,
-  updateAuthUserPassword
+  updateAuthUserPassword,
+  updateAuthUserPhoto
 } from "./controllers/auth-user-controller";
 import {
   customerEmailLogin,
@@ -47,6 +49,17 @@ authRouter.patch(
   ]),
   inputValidator(UpdateUserInfoDTOSchema),
   updateAuthUserInfo
+);
+// change profile photo
+authRouter.patch(
+  "/user/update/photo",
+  authenticator([
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.OUTLET_ADMIN,
+    USER_ROLE.CUSTOMER
+  ]),
+  uploadSingleFile, //!
+  updateAuthUserPhoto
 );
 
 // change password

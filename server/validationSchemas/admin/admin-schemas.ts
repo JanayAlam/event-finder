@@ -50,7 +50,9 @@ export const ResetPasswordDTOSchema = z
   });
 
 export const ResetPasswordDTOParamSchema = z.object({
-  userId: z.string().min(1, "User id is required"),
-  otp: z.string().trim().min(1, "OTP is required"),
-  identifierType: z.enum(["e", "p"])
+  token: z
+    .string({
+      message: "Token is required"
+    })
+    .min(1, "Token is required")
 });

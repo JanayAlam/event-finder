@@ -41,7 +41,7 @@ adminRouter.post(
 
 // admin reset password
 adminRouter.post(
-  "/reset-password/u/:userId/o/:otp/:identifierType",
+  "/reset-password/t/:token",
   inputValidator(ResetPasswordDTOSchema, ResetPasswordDTOParamSchema),
   resetPasswordHandler
 );

@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import crypto from "node:crypto";
 import { prisma } from "../../../../db";
+import { uploadFileToS3 } from "../../../../services/amazonS3";
 import {
   TUpdateUserInfoRequest,
   TUpdateUserPasswordRequest
@@ -95,4 +97,35 @@ export const updateAuthUserPassword = async (
   res.status(200).json(getUserWithoutPassword(updatedUser));
 };
 
-export const updateAuthUserPhoto = (req: Request, res: Response) => {};
+export const updateAuthUserPhoto = async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    if (!req.file) {
+      res.status(400).json({ error: "Profile photo is required" });
+      return;
+    }
+
+    const filename = `profile-photos/${req.user.id}-${crypto.randomUUID()}.jpg`;
+
+    const uploadedFile = await uploadFileToS3(
+      req.file,
+      { width: 300, height: 300 },
+      filename
+    );
+
+    const user = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { profilePhoto: uploadedFile.Location }
+    });
+
+    res.status(200).json(getUserWithoutPassword(user));
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update profile photo"
+    });
+  }
+};

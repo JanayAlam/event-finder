@@ -32,10 +32,6 @@ export const SSL_SMS_SEND_API = process.env.SSL_SMS_SEND_API;
 export const SSL_API_TOKEN = process.env.SSL_API_TOKEN;
 export const SSL_SID = process.env.SSL_SID;
 
-export const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-export const AWS_ACCESS_SECRET_KEY = process.env.AWS_ACCESS_SECRET_KEY;
-export const AWS_ACCESS_REGION = process.env.AWS_ACCESS_REGION;
-
 export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
 export const DEFAULT_IMAGE_WIDTH = 720;

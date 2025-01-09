@@ -50,6 +50,7 @@ authRouter.patch(
   inputValidator(UpdateUserInfoDTOSchema),
   updateAuthUserInfo
 );
+
 // change profile photo
 authRouter.patch(
   "/user/update/photo",
@@ -58,7 +59,7 @@ authRouter.patch(
     USER_ROLE.OUTLET_ADMIN,
     USER_ROLE.CUSTOMER
   ]),
-  uploadSingleFile, //!
+  uploadSingleFile,
   updateAuthUserPhoto
 );
 

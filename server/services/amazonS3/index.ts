@@ -1,60 +1,60 @@
 import {
   CompleteMultipartUploadCommandOutput,
-  ObjectIdentifier,
-  S3
+  ObjectIdentifier
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import crypto from "node:crypto";
 import sharp from "sharp";
-import {
-  AWS_ACCESS_KEY,
-  AWS_ACCESS_REGION,
-  AWS_ACCESS_SECRET_KEY,
-  AWS_S3_BUCKET_NAME
-} from "../../settings/config";
-
-const s3Config = new S3({
-  credentials: {
-    accessKeyId: AWS_ACCESS_KEY || "",
-    secretAccessKey: AWS_ACCESS_SECRET_KEY || ""
-  },
-  region: AWS_ACCESS_REGION || ""
-});
+import { AWS_S3_BUCKET_NAME } from "../../settings/config";
+import s3Config from "../../settings/secure-s3-configuration";
+import { TPhotoUploadParam } from "../../validationSchemas/services";
 
 export const uploadFileToS3 = async (
   file: Express.Multer.File,
-  resize?: {
-    width: number;
-  },
+  resize?: TPhotoUploadParam,
   fileName?: string,
   isPrivate = false
 ): Promise<CompleteMultipartUploadCommandOutput> => {
+  if (!file.buffer) {
+    throw new Error("Invalid file buffer");
+  }
+
   let buffer: Buffer = file.buffer;
 
   if (resize) {
-    buffer = await sharp(buffer)
-      .resize({
-        width: resize.width,
-        fit: "inside",
-        withoutEnlargement: true
-      })
-      .toFormat("jpeg")
-      .withMetadata()
-      .toBuffer();
+    try {
+      buffer = await sharp(buffer)
+        .resize({
+          width: resize.width,
+          height: resize.height,
+          fit: "inside",
+          withoutEnlargement: true
+        })
+        .jpeg({ quality: 80 }) // Optimize JPEG quality
+        .withMetadata()
+        .toBuffer();
+    } catch (err) {
+      throw new Error(`Image processing failed: ${(err as Error).message}`);
+    }
   }
 
-  const s3Response = (await new Upload({
-    client: s3Config,
-    params: {
-      Bucket: AWS_S3_BUCKET_NAME,
-      Key: fileName || crypto.randomBytes(20).toString("hex"),
-      Body: buffer,
-      ACL: isPrivate ? "private" : "public-read",
-      ContentType: file.mimetype
-    }
-  }).done()) as CompleteMultipartUploadCommandOutput;
-
-  return s3Response;
+  try {
+    return (await new Upload({
+      client: s3Config,
+      params: {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key:
+          fileName ||
+          `${crypto.randomUUID()}.${file.originalname.split(".").pop()}`,
+        Body: buffer,
+        ACL: isPrivate ? "private" : "public-read",
+        ContentType: file.mimetype,
+        CacheControl: "max-age=31536000" // 1 year cache
+      }
+    }).done()) as CompleteMultipartUploadCommandOutput;
+  } catch (err) {
+    throw new Error(`S3 upload failed: ${(err as Error).message}`);
+  }
 };
 
 export const removeFilesFromS3 = async (keys: string | string[]) => {

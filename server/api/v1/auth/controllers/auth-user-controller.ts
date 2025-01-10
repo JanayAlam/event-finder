@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import crypto from "node:crypto";
 import { prisma } from "../../../../db";
+import { serializeUserResponse } from "../../../../serializers/user";
 import {
   removeFilesFromS3,
   uploadFileToS3
@@ -11,7 +12,6 @@ import {
   TUpdateUserInfoRequest,
   TUpdateUserPasswordRequest
 } from "../../../../types/auth";
-import { getUserWithoutPassword } from "../utils";
 
 export const getAuthUser = async (req: Request, res: Response) => {
   if (!req.user) {
@@ -21,7 +21,7 @@ export const getAuthUser = async (req: Request, res: Response) => {
     return;
   }
 
-  res.status(200).json(getUserWithoutPassword(req.user));
+  res.status(200).json(serializeUserResponse(req.user));
 };
 
 export const updateAuthUserInfo = async (
@@ -54,7 +54,7 @@ export const updateAuthUserInfo = async (
     return;
   }
 
-  res.status(200).json(getUserWithoutPassword(updatedUser));
+  res.status(200).json(serializeUserResponse(updatedUser));
 };
 
 export const updateAuthUserPassword = async (
@@ -98,7 +98,7 @@ export const updateAuthUserPassword = async (
     return;
   }
 
-  res.status(200).json(getUserWithoutPassword(updatedUser));
+  res.status(200).json(serializeUserResponse(updatedUser));
 };
 
 export const updateAuthUserPhoto = async (req: Request, res: Response) => {
@@ -126,7 +126,7 @@ export const updateAuthUserPhoto = async (req: Request, res: Response) => {
       data: { profilePhoto: filename }
     });
 
-    res.status(200).json(getUserWithoutPassword(user));
+    res.status(200).json(serializeUserResponse(user));
   } catch (error) {
     res.status(500).json({
       message: (error as Error).message || "Failed to update profile photo"

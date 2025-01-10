@@ -2,12 +2,17 @@ import { USER_ROLE } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { prisma } from "../../../../db";
+import { serializeUserResponse } from "../../../../serializers/user";
+import {
+  generateAccessAndRefreshToken,
+  saveRefreshToken
+} from "../../../../services/token";
+import { REFRESH_TOKEN_EXPIRATION_TIME_SECOND } from "../../../../settings/config";
+import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 import {
   TAdminLoginRequest,
   TSuperAdminCreateRequest
 } from "../../../../types/admin";
-import { generateAccessAndRefreshToken } from "../../auth/utils";
-import { getUserWithoutPassword } from "../utils";
 
 export const superAdminRegisterHandler = async (
   req: Request<any, any, TSuperAdminCreateRequest, any>,
@@ -120,9 +125,21 @@ export const adminLoginHandler = async (
 
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
 
-  res.status(200).json({
-    user: getUserWithoutPassword(user),
-    accessToken,
-    refreshToken
-  });
+  const serializedUser = serializeUserResponse(user);
+
+  await saveRefreshToken(refreshToken, user.id);
+
+  res
+    .status(200)
+    .cookie(COOKIE_KEYS.authAccessToken, `Bearer ${accessToken}`, cookieOptions)
+    .cookie(COOKIE_KEYS.authRefreshToken, `Bearer ${refreshToken}`, {
+      ...cookieOptions,
+      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
+    })
+    .cookie(COOKIE_KEYS.authUser, serializedUser, cookieOptions)
+    .json({
+      user: serializedUser,
+      accessToken,
+      refreshToken
+    });
 };

@@ -1,21 +1,16 @@
 export const NODE_ENV = process.env.NODE_ENV;
 export const PORT: number = parseInt(process.env.PORT || "8000");
 
-export const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || "admin-secret";
-export const CUSTOMER_JWT_SECRET = process.env.CUSTOMER_JWT_SECRET || "secret";
+export const ACCESS_TOKEN_JWT_SECRET =
+  process.env.ACCESS_TOKEN_JWT_SECRET || "access-secret";
+export const REFRESH_TOKEN_JWT_SECRET =
+  process.env.REFRESH_TOKEN_JWT_SECRET || "refresh-secret";
 
-export const ADMIN_ACCESS_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.ADMIN_ACCESS_TOKEN_EXPIRATION_TIME_SECOND || "900"
+export const ACCESS_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
+  process.env.ACCESS_TOKEN_EXPIRATION_TIME_SECOND || "900"
 );
-export const ADMIN_REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.ADMIN_REFRESH_TOKEN_EXPIRATION_TIME_SECOND || "21600"
-);
-
-export const CUSTOMER_ACCESS_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.CUSTOMER_ACCESS_TOKEN_EXPIRATION_TIME_SECOND || "900"
-);
-export const CUSTOMER_REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.CUSTOMER_REFRESH_TOKEN_EXPIRATION_TIME_SECOND || "21600"
+export const REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
+  process.env.REFRESH_TOKEN_EXPIRATION_TIME_SECOND || "21600"
 );
 
 export const PUBLIC_SERVER_URL =

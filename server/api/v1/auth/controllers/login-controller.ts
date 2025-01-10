@@ -1,15 +1,18 @@
 import { OTP_TYPE } from "@prisma/client";
 import { Request, Response } from "express";
 import { prisma } from "../../../../db";
+import { serializeUserResponse } from "../../../../serializers/user";
 import { verifyAndRemoveOTP } from "../../../../services/otp";
+import {
+  generateAccessAndRefreshToken,
+  saveRefreshToken
+} from "../../../../services/token";
+import { REFRESH_TOKEN_EXPIRATION_TIME_SECOND } from "../../../../settings/config";
+import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 import {
   TCustomerEmailLoginRequest,
   TCustomerPhoneLoginRequest
 } from "../../../../types/auth/auth-types";
-import {
-  generateAccessAndRefreshToken,
-  getUserWithoutPassword
-} from "../utils";
 
 export const customerEmailLogin = async (
   req: Request<any, any, TCustomerEmailLoginRequest, any>,
@@ -44,11 +47,23 @@ export const customerEmailLogin = async (
 
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
 
-  res.status(200).json({
-    user: getUserWithoutPassword(user),
-    accessToken,
-    refreshToken
-  });
+  await saveRefreshToken(refreshToken, user.id);
+
+  const serializedUser = serializeUserResponse(user);
+
+  res
+    .status(200)
+    .cookie(COOKIE_KEYS.authAccessToken, `Bearer ${accessToken}`, cookieOptions)
+    .cookie(COOKIE_KEYS.authRefreshToken, `Bearer ${refreshToken}`, {
+      ...cookieOptions,
+      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
+    })
+    .cookie(COOKIE_KEYS.authUser, serializedUser, cookieOptions)
+    .json({
+      user: serializedUser,
+      accessToken,
+      refreshToken
+    });
 };
 
 export const customerPhoneLogin = async (
@@ -84,9 +99,21 @@ export const customerPhoneLogin = async (
 
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
 
-  res.status(200).json({
-    user: getUserWithoutPassword(user),
-    accessToken,
-    refreshToken
-  });
+  await saveRefreshToken(refreshToken, user.id);
+
+  const serializedUser = serializeUserResponse(user);
+
+  res
+    .status(200)
+    .cookie(COOKIE_KEYS.authAccessToken, `Bearer ${accessToken}`, cookieOptions)
+    .cookie(COOKIE_KEYS.authRefreshToken, `Bearer ${refreshToken}`, {
+      ...cookieOptions,
+      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
+    })
+    .cookie(COOKIE_KEYS.authUser, serializedUser, cookieOptions)
+    .json({
+      user: serializedUser,
+      accessToken,
+      refreshToken
+    });
 };

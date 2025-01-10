@@ -2,7 +2,11 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import crypto from "node:crypto";
 import { prisma } from "../../../../db";
-import { uploadFileToS3 } from "../../../../services/amazonS3";
+import {
+  removeFilesFromS3,
+  uploadFileToS3
+} from "../../../../services/amazonS3";
+import { PROFILE_PHOTO_UPLOAD_FOLDER_NAME } from "../../../../settings/constants";
 import {
   TUpdateUserInfoRequest,
   TUpdateUserPasswordRequest
@@ -109,23 +113,23 @@ export const updateAuthUserPhoto = async (req: Request, res: Response) => {
       return;
     }
 
-    const filename = `profile-photos/${req.user.id}-${crypto.randomUUID()}.jpg`;
+    if (req.user.profilePhoto) {
+      await removeFilesFromS3(req.user.profilePhoto);
+    }
 
-    const uploadedFile = await uploadFileToS3(
-      req.file,
-      { width: 300, height: 300 },
-      filename
-    );
+    const filename = `${PROFILE_PHOTO_UPLOAD_FOLDER_NAME}/${req.user.id}-${crypto.randomUUID()}.jpg`;
+
+    await uploadFileToS3(req.file, { width: 300, height: 300 }, filename);
 
     const user = await prisma.user.update({
       where: { id: req.user.id },
-      data: { profilePhoto: uploadedFile.Location }
+      data: { profilePhoto: filename }
     });
 
     res.status(200).json(getUserWithoutPassword(user));
   } catch (error) {
     res.status(500).json({
-      message: "Failed to update profile photo"
+      message: (error as Error).message || "Failed to update profile photo"
     });
   }
 };

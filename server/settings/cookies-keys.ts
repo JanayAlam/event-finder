@@ -4,7 +4,7 @@ const COOKIE_KEYS = {
   authSuperAdmin: "bhalothaki.super_admin",
   authOutletAdmin: "bhalothaki.outlet_admin",
   authCustomer: "bhalothaki.customer",
-  guestId: "dfe.guestId"
+  guestId: "bhalothaki.guestId"
 } as const;
 
 export default COOKIE_KEYS;

@@ -63,6 +63,7 @@ model Outlet {
   locationLongitude  Float
   locationLatitude   Float
   mapLink            String
+  isActive           Boolean        @default(true)
   productBrands      ProductBrand[]
   outletAdmin        User           @relation(fields: [outletAdminId], references: [id])
   outletAdminId      String         @unique

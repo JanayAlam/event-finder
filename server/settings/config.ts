@@ -33,4 +33,4 @@ export const AWS_REGION = process.env.AWS_REGION;
 
 export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
-export const DEFAULT_IMAGE_WIDTH = 720;
+export const GOOGLE_MAP_API_KEY = process.env.GOOGLE_MAP_API_KEY;

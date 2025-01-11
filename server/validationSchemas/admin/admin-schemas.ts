@@ -19,6 +19,8 @@ export const SuperAdminCreateDTOSchema = z
     path: ["confirmPassword"]
   });
 
+export const OutletAdminCreateDTOSchema = SuperAdminCreateDTOSchema;
+
 export const AdminLoginDTOSchema = z
   .object({
     email: z.string().trim().email().optional(),

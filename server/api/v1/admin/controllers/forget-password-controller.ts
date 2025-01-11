@@ -88,7 +88,7 @@ export const resetPasswordHandler = async (req: Request, res: Response) => {
         where: { id: resetPasswordToken.userId },
         data: {
           password: hashedPassword,
-          ResetPasswordToken: { delete: true }
+          resetPasswordToken: { delete: true }
         }
       });
     });

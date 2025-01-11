@@ -23,7 +23,8 @@ model User {
   profilePhoto       String?
   isUserBlocked      Boolean             @default(false)
   role               USER_ROLE           @default(CUSTOMER)
-  ResetPasswordToken ResetPasswordToken?
+  resetPasswordToken ResetPasswordToken?
+  outlet             Outlet?
   updatedAt          DateTime            @updatedAt
   createdAt          DateTime            @default(now())
 }
@@ -63,6 +64,8 @@ model Outlet {
   locationLatitude   Float
   mapLink            String
   productBrands      ProductBrand[]
+  outletAdmin        User           @relation(fields: [outletAdminId], references: [id])
+  outletAdminId      String         @unique
   updatedAt          DateTime       @updatedAt
   createdAt          DateTime       @default(now())
 }

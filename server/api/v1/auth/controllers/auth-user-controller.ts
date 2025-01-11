@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import crypto from "node:crypto";
 import { prisma } from "../../../../db";
 import { serializeUserResponse } from "../../../../serializers/user";
@@ -12,105 +12,115 @@ import {
   TUpdateUserInfoRequest,
   TUpdateUserPasswordRequest
 } from "../../../../types/auth";
+import ApiError from "../../../../utils/api-error";
 
-export const getAuthUser = async (req: Request, res: Response) => {
-  if (!req.user) {
-    res.status(401).json({
-      message: "Unauthenticated"
-    });
-    return;
+export const getAuthUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      throw new ApiError(401, "Unauthenticated");
+    }
+
+    res.status(200).json(serializeUserResponse(req.user));
+  } catch (err) {
+    next(err);
   }
-
-  res.status(200).json(serializeUserResponse(req.user));
 };
 
 export const updateAuthUserInfo = async (
   req: Request<any, any, TUpdateUserInfoRequest, any>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
-  if (!req.user) {
-    res.status(401).json({
-      message: "Unauthenticated"
-    });
-    return;
-  }
-
-  const { firstName, lastName } = req.body;
-
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: req.user.id
-    },
-    data: {
-      firstName,
-      lastName
+  try {
+    if (!req.user) {
+      throw new ApiError(401, "Unauthenticated");
     }
-  });
 
-  if (!updatedUser) {
-    res.status(500).json({
-      message: "Could not update the user info"
+    const { firstName, lastName } = req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: req.user.id
+      },
+      data: {
+        firstName,
+        lastName
+      }
     });
-    return;
-  }
 
-  res.status(200).json(serializeUserResponse(updatedUser));
+    if (!updatedUser) {
+      res.status(500).json({
+        message: "Could not update the user info"
+      });
+      return;
+    }
+
+    res.status(200).json(serializeUserResponse(updatedUser));
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const updateAuthUserPassword = async (
   req: Request<any, any, TUpdateUserPasswordRequest, any>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
-  if (!req.user || !req.user.password) {
-    res.status(401).json({
-      message: "Route is only valid for admin users"
-    });
-    return;
-  }
-
-  const { oldPassword, newPassword } = req.body;
-
-  const isMatched = await bcrypt.compare(oldPassword, req.user.password);
-
-  if (!isMatched) {
-    res.status(400).json({
-      oldPassword: "Old password did not match"
-    });
-    return;
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: req.user.id
-    },
-    data: {
-      password: hashedPassword
+  try {
+    if (!req.user || !req.user.password) {
+      throw new ApiError(403, "Route is only valid for admin users");
     }
-  });
 
-  if (!updatedUser) {
-    res.status(500).json({
-      message: "Could not update the user info"
+    const { oldPassword, newPassword } = req.body;
+
+    const isMatched = await bcrypt.compare(oldPassword, req.user.password);
+
+    if (!isMatched) {
+      throw new ApiError(400, undefined, {
+        oldPassword: "Old password did not match"
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: req.user.id
+      },
+      data: {
+        password: hashedPassword
+      }
     });
-    return;
-  }
 
-  res.status(200).json(serializeUserResponse(updatedUser));
+    if (!updatedUser) {
+      throw new Error("Could not update the user info");
+    }
+
+    res.status(200).json(serializeUserResponse(updatedUser));
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const updateAuthUserPhoto = async (req: Request, res: Response) => {
+export const updateAuthUserPhoto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.user?.id) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+      throw new ApiError(401, "Unauthenticated");
     }
 
     if (!req.file) {
-      res.status(400).json({ error: "Profile photo is required" });
-      return;
+      throw new ApiError(400, undefined, {
+        file: "Profile photo is required"
+      });
     }
 
     if (req.user.profilePhoto) {
@@ -127,9 +137,7 @@ export const updateAuthUserPhoto = async (req: Request, res: Response) => {
     });
 
     res.status(200).json(serializeUserResponse(user));
-  } catch (error) {
-    res.status(500).json({
-      message: (error as Error).message || "Failed to update profile photo"
-    });
+  } catch (err) {
+    next(err);
   }
 };

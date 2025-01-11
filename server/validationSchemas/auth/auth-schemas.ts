@@ -1,23 +1,5 @@
 import { z } from "zod";
 
-export const CustomerEmailVerifyDTOSchema = z.object({
-  email: z.string().email()
-});
-
-export const CustomerPhoneVerifyDTOSchema = z.object({
-  phone: z.string().min(1, "Required")
-});
-
-export const CustomerEmailLoginDTOSchema = z.object({
-  email: z.string().email(),
-  otp: z.string().min(6, "OTP must be 6 characters long")
-});
-
-export const CustomerPhoneLoginDTOSchema = z.object({
-  phone: z.string().min(1, "Required"),
-  otp: z.string().min(6, "OTP must be 6 characters long")
-});
-
 export const UpdateUserInfoDTOSchema = z.object({
   firstName: z
     .string()

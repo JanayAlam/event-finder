@@ -12,7 +12,7 @@ import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 import {
   TCustomerEmailLoginRequest,
   TCustomerPhoneLoginRequest
-} from "../../../../types/auth/auth-types";
+} from "../../../../types/customer";
 
 export const customerEmailLogin = async (
   req: Request<any, any, TCustomerEmailLoginRequest, any>,

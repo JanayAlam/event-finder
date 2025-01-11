@@ -1,29 +1,9 @@
 import { USER_ROLE } from "@prisma/client";
 import { z } from "zod";
 import {
-  CustomerEmailLoginDTOSchema,
-  CustomerEmailVerifyDTOSchema,
-  CustomerPhoneLoginDTOSchema,
-  CustomerPhoneVerifyDTOSchema,
   UpdateUserInfoDTOSchema,
   UpdateUserPasswordDTOSchema
 } from "../../validationSchemas/auth";
-
-export type TCustomerEmailVerifyRequest = z.infer<
-  typeof CustomerEmailVerifyDTOSchema
->;
-
-export type TCustomerPhoneVerifyRequest = z.infer<
-  typeof CustomerPhoneVerifyDTOSchema
->;
-
-export type TCustomerEmailLoginRequest = z.infer<
-  typeof CustomerEmailLoginDTOSchema
->;
-
-export type TCustomerPhoneLoginRequest = z.infer<
-  typeof CustomerPhoneLoginDTOSchema
->;
 
 export type TJWTPayload = {
   id: string;

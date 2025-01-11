@@ -7,7 +7,7 @@ import { sendSMS } from "../../../../services/sms";
 import {
   TCustomerEmailVerifyRequest,
   TCustomerPhoneVerifyRequest
-} from "../../../../types/auth";
+} from "../../../../types/customer/customer-types";
 
 export const verifyCustomerEmailAndSendOTP = async (
   req: Request<any, any, TCustomerEmailVerifyRequest, any>,

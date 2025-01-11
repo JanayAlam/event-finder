@@ -56,7 +56,7 @@ export const customerEmailLogin = async (
     .cookie(COOKIE_KEYS.authAccessToken, `Bearer ${accessToken}`, cookieOptions)
     .cookie(COOKIE_KEYS.authRefreshToken, `Bearer ${refreshToken}`, {
       ...cookieOptions,
-      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
+      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND * 1000
     })
     .cookie(COOKIE_KEYS.authUser, serializedUser, cookieOptions)
     .json({
@@ -108,7 +108,7 @@ export const customerPhoneLogin = async (
     .cookie(COOKIE_KEYS.authAccessToken, `Bearer ${accessToken}`, cookieOptions)
     .cookie(COOKIE_KEYS.authRefreshToken, `Bearer ${refreshToken}`, {
       ...cookieOptions,
-      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
+      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_SECOND * 1000
     })
     .cookie(COOKIE_KEYS.authUser, serializedUser, cookieOptions)
     .json({

@@ -1,4 +1,12 @@
 import { z } from "zod";
-import { OutletCreateDTOSchema } from "../../validationSchemas/outlet";
+import {
+  GetOutletDTOParamSchema,
+  GetOutletDTOQuerySchema,
+  OutletCreateDTOSchema
+} from "../../validationSchemas/outlet";
 
 export type TOutletCreateRequest = z.infer<typeof OutletCreateDTOSchema>;
+
+export type TGetOutletParam = z.infer<typeof GetOutletDTOParamSchema>;
+
+export type TGetOutletQuery = z.infer<typeof GetOutletDTOQuerySchema>;

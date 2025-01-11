@@ -9,3 +9,11 @@ export const OutletCreateDTOSchema = z.object({
   locationLongitude: z.number(),
   locationLatitude: z.number()
 });
+
+export const GetOutletDTOParamSchema = z.object({
+  outletId: z.string().trim()
+});
+
+export const GetOutletDTOQuerySchema = z.object({
+  outletAdmin: z.string().trim().optional()
+});

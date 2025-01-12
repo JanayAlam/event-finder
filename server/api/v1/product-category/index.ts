@@ -7,13 +7,15 @@ import {
   ProductCategoryDeleteDTOParamSchema,
   ProductCategoryGetAllQuerySchema,
   ProductCategoryGetDTOParamSchema,
-  ProductCategoryUpdateDTOParamSchema
+  ProductCategoryUpdateDTOParamSchema,
+  ProductCategoryUpdateDTOSchema
 } from "../../../validationSchemas/product-category";
 import { createProductCategoryHandler } from "./controllers/create-product-category-controller";
 import {
   getAllProductCategoryHandler,
   getProductCategoryHandler
 } from "./controllers/get-product-category-controller";
+import { updateProductCategoryHandler } from "./controllers/update-product-category-controller";
 
 const productCategoryRouter = Router();
 
@@ -44,8 +46,12 @@ productCategoryRouter.get(
 // Update product category
 productCategoryRouter.patch(
   "/:productCategoryId",
-  inputValidator(null, ProductCategoryUpdateDTOParamSchema),
-  authenticator([USER_ROLE.OUTLET_ADMIN])
+  inputValidator(
+    ProductCategoryUpdateDTOSchema,
+    ProductCategoryUpdateDTOParamSchema
+  ),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  updateProductCategoryHandler
 );
 
 // Delete product category

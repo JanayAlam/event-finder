@@ -14,10 +14,11 @@ export const createOutletHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {
+  let {
     outletAdmin,
     name,
     area,
+    mapAddress,
     addressDescription,
     locationLatitude,
     locationLongitude
@@ -47,10 +48,13 @@ export const createOutletHandler = async (
 
   try {
     await prisma.$transaction(async (tx) => {
-      const mapAddress = await getAddressFromCoordinates(
-        locationLatitude,
-        locationLongitude
-      );
+      if (!mapAddress) {
+        mapAddress = await getAddressFromCoordinates(
+          locationLatitude,
+          locationLongitude
+        );
+      }
+
       const mapLink = getGoogleMapLink(locationLatitude, locationLongitude);
 
       const salt = await bcrypt.genSalt(10);

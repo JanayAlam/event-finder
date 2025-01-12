@@ -5,7 +5,9 @@ import inputValidator from "../../../middlewares/input-validator";
 import {
   GetOutletDTOParamSchema,
   GetOutletDTOQuerySchema,
-  OutletCreateDTOSchema
+  OutletCreateDTOSchema,
+  UpdateOutletDTOParamSchema,
+  UpdateOutletDTOSchema
 } from "../../../validationSchemas/outlet";
 import { createOutletHandler } from "./controllers/create-outlet-controller";
 import {
@@ -13,6 +15,10 @@ import {
   getOutletHandler,
   getSelfOutletHandler
 } from "./controllers/get-outlet-controller";
+import {
+  updateOutletByOutletIdHandler,
+  updateSelfOutletHandler
+} from "./controllers/update-outlet-controller";
 
 const outletRouter = Router();
 
@@ -36,10 +42,24 @@ outletRouter.get(
   getOutletHandler
 );
 
+outletRouter.patch(
+  "/:outletId",
+  inputValidator(UpdateOutletDTOSchema, UpdateOutletDTOParamSchema),
+  authenticator([USER_ROLE.SUPER_ADMIN]),
+  updateOutletByOutletIdHandler
+);
+
 outletRouter.get(
   "/self/get",
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   getSelfOutletHandler
+);
+
+outletRouter.patch(
+  "/self/update",
+  inputValidator(UpdateOutletDTOSchema),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  updateSelfOutletHandler
 );
 
 export default outletRouter;

@@ -87,6 +87,9 @@ model ProductCategory {
   parentCategory   ProductCategory?  @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id])
   patentCategoryId String?
   childCategories  ProductCategory[] @relation("ParentCategoryHistory")
+  products         Product[]
+  title            String
+  subtitle         String?
   updatedAt        DateTime          @updatedAt
   createdAt        DateTime          @default(now())
 }
@@ -116,6 +119,8 @@ model Product {
   baseQty              Int?
   productBrand         ProductBrand?         @relation(fields: [productBrandId], references: [id])
   productBrandId       String?
+  productCategory      ProductCategory?      @relation(fields: [productCategoryId], references: [id])
+  productCategoryId    String?
   productSizeAndPrices ProductSizeAndPrice[]
   updatedAt            DateTime              @updatedAt
   createdAt            DateTime              @default(now())

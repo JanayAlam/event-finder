@@ -55,7 +55,7 @@ model ResetPasswordToken {
 }
 
 model Outlet {
-  id                 String         @id @default(cuid())
+  id                 String            @id @default(cuid())
   name               String
   area               String?
   mapAddress         String
@@ -63,12 +63,13 @@ model Outlet {
   locationLongitude  Float
   locationLatitude   Float
   mapLink            String
-  isActive           Boolean        @default(true)
+  isActive           Boolean           @default(true)
   productBrands      ProductBrand[]
-  outletAdmin        User           @relation(fields: [outletAdminId], references: [id])
-  outletAdminId      String         @unique
-  updatedAt          DateTime       @updatedAt
-  createdAt          DateTime       @default(now())
+  productCategories  ProductCategory[]
+  outletAdmin        User              @relation(fields: [outletAdminId], references: [id])
+  outletAdminId      String            @unique
+  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
 }
 
 model ProductBrand {
@@ -84,12 +85,14 @@ model ProductBrand {
 
 model ProductCategory {
   id               String            @id @default(cuid())
-  parentCategory   ProductCategory?  @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id])
+  parentCategory   ProductCategory?  @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id], onDelete: SetNull)
   patentCategoryId String?
   childCategories  ProductCategory[] @relation("ParentCategoryHistory")
   products         Product[]
   title            String
   subtitle         String?
+  outlet           Outlet            @relation(fields: [outletId], references: [id])
+  outletId         String
   updatedAt        DateTime          @updatedAt
   createdAt        DateTime          @default(now())
 }
@@ -117,9 +120,9 @@ model Product {
   hasMultipleSizes     Boolean
   basePrice            Decimal?
   baseQty              Int?
-  productBrand         ProductBrand?         @relation(fields: [productBrandId], references: [id])
+  productBrand         ProductBrand?         @relation(fields: [productBrandId], references: [id], onDelete: SetNull)
   productBrandId       String?
-  productCategory      ProductCategory?      @relation(fields: [productCategoryId], references: [id])
+  productCategory      ProductCategory?      @relation(fields: [productCategoryId], references: [id], onDelete: SetNull)
   productCategoryId    String?
   productSizeAndPrices ProductSizeAndPrice[]
   updatedAt            DateTime              @updatedAt

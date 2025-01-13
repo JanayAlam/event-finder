@@ -10,6 +10,17 @@ export const createProductCategoryHandler = async (
 ) => {
   const { title, subtitle, parentCategoryId } = req.body;
   try {
+    const outlet = await prisma.outlet.findUnique({
+      where: { outletAdminId: req.user?.id || "" },
+      select: {
+        id: true
+      }
+    });
+
+    if (!outlet) {
+      throw new ApiError(401, "Unauthenticated");
+    }
+
     if (parentCategoryId) {
       const parentCategory = await prisma.productCategory.findUnique({
         where: { id: parentCategoryId }
@@ -23,6 +34,7 @@ export const createProductCategoryHandler = async (
         data: {
           title,
           subtitle,
+          outlet: { connect: { id: outlet.id } },
           parentCategory: {
             connect: { id: parentCategoryId }
           }
@@ -34,7 +46,7 @@ export const createProductCategoryHandler = async (
     }
 
     const productCategory = await prisma.productCategory.create({
-      data: { title, subtitle }
+      data: { title, subtitle, outlet: { connect: { id: outlet.id } } }
     });
 
     res.status(201).json(productCategory);

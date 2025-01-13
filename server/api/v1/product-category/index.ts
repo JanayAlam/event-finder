@@ -11,6 +11,7 @@ import {
   ProductCategoryUpdateDTOSchema
 } from "../../../validationSchemas/product-category";
 import { createProductCategoryHandler } from "./controllers/create-product-category-controller";
+import { deleteProductCategoryHandler } from "./controllers/delete-product-category-controller";
 import {
   getAllProductCategoryHandler,
   getProductCategoryHandler
@@ -58,7 +59,8 @@ productCategoryRouter.patch(
 productCategoryRouter.delete(
   "/:productCategoryId",
   inputValidator(null, ProductCategoryDeleteDTOParamSchema),
-  authenticator([USER_ROLE.OUTLET_ADMIN])
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  deleteProductCategoryHandler
 );
 
 export default productCategoryRouter;

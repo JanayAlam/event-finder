@@ -12,9 +12,9 @@ import {
 } from "../../../validationSchemas/product-category";
 import { createProductCategoryHandler } from "./controllers/create-product-category-controller";
 import { deleteProductCategoryHandler } from "./controllers/delete-product-category-controller";
-import { getAvailableParentsHandler } from "./controllers/get-available-parents-controller";
 import {
   getAllProductCategoryHandler,
+  getAvailableParentsHandler,
   getProductCategoryHandler
 } from "./controllers/get-product-category-controller";
 import { updateProductCategoryHandler } from "./controllers/update-product-category-controller";

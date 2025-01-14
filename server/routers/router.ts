@@ -4,6 +4,7 @@ import authRouter from "../api/v1/auth";
 import customerRouter from "../api/v1/customer";
 import mapRouter from "../api/v1/map";
 import outletRouter from "../api/v1/outlet";
+import productBrandRouter from "../api/v1/product-brand";
 import productCategoryRouter from "../api/v1/product-category";
 
 const router = Router();
@@ -25,5 +26,8 @@ router.use("/outlets", outletRouter);
 
 // product category routes
 router.use("/product-categories", productCategoryRouter);
+
+// product brand routes
+router.use("/product-brands", productBrandRouter);
 
 export default router;

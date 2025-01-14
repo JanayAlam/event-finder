@@ -23,7 +23,7 @@ export const createProductCategoryHandler = async (
 
     if (parentCategoryId) {
       const parentCategory = await prisma.productCategory.findUnique({
-        where: { id: parentCategoryId }
+        where: { id: parentCategoryId, parentCategory: null }
       });
 
       if (!parentCategory) {

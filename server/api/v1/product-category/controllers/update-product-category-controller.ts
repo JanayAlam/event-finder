@@ -30,8 +30,15 @@ export const updateProductCategoryHandler = async (
     const data: TProductCategoryUpdateRequest = { title, subtitle };
 
     if (parentCategoryId) {
+      if (parentCategoryId === existingProductCategory.id) {
+        throw new ApiError(400, undefined, {
+          parentCategoryId:
+            "Parent category cannot be the same as the category itself"
+        });
+      }
+
       const parentProductCategory = await prisma.productCategory.findUnique({
-        where: { id: parentCategoryId }
+        where: { id: parentCategoryId, parentCategory: null }
       });
 
       if (!parentProductCategory) {

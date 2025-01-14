@@ -12,6 +12,7 @@ import {
 } from "../../../validationSchemas/product-category";
 import { createProductCategoryHandler } from "./controllers/create-product-category-controller";
 import { deleteProductCategoryHandler } from "./controllers/delete-product-category-controller";
+import { getAvailableParentsHandler } from "./controllers/get-available-parents-controller";
 import {
   getAllProductCategoryHandler,
   getProductCategoryHandler
@@ -32,7 +33,6 @@ productCategoryRouter.post(
 productCategoryRouter.get(
   "/",
   inputValidator(null, null, ProductCategoryGetAllQuerySchema),
-  authenticator([USER_ROLE.SUPER_ADMIN, USER_ROLE.OUTLET_ADMIN]),
   getAllProductCategoryHandler
 );
 
@@ -40,7 +40,6 @@ productCategoryRouter.get(
 productCategoryRouter.get(
   "/:productCategoryId",
   inputValidator(null, ProductCategoryGetDTOParamSchema),
-  authenticator([USER_ROLE.SUPER_ADMIN, USER_ROLE.OUTLET_ADMIN]),
   getProductCategoryHandler
 );
 
@@ -61,6 +60,12 @@ productCategoryRouter.delete(
   inputValidator(null, ProductCategoryDeleteDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   deleteProductCategoryHandler
+);
+
+productCategoryRouter.get(
+  "/:productCategoryId/available-parents",
+  inputValidator(null, ProductCategoryGetDTOParamSchema),
+  getAvailableParentsHandler
 );
 
 export default productCategoryRouter;

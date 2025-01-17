@@ -2,6 +2,7 @@ import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
+import { uploadImages } from "../../../middlewares/multer-config";
 import {
   ProductCategoryCreateDTOSchema,
   ProductCategoryDeleteDTOParamSchema,
@@ -24,6 +25,11 @@ const productCategoryRouter = Router();
 // Create product category
 productCategoryRouter.post(
   "/",
+  uploadImages.fields([
+    { name: "bannerPhoto", maxCount: 1 },
+    { name: "coverPhoto", maxCount: 1 },
+    { name: "icon", maxCount: 1 }
+  ]),
   inputValidator(ProductCategoryCreateDTOSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   createProductCategoryHandler
@@ -46,6 +52,11 @@ productCategoryRouter.get(
 // Update product category
 productCategoryRouter.patch(
   "/:productCategoryId",
+  uploadImages.fields([
+    { name: "bannerPhoto", maxCount: 1 },
+    { name: "coverPhoto", maxCount: 1 },
+    { name: "icon", maxCount: 1 }
+  ]),
   inputValidator(
     ProductCategoryUpdateDTOSchema,
     ProductCategoryUpdateDTOParamSchema

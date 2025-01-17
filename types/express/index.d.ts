@@ -12,7 +12,7 @@ declare global {
     export interface Request {
       user?: User;
       file?: Express.Multer.File;
-      files?: Express.Multer.File[];
+      files?: Express.Multer.File[] | Record<string, Express.Multer.File[]>;
     }
   }
 }

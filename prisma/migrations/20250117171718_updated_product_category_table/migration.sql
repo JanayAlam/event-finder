@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `ProductCategory` ADD COLUMN `bannerPhoto` VARCHAR(191) NULL,
+    ADD COLUMN `categoryType` ENUM('PHYSICAL', 'DIGITAL') NOT NULL DEFAULT 'PHYSICAL',
+    ADD COLUMN `coverPhoto` VARCHAR(191) NULL,
+    ADD COLUMN `icon` VARCHAR(191) NULL,
+    ADD COLUMN `metaDescription` LONGTEXT NULL,
+    ADD COLUMN `metaTitle` VARCHAR(191) NULL,
+    ADD COLUMN `slug` VARCHAR(191) NULL;

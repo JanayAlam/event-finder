@@ -24,20 +24,26 @@ export const createProductBrandHandler = async (
       throw new ApiError(401, "Unauthenticated");
     }
 
-    let filename: string | undefined;
+    let productBrandPhotoKey: string | undefined;
 
     if (brandPhoto) {
-      filename = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${name}-${getFormattedCurrentDateTime(
-        "DDMMYYYYHHmmss"
-      )}.jpg`;
-      await uploadFileToS3(brandPhoto, { width: 120, height: 80 }, filename);
+      productBrandPhotoKey = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${name.replace(
+        " ",
+        "_"
+      )}-${getFormattedCurrentDateTime("DDMMYYYYHHmmss")}.jpg`;
+
+      await uploadFileToS3(
+        brandPhoto,
+        { width: 120, height: 80 },
+        productBrandPhotoKey
+      );
     }
 
     const productBrand = await prisma.productBrand.create({
       data: {
         name,
         description,
-        brandPhoto: filename,
+        brandPhoto: productBrandPhotoKey,
         metaTitle,
         metaDescription,
         slug,

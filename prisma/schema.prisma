@@ -87,18 +87,30 @@ model ProductBrand {
   createdAt       DateTime  @default(now())
 }
 
+enum PRODUCT_CATEGORY_TYPE {
+  PHYSICAL
+  DIGITAL
+}
+
 model ProductCategory {
-  id               String            @id @default(cuid())
-  parentCategory   ProductCategory?  @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id], onDelete: SetNull)
+  id               String                @id @default(cuid())
+  parentCategory   ProductCategory?      @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id], onDelete: SetNull)
   patentCategoryId String?
-  childCategories  ProductCategory[] @relation("ParentCategoryHistory")
+  childCategories  ProductCategory[]     @relation("ParentCategoryHistory")
   products         Product[]
   title            String
   subtitle         String?
-  outlet           Outlet            @relation(fields: [outletId], references: [id])
+  metaTitle        String?
+  metaDescription  String?               @db.LongText
+  slug             String?
+  categoryType     PRODUCT_CATEGORY_TYPE @default(PHYSICAL)
+  bannerPhoto      String?
+  coverPhoto       String?
+  icon             String?
+  outlet           Outlet                @relation(fields: [outletId], references: [id])
   outletId         String
-  updatedAt        DateTime          @updatedAt
-  createdAt        DateTime          @default(now())
+  updatedAt        DateTime              @updatedAt
+  createdAt        DateTime              @default(now())
 }
 
 model ProductSizeAndPrice {

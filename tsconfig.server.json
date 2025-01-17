@@ -6,9 +6,10 @@
     "lib": [
       "ES2019"
     ],
-    "target": "ESNext",
+    "target": "ES2019",
     "isolatedModules": false,
     "noEmit": false,
+    "moduleResolution": "node",
     "typeRoots": [
       "types",
       "node_modules/@types"

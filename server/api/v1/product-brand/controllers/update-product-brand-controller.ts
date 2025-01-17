@@ -30,17 +30,22 @@ export const updateProductBrandHandler = async (
       throw new ApiError(404, "Product brand not found");
     }
 
-    let filename: string | undefined;
+    let productBrandPhotoKey: string | undefined;
 
     if (file) {
       if (existingProductBrand.brandPhoto) {
         await removeFilesFromS3(existingProductBrand.brandPhoto);
       }
 
-      filename = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${
-        name || existingProductBrand.name
+      productBrandPhotoKey = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${
+        name?.replace(" ", "_") || existingProductBrand.name.replace(" ", "_")
       }-${getFormattedCurrentDateTime("DDMMYYYYHHmmss")}.jpg`;
-      await uploadFileToS3(file, { width: 120, height: 80 }, filename);
+
+      await uploadFileToS3(
+        file,
+        { width: 120, height: 80 },
+        productBrandPhotoKey
+      );
     }
 
     const productBrand = await prisma.productBrand.update({
@@ -48,7 +53,7 @@ export const updateProductBrandHandler = async (
       data: {
         name,
         description,
-        brandPhoto: filename || existingProductBrand.brandPhoto,
+        brandPhoto: productBrandPhotoKey || existingProductBrand.brandPhoto,
         metaDescription,
         metaTitle,
         slug

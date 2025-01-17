@@ -112,13 +112,15 @@ export const updateAuthUserPhoto = async (
   next: NextFunction
 ) => {
   try {
+    const profilePhoto = req.file;
+
     if (!req.user?.id) {
       throw new ApiError(401, "Unauthenticated");
     }
 
-    if (!req.file) {
+    if (!profilePhoto) {
       throw new ApiError(400, undefined, {
-        file: "Profile photo is required"
+        profilePhoto: "Profile photo is required"
       });
     }
 
@@ -128,7 +130,7 @@ export const updateAuthUserPhoto = async (
 
     const filename = `${PROFILE_PHOTO_UPLOAD_FOLDER_NAME}/${req.user.id}.jpg`;
 
-    await uploadFileToS3(req.file, { width: 300, height: 300 }, filename);
+    await uploadFileToS3(profilePhoto, { width: 300, height: 300 }, filename);
 
     const user = await prisma.user.update({
       where: { id: req.user.id },

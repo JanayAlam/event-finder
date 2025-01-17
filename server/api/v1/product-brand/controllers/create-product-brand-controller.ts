@@ -12,7 +12,7 @@ export const createProductBrandHandler = async (
   next: NextFunction
 ) => {
   const { name, description, metaTitle, metaDescription, slug } = req.body;
-  const file = req.file;
+  const brandPhoto = req.file;
 
   try {
     const outlet = await prisma.outlet.findUnique({
@@ -26,11 +26,11 @@ export const createProductBrandHandler = async (
 
     let filename: string | undefined;
 
-    if (file) {
+    if (brandPhoto) {
       filename = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${name}-${getFormattedCurrentDateTime(
         "DDMMYYYYHHmmss"
       )}.jpg`;
-      await uploadFileToS3(file, { width: 120, height: 80 }, filename);
+      await uploadFileToS3(brandPhoto, { width: 120, height: 80 }, filename);
     }
 
     const productBrand = await prisma.productBrand.create({

@@ -2,7 +2,7 @@ import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
-import { uploadSingleFile } from "../../../middlewares/multer-config";
+import { upload } from "../../../middlewares/multer-config";
 import {
   ProductBrandCreateDTOSchema,
   ProductBrandDeleteDTOParamSchema,
@@ -25,7 +25,7 @@ const productBrandRouter = Router();
 // Create product brand
 productBrandRouter.post(
   "/",
-  uploadSingleFile,
+  upload.single("brandPhoto"),
   inputValidator(ProductBrandCreateDTOSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   createProductBrandHandler
@@ -44,7 +44,7 @@ productBrandRouter.get(
 // Update product brand
 productBrandRouter.patch(
   "/:productBrandId",
-  uploadSingleFile,
+  upload.single("brandPhoto"),
   inputValidator(ProductBrandUpdateDTOSchema, ProductBrandGetDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   updateProductBrandHandler

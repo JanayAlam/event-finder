@@ -10,7 +10,10 @@ import {
   ProductBrandUpdateDTOSchema
 } from "../../../validationSchemas/product-brand";
 import { createProductBrandHandler } from "./controllers/create-product-brand-controller";
-import { deleteProductBrandHandler } from "./controllers/delete-product-brand-controller";
+import {
+  deleteProductBrandHandler,
+  removeProductBrandPhotoHandler
+} from "./controllers/delete-product-brand-controller";
 import {
   getAllProductBrandsHandler,
   getProductBrandHandler
@@ -53,6 +56,14 @@ productBrandRouter.delete(
   inputValidator(null, ProductBrandDeleteDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   deleteProductBrandHandler
+);
+
+// Delete product brand photo
+productBrandRouter.delete(
+  "/:productBrandId/remove-brand-photo",
+  inputValidator(null, ProductBrandDeleteDTOParamSchema),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  removeProductBrandPhotoHandler
 );
 
 export default productBrandRouter;

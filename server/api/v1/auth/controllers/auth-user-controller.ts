@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
-import crypto from "node:crypto";
 import { prisma } from "../../../../db";
 import { serializeUserResponse } from "../../../../serializers/user";
 import {
@@ -127,7 +126,7 @@ export const updateAuthUserPhoto = async (
       await removeFilesFromS3(req.user.profilePhoto);
     }
 
-    const filename = `${PROFILE_PHOTO_UPLOAD_FOLDER_NAME}/${req.user.id}-${crypto.randomUUID()}.jpg`;
+    const filename = `${PROFILE_PHOTO_UPLOAD_FOLDER_NAME}/${req.user.id}.jpg`;
 
     await uploadFileToS3(req.file, { width: 300, height: 300 }, filename);
 

@@ -73,14 +73,18 @@ model Outlet {
 }
 
 model ProductBrand {
-  id          String    @id @default(cuid())
-  name        String
-  description String?   @db.LongText
-  outlet      Outlet    @relation(fields: [outletId], references: [id])
-  outletId    String
-  products    Product[]
-  updatedAt   DateTime  @updatedAt
-  createdAt   DateTime  @default(now())
+  id              String    @id @default(cuid())
+  name            String
+  description     String?   @db.LongText
+  brandPhoto      String?
+  metaTitle       String?
+  metaDescription String?   @db.LongText
+  slug            String?
+  outlet          Outlet    @relation(fields: [outletId], references: [id])
+  outletId        String
+  products        Product[]
+  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
 }
 
 model ProductCategory {

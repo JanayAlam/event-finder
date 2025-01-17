@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import {
+  removeFilesFromS3,
+  uploadFileToS3
+} from "../../../../services/amazonS3";
+import { getFormattedCurrentDateTime } from "../../../../services/date";
+import { PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME } from "../../../../settings/constants";
+import {
   TProductBrandGetParam,
   TProductBrandUpdateRequest
 } from "../../../../types/product-brand/product-brand-types";
@@ -12,7 +18,8 @@ export const updateProductBrandHandler = async (
   next: NextFunction
 ) => {
   const { productBrandId } = req.params;
-  const { name, description } = req.body;
+  const { name, description, metaDescription, metaTitle, slug } = req.body;
+  const file = req.file;
 
   try {
     const existingProductBrand = await prisma.productBrand.findUnique({
@@ -23,9 +30,29 @@ export const updateProductBrandHandler = async (
       throw new ApiError(404, "Product brand not found");
     }
 
+    let filename: string | undefined;
+
+    if (file) {
+      if (existingProductBrand.brandPhoto) {
+        await removeFilesFromS3(existingProductBrand.brandPhoto);
+      }
+
+      filename = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${
+        name || existingProductBrand.name
+      }-${getFormattedCurrentDateTime("DDMMYYYYHHmmss")}.jpg`;
+      await uploadFileToS3(file, { width: 120, height: 80 }, filename);
+    }
+
     const productBrand = await prisma.productBrand.update({
       where: { id: productBrandId },
-      data: { name, description }
+      data: {
+        name,
+        description,
+        brandPhoto: filename || existingProductBrand.brandPhoto,
+        metaDescription,
+        metaTitle,
+        slug
+      }
     });
 
     res.status(200).json(productBrand);

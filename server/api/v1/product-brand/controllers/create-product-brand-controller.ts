@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
+import { uploadFileToS3 } from "../../../../services/amazonS3";
+import { getFormattedCurrentDateTime } from "../../../../services/date";
+import { PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME } from "../../../../settings/constants";
 import { TProductBrandCreateRequest } from "../../../../types/product-brand/product-brand-types";
 import ApiError from "../../../../utils/api-error";
 
@@ -8,7 +11,9 @@ export const createProductBrandHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, description } = req.body;
+  const { name, description, metaTitle, metaDescription, slug } = req.body;
+  const file = req.file;
+
   try {
     const outlet = await prisma.outlet.findUnique({
       where: { outletAdminId: req.user?.id || "" },
@@ -19,10 +24,23 @@ export const createProductBrandHandler = async (
       throw new ApiError(401, "Unauthenticated");
     }
 
+    let filename: string | undefined;
+
+    if (file) {
+      filename = `${PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME}/${name}-${getFormattedCurrentDateTime(
+        "DDMMYYYYHHmmss"
+      )}.jpg`;
+      await uploadFileToS3(file, { width: 120, height: 80 }, filename);
+    }
+
     const productBrand = await prisma.productBrand.create({
       data: {
         name,
         description,
+        brandPhoto: filename,
+        metaTitle,
+        metaDescription,
+        slug,
         outlet: { connect: { id: outlet.id } }
       }
     });

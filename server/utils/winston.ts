@@ -1,11 +1,17 @@
 import { createLogger, format, transports } from "winston";
 import { NODE_ENV } from "../settings/config";
 
-const { prettyPrint } = format;
+const { prettyPrint, timestamp } = format;
 
 const logger = createLogger({
   level: "debug",
-  format: format.combine(format.json(), prettyPrint()),
+  format: format.combine(
+    timestamp({
+      format: "DD-MM-YYYY HH:mm:ss"
+    }),
+    format.json(),
+    prettyPrint()
+  ),
   transports: [new transports.Console()],
   silent: NODE_ENV === "test"
 });

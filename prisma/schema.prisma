@@ -66,6 +66,7 @@ model Outlet {
   isActive           Boolean           @default(true)
   productBrands      ProductBrand[]
   productCategories  ProductCategory[]
+  products           Product[]
   outletAdmin        User              @relation(fields: [outletAdminId], references: [id])
   outletAdminId      String            @unique
   updatedAt          DateTime          @updatedAt
@@ -113,34 +114,137 @@ model ProductCategory {
   createdAt        DateTime              @default(now())
 }
 
-model ProductSizeAndPrice {
+model Product {
+  id                       String                    @id @default(cuid())
+  name                     String                    @db.VarChar(255)
+  shortDescription         String?                   @db.VarChar(150)
+  description              String?                   @db.LongText
+  externalLinkText         String?                   @db.VarChar(50)
+  externalLink             String?                   @db.VarChar(255)
+  isFeatured               Boolean?                  @default(false)
+  isActive                 Boolean?                  @default(true)
+  isNewArrival             Boolean?                  @default(false)
+  isBestSeller             Boolean?                  @default(false)
+  youTubeVideoLink         String?                   @db.VarChar(255)
+  pdfLink                  String?                   @db.VarChar(255)
+  metaTitle                String?                   @db.VarChar(150)
+  metaDescription          String?                   @db.LongText
+  metaImage                String?                   @db.VarChar(255)
+  hasMultipleVariants      Boolean                   @default(false)
+  isRefundable             Boolean?                  @default(true)
+  basePrice                Decimal?
+  baseStock                Int                       @default(0)
+  baseSKU                  String?                   @unique
+  baseBarcode              String?                   @unique
+  thumbnailPhoto           String?                   @db.VarChar(255)
+  basePhoto                String?                   @db.VarChar(255)
+  averageRating            Float?                    @default(0)
+  ratingCount              Int?                      @default(0)
+  productBrand             ProductBrand?             @relation(fields: [productBrandId], references: [id], onDelete: SetNull)
+  productBrandId           String?
+  productCategory          ProductCategory?          @relation(fields: [productCategoryId], references: [id], onDelete: SetNull)
+  productCategoryId        String?
+  outlet                   Outlet                    @relation(fields: [outletId], references: [id])
+  outletId                 String
+  frequentlyBoughtProducts FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProducts")
+  frequentlyBoughtBy       FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProductHistory")
+  productTags              ProductTag[]
+  productColors            ProductColor[]
+  productSizes             ProductSize[]
+  productPrices            ProductPrice[]
+  updatedAt                DateTime                  @updatedAt
+  createdAt                DateTime                  @default(now())
+
+  @@index(fields: [isFeatured, isNewArrival, isBestSeller, name])
+}
+
+model FrequentlyBoughtProduct {
+  id                        String   @id @default(cuid())
+  product                   Product  @relation("FrequentlyBoughtProducts", fields: [productId], references: [id])
+  productId                 String
+  frequentlyBoughtProduct   Product  @relation("FrequentlyBoughtProductHistory", fields: [frequentlyBoughtProductId], references: [id])
+  frequentlyBoughtProductId String
+  updatedAt                 DateTime @updatedAt
+  createdAt                 DateTime @default(now())
+
+  @@index(fields: [productId])
+}
+
+model ProductTag {
   id        String   @id @default(cuid())
   title     String
-  price     Decimal
-  qty       Int
   product   Product  @relation(fields: [productId], references: [id])
   productId String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+
+  @@index(fields: [title, productId])
 }
 
-model Product {
-  id                   String                @id @default(cuid())
-  title                String
-  subtitle             String?
-  description          String?               @db.LongText
-  SKU                  String?
-  isFeatured           Boolean?
-  isActive             Boolean?
-  productPhoto         String?
-  hasMultipleSizes     Boolean
-  basePrice            Decimal?
-  baseQty              Int?
-  productBrand         ProductBrand?         @relation(fields: [productBrandId], references: [id], onDelete: SetNull)
-  productBrandId       String?
-  productCategory      ProductCategory?      @relation(fields: [productCategoryId], references: [id], onDelete: SetNull)
-  productCategoryId    String?
-  productSizeAndPrices ProductSizeAndPrice[]
-  updatedAt            DateTime              @updatedAt
-  createdAt            DateTime              @default(now())
+model ProductColor {
+  id            String         @id @default(uuid())
+  colorName     String         @db.VarChar(50)
+  colorHexCode  String?        @db.VarChar(7)
+  productPhoto  String?        @db.VarChar(255)
+  product       Product        @relation(fields: [productId], references: [id])
+  productId     String
+  productPrices ProductPrice[]
+  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime       @default(now())
+
+  @@index([productId, colorName])
+}
+
+enum WeightUnit {
+  KILOGRAM
+  POUND
+  GRAM
+  OUNCE
+  MILLIGRAM
+  TON
+  MILLILITRE
+  LITRE
+}
+
+enum SizeType {
+  STANDARD
+  WEIGHT
+}
+
+model ProductSize {
+  id               String         @id @default(uuid())
+  sizeName         String?        @db.VarChar(50)
+  sizeType         SizeType?      @default(STANDARD)
+  weight           Float?
+  weightUnit       WeightUnit?
+  shortDescription String?        @db.VarChar(150)
+  product          Product        @relation(fields: [productId], references: [id])
+  productId        String
+  productPrices    ProductPrice[]
+  isFeatured       Boolean        @default(false)
+  updatedAt        DateTime       @updatedAt
+  createdAt        DateTime       @default(now())
+
+  @@index([productId, sizeName, sizeType])
+}
+
+model ProductPrice {
+  id                     String        @id @default(uuid())
+  price                  Float
+  isActive               Boolean       @default(true)
+  SKU                    String?       @unique @db.VarChar(100)
+  barcode                String?       @unique @db.VarChar(100)
+  stock                  Int           @default(0)
+  lowStockThreshold      Int           @default(10)
+  criticalStockThreshold Int           @default(5)
+  product                Product       @relation(fields: [productId], references: [id])
+  productId              String
+  productSize            ProductSize?  @relation(fields: [productSizeId], references: [id], onDelete: SetNull)
+  productSizeId          String?
+  productColor           ProductColor? @relation(fields: [productColorId], references: [id], onDelete: SetNull)
+  productColorId         String?
+  updatedAt              DateTime      @updatedAt
+  createdAt              DateTime      @default(now())
+
+  @@index([productId, productSizeId, productColorId, isActive, stock])
 }

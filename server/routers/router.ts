@@ -4,6 +4,7 @@ import authRouter from "../api/v1/auth";
 import customerRouter from "../api/v1/customer";
 import mapRouter from "../api/v1/map";
 import outletRouter from "../api/v1/outlet";
+import productRouter from "../api/v1/product";
 import productBrandRouter from "../api/v1/product-brand";
 import productCategoryRouter from "../api/v1/product-category";
 
@@ -29,5 +30,8 @@ router.use("/product-categories", productCategoryRouter);
 
 // product brand routes
 router.use("/product-brands", productBrandRouter);
+
+// product routes
+router.use("/products", productRouter);
 
 export default router;

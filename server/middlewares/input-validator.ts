@@ -13,7 +13,7 @@ const inputValidator = (
         Object.keys(req.body).forEach((key) => {
           try {
             req.body[key] = JSON.parse(req.body[key]);
-          } catch (err) {}
+          } catch {}
         });
       }
 

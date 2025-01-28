@@ -134,6 +134,7 @@ model Product {
   baseStock                Int                       @default(0)
   baseSKU                  String?                   @unique
   baseBarcode              String?                   @unique
+  basePackagingCost        Float?
   basePhoto                String?                   @db.VarChar(255)
   averageRating            Float?                    @default(0)
   ratingCount              Int?                      @default(0)
@@ -145,7 +146,7 @@ model Product {
   outletId                 String
   frequentlyBoughtProducts FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProducts")
   frequentlyBoughtBy       FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProductHistory")
-  productPriceAndSize      ProductPriceAndSize[]
+  productPriceAndSizes     ProductPriceAndSize[]
   productAdditionalPhotos  ProductAdditionalPhoto[]
   updatedAt                DateTime                  @updatedAt
   createdAt                DateTime                  @default(now())
@@ -190,6 +191,7 @@ model ProductPriceAndSize {
   shortDescription       String?      @db.VarChar(150)
   price                  Float
   isActive               Boolean      @default(true)
+  packagingCost          Float        @default(0)
   SKU                    String?      @unique @db.VarChar(100)
   barcode                String?      @unique @db.VarChar(100)
   stock                  Int          @default(0)

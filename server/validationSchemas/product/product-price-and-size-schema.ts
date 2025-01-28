@@ -3,12 +3,13 @@ import { z } from "zod";
 
 export const ProductPriceAndSizeDTOSchema = z
   .object({
+    sizeType: z.nativeEnum(SIZE_TYPE),
     sizeName: z.string().max(50).optional(),
     shortDescription: z.string().max(150).optional(),
-    sizeType: z.nativeEnum(SIZE_TYPE),
     weight: z.coerce.number().optional(),
     weightUnit: z.nativeEnum(WEIGHT_UNIT).optional(),
     price: z.coerce.number().min(0),
+    packagingCost: z.coerce.number().min(0).optional(),
     SKU: z.string().max(100).optional(),
     barcode: z.string().max(100).optional(),
     stock: z.coerce.number().min(0).default(0),

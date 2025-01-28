@@ -27,12 +27,6 @@ const configMorgan = (app: Express) => {
             `${method} ${url} - ${responseStatus} - ${responseTime}ms`
           );
 
-          if (method === "GET" && !req.file && req.query) {
-            logger.http(req.query);
-          } else if (!req.file) {
-            logger.http(tokens.body(req, res));
-          }
-
           if (
             responseStatus !== "200" &&
             responseStatus !== "304" &&

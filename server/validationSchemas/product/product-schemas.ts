@@ -27,10 +27,11 @@ export const ProductDTOSchema = z
 
     hasMultipleSizes: z.boolean().default(false),
 
-    basePrice: z.number().min(0).optional(),
-    baseStock: z.number().min(0).default(0),
+    basePrice: z.coerce.number().min(0).optional(),
+    baseStock: z.coerce.number().min(0).default(0),
     baseSKU: z.string().max(150).optional(),
     baseBarcode: z.string().max(150).optional(),
+    basePackagingCost: z.coerce.number().min(0).default(0),
 
     productBrandId: z.string().max(150).optional(),
     productCategoryId: z.string().max(150),
@@ -40,8 +41,6 @@ export const ProductDTOSchema = z
       .optional(),
 
     frequentlyBoughtProductIds: z.array(z.string()).optional()
-
-    // basePhoto, additionalPhotos
   })
   .strip();
 
@@ -65,8 +64,7 @@ export const ProductCreateDTOSchema = ProductDTOSchema.refine(
     return true;
   },
   {
-    message:
-      "Either sizes with price is required when the product has multiple sizes",
+    message: "Sizes with price is required when the product has multiple sizes",
     path: ["productPriceAndSizes"]
   }
 );

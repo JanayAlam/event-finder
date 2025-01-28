@@ -1,35 +1,27 @@
+import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
+import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import { uploadImages } from "../../../middlewares/multer-config";
-import ApiError from "../../../utils/api-error";
 import { ProductCreateDTOSchema } from "../../../validationSchemas/product";
+import { createProduct } from "./controllers/create-product-controller";
+import { getAllProductsHandler } from "./controllers/get-product-controller";
 
 const productRouter = Router();
 
 // create product
 productRouter.post(
   "/",
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
   uploadImages.fields([
     { name: "basePhoto", maxCount: 1 },
     { name: "additionalPhotos", maxCount: 5 }
   ]),
   inputValidator(ProductCreateDTOSchema),
-  (req, res) => {
-    const files = req.files as Record<string, any>;
-    const basePhoto = files["basePhoto"]?.[0];
-    const additionalPhotos = files["additionalPhotos"];
-
-    if (!files || !basePhoto) {
-      throw new ApiError(400, undefined, {
-        basePhoto: "Required"
-      });
-    }
-
-    console.log(basePhoto);
-    console.log(additionalPhotos);
-
-    res.send(req.body);
-  }
+  createProduct
 );
+
+// get all products
+productRouter.get("/", getAllProductsHandler);
 
 export default productRouter;

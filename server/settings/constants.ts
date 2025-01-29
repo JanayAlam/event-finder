@@ -10,3 +10,5 @@ export const PRODUCT_CATEGORY_COVER_PHOTO_UPLOAD_FOLDER_NAME =
 
 export const PRODUCT_CATEGORY_ICON_UPLOAD_FOLDER_NAME =
   "product-category-icons";
+
+export const PRODUCT_BASE_PHOTO_FOLDER_NAME = "product-base-photos";

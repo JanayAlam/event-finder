@@ -1,8 +1,13 @@
 import { SIZE_TYPE } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
+import {
+  removeFilesFromS3,
+  uploadFileToS3
+} from "../../../../services/amazonS3";
 import { TProductCreateRequest } from "../../../../types/product";
 import ApiError from "../../../../utils/api-error";
+import { generateProductPhotoKey } from "../utils";
 
 export const createProduct = async (
   req: Request<any, any, TProductCreateRequest, any>,
@@ -10,8 +15,12 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   const files = req.files as Record<string, any>;
+
   const basePhoto = files["basePhoto"]?.[0];
-  const additionalPhotos = files["additionalPhotos"];
+  // const additionalPhotos = files["additionalPhotos"];
+
+  let basePhotoKey: string | undefined;
+  // let additionalPhotoKeys: string[] | undefined;
 
   const {
     hasMultipleSizes,
@@ -64,6 +73,15 @@ export const createProduct = async (
       }
     }
 
+    if (basePhoto) {
+      basePhotoKey = generateProductPhotoKey(outlet.id, rest.name);
+      await uploadFileToS3(
+        basePhoto,
+        { height: 900, width: 900 },
+        basePhotoKey
+      );
+    }
+
     await prisma.$transaction(async (tx) => {
       let productCreateBody: any = { ...rest };
 
@@ -106,6 +124,7 @@ export const createProduct = async (
       const product = await tx.product.create({
         data: {
           ...productCreateBody,
+          basePhoto: basePhotoKey ?? null,
           productCategory: {
             connect: { id: productCategoryId }
           },
@@ -148,13 +167,18 @@ export const createProduct = async (
           data: validIds.map((frequentlyBoughtProductId) => ({
             productId: product.id,
             frequentlyBoughtProductId
-          }))
+          })),
+          skipDuplicates: true
         });
       }
 
       res.status(201).json(product);
     });
   } catch (err) {
+    if (basePhotoKey) {
+      await removeFilesFromS3(basePhotoKey);
+    }
+
     next(err);
   }
 };

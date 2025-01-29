@@ -75,6 +75,15 @@ export const uploadFileToS3 = async (
   }
 };
 
+export const uploadMultipleFilesToS3 = async (
+  files: Express.Multer.File[],
+  resize?: TPhotoUploadParam
+): Promise<CompleteMultipartUploadCommandOutput[]> => {
+  const uploadPromises = files.map((file) => uploadFileToS3(file, resize));
+
+  return Promise.all(uploadPromises);
+};
+
 export const removeFilesFromS3 = async (keys: string | string[]) => {
   try {
     keys = Array.isArray(keys) ? keys : [keys];

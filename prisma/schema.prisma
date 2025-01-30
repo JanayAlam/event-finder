@@ -69,6 +69,7 @@ model Outlet {
   products           Product[]
   outletAdmin        User              @relation(fields: [outletAdminId], references: [id])
   outletAdminId      String            @unique
+  discounts          Discount[]
   updatedAt          DateTime          @updatedAt
   createdAt          DateTime          @default(now())
 }
@@ -148,6 +149,7 @@ model Product {
   frequentlyBoughtBy       FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProductHistory")
   productPriceAndSizes     ProductPriceAndSize[]
   productAdditionalPhotos  ProductAdditionalPhoto[]
+  discounts                Discount[]
   updatedAt                DateTime                  @updatedAt
   createdAt                DateTime                  @default(now())
 
@@ -213,4 +215,22 @@ model ProductAdditionalPhoto {
   photoURL  String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+}
+
+enum DISCOUNT_TYPE {
+  FLAT
+  PERCENT
+}
+
+model Discount {
+  id           String        @id @default(uuid())
+  discountType DISCOUNT_TYPE @default(PERCENT)
+  flat         Decimal
+  percent      Decimal
+  startsFrom   DateTime
+  endsAt       DateTime?
+  outlet       Outlet        @relation(fields: [outletId], references: [id])
+  outletId     String
+  product      Product       @relation(fields: [productId], references: [id])
+  productId    String
 }

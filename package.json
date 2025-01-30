@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "clean": "rm -rf .next && rm -rf ./dist && rm -f ./tsconfig.tsbuildinfo",
-    "build:next": "concurrently \"node scripts/start-server.js\" \"sleep 20 && next build && node scripts/kill-server.js\"",
+    "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
-    "build": "yarn clean && yarn run build:next && yarn run build:server",
+    "build": "yarn clean && yarn run  build:server && yarn run build:next",
     "build:staging": "yarn clean && yarn run build:next:staging && yarn run build:server",
-    "start": "NODE_ENV=production node dist/server/index.js",
+    "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint . --ext ts --ext tsx --ext js"
   },
   "engines": {

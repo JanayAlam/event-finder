@@ -9,6 +9,7 @@ import {
   ProductCreateParamSchema,
   ProductGetAllParamSchema
 } from "../../../validationSchemas/product";
+import frequentProductRouter from "../frequent-products";
 import { createProduct } from "./controllers/create-product-controller";
 import { getAllProductsHandler } from "./controllers/get-product-controller";
 import { updateProductBasePhotoHandler } from "./controllers/update-product-controller";
@@ -43,5 +44,8 @@ productRouter.patch(
   uploadImages.single("basePhoto"),
   updateProductBasePhotoHandler
 );
+
+// frequent product router
+productRouter.use("/:productId/frequent-products", frequentProductRouter);
 
 export default productRouter;

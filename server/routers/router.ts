@@ -2,6 +2,7 @@ import { Router } from "express";
 import adminRouter from "../api/v1/admin";
 import authRouter from "../api/v1/auth";
 import customerRouter from "../api/v1/customer";
+import discountRouter from "../api/v1/discount";
 import mapRouter from "../api/v1/map";
 import outletRouter from "../api/v1/outlet";
 import productRouter from "../api/v1/product";
@@ -33,5 +34,8 @@ router.use("/product-brands", productBrandRouter);
 
 // product routes
 router.use("/outlets/:outletId/products", productRouter);
+
+// discount routes
+router.use("/outlets/:outletId/discounts", discountRouter);
 
 export default router;

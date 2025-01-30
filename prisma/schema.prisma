@@ -149,7 +149,7 @@ model Product {
   frequentlyBoughtBy       FrequentlyBoughtProduct[] @relation("FrequentlyBoughtProductHistory")
   productPriceAndSizes     ProductPriceAndSize[]
   productAdditionalPhotos  ProductAdditionalPhoto[]
-  discounts                Discount[]
+  discountsOnProducts      DiscountsOnProducts[]
   updatedAt                DateTime                  @updatedAt
   createdAt                DateTime                  @default(now())
 
@@ -223,14 +223,27 @@ enum DISCOUNT_TYPE {
 }
 
 model Discount {
-  id           String        @id @default(uuid())
-  discountType DISCOUNT_TYPE @default(PERCENT)
-  flat         Decimal
-  percent      Decimal
-  startsFrom   DateTime
-  endsAt       DateTime?
-  outlet       Outlet        @relation(fields: [outletId], references: [id])
-  outletId     String
-  product      Product       @relation(fields: [productId], references: [id])
-  productId    String
+  id                  String                @id @default(uuid())
+  title               String?               @db.VarChar(150)
+  discountType        DISCOUNT_TYPE         @default(PERCENT)
+  flat                Float?
+  percent             Float?
+  startsFrom          DateTime
+  endsAt              DateTime?
+  outlet              Outlet                @relation(fields: [outletId], references: [id])
+  outletId            String
+  discountsOnProducts DiscountsOnProducts[]
+  updatedAt           DateTime              @updatedAt
+  createdAt           DateTime              @default(now())
+}
+
+model DiscountsOnProducts {
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  discount   Discount @relation(fields: [discountId], references: [id])
+  discountId String
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  @@id([productId, discountId])
 }

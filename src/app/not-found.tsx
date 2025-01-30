@@ -1,7 +1,7 @@
 import Image from "next/image";
-import PageNotFoundImage from "../../public/images/page-not-found-page.svg";
+import PageNotFoundImage from "/public/images/page-not-found-page.svg";
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <div className="grid h-screen place-content-center bg-white px-4">
       <div className="text-center">
@@ -19,4 +19,6 @@ export default function NotFound() {
       </div>
     </div>
   );
-}
+};
+
+export default NotFound;

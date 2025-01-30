@@ -185,7 +185,7 @@ enum SIZE_TYPE {
 }
 
 model ProductPriceAndSize {
-  id                     String       @id @default(uuid())
+  id                     String       @id @default(cuid())
   sizeName               String?      @db.VarChar(50)
   sizeType               SIZE_TYPE?   @default(WEIGHT)
   weight                 Float?
@@ -223,7 +223,7 @@ enum DISCOUNT_TYPE {
 }
 
 model Discount {
-  id                  String                @id @default(uuid())
+  id                  String                @id @default(cuid())
   title               String?               @db.VarChar(150)
   discountType        DISCOUNT_TYPE         @default(PERCENT)
   flat                Float?

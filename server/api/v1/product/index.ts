@@ -11,7 +11,10 @@ import {
 } from "../../../validationSchemas/product";
 import frequentProductRouter from "../frequent-products";
 import { createProduct } from "./controllers/create-product-controller";
-import { getAllProductsHandler } from "./controllers/get-product-controller";
+import {
+  getAllDiscountsForProductHandler,
+  getAllProductsHandler
+} from "./controllers/get-product-controller";
 import { updateProductBasePhotoHandler } from "./controllers/update-product-controller";
 
 const productRouter = Router({ mergeParams: true });
@@ -35,7 +38,8 @@ productRouter.get(
   getAllProductsHandler
 );
 
-// get all product list by outlet id
+// get all discounts on a specific products
+productRouter.get("/:productId/discounts", getAllDiscountsForProductHandler);
 
 // update base photo
 productRouter.patch(

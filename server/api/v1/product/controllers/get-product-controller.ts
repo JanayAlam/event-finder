@@ -41,3 +41,28 @@ export const getAllProductsHandler = async (
     next(err);
   }
 };
+
+export const getAllDiscountsForProductHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { outletId, productId } = req.params;
+
+  try {
+    const discounts = await prisma.discount.findMany({
+      where: {
+        outletId,
+        discountsOnProducts: {
+          some: {
+            productId
+          }
+        }
+      }
+    });
+
+    res.status(200).json(discounts);
+  } catch (err) {
+    next(err);
+  }
+};

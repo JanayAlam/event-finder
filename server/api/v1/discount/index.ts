@@ -7,6 +7,7 @@ import {
   DiscountCreateSchema
 } from "../../../validationSchemas/discount";
 import { createDiscountHandler } from "./controllers/create-discount-controller";
+import { getAllDiscountsForOutletHandler } from "./controllers/get-discount-controller";
 
 const discountRouter = Router({ mergeParams: true });
 
@@ -17,5 +18,8 @@ discountRouter.post(
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   createDiscountHandler
 );
+
+// get all discounts of a outlet
+discountRouter.get("/", getAllDiscountsForOutletHandler);
 
 export default discountRouter;

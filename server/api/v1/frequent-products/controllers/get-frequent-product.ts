@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
+import { TFrequentProductGetAllParam } from "../../../../types/frequent-product";
 import ApiError from "../../../../utils/api-error";
 
 export const getAllFrequentProductsHandler = async (
-  req: Request,
+  req: Request<TFrequentProductGetAllParam, any, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {

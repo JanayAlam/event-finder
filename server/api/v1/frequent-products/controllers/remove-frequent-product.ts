@@ -1,9 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
+import {
+  TFrequentProductRemoveParam,
+  TFrequentProductRemoveRequest
+} from "../../../../types/frequent-product";
 import ApiError from "../../../../utils/api-error";
 
 export const removeFrequentProductsHandler = async (
-  req: Request,
+  req: Request<
+    TFrequentProductRemoveParam,
+    any,
+    any,
+    TFrequentProductRemoveRequest,
+    any
+  >,
   res: Response,
   next: NextFunction
 ) => {

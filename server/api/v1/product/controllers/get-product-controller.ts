@@ -1,27 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
+import { TPaginationQuery } from "../../../../types/common/common-types";
+import { TProductGetAllParam } from "../../../../types/product";
 
 export const getAllProductsHandler = async (
-  req: Request,
+  req: Request<TProductGetAllParam, any, any, TPaginationQuery>,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
-
-    const pageNumber = parseInt(page as string, 10);
-    const pageSizeNumber = parseInt(pageSize as string, 10);
+    const { outletId } = req.params;
 
     const products = await prisma.product.findMany({
-      skip: (pageNumber - 1) * pageSizeNumber,
-      take: pageSizeNumber,
+      where: { outletId },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       include: {
-        productCategory: true,
-        productBrand: true,
-        outlet: true,
-        productPriceAndSizes: true,
-        productAdditionalPhotos: true,
-        frequentlyBoughtProducts: true
+        // productCategory: true,
+        // productBrand: true,
+        // outlet: true,
+        // productPriceAndSizes: true,
+        // productAdditionalPhotos: true,
+        // frequentlyBoughtProducts: true
       }
     });
 
@@ -31,9 +32,9 @@ export const getAllProductsHandler = async (
       products,
       meta: {
         total: totalProducts,
-        page: pageNumber,
-        pageSize: pageSizeNumber,
-        totalPages: Math.ceil(totalProducts / pageSizeNumber)
+        page: page,
+        pageSize: pageSize,
+        totalPages: Math.ceil(totalProducts / pageSize)
       }
     });
   } catch (err) {

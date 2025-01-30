@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, USER_ROLE } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../db";
@@ -128,6 +128,9 @@ const authProcessor = async (
       const user = await prisma.user.findUnique({
         where: {
           id: (tokenData as User).id
+        },
+        include: {
+          outlet: role === USER_ROLE.OUTLET_ADMIN
         }
       });
 

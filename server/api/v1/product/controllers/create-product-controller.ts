@@ -5,15 +5,20 @@ import {
   removeFilesFromS3,
   uploadFileToS3
 } from "../../../../services/amazonS3";
-import { TProductCreateRequest } from "../../../../types/product";
+import {
+  TProductCreateParam,
+  TProductCreateRequest
+} from "../../../../types/product";
 import ApiError from "../../../../utils/api-error";
 import { generateProductPhotoKey } from "../utils";
 
 export const createProduct = async (
-  req: Request<any, any, TProductCreateRequest, any>,
+  req: Request<TProductCreateParam, any, TProductCreateRequest, any>,
   res: Response,
   next: NextFunction
 ) => {
+  const { outletId } = req.params;
+
   const files = req.files as Record<string, any>;
 
   const basePhoto = files["basePhoto"]?.[0];
@@ -37,22 +42,12 @@ export const createProduct = async (
   } = req.body;
 
   try {
-    if (!req.user) {
+    if (!req.user || !req.user.outlet || req.user.outlet.id !== outletId) {
       throw new ApiError(401, "Unauthenticated");
     }
 
-    const outlet = await prisma.outlet.findFirst({
-      where: {
-        outletAdminId: req.user.id
-      }
-    });
-
-    if (!outlet) {
-      throw new ApiError(404, "Outlet not found");
-    }
-
     const productCategory = await prisma.productCategory.findUnique({
-      where: { id: productCategoryId }
+      where: { id: productCategoryId, outletId }
     });
 
     if (!productCategory) {
@@ -63,7 +58,7 @@ export const createProduct = async (
 
     if (productBrandId) {
       const productBrand = await prisma.productBrand.findUnique({
-        where: { id: productBrandId }
+        where: { id: productBrandId, outletId }
       });
 
       if (!productBrand) {
@@ -74,7 +69,7 @@ export const createProduct = async (
     }
 
     if (basePhoto) {
-      basePhotoKey = generateProductPhotoKey(outlet.id, rest.name);
+      basePhotoKey = generateProductPhotoKey(req.user.outlet.id, rest.name);
       await uploadFileToS3(
         basePhoto,
         { height: 900, width: 900 },
@@ -132,15 +127,8 @@ export const createProduct = async (
             ? { connect: { id: productBrandId } }
             : undefined,
           outlet: {
-            connect: { id: outlet.id }
+            connect: { id: req.user?.outlet?.id }
           }
-        },
-        include: {
-          productAdditionalPhotos: true,
-          frequentlyBoughtProducts: true,
-          productCategory: true,
-          productBrand: true,
-          productPriceAndSizes: true
         }
       });
 

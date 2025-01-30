@@ -32,6 +32,6 @@ router.use("/product-categories", productCategoryRouter);
 router.use("/product-brands", productBrandRouter);
 
 // product routes
-router.use("/products", productRouter);
+router.use("/outlet/:outletId/products", productRouter);
 
 export default router;

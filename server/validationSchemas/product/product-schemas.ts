@@ -69,4 +69,19 @@ export const ProductCreateDTOSchema = ProductDTOSchema.refine(
   }
 );
 
+export const ProductCreateParamSchema = z.object({
+  outletId: z.string()
+});
+
+export const ProductGetAllParamSchema = ProductCreateParamSchema;
+
+export const ProductGetParamSchema = z.object({
+  outletId: z.string(),
+  productId: z.string()
+});
+
+export const ProductUpdateParamSchema = ProductGetParamSchema;
+
+export const ProductDeleteParamSchema = ProductGetParamSchema;
+
 // export const ProductUpdateDTOSchema = ProductDTOSchema.partial();

@@ -73,15 +73,11 @@ export const getSelfOutletHandler = async (
       throw new ApiError(403, "Route is only valid for outlet admins");
     }
 
-    const outlet = await prisma.outlet.findUnique({
-      where: { outletAdminId: req.user.id }
-    });
-
-    if (!outlet) {
+    if (!req.user.outlet) {
       throw new ApiError(404, "Outlet not found");
     }
 
-    res.status(200).json(outlet);
+    res.status(200).json(req.user.outlet);
   } catch (err) {
     next(err);
   }

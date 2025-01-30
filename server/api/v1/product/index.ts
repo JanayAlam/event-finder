@@ -3,12 +3,17 @@ import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import { uploadImages } from "../../../middlewares/multer-config";
-import { ProductCreateDTOSchema } from "../../../validationSchemas/product";
+import { PaginationQuerySchema } from "../../../validationSchemas/common";
+import {
+  ProductCreateDTOSchema,
+  ProductCreateParamSchema,
+  ProductGetAllParamSchema
+} from "../../../validationSchemas/product";
 import { createProduct } from "./controllers/create-product-controller";
 import { getAllProductsHandler } from "./controllers/get-product-controller";
 import { updateProductBasePhotoHandler } from "./controllers/update-product-controller";
 
-const productRouter = Router();
+const productRouter = Router({ mergeParams: true });
 
 // create product
 productRouter.post(
@@ -18,12 +23,16 @@ productRouter.post(
     { name: "basePhoto", maxCount: 1 }
     // { name: "additionalPhotos", maxCount: 5 }
   ]),
-  inputValidator(ProductCreateDTOSchema),
+  inputValidator(ProductCreateDTOSchema, ProductCreateParamSchema),
   createProduct
 );
 
 // get all products
-productRouter.get("/", getAllProductsHandler);
+productRouter.get(
+  "/",
+  inputValidator(null, ProductGetAllParamSchema, PaginationQuerySchema),
+  getAllProductsHandler
+);
 
 // get all product list by outlet id
 

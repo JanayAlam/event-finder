@@ -15,8 +15,8 @@ export const REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
 
 export const PUBLIC_SERVER_URL =
   process.env.PUBLIC_SERVER_URL || "http://localhost:5000";
-export const NEXT_LOCAL_SERVER_URL =
-  process.env.NEXT_LOCAL_SERVER_URL || "http://localhost:5000";
+export const NEXT_PUBLIC_LOCAL_SERVER_URL =
+  process.env.NEXT_PUBLIC_LOCAL_SERVER_URL || "http://localhost:5000";
 
 export const SMTP_HOST = process.env.SMTP_HOST || "sandbox.smtp.mailtrap.io";
 export const SMTP_PORT: number = parseInt(process.env.SMTP_PORT || "2525");

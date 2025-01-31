@@ -7,7 +7,7 @@ import next from "next";
 import errorHandler from "./middlewares/error-handler";
 import configMorgan from "./middlewares/morgan";
 import router from "./routers";
-import { NEXT_LOCAL_SERVER_URL, NODE_ENV } from "./settings/config";
+import { NEXT_PUBLIC_LOCAL_SERVER_URL, NODE_ENV } from "./settings/config";
 import logger from "./utils/winston";
 
 const app = express();
@@ -17,7 +17,7 @@ const handle = nextApp.getRequestHandler();
 app.use(
   cors({
     credentials: true,
-    origin: [NEXT_LOCAL_SERVER_URL]
+    origin: [NEXT_PUBLIC_LOCAL_SERVER_URL]
   })
 );
 
@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use((_req: Request, res: Response, next: NextFunction) => {
-  res.setHeader("Access-Control-Allow-Origin", NEXT_LOCAL_SERVER_URL);
+  res.setHeader("Access-Control-Allow-Origin", NEXT_PUBLIC_LOCAL_SERVER_URL);
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",

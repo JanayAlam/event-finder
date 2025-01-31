@@ -1,7 +1,7 @@
-import React from "react";
-
-const Home: React.FC = () => {
-  return <div>Hello World</div>;
-};
-
-export default Home;
+export default function Home() {
+  return (
+    <main>
+      <p>Hello World</p>
+    </main>
+  );
+}

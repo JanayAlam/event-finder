@@ -3,9 +3,7 @@
 import React from "react";
 import LoginForm from "./LoginForm";
 
-interface IProps {}
-
-const page: React.FC<IProps> = () => {
+const page: React.FC = () => {
   return <LoginForm />;
 };
 

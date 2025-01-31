@@ -10,5 +10,6 @@ export const COOKIE_KEYS = {
 
 export const cookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: NODE_ENV !== "development"
+  secure: NODE_ENV === "production",
+  sameSite: NODE_ENV === "production" ? "none" : "lax"
 };

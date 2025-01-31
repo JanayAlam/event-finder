@@ -52,6 +52,9 @@ const refreshController = async (
     const user = await prisma.user.findUnique({
       where: {
         id: decodedUser.id
+      },
+      include: {
+        outlet: decodedUser.role === USER_ROLE.OUTLET_ADMIN
       }
     });
 

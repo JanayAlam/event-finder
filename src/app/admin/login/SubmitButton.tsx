@@ -1,11 +1,7 @@
-"use client";
-
-interface IProps {}
-
 import React from "react";
 import { useFormStatus } from "react-dom";
 
-const SubmitButton: React.FC<IProps> = () => {
+const SubmitButton: React.FC = () => {
   const { pending } = useFormStatus();
 
   return (

@@ -1,15 +1,7 @@
 import { axiosInstance } from "@/axios";
 import { AxiosError } from "axios";
 import React, { useState } from "react";
-import { z } from "zod";
-
-const LoginSchema = z.object({
-  email: z.string().email({ message: "Invalid email format" }).trim(),
-  password: z
-    .string()
-    .trim()
-    .min(6, "Password must be at least 6 characters long")
-});
+import { AdminLoginDTOSchema } from "../../../../../server/validationSchemas/admin";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -22,7 +14,7 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const result = LoginSchema.safeParse(formData);
+    const result = AdminLoginDTOSchema.safeParse(formData);
 
     if (!result.success) {
       setErrors(result.error.flatten().fieldErrors);

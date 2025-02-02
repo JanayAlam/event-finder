@@ -4,21 +4,22 @@ import { adminLoginApi } from "@/api/admin";
 import { CommonApiError } from "@/app/_types/common/error";
 import { handlePrivateApiError } from "@/utils/error-handlers";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import {
   COOKIE_KEYS,
   cookieOptions
 } from "../../../../../server/settings/cookies";
 import { TAdminLoginRequest } from "../../../../../server/types/admin";
 
-export const adminLoginFormSubmitAction = async (
-  requestBody: TAdminLoginRequest
-): Promise<{
+type AdminLoginFormSubmitActionResponse = Promise<{
   error?: {
     message: string;
     status: number;
   };
-}> => {
+}>;
+
+export const adminLoginFormSubmitAction = async (
+  requestBody: TAdminLoginRequest
+): AdminLoginFormSubmitActionResponse => {
   try {
     const { data } = await adminLoginApi(requestBody);
 
@@ -44,6 +45,8 @@ export const adminLoginFormSubmitAction = async (
       path: "/",
       ...cookieOptions
     });
+
+    return {};
   } catch (err) {
     const { data, error, status } = handlePrivateApiError(
       err as CommonApiError
@@ -55,6 +58,4 @@ export const adminLoginFormSubmitAction = async (
       }
     };
   }
-
-  redirect("/");
 };

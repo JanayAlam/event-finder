@@ -2,6 +2,7 @@
 
 import { adminLoginFormSubmitAction } from "@/app/(auth)/admin/login/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -15,11 +16,7 @@ const AdminLoginForm: React.FC = () => {
     formState: { errors, isSubmitting }
   } = useForm<TAdminLoginRequest>({
     resolver: zodResolver(AdminLoginDTOSchema),
-    defaultValues: {
-      email: undefined,
-      phone: undefined,
-      password: undefined
-    },
+    defaultValues: {},
     mode: "onBlur"
   });
 
@@ -30,6 +27,8 @@ const AdminLoginForm: React.FC = () => {
         toast.error(error.message);
         return;
       }
+      toast.success("Login successful");
+      redirect("/");
     },
     []
   );

@@ -13,8 +13,20 @@ import {
   updateAuthUserPassword,
   updateAuthUserPhoto
 } from "./controllers/auth-user-controller";
+import { logoutHandler } from "./controllers/logout";
 
 const authRouter = Router();
+
+// get auth user
+authRouter.delete(
+  "/logout",
+  authenticator([
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.OUTLET_ADMIN,
+    USER_ROLE.CUSTOMER
+  ]),
+  logoutHandler
+);
 
 // get auth user
 authRouter.get(

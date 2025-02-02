@@ -85,19 +85,10 @@ export const adminLoginHandler = async (
     where: email ? { email } : { phone }
   });
 
-  const invalidCredentialObj: Record<string, string> = {
-    email: `${email ? "Email" : "Phone number"} or password did not match`,
-    phone: `${email ? "Email" : "Phone number"} or password did not match`,
-    password: `${email ? "Email" : "Phone number"} or password did not match`
-  };
-  if (email) {
-    delete invalidCredentialObj.phone;
-  } else {
-    delete invalidCredentialObj.email;
-  }
-
   if (!user) {
-    res.status(400).json(invalidCredentialObj);
+    res.status(400).json({
+      message: `${email ? "Email" : "Phone number"} or password did not match`
+    });
     return;
   }
 
@@ -112,14 +103,18 @@ export const adminLoginHandler = async (
     user.role !== USER_ROLE.SUPER_ADMIN &&
     user.role !== USER_ROLE.OUTLET_ADMIN
   ) {
-    res.status(400).json(invalidCredentialObj);
+    res.status(400).json({
+      message: `${email ? "Email" : "Phone number"} or password did not match`
+    });
     return;
   }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password || "");
 
   if (!isPasswordMatched) {
-    res.status(400).json(invalidCredentialObj);
+    res.status(400).json({
+      message: `${email ? "Email" : "Phone number"} or password did not match`
+    });
     return;
   }
 

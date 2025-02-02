@@ -1,56 +1,60 @@
-import { axiosInstance } from "@/axios";
-import { AxiosError } from "axios";
-import { AdminLoginDTOSchema } from "../../../../../server/validationSchemas/admin";
+"use server";
 
-interface State {
-  errors?: {
-    email?: string;
-    password?: string;
-    general?: string;
+import { adminLoginApi } from "@/api/admin";
+import { CommonApiError } from "@/app/_types/common/error";
+import { handlePrivateApiError } from "@/utils/error-handlers";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import {
+  COOKIE_KEYS,
+  cookieOptions
+} from "../../../../../server/settings/cookies";
+import { TAdminLoginRequest } from "../../../../../server/types/admin";
+
+export const adminLoginFormSubmitAction = async (
+  requestBody: TAdminLoginRequest
+): Promise<{
+  error?: {
+    message: string;
+    status: number;
   };
-}
-
-export const adminLoginHandler = async (
-  prevState: State,
-  formData: FormData
-): Promise<State> => {
-  const requestBody = {
-    email: formData.get("email"),
-    password: formData.get("password")
-  };
-
-  const result = AdminLoginDTOSchema.safeParse(requestBody);
-
-  if (!result.success) {
-    console.log(result.error);
-
-    return {
-      errors: {
-        general: "Validation error"
-      }
-    };
-  }
-
+}> => {
   try {
-    await axiosInstance.post("/admins/login", result.data);
-    window.location.href = "/";
-    return {};
+    const { data } = await adminLoginApi(requestBody);
+
+    const cookieStore = await cookies();
+
+    cookieStore.set({
+      name: COOKIE_KEYS.authAccessToken,
+      value: `Bearer ${data.accessToken}`,
+      path: "/",
+      ...cookieOptions
+    });
+
+    cookieStore.set({
+      name: COOKIE_KEYS.authRefreshToken,
+      value: `Bearer ${data.refreshToken}`,
+      path: "/",
+      ...cookieOptions
+    });
+
+    cookieStore.set({
+      name: COOKIE_KEYS.authUser,
+      value: JSON.stringify(data.user),
+      path: "/",
+      ...cookieOptions
+    });
   } catch (err) {
-    if (err instanceof AxiosError) {
-      if (err.response?.status === 400) {
-        return {
-          errors: {
-            email: err.response.data.email,
-            password: err.response.data.password
-          }
-        };
-      }
-      return {
-        errors: { general: err.message }
-      };
-    }
+    const { data, error, status } = handlePrivateApiError(
+      err as CommonApiError
+    );
     return {
-      errors: { general: (err as Error).message }
+      error: {
+        message: data?.message || error || "Could not login",
+        status
+      }
     };
   }
+
+  redirect("/");
 };

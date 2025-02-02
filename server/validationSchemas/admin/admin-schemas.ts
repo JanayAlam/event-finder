@@ -23,8 +23,8 @@ export const OutletAdminCreateDTOSchema = SuperAdminCreateDTOSchema;
 
 export const AdminLoginDTOSchema = z
   .object({
-    email: z.string().trim().email().optional(),
-    phone: z.string().trim().min(1, "Phone number cannot be empty").optional(),
+    email: z.string().trim().email("Must be a valid email address").optional(),
+    phone: z.string().trim().optional(),
     password: z
       .string()
       .trim()

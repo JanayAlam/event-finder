@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { z } from "zod";
 import {
   AdminLoginDTOSchema,
@@ -28,3 +29,9 @@ export type TResetPasswordPasswordParam = z.infer<
 export type TBlockUserRequest = z.infer<typeof BlockUserDTOSchema>;
 
 export type TUnblockUserRequest = z.infer<typeof UnblockUserDTOSchema>;
+
+export type TAdminLoginResponse = {
+  user: Omit<User, "password">;
+  accessToken: string;
+  refreshToken: string;
+};

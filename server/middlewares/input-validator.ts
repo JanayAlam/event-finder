@@ -32,21 +32,11 @@ const inputValidator = (
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        let errObj: Record<string, string> = {};
-
-        error.issues.forEach((issue) => {
-          const keys = issue.path.length ? issue.path : undefined;
-          if (keys?.length) {
-            keys.forEach((key) => {
-              errObj = {
-                ...errObj,
-                [key]: issue.message
-              };
-            });
-          }
+        res.status(400).json({
+          message: error.issues.length
+            ? error.issues[0].message
+            : "Validation error"
         });
-
-        res.status(400).json(errObj);
       } else {
         logger.error(error);
         res.status(500).json({ message: "Server error" });

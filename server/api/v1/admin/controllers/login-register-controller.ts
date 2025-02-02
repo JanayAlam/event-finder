@@ -3,10 +3,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { prisma } from "../../../../db";
 import { serializeUserResponse } from "../../../../serializers/user";
-import {
-  generateAccessAndRefreshToken,
-  saveRefreshToken
-} from "../../../../services/token";
+import { generateAccessAndRefreshToken } from "../../../../services/token";
 import { REFRESH_TOKEN_EXPIRATION_TIME_SECOND } from "../../../../settings/config";
 import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 import {
@@ -121,8 +118,6 @@ export const adminLoginHandler = async (
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
 
   const serializedUser = serializeUserResponse(user);
-
-  await saveRefreshToken(refreshToken, user.id);
 
   res
     .status(200)

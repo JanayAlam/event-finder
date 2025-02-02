@@ -3,10 +3,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../../../db";
 import { serializeUserResponse } from "../../../../serializers/user";
 import { verifyAndRemoveOTP } from "../../../../services/otp";
-import {
-  generateAccessAndRefreshToken,
-  saveRefreshToken
-} from "../../../../services/token";
+import { generateAccessAndRefreshToken } from "../../../../services/token";
 import { REFRESH_TOKEN_EXPIRATION_TIME_SECOND } from "../../../../settings/config";
 import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 import {
@@ -46,8 +43,6 @@ export const customerEmailLogin = async (
   }
 
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
-
-  await saveRefreshToken(refreshToken, user.id);
 
   const serializedUser = serializeUserResponse(user);
 
@@ -98,8 +93,6 @@ export const customerPhoneLogin = async (
   }
 
   const [accessToken, refreshToken] = generateAccessAndRefreshToken(user);
-
-  await saveRefreshToken(refreshToken, user.id);
 
   const serializedUser = serializeUserResponse(user);
 

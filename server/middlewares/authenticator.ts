@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../db";
 import { serializeUserResponse } from "../serializers/user";
-import { saveRefreshToken } from "../services/token";
 import {
   ACCESS_TOKEN_EXPIRATION_TIME_SECOND,
   ACCESS_TOKEN_JWT_SECRET,
@@ -40,11 +39,6 @@ const refreshController = async (
       | TJWTPayload
       | undefined;
 
-    // get refresh token from redis
-    // const refreshTokenFromCache = await getRefreshTokenFromCache(
-    //   decodedUser?.id
-    // );
-
     if (!decodedUser) {
       return sendUnauthorized(res);
     }
@@ -78,8 +72,6 @@ const refreshController = async (
       expiresIn: REFRESH_TOKEN_EXPIRATION_TIME_SECOND
     });
     const refreshToken = "Bearer " + refreshJWT;
-
-    await saveRefreshToken(refreshJWT, user.id);
 
     req.user = user;
 

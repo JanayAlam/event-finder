@@ -11,7 +11,7 @@ const { prettyPrint, timestamp } = format;
 
 const allTransports: any[] = [new transports.Console()];
 
-if (NODE_ENV === "production" && LOGGLY_SUBDOMAIN && LOGGLY_TOKEN) {
+if (LOGGLY_SUBDOMAIN && LOGGLY_TOKEN) {
   allTransports.push(
     new Loggly({
       subdomain: LOGGLY_SUBDOMAIN,

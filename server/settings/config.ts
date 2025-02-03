@@ -1,6 +1,10 @@
 export const NODE_ENV = process.env.NODE_ENV;
 export const PORT: number = parseInt(process.env.PORT || "8000");
 
+export const LOGGLY_SUBDOMAIN = process.env.LOGGLY_SUBDOMAIN;
+export const LOGGLY_TOKEN = process.env.LOGGLY_TOKEN;
+export const LOGGLY_TAG = process.env.LOGGLY_TAG || "Winston-NodeJS";
+
 export const ACCESS_TOKEN_JWT_SECRET =
   process.env.ACCESS_TOKEN_JWT_SECRET || "access-secret";
 export const REFRESH_TOKEN_JWT_SECRET =

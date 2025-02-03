@@ -1,7 +1,26 @@
 import { createLogger, format, transports } from "winston";
-import { NODE_ENV } from "../settings/config";
+import { Loggly } from "winston-loggly-bulk";
+import {
+  LOGGLY_SUBDOMAIN,
+  LOGGLY_TAG,
+  LOGGLY_TOKEN,
+  NODE_ENV
+} from "../settings/config";
 
 const { prettyPrint, timestamp } = format;
+
+const allTransports: any[] = [new transports.Console()];
+
+if (NODE_ENV === "production" && LOGGLY_SUBDOMAIN && LOGGLY_TOKEN) {
+  allTransports.push(
+    new Loggly({
+      subdomain: LOGGLY_SUBDOMAIN,
+      token: LOGGLY_TOKEN,
+      tags: [LOGGLY_TAG],
+      json: true
+    })
+  );
+}
 
 const logger = createLogger({
   level: "debug",
@@ -12,7 +31,7 @@ const logger = createLogger({
     format.json(),
     prettyPrint()
   ),
-  transports: [new transports.Console()],
+  transports: allTransports,
   silent: NODE_ENV === "test"
 });
 

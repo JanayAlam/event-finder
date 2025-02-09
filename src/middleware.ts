@@ -3,7 +3,10 @@ import { COOKIE_KEYS } from "../server/settings/cookies";
 
 const SUPER_ADMIN_ONLY_ROUTES: string[] = [];
 
-const OUTLET_ADMIN_ONLY_ROUTES: string[] = [];
+const OUTLET_ADMIN_ONLY_ROUTES: string[] = [
+  "/outlet-admin",
+  "/outlet-admin/dashboard"
+];
 
 const CUSTOMER_ONLY_ROUTES: string[] = [];
 

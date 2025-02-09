@@ -1,4 +1,4 @@
-import AdminLoginForm from "@/components/organism/forms/admin-login-form";
+import AdminLoginForm from "@/components/ui/forms/admin-login-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

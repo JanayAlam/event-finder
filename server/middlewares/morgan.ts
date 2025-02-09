@@ -9,33 +9,18 @@ const configMorgan = (app: Express) => {
   app.use(
     morgan((tokens, req, res) => {
       if (!req.baseUrl || !req.baseUrl.startsWith("/api")) {
-        // Don't want next app page calls to be logged
         return undefined;
       }
 
       try {
-        // Request
         const method = tokens.method(req, res);
         const url = tokens.url(req, res);
-        // Response
+
         const responseStatus = tokens.status(req, res);
         const responseTime = tokens["response-time"](req, res);
-        const responseBody = tokens["res-body"](req, res);
 
-        if (method !== "OPTIONS" && responseStatus && responseTime) {
-          logger.http(
-            `${method} ${url} - ${responseStatus} - ${responseTime}ms`
-          );
+        logger.http(`${method} ${url} - ${responseStatus} - ${responseTime}ms`);
 
-          if (
-            responseStatus !== "200" &&
-            responseStatus !== "304" &&
-            !req.file
-          ) {
-            logger.http(responseBody);
-          }
-        }
-        // No logs for morgan
         return undefined;
       } catch (err) {
         logger.error((err as Error).message);

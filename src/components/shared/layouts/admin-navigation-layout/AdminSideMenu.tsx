@@ -14,13 +14,25 @@ import {
   User
 } from "@heroui/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
 import LogoSVG from "/public/logo/bhalothaki-logo-green.svg";
 
+const isActive = (key: string, pathname: string) => {
+  const urlKey = pathname.substring(1).split("_")[0] || "";
+
+  if (key === urlKey) {
+    return true;
+  }
+
+  return false;
+};
+
 const AdminSideMenu: React.FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const user = useAuthStore((state) => state.user);
 
@@ -43,11 +55,34 @@ const AdminSideMenu: React.FC = () => {
       </div>
 
       <ScrollShadow className="flex-1 overflow-y-auto max-h-[calc(100vh-188px)] px-2 scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-200">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium
-        praesentium sapiente at id eaque dolores tempore, adipisci rem ad beatae
-        impedit mollitia obcaecati, a nulla blanditiis incidunt. Iste neque
-        explicabo esse aut alias dolores soluta eum repudiandae hic molestias
-        cum iste.
+        <menu className="w-full flex flex-col gap-1">
+          {[
+            {
+              label: "Dashboard",
+              link: "/outlet-admin",
+              key: "outlet-admin"
+            },
+            {
+              label: "Products",
+              link: "/outlet-admin/products",
+              key: "outlet-admin_products"
+            }
+          ].map((item) => {
+            const bgStyles = isActive(item.key, pathname)
+              ? "bg-teal-100 bg-opacity-25"
+              : "hover:bg-teal-100 hover:bg-opacity-25 text-slate-900";
+
+            return (
+              <Link key={item.key} href={item.link}>
+                <div
+                  className={`px-4 py-2 text-teal-900 rounded-md ${bgStyles}`}
+                >
+                  {item.label}
+                </div>
+              </Link>
+            );
+          })}
+        </menu>
       </ScrollShadow>
 
       <div className="h-[80px] px-3 flex items-center">

@@ -35,9 +35,6 @@ export const useAuthStore = create<AuthStoreStates & AuthStoreActions>()(
       storage: createJSONStorage(() => localStorage),
       partialize(state) {
         return { user: state.user };
-      },
-      onRehydrateStorage(state) {
-        console.log({ state });
       }
     }
   )

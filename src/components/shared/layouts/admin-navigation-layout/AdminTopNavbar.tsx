@@ -9,22 +9,17 @@ const AdminTopNavbar: React.FC = () => {
 
   return (
     <>
-      <nav className=" w-full h-[50px]">
+      <nav className="md:hidden border-b-1 w-full h-[50px]">
         <div className="h-full flex items-center">
           <Button
             isIconOnly
             color="default"
             variant="flat"
-            className="md:hidden bg-transparent"
+            className="bg-transparent"
             onPress={() => setIsSidebarDrawerOpen(true)}
           >
             <MenuIcon />
           </Button>
-          <Button>Default</Button>
-          <Button isDisabled color="primary">
-            Press me
-          </Button>
-          <Button color="secondary">Press me 2</Button>
         </div>
       </nav>
 

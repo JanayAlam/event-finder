@@ -1,5 +1,4 @@
-import AdminNavbar from "@/components/ui/navbars/admin-navbar";
-import OutletAdminDashboardSidebar from "@/components/ui/sidebars/outlet-admin-dashboard-sidebar";
+import AdminNavigationLayout from "@/components/shared/layouts/admin-navigation-layout";
 import { Metadata } from "next";
 import React from "react";
 
@@ -13,13 +12,5 @@ export default function OutletAdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <main className="flex flex-row">
-      <OutletAdminDashboardSidebar />
-      <div>
-        <AdminNavbar />
-        {children}
-      </div>
-    </main>
-  );
+  return <AdminNavigationLayout>{children}</AdminNavigationLayout>;
 }

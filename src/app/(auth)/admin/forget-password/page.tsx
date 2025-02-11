@@ -6,9 +6,9 @@ export default function page() {
       <Head>
         <title>Forget password</title>
       </Head>
-      <main>
+      <div>
         <p>Forget password</p>
-      </main>
+      </div>
     </>
   );
 }

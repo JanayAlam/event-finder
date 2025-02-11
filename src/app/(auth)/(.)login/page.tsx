@@ -8,9 +8,9 @@ const page = () => {
       <Head>
         <title>Customer Login</title>
       </Head>
-      <main>
+      <div>
         <p>Intercepted Customer login</p>
-      </main>
+      </div>
     </>
   );
 };

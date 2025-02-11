@@ -9,8 +9,10 @@ import {
   cookieOptions
 } from "../../../../../server/settings/cookies";
 import { TAdminLoginRequest } from "../../../../../server/types/admin";
+import { TUserResponse } from "../../../../../server/types/auth";
 
 type AdminLoginFormSubmitActionResponse = Promise<{
+  user?: TUserResponse | null;
   error?: {
     message: string;
     status: number;
@@ -46,7 +48,9 @@ export const adminLoginFormSubmitAction = async (
       ...cookieOptions
     });
 
-    return {};
+    return {
+      user: data.user
+    };
   } catch (err) {
     const { data, error, status } = handlePrivateApiError(
       err as CommonApiError

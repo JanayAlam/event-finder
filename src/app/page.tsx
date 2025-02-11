@@ -21,10 +21,12 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <div className="flex flex-col gap-2">
       <Link href="/admin/login">Go to login page</Link>
-      <button onClick={logout}>Logout</button>
-      <p>Hello World</p>
-    </main>
+      <Link href="/outlet-admin">Go to outlet admin page</Link>
+      <div>
+        <button onClick={logout}>Logout</button>
+      </div>
+    </div>
   );
 }

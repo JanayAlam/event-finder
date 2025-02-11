@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 
 export default function AdminLogin() {
   return (
-    <main>
+    <div>
       <div className="min-h-screen flex justify-center items-center">
         <AdminLoginForm />
       </div>
-    </main>
+    </div>
   );
 }

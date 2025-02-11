@@ -1,8 +1,10 @@
 "use client";
 
 import { adminLoginFormSubmitAction } from "@/app/(auth)/admin/login/actions";
+import { useAuthStore } from "@/store/auth-store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect } from "next/navigation";
+import { USER_ROLE } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -10,6 +12,10 @@ import { TAdminLoginRequest } from "../../../../../server/types/admin";
 import { AdminLoginDTOSchema } from "../../../../../server/validationSchemas/admin";
 
 const AdminLoginForm: React.FC = () => {
+  const router = useRouter();
+
+  const setUser = useAuthStore((state) => state.setUser);
+
   const {
     register,
     handleSubmit,
@@ -22,13 +28,29 @@ const AdminLoginForm: React.FC = () => {
 
   const formSubmitHandler = useCallback(
     async (loginFormData: TAdminLoginRequest) => {
-      const { error } = await adminLoginFormSubmitAction(loginFormData);
+      const { user, error } = await adminLoginFormSubmitAction(loginFormData);
       if (error) {
         toast.error(error.message);
         return;
       }
-      toast.success("Login successful");
-      redirect("/");
+
+      if (user) {
+        toast.success("Login successful");
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+
+        if (user.role === USER_ROLE.SUPER_ADMIN) {
+          router.push("/super-admin");
+          return;
+        }
+
+        if (user.role === USER_ROLE.OUTLET_ADMIN) {
+          router.push("/outlet-admin");
+          return;
+        }
+
+        router.push("/");
+      }
     },
     []
   );

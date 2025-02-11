@@ -11,3 +11,21 @@ body {
 body {
   font-size: 16px;
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #e5e7eb; /* Tailwind gray-200 */
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db; /* Tailwind gray-300 */
+}

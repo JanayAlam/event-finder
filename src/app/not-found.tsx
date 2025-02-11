@@ -4,7 +4,7 @@ import PageNotFoundImage from "/public/images/page-not-found-page.svg";
 
 const NotFound = () => {
   return (
-    <main>
+    <div>
       <div className="grid h-screen place-content-center bg-white">
         <div className="text-center">
           <Image
@@ -28,7 +28,7 @@ const NotFound = () => {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

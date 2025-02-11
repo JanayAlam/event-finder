@@ -1,48 +1,43 @@
-import { Outlet, User } from "@prisma/client";
+import { Outlet } from "@prisma/client";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { TUserResponse } from "../../server/types/auth";
 
-type AuthUser = User & {
+type AuthUser = TUserResponse & {
   outlet?: Outlet | null;
 };
 
 interface AuthStoreStates {
-  accessToken: string | null;
-  refreshToken: string | null;
   user: AuthUser | null;
-  isHydrated: boolean;
 }
 
 interface AuthStoreActions {
-  finishHydration(): void;
+  setUser: (user: AuthUser | null) => void;
 }
 
 const initialState: AuthStoreStates = {
-  accessToken: null,
-  refreshToken: null,
-  user: null,
-  isHydrated: false
+  user: null
 };
 
 export const useAuthStore = create<AuthStoreStates & AuthStoreActions>()(
   persist(
-    immer((set) => ({
+    immer((set, _get) => ({
       ...initialState,
-      finishHydration() {
+      setUser(user) {
         set({
-          isHydrated: true
+          user: user
         });
       }
     })),
     {
-      name: "auth",
-      onRehydrateStorage() {
-        return (state, error) => {
-          if (!error) {
-            state?.finishHydration();
-          }
-        };
+      name: "user",
+      storage: createJSONStorage(() => localStorage),
+      partialize(state) {
+        return { user: state.user };
+      },
+      onRehydrateStorage(state) {
+        console.log({ state });
       }
     }
   )

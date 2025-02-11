@@ -1,4 +1,4 @@
-import { USER_ROLE } from "@prisma/client";
+import { User, USER_ROLE } from "@prisma/client";
 import { z } from "zod";
 import {
   UpdateUserInfoDTOSchema,
@@ -17,3 +17,5 @@ export type TUpdateUserInfoRequest = z.infer<typeof UpdateUserInfoDTOSchema>;
 export type TUpdateUserPasswordRequest = z.infer<
   typeof UpdateUserPasswordDTOSchema
 >;
+
+export type TUserResponse = Omit<User, "password">;

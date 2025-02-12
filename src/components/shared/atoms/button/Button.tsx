@@ -1,18 +1,7 @@
-import { ButtonProps, Button as HeroButton } from "@heroui/react";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
-const Button: React.FC<ButtonProps> = ({ children, className, ...rest }) => {
-  return (
-    <HeroButton
-      disableAnimation
-      radius="sm"
-      color="default"
-      className={className ?? ""}
-      {...rest}
-    >
-      {children}
-    </HeroButton>
-  );
+const Button: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
+  return <button {...rest}>{children}</button>;
 };
 
 export default Button;

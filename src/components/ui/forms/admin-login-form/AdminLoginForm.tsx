@@ -36,7 +36,6 @@ const AdminLoginForm: React.FC = () => {
 
       if (user) {
         toast.success("Login successful");
-        localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
 
         if (user.role === USER_ROLE.SUPER_ADMIN) {

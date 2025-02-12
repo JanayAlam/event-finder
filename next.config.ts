@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "localhost"
       }
-    ]
+    ],
+    domains: [`bhalothaki001.s3.ap-south-1.amazonaws.com`]
   }
 };
 

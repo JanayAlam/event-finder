@@ -1,6 +1,7 @@
 "use client";
 
 import { logoutApi } from "@/api/auth";
+import { useAuthStore } from "@/store/auth-store";
 import { handlePrivateApiError } from "@/utils/error-handlers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,10 +10,12 @@ import { CommonApiError } from "./_types/common/error";
 
 export default function Home() {
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
 
   const logout = async () => {
     try {
       await logoutApi();
+      setUser(null);
       router.push("/admin/login");
     } catch (err) {
       const { data, error } = handlePrivateApiError(err as CommonApiError);

@@ -1,6 +1,5 @@
-import MenuIcon from "@/assets/icons/MenuIcon";
-import Button from "@/components/shared/atoms/button";
-import { Drawer, DrawerContent } from "@heroui/react";
+import { MenuUnfoldOutlined } from "@ant-design/icons";
+import { Button, Drawer } from "antd";
 import React, { useState } from "react";
 import AdminSideMenu from "./AdminSideMenu";
 
@@ -9,32 +8,28 @@ const AdminTopNavbar: React.FC = () => {
 
   return (
     <>
-      <nav className="md:hidden border-b-1 w-full h-[50px]">
-        <div className="h-full flex items-center">
+      <nav className="border-b border-gray-100 w-full h-[50px] ">
+        <div className="md:hidden h-full flex items-center">
           <Button
-            isIconOnly
             color="default"
-            variant="flat"
-            className="bg-transparent"
-            onPress={() => setIsSidebarDrawerOpen(true)}
+            variant="text"
+            className="bg-transparent h-full"
+            onClick={() => setIsSidebarDrawerOpen(true)}
           >
-            <MenuIcon />
+            <MenuUnfoldOutlined />
           </Button>
         </div>
       </nav>
 
       <Drawer
-        isOpen={isSidebarDrawerOpen}
+        open={isSidebarDrawerOpen}
         placement={"left"}
-        onOpenChange={(isOpen) => setIsSidebarDrawerOpen(isOpen)}
-        size="xs"
-        radius="sm"
+        onClose={() => setIsSidebarDrawerOpen(false)}
+        size="default"
       >
-        <DrawerContent>
-          <div className="min-h-[100vh] w-full py-[16px] flex flex-col gap-[8px]">
-            <AdminSideMenu />
-          </div>
-        </DrawerContent>
+        <div className="min-h-[100vh] w-full py-[16px] flex flex-col gap-[8px]">
+          <AdminSideMenu />
+        </div>
       </Drawer>
     </>
   );

@@ -1,11 +1,14 @@
-import { HeroUIProvider } from "@heroui/react";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+import React from "react";
+import antdThemeConfig from "./_themes/antd-theme";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: React.PropsWithChildren) {
   return (
-    <HeroUIProvider>
-      <main className="bhalo-thaki-theme text-foreground bg-background">
-        {children}
-      </main>
-    </HeroUIProvider>
+    <main>
+      <AntdRegistry>
+        <ConfigProvider theme={antdThemeConfig}>{children}</ConfigProvider>
+      </AntdRegistry>
+    </main>
   );
 }

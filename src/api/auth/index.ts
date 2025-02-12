@@ -6,6 +6,5 @@ export const getAuthUserApi = () => {
 };
 
 export const logoutApi = () => {
-  localStorage.removeItem("user");
   return axiosInstance.delete<{}>("/auth/logout");
 };

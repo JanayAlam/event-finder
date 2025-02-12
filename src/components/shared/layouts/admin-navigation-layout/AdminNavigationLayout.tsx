@@ -7,7 +7,7 @@ import AdminTopNavbar from "./AdminTopNavbar";
 const AdminNavigationLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="flex flex-row">
-      <aside className="hidden min-h-[100vh] w-[260px] border-r py-[16px] md:flex md:flex-col md:gap-[8px]">
+      <aside className="hidden min-h-[100vh] w-[260px] py-[16px] md:flex md:flex-col md:gap-[8px] bg-background">
         <AdminSideMenu />
       </aside>
 

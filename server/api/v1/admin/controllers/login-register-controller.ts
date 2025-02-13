@@ -79,7 +79,10 @@ export const adminLoginHandler = async (
   }
 
   const user = await prisma.user.findUnique({
-    where: email ? { email } : { phone }
+    where: email ? { email } : { phone },
+    include: {
+      outlet: true
+    }
   });
 
   if (!user) {

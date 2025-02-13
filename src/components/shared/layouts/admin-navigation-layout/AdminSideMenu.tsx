@@ -1,13 +1,7 @@
 "use client";
 
-import { logoutApi } from "@/api/auth";
-import { CommonApiError } from "@/app/_types/common/error";
-import { useAuthStore } from "@/store/auth-store";
-import { handlePrivateApiError } from "@/utils/error-handlers";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
 import React from "react";
-import toast from "react-hot-toast";
 import LogoSVG from "/public/logo/bhalothaki-logo-green.svg";
 
 const isActive = (key: string, pathname: string) => {
@@ -21,25 +15,6 @@ const isActive = (key: string, pathname: string) => {
 };
 
 const AdminSideMenu: React.FC = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
-
-  const logout = async () => {
-    try {
-      await logoutApi();
-      setUser(null);
-      router.push("/admin/login");
-    } catch (err) {
-      const { data, error } = handlePrivateApiError(err as CommonApiError);
-      toast.error(data?.message || error || "Could not logout");
-    }
-  };
-
-  if (!user) return null;
-
   return (
     <>
       <div className="h-[60px] flex items-center px-3">

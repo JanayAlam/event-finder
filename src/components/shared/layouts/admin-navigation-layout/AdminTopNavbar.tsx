@@ -68,11 +68,11 @@ const AdminTopNavbar: React.FC = () => {
                 }
               />
               <div className="flex flex-col">
-                <p className="text-sm max-w-[180px] truncate">
+                <p className="font-medium text-sm max-w-[180px] truncate">
                   {user.lastName || user.firstName || "Unnamed User"}
                 </p>
                 {user.outlet ? (
-                  <p className="text-xs text-gray-400 max-w-[180px] truncate">
+                  <p className="text-xs text-gray-400  max-w-[180px] truncate">
                     {user.outlet.name}
                   </p>
                 ) : (
@@ -81,7 +81,7 @@ const AdminTopNavbar: React.FC = () => {
                   </p>
                 )}
               </div>
-              <DownOutlined className="text-gray-400" />
+              <DownOutlined className="text-sm text-gray-400" />
             </div>
           </Dropdown>
         </div>

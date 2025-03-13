@@ -14,6 +14,16 @@ Install dependencies:
 yarn
 ```
 
+Prisma:
+
+```bash
+yarn prisma generate
+```
+
+```bash
+yarn prisma migrate deploy
+```
+
 Run the development server:
 
 ```bash

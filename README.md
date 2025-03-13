@@ -8,6 +8,12 @@ Install yarn if not installed-
 npm install -g yarn
 ```
 
+Install dependencies:
+
+```bash
+yarn
+```
+
 Run the development server:
 
 ```bash

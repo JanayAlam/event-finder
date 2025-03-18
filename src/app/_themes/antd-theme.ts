@@ -2,9 +2,9 @@ import { ThemeConfig } from "antd";
 
 const antdThemeConfig: ThemeConfig = {
   token: {
-    colorPrimary: "#2E6343",
-    colorFillSecondary: "#6d28d9",
-    colorTextSecondary: "#ffffff",
+    // colorPrimary: "#2E6343",
+    // colorFillSecondary: "#6d28d9",
+    // colorTextSecondary: "#ffffff",
     colorSuccess: "#047857",
     colorSuccessText: "#ffffff",
     colorError: "#991b1b",

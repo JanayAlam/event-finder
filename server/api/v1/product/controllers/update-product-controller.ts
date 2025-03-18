@@ -44,7 +44,7 @@ export const updateProductBasePhotoHandler = async (
 
     const newBasePhotoKey = generateProductPhotoKey(outlet.id, product.name);
 
-    const uploadResult = await uploadFileToS3(
+    await uploadFileToS3(
       req.file,
       { width: 900, height: 900 },
       newBasePhotoKey

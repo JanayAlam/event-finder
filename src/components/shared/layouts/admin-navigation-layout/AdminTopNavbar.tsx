@@ -6,11 +6,30 @@ import { handlePrivateApiError } from "@/utils/error-handlers";
 import { DownOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Avatar, Button, Drawer, Dropdown } from "antd";
 import { useRouter } from "next/navigation";
+import { MenuProps } from "rc-menu";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import AdminSideMenu from "./AdminSideMenu";
 
-const AdminTopNavbar: React.FC = () => {
+interface IProps {
+  defaultSelectedKeys: string[];
+  defaultOpenKeys: string[];
+  openKeys: string[];
+  selectedKeys: string[];
+  onOpenChange: (keys: string[]) => void;
+  onSelect: (menu: any) => void;
+  items: MenuProps["items"];
+}
+
+const AdminTopNavbar: React.FC<IProps> = ({
+  defaultOpenKeys,
+  defaultSelectedKeys,
+  onOpenChange,
+  onSelect,
+  openKeys,
+  selectedKeys,
+  items
+}) => {
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -94,7 +113,15 @@ const AdminTopNavbar: React.FC = () => {
         size="default"
       >
         <div className="min-h-[100vh] w-full py-[16px] flex flex-col gap-[8px]">
-          <AdminSideMenu />
+          <AdminSideMenu
+            defaultSelectedKeys={defaultSelectedKeys}
+            defaultOpenKeys={defaultOpenKeys}
+            openKeys={openKeys}
+            selectedKeys={selectedKeys}
+            onOpenChange={onOpenChange}
+            onSelect={onSelect}
+            items={items}
+          />
         </div>
       </Drawer>
     </>

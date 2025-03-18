@@ -41,6 +41,12 @@ export default function middleware(request: NextRequest) {
   if (!isLoggedIn && PRIVATE_ROUTES.includes(path)) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
+
+  if (path === "/outlet-admin") {
+    return NextResponse.redirect(
+      new URL("/outlet-admin/dashboard", request.url)
+    );
+  }
 }
 
 export const config = {

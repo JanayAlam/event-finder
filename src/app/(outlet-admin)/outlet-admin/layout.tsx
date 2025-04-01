@@ -58,7 +58,7 @@ export default function OutletAdminDashboardLayout({
         items={items}
       >
         <div className="h-[calc(100vh-60px)] w-full bg-background-2 p-0 md:p-5 scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-200 overflow-y-auto">
-          <div className="w-full md:w-[980px]">{children}</div>
+          <div className="w-full xl:max-w-[980px]">{children}</div>
         </div>
       </AdminNavigationLayout>
     </>

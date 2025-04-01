@@ -32,7 +32,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-500 hover:text-blue-600 hover:underline transition-colors"
+                  className="text-gray-500 hover:text-primary-600 hover:underline transition-colors"
                 >
                   {item.label}
                 </Link>

@@ -5,9 +5,12 @@ import Button from "@/components/shared/molecules/Button";
 import Card from "@/components/shared/molecules/Card";
 import PageHeader from "@/components/shared/molecules/PageHeader";
 import SearchInputBox from "@/components/shared/molecules/SearchInputBox";
+import useBreakpoint from "@/hooks/useBreakpoints";
 import { PlusOutlined } from "@ant-design/icons";
 
 export default function Items() {
+  const { upSm } = useBreakpoint();
+
   return (
     <div className="flex flex-col gap-4">
       <PageHeader headerText="Products" />
@@ -23,7 +26,7 @@ export default function Items() {
             leftIcon={<PlusOutlined />}
             colorType="primary"
           >
-            Add product
+            {upSm ? "Add product" : null}
           </Button>
         </div>
       </Card>

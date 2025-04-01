@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 
@@ -24,7 +25,8 @@ interface BaseProps {
   children?: ReactNode;
   className?: string;
   fullWidth?: boolean;
-  disabled?: boolean;
+  isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
 export interface ButtonProps
@@ -46,7 +48,7 @@ const isLinkProps = (props: CombinedButtonProps): props is LinkButtonProps => {
 };
 
 const Button = (props: CombinedButtonProps) => {
-  const {
+  let {
     colorType = "default",
     variant = "solid",
     size = "medium",
@@ -56,9 +58,12 @@ const Button = (props: CombinedButtonProps) => {
     children,
     className = "",
     fullWidth = false,
-    disabled = false,
+    isDisabled = false,
+    isLoading = false,
     ...rest
   } = props;
+
+  isDisabled = isDisabled || isLoading;
 
   const sizeStyles = {
     small: "text-xs py-1 px-4",
@@ -143,7 +148,7 @@ const Button = (props: CombinedButtonProps) => {
     "whitespace-nowrap",
     variant !== "rounded" && variant !== "icon" ? "rounded-md" : "",
     `focus:ring-${colorType === "default" ? "gray-500" : colorType}-500`,
-    disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+    isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
     fullWidth ? "w-full" : ""
   ]
     .filter(Boolean)
@@ -151,31 +156,48 @@ const Button = (props: CombinedButtonProps) => {
 
   const buttonContent = (
     <>
-      {variant !== "icon" &&
-        ((leftIcon && iconPosition === "left") ||
-          (leftIcon && iconPosition === "both")) && (
-          <span className="mr-2 flex-shrink-0 text-base">{leftIcon}</span>
-        )}
-
-      {variant === "icon" ? (
-        <span className="flex-shrink-0 text-base">
-          {leftIcon || rightIcon || children}
+      {isLoading ? (
+        <span className="flex items-center">
+          <LoadingOutlined className="animate-spin mr-2" />
+          {variant !== "icon" && children}
         </span>
       ) : (
-        <span>{children}</span>
-      )}
+        <>
+          {variant !== "icon" &&
+            ((leftIcon && iconPosition === "left") ||
+              (leftIcon && iconPosition === "both")) && (
+              <span
+                className={`${children ? "mr-2" : ""} flex-shrink-0 text-base text-center`}
+              >
+                {leftIcon}
+              </span>
+            )}
 
-      {variant !== "icon" &&
-        ((rightIcon && iconPosition === "right") ||
-          (rightIcon && iconPosition === "both")) && (
-          <span className="ml-2 flex-shrink-0 text-base">{rightIcon}</span>
-        )}
+          {variant === "icon" ? (
+            <span className="flex-shrink-0 text-base">
+              {leftIcon || rightIcon || children}
+            </span>
+          ) : (
+            <span>{children}</span>
+          )}
+
+          {variant !== "icon" &&
+            ((rightIcon && iconPosition === "right") ||
+              (rightIcon && iconPosition === "both")) && (
+              <span
+                className={`${children ? "ml-2" : ""} flex-shrink-0 text-base text-center`}
+              >
+                {rightIcon}
+              </span>
+            )}
+        </>
+      )}
     </>
   );
 
   const combinedClassName = `${baseStyles} ${buttonSizeStyles} ${colorStyle} ${className}`;
 
-  if (isLinkProps(props) && !disabled) {
+  if (isLinkProps(props) && !isDisabled) {
     const { href, ...linkRest } = rest as LinkButtonProps;
     return (
       <Link href={href} className={combinedClassName} {...linkRest}>
@@ -188,7 +210,7 @@ const Button = (props: CombinedButtonProps) => {
     <button
       type="button"
       className={combinedClassName}
-      disabled={disabled}
+      disabled={isDisabled}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {buttonContent}

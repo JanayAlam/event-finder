@@ -1,4 +1,4 @@
-// import "./reset.css";
+import "./reset.css";
 
 import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
@@ -8,7 +8,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 const inter = Inter({
-  subsets: ["latin"]
+  subsets: ["latin"],
+  variable: "--font-inter"
 });
 
 export const metadata: Metadata = {

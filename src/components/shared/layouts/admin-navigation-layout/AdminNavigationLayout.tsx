@@ -36,14 +36,14 @@ const AdminNavigationLayout: React.FC<IProps> = ({
   };
 
   return (
-    <div className="flex flex-row">
-      <aside className="hidden min-h-[100vh] w-[260px] py-[16px] md:flex md:flex-col md:gap-[8px] bg-background">
-        <AdminSideMenu {...menuProps} />
-      </aside>
+    <div>
+      <AdminTopNavbar {...menuProps} />
 
-      <section className="flex-1">
-        <AdminTopNavbar {...menuProps} />
-        {children}
+      <section className="flex">
+        <aside className="hidden max-h-[calc(100vh-60px)] w-[260px] py-[16px] md:flex md:flex-col md:gap-[8px] bg-background">
+          <AdminSideMenu {...menuProps} />
+        </aside>
+        <div className="flex-1">{children}</div>
       </section>
     </div>
   );

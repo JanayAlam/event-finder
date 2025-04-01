@@ -43,7 +43,7 @@ export default function OutletAdminDashboardLayout({
       <Head>
         <title>Outlet Admin | Bhalo Thaki</title>
         <meta
-          name="description"
+          name="Outlet admin dashboard"
           content="Bhalo Thaki's outlet admin dashboard"
         />
       </Head>
@@ -57,8 +57,8 @@ export default function OutletAdminDashboardLayout({
         onSelect={onSelectMenu}
         items={items}
       >
-        <div className="min-h-[calc(100vh-60px)] bg-background-2 p-5">
-          {children}
+        <div className="h-[calc(100vh-60px)] w-full bg-background-2 p-0 md:p-5 scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-200 overflow-y-auto">
+          <div className="w-full md:w-[980px]">{children}</div>
         </div>
       </AdminNavigationLayout>
     </>

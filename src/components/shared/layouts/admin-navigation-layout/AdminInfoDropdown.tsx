@@ -36,7 +36,7 @@ const AdminInfoDropdown: React.FC = () => {
 
   return (
     <Dropdown
-      className="hidden md:flex"
+      className="flex"
       trigger={["click"]}
       menu={{
         items: [
@@ -67,7 +67,7 @@ const AdminInfoDropdown: React.FC = () => {
             }
           />
         ) : null}
-        <div className="flex flex-col">
+        <div className="hidden md:flex flex-col">
           <p className="font-medium text-sm max-w-[180px] truncate">
             {user.lastName || user.firstName || "Unnamed User"}
           </p>
@@ -81,7 +81,7 @@ const AdminInfoDropdown: React.FC = () => {
             </p>
           )}
         </div>
-        <DownOutlined className="text-sm text-gray-500" />
+        <DownOutlined className="text-sm text-gray-500 hidden md:block" />
       </div>
     </Dropdown>
   );

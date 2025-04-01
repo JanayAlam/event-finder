@@ -31,7 +31,7 @@ const AdminTopNavbar: React.FC<IProps> = ({
   return (
     <div className="sticky top-0">
       <nav className="border-b border-gray-100 w-full h-[60px]">
-        <div className="h-full flex items-center justify-between md:justify-end md:px-10">
+        <div className="h-full flex items-center justify-between md:px-10">
           <Button
             color="default"
             variant="text"
@@ -41,15 +41,14 @@ const AdminTopNavbar: React.FC<IProps> = ({
             <MenuUnfoldOutlined />
           </Button>
 
-          <div className="flex-1 flex flex-row-reverse md:flex-row justify-between">
-            <Image
-              src={LogoSVG}
-              alt="logo"
-              height={40}
-              className="px-4 md:px-0"
-            />
-            <AdminInfoDropdown />
-          </div>
+          <Image
+            src={LogoSVG}
+            alt="logo"
+            height={40}
+            className="px-4 md:px-0"
+          />
+
+          <AdminInfoDropdown />
         </div>
       </nav>
 

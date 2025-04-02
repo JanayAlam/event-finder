@@ -23,7 +23,7 @@ const headingMobileFontSize = [
   "text-[1.25rem]",
   "text-[1.25rem]",
   "text-[1.25rem]",
-  "text-[1.25rem]"
+  "text-[1rem]"
 ];
 
 const headingMobileLineHeight = [
@@ -32,7 +32,7 @@ const headingMobileLineHeight = [
   "leading-[1.75rem]",
   "leading-[1.75rem]",
   "leading-[1.75rem]",
-  "leading-[1.75rem]"
+  "leading-[1.5rem]"
 ];
 
 const headingDesktopFontSize = [
@@ -41,7 +41,7 @@ const headingDesktopFontSize = [
   "text-[2.75rem]",
   "text-[2.25rem]",
   "text-[1.75rem]",
-  "text-[1.5rem]"
+  "text-[1.25rem]"
 ];
 
 const headingDesktopLineHeight = [
@@ -50,16 +50,16 @@ const headingDesktopLineHeight = [
   "leading-[3.25rem]",
   "leading-[2.75rem]",
   "leading-[2.375rem]",
-  "leading-[2rem]"
+  "leading-[1.75rem]"
 ];
 
 const headingFontWeight = [
   "font-bold", // 700
   "font-bold", // 700
-  "font-bold", // 600
-  "font-bold", // 600
-  "font-bold", // 500
-  "font-bold" // 400
+  "font-bold", // 700
+  "font-bold", // 700
+  "font-bold", // 700
+  "font-bold" // 700
 ];
 
 const Heading: React.FC<HeadingProps> = ({

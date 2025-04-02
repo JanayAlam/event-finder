@@ -46,7 +46,7 @@ export default {
         "success-700": "#047857",
         "success-800": "#065f46",
         "success-900": "#064e3b",
-        error: "#991b1b",
+        error: "#dc2626",
         "error-50": "#fef2f2",
         "error-100": "#fee2e2",
         "error-200": "#fecaca",

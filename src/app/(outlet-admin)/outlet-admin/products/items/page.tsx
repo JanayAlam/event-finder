@@ -13,7 +13,7 @@ export default function Items() {
   const { upSm } = useBreakpoint();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 md:gap-7">
       <PageHeader headerText="Products" />
 
       <Card>

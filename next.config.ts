@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
         hostname: "localhost"
       }
     ],
-    domains: [`bhalothaki001.s3.ap-south-1.amazonaws.com`]
+    domains: ["bhalothaki001.s3.ap-south-1.amazonaws.com", "placehold.co"]
   }
 };
 

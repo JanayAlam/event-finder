@@ -1,5 +1,5 @@
 import React from "react";
-import Heading from "../../atoms/typography/heading";
+import Heading from "../../atoms/typography/Heading";
 
 interface CardProps {
   header?: string | React.ReactNode;

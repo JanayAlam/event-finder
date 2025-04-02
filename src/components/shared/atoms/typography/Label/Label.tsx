@@ -15,6 +15,7 @@ interface LabelProps {
   children: React.ReactNode;
   textAlign?: TextAlign;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLLabelElement>) => void;
 }
 
 const labelMobileFontSize = [
@@ -47,11 +48,13 @@ const Label: React.FC<LabelProps> = ({
   level = 1,
   children,
   textAlign = "left",
-  className = ""
+  className = "",
+  onClick
 }) => {
   return (
     <label
       className={`${labelMobileFontSize[level - 1]} ${labelMobileLineHeight[level - 1]} ${labelFontWeight[level - 1]} md:${labelDesktopFontSize[level - 1]} md:${labelDesktopLineHeight[level - 1]} text-${textAlign} text-[#3F4451] ${className}`}
+      onClick={onClick}
     >
       {children}
     </label>

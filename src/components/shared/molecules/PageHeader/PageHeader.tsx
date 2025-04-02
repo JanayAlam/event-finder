@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb, { BreadcrumbItem } from "../../atoms/Breadcrumb";
-import Heading from "../../atoms/typography/heading";
+import Heading from "../../atoms/typography/Heading";
 
 interface PageHeaderProps {
   headerText: string;

@@ -14,6 +14,7 @@ interface ParagraphProps {
   level?: ParagraphLevel;
   children: React.ReactNode;
   textAlign?: TextAlign;
+  fontWeight?: string;
   className?: string;
 }
 
@@ -57,11 +58,12 @@ const Paragraph: React.FC<ParagraphProps> = ({
   level = 4,
   children,
   textAlign = "left",
+  fontWeight,
   className = ""
 }) => {
   return (
     <p
-      className={`${paragraphMobileFontSize[level - 1]} ${paragraphMobileLineHeight[level - 1]} md:${paragraphDesktopFontSize[level - 1]} md:${paragraphDesktopLineHeight[level - 1]} text-${textAlign} font-normal text-[#3F4451] ${className}`}
+      className={`${paragraphMobileFontSize[level - 1]} ${paragraphMobileLineHeight[level - 1]} md:${paragraphDesktopFontSize[level - 1]} md:${paragraphDesktopLineHeight[level - 1]} text-${textAlign} ${fontWeight ? "font-" + fontWeight : "font-normal"} text-[#3F4451] ${className}`}
     >
       {children}
     </p>

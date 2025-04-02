@@ -1753,6 +1753,18 @@
   dependencies:
     tslib "^2.8.0"
 
+"@tanstack/query-core@5.71.3":
+  version "5.71.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.71.3.tgz#b26b3056787ddf03563571dbfe8dfdaba5fbdbea"
+  integrity sha512-SW7PXYpKiQCZU5pPOXG2UiHX1oSAxLyxoJiYbQ3aLYiABJW0UnfBZ9PVnO/x4ZCIVK30wfDn0h6Mrsr10q922Q==
+
+"@tanstack/react-query@^5.71.3":
+  version "5.71.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.71.3.tgz#346b35f5f310bae446a2bacf19d204f7966e1b82"
+  integrity sha512-4GZxKqiMX+CH4CxXiUBNipbqzk2V5jUU8Z4d6J+lSDu8OejcLtjx1hEDJzabFZHwd+ZHCsYLAJmM54kCS1/ekA==
+  dependencies:
+    "@tanstack/query-core" "5.71.3"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.11.tgz#6ee46400685f130e278128c7b38b7e031ff5b2f2"

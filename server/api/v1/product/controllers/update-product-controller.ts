@@ -4,6 +4,10 @@ import {
   removeFilesFromS3,
   uploadFileToS3
 } from "../../../../services/amazonS3";
+import {
+  TProductStatusUpdate,
+  TProductUpdateParam
+} from "../../../../types/product";
 import ApiError from "../../../../utils/api-error";
 import { generateProductPhotoKey } from "../utils";
 
@@ -62,6 +66,46 @@ export const updateProductBasePhotoHandler = async (
     res.status(200).json({
       basePhoto: newProduct.basePhoto
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateProductStatusHandler = async (
+  req: Request<TProductUpdateParam, any, TProductStatusUpdate, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { productId } = req.params;
+
+  if (!req.user) {
+    throw new ApiError(401, "Unauthenticated");
+  }
+
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: { outlet: true }
+    });
+
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+
+    const outlet = await prisma.outlet.findUnique({
+      where: { outletAdminId: req.user.id }
+    });
+
+    if (!outlet || outlet.id !== product.outletId) {
+      throw new ApiError(403, "Forbidden");
+    }
+
+    const newProduct = await prisma.product.update({
+      where: { id: productId },
+      data: req.body
+    });
+
+    res.status(200).json(newProduct);
   } catch (err) {
     next(err);
   }

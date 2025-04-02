@@ -84,4 +84,17 @@ export const ProductUpdateParamSchema = ProductGetParamSchema;
 
 export const ProductDeleteParamSchema = ProductGetParamSchema;
 
+export const ProductStatusUpdateSchema = z
+  .object({
+    isFeatured: z.boolean().optional(),
+    isActive: z.boolean().optional(),
+    isNewArrival: z.boolean().optional(),
+    isBestSeller: z.boolean().optional()
+  })
+  .transform((data) => {
+    return Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== undefined)
+    );
+  });
+
 // export const ProductUpdateDTOSchema = ProductDTOSchema.partial();

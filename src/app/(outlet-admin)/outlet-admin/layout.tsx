@@ -1,10 +1,13 @@
 "use client";
 
 import AdminNavigationLayout from "@/components/shared/layouts/admin-navigation-layout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getSidebarMenuItems } from "./getSidebarMenuItems";
+
+const queryClient = new QueryClient();
 
 export default function OutletAdminDashboardLayout({
   children
@@ -58,7 +61,11 @@ export default function OutletAdminDashboardLayout({
         items={items}
       >
         <div className="h-[calc(100vh-60px)] w-full bg-background-2 p-0 md:p-5 scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-200 overflow-y-auto">
-          <div className="w-full xl:max-w-[980px]">{children}</div>
+          <div className="w-full xl:max-w-[980px]">
+            <QueryClientProvider client={queryClient}>
+              {children}
+            </QueryClientProvider>
+          </div>
         </div>
       </AdminNavigationLayout>
     </>

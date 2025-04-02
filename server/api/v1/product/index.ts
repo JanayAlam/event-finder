@@ -7,15 +7,21 @@ import { PaginationQuerySchema } from "../../../validationSchemas/common";
 import {
   ProductCreateDTOSchema,
   ProductCreateParamSchema,
-  ProductGetAllParamSchema
+  ProductGetAllParamSchema,
+  ProductStatusUpdateSchema,
+  ProductUpdateParamSchema
 } from "../../../validationSchemas/product";
 import frequentProductRouter from "../frequent-products";
 import { createProduct } from "./controllers/create-product-controller";
 import {
   getAllDiscountsForProductHandler,
-  getAllProductsHandler
+  getAllProductsHandler,
+  getProductListHandler
 } from "./controllers/get-product-controller";
-import { updateProductBasePhotoHandler } from "./controllers/update-product-controller";
+import {
+  updateProductBasePhotoHandler,
+  updateProductStatusHandler
+} from "./controllers/update-product-controller";
 
 const productRouter = Router({ mergeParams: true });
 
@@ -36,6 +42,21 @@ productRouter.get(
   "/",
   inputValidator(null, ProductGetAllParamSchema, PaginationQuerySchema),
   getAllProductsHandler
+);
+
+// get product list
+productRouter.get(
+  "/list",
+  inputValidator(null, ProductGetAllParamSchema, PaginationQuerySchema),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  getProductListHandler
+);
+
+productRouter.patch(
+  "/:productId/update/status",
+  inputValidator(ProductStatusUpdateSchema, ProductUpdateParamSchema),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  updateProductStatusHandler
 );
 
 // get all discounts on a specific products

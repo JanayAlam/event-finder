@@ -10,16 +10,12 @@ export const ProductDTOSchema = z
     shortDescription: z.string().max(150).optional(),
     description: z.string().optional(),
 
-    externalLinkText: z.string().max(50).optional(),
-    externalLink: z.string().max(255).optional(),
-
     isFeatured: z.boolean().default(false),
     isActive: z.boolean().default(true),
     isNewArrival: z.boolean().default(false),
     isBestSeller: z.boolean().default(false),
 
-    youTubeVideoId: z.string().max(150).optional(),
-
+    slug: z.string().max(255),
     metaTitle: z.string().max(150).optional(),
     metaDescription: z.string().optional(),
 

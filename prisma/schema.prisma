@@ -120,13 +120,11 @@ model Product {
   name                     String                    @db.VarChar(255)
   shortDescription         String?                   @db.VarChar(150)
   description              String?                   @db.LongText
-  externalLinkText         String?                   @db.VarChar(50)
-  externalLink             String?                   @db.VarChar(255)
   isFeatured               Boolean?                  @default(false)
   isActive                 Boolean?                  @default(true)
   isNewArrival             Boolean?                  @default(false)
   isBestSeller             Boolean?                  @default(false)
-  youTubeVideoId           String?                   @db.VarChar(150)
+  slug                     String                    @unique @db.VarChar(255)
   metaTitle                String?                   @db.VarChar(150)
   metaDescription          String?                   @db.LongText
   hasMultipleSizes         Boolean                   @default(false)
@@ -153,7 +151,7 @@ model Product {
   updatedAt                DateTime                  @updatedAt
   createdAt                DateTime                  @default(now())
 
-  @@index(fields: [isActive, isFeatured, isNewArrival, isBestSeller, name])
+  @@index(fields: [isActive, isFeatured, isNewArrival, isBestSeller, name, slug])
 }
 
 model FrequentlyBoughtProduct {

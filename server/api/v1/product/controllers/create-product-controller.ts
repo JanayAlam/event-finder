@@ -22,10 +22,8 @@ export const createProduct = async (
   const files = req.files as Record<string, any>;
 
   const basePhoto = files["basePhoto"]?.[0];
-  // const additionalPhotos = files["additionalPhotos"];
 
   let basePhotoKey: string | undefined;
-  // let additionalPhotoKeys: string[] | undefined;
 
   const {
     hasMultipleSizes,

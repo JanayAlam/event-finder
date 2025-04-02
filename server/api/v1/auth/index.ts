@@ -18,15 +18,7 @@ import { logoutHandler } from "./controllers/logout";
 const authRouter = Router();
 
 // get auth user
-authRouter.delete(
-  "/logout",
-  authenticator([
-    USER_ROLE.SUPER_ADMIN,
-    USER_ROLE.OUTLET_ADMIN,
-    USER_ROLE.CUSTOMER
-  ]),
-  logoutHandler
-);
+authRouter.delete("/logout", logoutHandler);
 
 // get auth user
 authRouter.get(

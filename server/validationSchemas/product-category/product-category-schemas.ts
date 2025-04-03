@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const ProductCategoryIdDTOSchema = z.object({
+  outletId: z.string().trim(),
   productCategoryId: z.string().trim()
 });
 
@@ -16,8 +17,16 @@ export const ProductCategoryCreateDTOSchema = z
   })
   .strip();
 
+export const ProductCategoryCreateDTOParamSchema = z.object({
+  outletId: z.string().trim()
+});
+
 export const ProductCategoryUpdateDTOSchema =
   ProductCategoryCreateDTOSchema.partial().strip();
+
+export const ProductCategoryGetAllDTOParamDTOSchema = z.object({
+  outletId: z.string().trim()
+});
 
 export const ProductCategoryGetDTOParamSchema = ProductCategoryIdDTOSchema;
 
@@ -35,3 +44,7 @@ export const ProductCategoryGetAllQuerySchema = z.object({
 export const ProductCategoryUpdateDTOParamSchema = ProductCategoryIdDTOSchema;
 
 export const ProductCategoryDeleteDTOParamSchema = ProductCategoryIdDTOSchema;
+
+export const ProductCategorySelectListDTOParamSchema = z.object({
+  outletId: z.string().trim()
+});

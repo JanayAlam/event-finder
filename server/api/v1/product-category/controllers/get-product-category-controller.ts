@@ -1,24 +1,35 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import {
+  ProductCategorySelectListParam,
+  TProductCategoryGetAllParam,
   TProductCategoryGetAllQuery,
   TProductCategoryGetParam
 } from "../../../../types/product-category";
 import ApiError from "../../../../utils/api-error";
 
+type GetAllProductCategoryRequest = Request<
+  TProductCategoryGetAllParam,
+  any,
+  any,
+  TProductCategoryGetAllQuery
+>;
+
 export const getAllProductCategoryHandler = async (
-  req: Request<any, any, any, TProductCategoryGetAllQuery>,
+  req: GetAllProductCategoryRequest,
   res: Response,
   next: NextFunction
 ) => {
   const { shouldIncludeChildProductCategories } = req.query;
+  const { outletId } = req.params;
 
   try {
     const query = !!shouldIncludeChildProductCategories
       ? {
+          outletId,
           patentCategoryId: null
         }
-      : {};
+      : { outletId };
 
     const productCategories = await prisma.productCategory.findMany({
       where: query,
@@ -38,11 +49,11 @@ export const getProductCategoryHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { productCategoryId } = req.params;
+  const { outletId, productCategoryId } = req.params;
 
   try {
     const productCategory = await prisma.productCategory.findUnique({
-      where: { id: productCategoryId },
+      where: { id: productCategoryId, outletId },
       include: {
         childCategories: true
       }
@@ -63,11 +74,11 @@ export const getAvailableParentsHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { productCategoryId } = req.params;
+  const { outletId, productCategoryId } = req.params;
 
   try {
     const existingProductCategory = await prisma.productCategory.findUnique({
-      where: { id: productCategoryId },
+      where: { id: productCategoryId, outletId },
       include: {
         childCategories: true,
         parentCategory: true
@@ -102,12 +113,15 @@ export const getAvailableParentsHandler = async (
 };
 
 export const getProductCategorySelectListHandler = async (
-  req: Request,
+  req: Request<ProductCategorySelectListParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    const { outletId } = req.params;
+
     const categories = await prisma.productCategory.findMany({
+      where: { outletId },
       select: {
         id: true,
         slug: true,

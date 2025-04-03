@@ -27,10 +27,10 @@ router.use("/customers", customerRouter);
 router.use("/outlets", outletRouter);
 
 // product category routes
-router.use("/product-categories", productCategoryRouter);
+router.use("/outlets/:outletId/product-categories", productCategoryRouter);
 
 // product brand routes
-router.use("/product-brands", productBrandRouter);
+router.use("/outlets/:outletId/product-brands", productBrandRouter);
 
 // product routes
 router.use("/outlets/:outletId/products", productRouter);

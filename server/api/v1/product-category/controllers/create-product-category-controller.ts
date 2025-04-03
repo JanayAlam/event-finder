@@ -1,15 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import { uploadFileToS3 } from "../../../../services/amazonS3";
-import { TProductCategoryCreateRequest } from "../../../../types/product-category";
+import {
+  TProductCategoryCreateParam,
+  TProductCategoryCreateRequest
+} from "../../../../types/product-category";
 import ApiError from "../../../../utils/api-error";
 import { getBannerPhotoKey, getCoverPhotoKey, getIconKey } from "../utils";
 
+type CreateProductCategoryRequest = Request<
+  TProductCategoryCreateParam,
+  any,
+  TProductCategoryCreateRequest,
+  any
+>;
+
 export const createProductCategoryHandler = async (
-  req: Request<any, any, TProductCategoryCreateRequest, any>,
+  req: CreateProductCategoryRequest,
   res: Response,
   next: NextFunction
 ) => {
+  const { outletId } = req.params;
   const {
     title,
     subtitle,
@@ -21,15 +32,12 @@ export const createProductCategoryHandler = async (
   } = req.body;
 
   try {
-    const outlet = await prisma.outlet.findUnique({
-      where: { outletAdminId: req.user?.id || "" },
-      select: {
-        id: true
-      }
-    });
-
-    if (!outlet) {
+    if (!req.user?.outlet) {
       throw new ApiError(401, "Unauthenticated");
+    }
+
+    if (req.user.outlet.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
     }
 
     const data: TProductCategoryCreateRequest = {
@@ -92,7 +100,7 @@ export const createProductCategoryHandler = async (
           bannerPhoto: bannerPhotoKey,
           coverPhoto: coverPhotoKey,
           icon: iconKey,
-          outlet: { connect: { id: outlet.id } },
+          outlet: { connect: { id: outletId } },
           parentCategory: {
             connect: { id: parentCategoryId }
           }
@@ -109,7 +117,7 @@ export const createProductCategoryHandler = async (
         bannerPhoto: bannerPhotoKey,
         coverPhoto: coverPhotoKey,
         icon: iconKey,
-        outlet: { connect: { id: outlet.id } }
+        outlet: { connect: { id: outletId } }
       }
     });
 

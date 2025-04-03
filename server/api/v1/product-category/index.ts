@@ -4,10 +4,13 @@ import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import { uploadImages } from "../../../middlewares/multer-config";
 import {
+  ProductCategoryCreateDTOParamSchema,
   ProductCategoryCreateDTOSchema,
   ProductCategoryDeleteDTOParamSchema,
+  ProductCategoryGetAllDTOParamDTOSchema,
   ProductCategoryGetAllQuerySchema,
   ProductCategoryGetDTOParamSchema,
+  ProductCategorySelectListDTOParamSchema,
   ProductCategoryUpdateDTOParamSchema,
   ProductCategoryUpdateDTOSchema
 } from "../../../validationSchemas/product-category";
@@ -21,7 +24,7 @@ import {
 } from "./controllers/get-product-category-controller";
 import { updateProductCategoryHandler } from "./controllers/update-product-category-controller";
 
-const productCategoryRouter = Router();
+const productCategoryRouter = Router({ mergeParams: true });
 
 // Create product category
 productCategoryRouter.post(
@@ -31,7 +34,10 @@ productCategoryRouter.post(
     { name: "coverPhoto", maxCount: 1 },
     { name: "icon", maxCount: 1 }
   ]),
-  inputValidator(ProductCategoryCreateDTOSchema),
+  inputValidator(
+    ProductCategoryCreateDTOSchema,
+    ProductCategoryCreateDTOParamSchema
+  ),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   createProductCategoryHandler
 );
@@ -39,7 +45,11 @@ productCategoryRouter.post(
 // Get all product category
 productCategoryRouter.get(
   "/",
-  inputValidator(null, null, ProductCategoryGetAllQuerySchema),
+  inputValidator(
+    null,
+    ProductCategoryGetAllDTOParamDTOSchema,
+    ProductCategoryGetAllQuerySchema
+  ),
   getAllProductCategoryHandler
 );
 
@@ -81,6 +91,10 @@ productCategoryRouter.get(
 );
 
 // Get product category select list
-productCategoryRouter.get("/select/list", getProductCategorySelectListHandler);
+productCategoryRouter.get(
+  "/select/list",
+  inputValidator(null, ProductCategorySelectListDTOParamSchema),
+  getProductCategorySelectListHandler
+);
 
 export default productCategoryRouter;

@@ -65,8 +65,6 @@ const data: DataType[] = [
 const ProductCategoryList: React.FC<ProductCategoryListProps> = () => {
   const { productCategorySelectOption } = useProductCategorySelectList();
 
-  console.log(productCategorySelectOption);
-
   return (
     <Table<DataType>
       bordered

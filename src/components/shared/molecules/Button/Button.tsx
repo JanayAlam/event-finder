@@ -66,9 +66,9 @@ const Button = (props: CombinedButtonProps) => {
   isDisabled = isDisabled || isLoading;
 
   const sizeStyles = {
-    small: "text-xs py-1 px-4",
-    medium: "text-sm py-2 px-6",
-    large: "text-base py-3 px-8"
+    small: "text-sm py-1 px-4 rounded-md",
+    medium: "text-sm py-2 px-5",
+    large: "text-base py-3 px-6"
   };
 
   const iconSizeStyles = {

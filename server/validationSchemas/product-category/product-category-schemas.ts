@@ -11,7 +11,7 @@ export const ProductCategoryCreateDTOSchema = z
     parentCategoryId: z.string().trim().optional(),
     metaTitle: z.string().trim().max(150).optional(),
     metaDescription: z.string().trim().optional(),
-    slug: z.string().trim().max(150).optional(),
+    slug: z.string().trim().max(150),
     categoryType: z.enum(["PHYSICAL", "DIGITAL"]).optional()
   })
   .strip();

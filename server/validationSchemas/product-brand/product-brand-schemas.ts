@@ -12,7 +12,7 @@ export const ProductBrandCreateDTOSchema = z
     description: z.string().trim().max(500).optional(),
     metaTitle: z.string().trim().max(150).optional(),
     metaDescription: z.string().trim().optional(),
-    slug: z.string().trim().max(150).optional()
+    slug: z.string().trim().max(150)
   })
   .strip();
 

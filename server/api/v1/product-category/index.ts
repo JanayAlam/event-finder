@@ -16,7 +16,8 @@ import { deleteProductCategoryHandler } from "./controllers/delete-product-categ
 import {
   getAllProductCategoryHandler,
   getAvailableParentsHandler,
-  getProductCategoryHandler
+  getProductCategoryHandler,
+  getProductCategorySelectListHandler
 } from "./controllers/get-product-category-controller";
 import { updateProductCategoryHandler } from "./controllers/update-product-category-controller";
 
@@ -78,5 +79,8 @@ productCategoryRouter.get(
   inputValidator(null, ProductCategoryGetDTOParamSchema),
   getAvailableParentsHandler
 );
+
+// Get product category select list
+productCategoryRouter.get("/select/list", getProductCategorySelectListHandler);
 
 export default productCategoryRouter;

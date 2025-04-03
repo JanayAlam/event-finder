@@ -6,7 +6,7 @@ import Card from "@/components/shared/molecules/Card";
 import PageHeader from "@/components/shared/molecules/PageHeader";
 import SearchInputBox from "@/components/shared/molecules/SearchInputBox";
 import ProductList from "@/components/ui/lists/admin/ProductList";
-import useBreakpoint from "@/hooks/useBreakpoints";
+import useBreakpoint from "@/hooks/general/useBreakpoints";
 import { PlusOutlined } from "@ant-design/icons";
 
 export default function Items() {

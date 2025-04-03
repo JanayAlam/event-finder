@@ -31,3 +31,11 @@ export type TProductCategoryUpdateParam = z.infer<
 export type TProductCategoryDeleteParam = z.infer<
   typeof ProductCategoryDeleteDTOParamSchema
 >;
+
+export interface ProductCategorySelectListItemResponse {
+  id: string;
+  slug: string;
+  title: string;
+  updatedAt: Date;
+  createdAt: Date;
+}

@@ -100,3 +100,25 @@ export const getAvailableParentsHandler = async (
     next(error);
   }
 };
+
+export const getProductCategorySelectListHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const categories = await prisma.productCategory.findMany({
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        updatedAt: true,
+        createdAt: true
+      }
+    });
+
+    res.status(200).json(categories);
+  } catch (err) {
+    next(err);
+  }
+};

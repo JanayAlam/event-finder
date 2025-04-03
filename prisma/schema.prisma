@@ -81,12 +81,14 @@ model ProductBrand {
   brandPhoto      String?
   metaTitle       String?
   metaDescription String?   @db.LongText
-  slug            String?
+  slug            String    @unique @db.VarChar(150)
   outlet          Outlet    @relation(fields: [outletId], references: [id])
   outletId        String
   products        Product[]
   updatedAt       DateTime  @updatedAt
   createdAt       DateTime  @default(now())
+
+  @@index(fields: [slug])
 }
 
 enum PRODUCT_CATEGORY_TYPE {
@@ -104,7 +106,7 @@ model ProductCategory {
   subtitle         String?
   metaTitle        String?
   metaDescription  String?               @db.LongText
-  slug             String?
+  slug             String                @unique @db.VarChar(150)
   categoryType     PRODUCT_CATEGORY_TYPE @default(PHYSICAL)
   bannerPhoto      String?
   coverPhoto       String?
@@ -113,6 +115,8 @@ model ProductCategory {
   outletId         String
   updatedAt        DateTime              @updatedAt
   createdAt        DateTime              @default(now())
+
+  @@index(fields: [slug])
 }
 
 model Product {

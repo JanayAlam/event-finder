@@ -53,7 +53,7 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
       className={`relative inline-block w-full ${className}`}
     >
       <div
-        className={`flex items-center relative rounded-md border border-gray-300 bg-white hover:border-blue-400 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all ${sizeClasses[size]}`}
+        className={`flex items-center relative rounded-md border border-gray-300 bg-white hover:border-primary focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all ${sizeClasses[size]}`}
       >
         <Controller
           name="searchTerm"
@@ -73,7 +73,7 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="p-1 text-gray-400 hover:text-gray-600 focus:outline-none"
+              className="p-1 text-gray-400 hover:text-warning focus:outline-none"
               aria-label="Clear search"
             >
               <CloseOutlined style={{ height: 16, width: 16 }} />
@@ -82,7 +82,7 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
 
           <button
             type="submit"
-            className="p-1 text-gray-400 hover:text-blue-500 focus:outline-none"
+            className="p-1 text-gray-400 hover:text-primary focus:outline-none"
             aria-label="Search"
           >
             <SearchOutlined style={{ height: 16, width: 16 }} />

@@ -84,6 +84,7 @@ productCategoryRouter.delete(
   deleteProductCategoryHandler
 );
 
+// Get product category's available parents
 productCategoryRouter.get(
   "/:productCategoryId/available-parents",
   inputValidator(null, ProductCategoryGetDTOParamSchema),

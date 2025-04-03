@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import {
-  ProductCategorySelectListParam,
-  TProductCategoryGetAllParam,
-  TProductCategoryGetAllQuery,
-  TProductCategoryGetParam
+  ProductCategoryGetAllParam,
+  ProductCategoryGetAllQuery,
+  ProductCategoryGetParam,
+  ProductCategorySelectListItemResponse,
+  ProductCategorySelectListParam
 } from "../../../../types/product-category";
 import ApiError from "../../../../utils/api-error";
 
 type GetAllProductCategoryRequest = Request<
-  TProductCategoryGetAllParam,
+  ProductCategoryGetAllParam,
   any,
   any,
-  TProductCategoryGetAllQuery
+  ProductCategoryGetAllQuery
 >;
 
 export const getAllProductCategoryHandler = async (
@@ -45,7 +46,7 @@ export const getAllProductCategoryHandler = async (
 };
 
 export const getProductCategoryHandler = async (
-  req: Request<TProductCategoryGetParam, any, any, any>,
+  req: Request<ProductCategoryGetParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
@@ -70,7 +71,7 @@ export const getProductCategoryHandler = async (
 };
 
 export const getAvailableParentsHandler = async (
-  req: Request<TProductCategoryGetParam, any, any, any>,
+  req: Request<ProductCategoryGetParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
@@ -94,17 +95,27 @@ export const getAvailableParentsHandler = async (
       return;
     }
 
-    const availableParents = await prisma.productCategory.findMany({
-      where: {
-        id: {
-          notIn: [
-            productCategoryId,
-            ...existingProductCategory.childCategories.map((child) => child.id)
-          ]
+    const availableParents: ProductCategorySelectListItemResponse[] =
+      await prisma.productCategory.findMany({
+        where: {
+          id: {
+            notIn: [
+              productCategoryId,
+              ...existingProductCategory.childCategories.map(
+                (child) => child.id
+              )
+            ]
+          },
+          patentCategoryId: null
         },
-        patentCategoryId: null
-      }
-    });
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          updatedAt: true,
+          createdAt: true
+        }
+      });
 
     res.status(200).json(availableParents);
   } catch (error) {
@@ -120,16 +131,17 @@ export const getProductCategorySelectListHandler = async (
   try {
     const { outletId } = req.params;
 
-    const categories = await prisma.productCategory.findMany({
-      where: { outletId },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        updatedAt: true,
-        createdAt: true
-      }
-    });
+    const categories: ProductCategorySelectListItemResponse[] =
+      await prisma.productCategory.findMany({
+        where: { outletId },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          updatedAt: true,
+          createdAt: true
+        }
+      });
 
     res.status(200).json(categories);
   } catch (err) {

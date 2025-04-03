@@ -1,18 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
-import { TProductBrandGetParam } from "../../../../types/product-brand/product-brand-types";
+import {
+  ProductBrandGetAllParam,
+  ProductBrandGetParam,
+  ProductBrandSelectListItemResponse,
+  ProductBrandSelectListParam
+} from "../../../../types/product-brand";
 import ApiError from "../../../../utils/api-error";
 
 export const getProductBrandHandler = async (
-  req: Request<TProductBrandGetParam, any, any, any>,
+  req: Request<ProductBrandGetParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
-  const { productBrandId } = req.params;
+  const { outletId, productBrandId } = req.params;
 
   try {
     const productBrand = await prisma.productBrand.findUnique({
-      where: { id: productBrandId }
+      where: { id: productBrandId, outletId }
     });
 
     if (!productBrand) {
@@ -26,13 +31,44 @@ export const getProductBrandHandler = async (
 };
 
 export const getAllProductBrandsHandler = async (
-  req: Request,
+  req: Request<ProductBrandGetAllParam, any, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { outletId } = req.params;
+
+  try {
+    const productBrands = await prisma.productBrand.findMany({
+      where: { outletId }
+    });
+
+    res.status(200).json(productBrands);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getProductBrandSelectListHandler = async (
+  req: Request<ProductBrandSelectListParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const productBrands = await prisma.productBrand.findMany();
-    res.status(200).json(productBrands);
+    const { outletId } = req.params;
+
+    const brands: ProductBrandSelectListItemResponse[] =
+      await prisma.productBrand.findMany({
+        where: { outletId },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          updatedAt: true,
+          createdAt: true
+        }
+      });
+
+    res.status(200).json(brands);
   } catch (err) {
     next(err);
   }

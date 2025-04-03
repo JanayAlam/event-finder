@@ -11,35 +11,35 @@ import {
   ProductCategoryUpdateDTOSchema
 } from "../../validationSchemas/product-category";
 
-export type TProductCategoryCreateRequest = z.infer<
+export type ProductCategoryCreateRequest = z.infer<
   typeof ProductCategoryCreateDTOSchema
 >;
 
-export type TProductCategoryCreateParam = z.infer<
+export type ProductCategoryCreateParam = z.infer<
   typeof ProductCategoryCreateDTOParamSchema
 >;
 
-export type TProductCategoryUpdateRequest = z.infer<
+export type ProductCategoryUpdateRequest = z.infer<
   typeof ProductCategoryUpdateDTOSchema
 >;
 
-export type TProductCategoryGetAllParam = z.infer<
+export type ProductCategoryGetAllParam = z.infer<
   typeof ProductCategoryGetAllDTOParamDTOSchema
 >;
 
-export type TProductCategoryGetParam = z.infer<
+export type ProductCategoryGetParam = z.infer<
   typeof ProductCategoryGetDTOParamSchema
 >;
 
-export type TProductCategoryGetAllQuery = z.infer<
+export type ProductCategoryGetAllQuery = z.infer<
   typeof ProductCategoryGetAllQuerySchema
 >;
 
-export type TProductCategoryUpdateParam = z.infer<
+export type ProductCategoryUpdateParam = z.infer<
   typeof ProductCategoryUpdateDTOParamSchema
 >;
 
-export type TProductCategoryDeleteParam = z.infer<
+export type ProductCategoryDeleteParam = z.infer<
   typeof ProductCategoryDeleteDTOParamSchema
 >;
 

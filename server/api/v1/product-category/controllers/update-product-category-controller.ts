@@ -5,23 +5,23 @@ import {
   uploadFileToS3
 } from "../../../../services/amazonS3";
 import {
-  TProductCategoryUpdateParam,
-  TProductCategoryUpdateRequest
+  ProductCategoryUpdateParam,
+  ProductCategoryUpdateRequest
 } from "../../../../types/product-category";
 import ApiError from "../../../../utils/api-error";
 import { getBannerPhotoKey, getCoverPhotoKey, getIconKey } from "../utils";
 
 export const updateProductCategoryHandler = async (
   req: Request<
-    TProductCategoryUpdateParam,
+    ProductCategoryUpdateParam,
     any,
-    TProductCategoryUpdateRequest,
+    ProductCategoryUpdateRequest,
     any
   >,
   res: Response,
   next: NextFunction
 ) => {
-  const { productCategoryId } = req.params;
+  const { outletId, productCategoryId } = req.params;
   const {
     title,
     subtitle,
@@ -32,15 +32,19 @@ export const updateProductCategoryHandler = async (
     categoryType
   } = req.body;
   try {
+    if (req.user?.outlet?.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
+    }
+
     const existingProductCategory = await prisma.productCategory.findUnique({
-      where: { id: productCategoryId }
+      where: { id: productCategoryId, outletId }
     });
 
     if (!existingProductCategory) {
       throw new ApiError(404, "Product category not found");
     }
 
-    const data: TProductCategoryUpdateRequest = {
+    const data: ProductCategoryUpdateRequest = {
       title,
       subtitle,
       metaTitle,
@@ -58,7 +62,7 @@ export const updateProductCategoryHandler = async (
       }
 
       const parentProductCategory = await prisma.productCategory.findUnique({
-        where: { id: parentCategoryId, parentCategory: null }
+        where: { id: parentCategoryId, outletId, parentCategory: null }
       });
 
       if (!parentProductCategory) {
@@ -123,7 +127,7 @@ export const updateProductCategoryHandler = async (
     }
 
     const productCategory = await prisma.productCategory.update({
-      where: { id: existingProductCategory.id },
+      where: { id: existingProductCategory.id, outletId },
       data: {
         ...data,
         bannerPhoto: bannerPhotoKey || existingProductCategory.bannerPhoto,

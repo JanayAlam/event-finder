@@ -17,16 +17,20 @@ export const ProductCategoryCreateDTOSchema = z
   })
   .strip();
 
-export const ProductCategoryCreateDTOParamSchema = z.object({
-  outletId: z.string().trim()
-});
+export const ProductCategoryCreateDTOParamSchema = z
+  .object({
+    outletId: z.string().trim()
+  })
+  .strip();
 
 export const ProductCategoryUpdateDTOSchema =
   ProductCategoryCreateDTOSchema.partial().strip();
 
-export const ProductCategoryGetAllDTOParamDTOSchema = z.object({
-  outletId: z.string().trim()
-});
+export const ProductCategoryGetAllDTOParamDTOSchema = z
+  .object({
+    outletId: z.string().trim()
+  })
+  .strip();
 
 export const ProductCategoryGetDTOParamSchema = ProductCategoryIdDTOSchema;
 
@@ -45,6 +49,8 @@ export const ProductCategoryUpdateDTOParamSchema = ProductCategoryIdDTOSchema;
 
 export const ProductCategoryDeleteDTOParamSchema = ProductCategoryIdDTOSchema;
 
-export const ProductCategorySelectListDTOParamSchema = z.object({
-  outletId: z.string().trim()
-});
+export const ProductCategorySelectListDTOParamSchema = z
+  .object({
+    outletId: z.string().trim()
+  })
+  .strip();

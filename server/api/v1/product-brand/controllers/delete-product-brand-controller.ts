@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import { removeFilesFromS3 } from "../../../../services/amazonS3";
-import { TProductBrandDeleteParam } from "../../../../types/product-brand/product-brand-types";
+import { ProductBrandDeleteParam } from "../../../../types/product-brand";
 import ApiError from "../../../../utils/api-error";
 
 export const deleteProductBrandHandler = async (
-  req: Request<TProductBrandDeleteParam, any, any, any>,
+  req: Request<ProductBrandDeleteParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
-  const { productBrandId } = req.params;
+  const { outletId, productBrandId } = req.params;
 
   try {
+    if (req.user?.outlet?.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
+    }
+
     const productBrand = await prisma.productBrand.findUnique({
-      where: { id: productBrandId }
+      where: { id: productBrandId, outletId }
     });
 
     if (!productBrand) {
@@ -21,7 +25,7 @@ export const deleteProductBrandHandler = async (
     }
 
     await prisma.productBrand.delete({
-      where: { id: productBrandId }
+      where: { id: productBrandId, outletId }
     });
 
     res.status(204).send();
@@ -31,15 +35,19 @@ export const deleteProductBrandHandler = async (
 };
 
 export const removeProductBrandPhotoHandler = async (
-  req: Request<TProductBrandDeleteParam, any, any, any>,
+  req: Request<ProductBrandDeleteParam, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {
-  const { productBrandId } = req.params;
+  const { outletId, productBrandId } = req.params;
 
   try {
+    if (req.user?.outlet?.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
+    }
+
     const existingProductBrand = await prisma.productBrand.findUnique({
-      where: { id: productBrandId }
+      where: { id: productBrandId, outletId }
     });
 
     if (!existingProductBrand) {
@@ -54,7 +62,7 @@ export const removeProductBrandPhotoHandler = async (
     await removeFilesFromS3(existingProductBrand.brandPhoto);
 
     const productBrand = await prisma.productBrand.update({
-      where: { id: productBrandId },
+      where: { id: productBrandId, outletId },
       data: {
         brandPhoto: null
       }

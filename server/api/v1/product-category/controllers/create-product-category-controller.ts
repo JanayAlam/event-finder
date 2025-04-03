@@ -2,16 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import { uploadFileToS3 } from "../../../../services/amazonS3";
 import {
-  TProductCategoryCreateParam,
-  TProductCategoryCreateRequest
+  ProductCategoryCreateParam,
+  ProductCategoryCreateRequest
 } from "../../../../types/product-category";
 import ApiError from "../../../../utils/api-error";
 import { getBannerPhotoKey, getCoverPhotoKey, getIconKey } from "../utils";
 
 type CreateProductCategoryRequest = Request<
-  TProductCategoryCreateParam,
+  ProductCategoryCreateParam,
   any,
-  TProductCategoryCreateRequest,
+  ProductCategoryCreateRequest,
   any
 >;
 
@@ -32,15 +32,11 @@ export const createProductCategoryHandler = async (
   } = req.body;
 
   try {
-    if (!req.user?.outlet) {
-      throw new ApiError(401, "Unauthenticated");
-    }
-
-    if (req.user.outlet.id !== outletId) {
+    if (req.user?.outlet?.id !== outletId) {
       throw new ApiError(403, "Forbidden");
     }
 
-    const data: TProductCategoryCreateRequest = {
+    const data: ProductCategoryCreateRequest = {
       title,
       subtitle,
       metaTitle,

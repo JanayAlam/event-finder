@@ -7,23 +7,27 @@ import {
 import { getFormattedCurrentDateTime } from "../../../../services/date";
 import { PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME } from "../../../../settings/constants";
 import {
-  TProductBrandGetParam,
-  TProductBrandUpdateRequest
-} from "../../../../types/product-brand/product-brand-types";
+  ProductBrandGetParam,
+  ProductBrandUpdateRequest
+} from "../../../../types/product-brand";
 import ApiError from "../../../../utils/api-error";
 
 export const updateProductBrandHandler = async (
-  req: Request<TProductBrandGetParam, any, TProductBrandUpdateRequest, any>,
+  req: Request<ProductBrandGetParam, any, ProductBrandUpdateRequest, any>,
   res: Response,
   next: NextFunction
 ) => {
-  const { productBrandId } = req.params;
+  const { outletId, productBrandId } = req.params;
   const { name, description, metaDescription, metaTitle, slug } = req.body;
   const file = req.file;
 
   try {
+    if (req.user?.outlet?.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
+    }
+
     const existingProductBrand = await prisma.productBrand.findUnique({
-      where: { id: productBrandId }
+      where: { id: productBrandId, outletId }
     });
 
     if (!existingProductBrand) {
@@ -49,7 +53,7 @@ export const updateProductBrandHandler = async (
     }
 
     const productBrand = await prisma.productBrand.update({
-      where: { id: productBrandId },
+      where: { id: productBrandId, outletId },
       data: {
         name,
         description,

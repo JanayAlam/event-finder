@@ -4,9 +4,11 @@ import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import { uploadImages } from "../../../middlewares/multer-config";
 import {
+  ProductBrandCreateDTOParamSchema,
   ProductBrandCreateDTOSchema,
   ProductBrandDeleteDTOParamSchema,
   ProductBrandGetDTOParamSchema,
+  ProductBrandSelectListDTOParamSchema,
   ProductBrandUpdateDTOSchema
 } from "../../../validationSchemas/product-brand";
 import { createProductBrandHandler } from "./controllers/create-product-brand-controller";
@@ -16,17 +18,18 @@ import {
 } from "./controllers/delete-product-brand-controller";
 import {
   getAllProductBrandsHandler,
-  getProductBrandHandler
+  getProductBrandHandler,
+  getProductBrandSelectListHandler
 } from "./controllers/get-product-brand-controller";
 import { updateProductBrandHandler } from "./controllers/update-product-brand-controller";
 
-const productBrandRouter = Router();
+const productBrandRouter = Router({ mergeParams: true });
 
 // Create product brand
 productBrandRouter.post(
   "/",
   uploadImages.single("brandPhoto"),
-  inputValidator(ProductBrandCreateDTOSchema),
+  inputValidator(ProductBrandCreateDTOSchema, ProductBrandCreateDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   createProductBrandHandler
 );
@@ -64,6 +67,13 @@ productBrandRouter.delete(
   inputValidator(null, ProductBrandDeleteDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   removeProductBrandPhotoHandler
+);
+
+// Get product category select list
+productBrandRouter.get(
+  "/select/list",
+  inputValidator(null, ProductBrandSelectListDTOParamSchema),
+  getProductBrandSelectListHandler
 );
 
 export default productBrandRouter;

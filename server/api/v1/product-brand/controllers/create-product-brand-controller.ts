@@ -3,25 +3,24 @@ import { prisma } from "../../../../db";
 import { uploadFileToS3 } from "../../../../services/amazonS3";
 import { getFormattedCurrentDateTime } from "../../../../services/date";
 import { PRODUCT_BRAND_PHOTO_UPLOAD_FOLDER_NAME } from "../../../../settings/constants";
-import { TProductBrandCreateRequest } from "../../../../types/product-brand/product-brand-types";
+import {
+  ProductBrandCreateParam,
+  ProductBrandCreateRequest
+} from "../../../../types/product-brand";
 import ApiError from "../../../../utils/api-error";
 
 export const createProductBrandHandler = async (
-  req: Request<any, any, TProductBrandCreateRequest, any>,
+  req: Request<ProductBrandCreateParam, any, ProductBrandCreateRequest, any>,
   res: Response,
   next: NextFunction
 ) => {
+  const { outletId } = req.params;
   const { name, description, metaTitle, metaDescription, slug } = req.body;
   const brandPhoto = req.file;
 
   try {
-    const outlet = await prisma.outlet.findUnique({
-      where: { outletAdminId: req.user?.id || "" },
-      select: { id: true }
-    });
-
-    if (!outlet) {
-      throw new ApiError(401, "Unauthenticated");
+    if (req.user?.outlet?.id !== outletId) {
+      throw new ApiError(403, "Forbidden");
     }
 
     let productBrandPhotoKey: string | undefined;
@@ -47,7 +46,7 @@ export const createProductBrandHandler = async (
         metaTitle,
         metaDescription,
         slug,
-        outlet: { connect: { id: outlet.id } }
+        outlet: { connect: { id: outletId } }
       }
     });
 

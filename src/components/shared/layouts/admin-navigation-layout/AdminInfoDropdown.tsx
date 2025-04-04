@@ -3,6 +3,7 @@
 import { logoutApi } from "@/api/auth";
 import { CommonApiError } from "@/app/_types/common/error";
 import { useAuthStore } from "@/store/auth-store";
+import { getUIAvatar } from "@/utils/avatars";
 import { getAWSLinkFromKey } from "@/utils/aws";
 import { handlePrivateApiError } from "@/utils/error-handlers";
 import {
@@ -56,17 +57,20 @@ const AdminInfoDropdown: React.FC = () => {
       }}
     >
       <div className="h-[60px] px-3 cursor-pointer flex gap-2 items-center hover:bg-gray-100">
-        {user.profilePhoto ? (
-          <Avatar
-            size="large"
-            src={
-              <img
-                src={getAWSLinkFromKey(user.profilePhoto) || undefined}
-                alt="User profile photo"
-              />
-            }
-          />
-        ) : null}
+        <Avatar
+          size="large"
+          src={
+            <img
+              src={
+                user.profilePhoto
+                  ? getAWSLinkFromKey(user.profilePhoto) || undefined
+                  : getUIAvatar(user.firstName || user.lastName || user.email)
+              }
+              alt="User profile photo"
+            />
+          }
+        />
+
         <div className="hidden md:flex flex-col">
           <p className="font-medium text-sm max-w-[180px] truncate">
             {user.lastName || user.firstName || "Unnamed User"}

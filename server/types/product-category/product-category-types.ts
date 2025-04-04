@@ -1,3 +1,4 @@
+import { ProductCategory } from "@prisma/client";
 import { z } from "zod";
 import {
   ProductCategoryCreateDTOParamSchema,
@@ -46,6 +47,15 @@ export type ProductCategoryDeleteParam = z.infer<
 export type ProductCategorySelectListParam = z.infer<
   typeof ProductCategorySelectListDTOParamSchema
 >;
+
+export interface GetAllProductCategoryItemResponse extends ProductCategory {
+  parentCategory?: {
+    id: string;
+    title: string;
+    slug: string;
+  } | null;
+  childCategories?: ProductCategory[] | null;
+}
 
 export interface ProductCategorySelectListItemResponse {
   id: string;

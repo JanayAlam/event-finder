@@ -1,7 +1,7 @@
 "use client";
 
 import { PRODUCT_ITEMS_ROUTE } from "@/app/_routes/outlet-admin-routes";
-import Button from "@/components/shared/molecules/Button";
+import Button from "@/components/shared/molecules/button";
 import Card from "@/components/shared/molecules/Card";
 import InputFieldWithLabel from "@/components/shared/molecules/inputs/InputFieldWithLabel";
 import TextAreaWithLabel from "@/components/shared/molecules/inputs/TextAreaFieldWithLabel";

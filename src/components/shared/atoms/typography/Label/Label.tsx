@@ -14,6 +14,7 @@ interface LabelProps {
   level?: LabelLevel;
   children: React.ReactNode;
   textAlign?: TextAlign;
+  fontWeight?: "bold" | "semibold" | "medium" | "normal";
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLLabelElement>) => void;
 }
@@ -47,13 +48,14 @@ const labelFontWeight = ["font-semibold", "font-medium", "font-normal"]; // 600,
 const Label: React.FC<LabelProps> = ({
   level = 1,
   children,
+  fontWeight,
   textAlign = "left",
   className = "",
   onClick
 }) => {
   return (
     <label
-      className={`${labelMobileFontSize[level - 1]} ${labelMobileLineHeight[level - 1]} ${labelFontWeight[level - 1]} md:${labelDesktopFontSize[level - 1]} md:${labelDesktopLineHeight[level - 1]} text-${textAlign} text-[#3F4451] ${className}`}
+      className={`${labelMobileFontSize[level - 1]} ${labelMobileLineHeight[level - 1]} ${fontWeight ? "font-" + fontWeight : labelFontWeight[level - 1]} md:${labelDesktopFontSize[level - 1]} md:${labelDesktopLineHeight[level - 1]} text-${textAlign} text-[#3F4451] ${className}`}
       onClick={onClick}
     >
       {children}

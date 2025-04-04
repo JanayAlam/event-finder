@@ -1,18 +1,28 @@
 "use client";
 
-import Button from "@/components/shared/molecules/Button";
+import Button from "@/components/shared/molecules/button";
 import Card from "@/components/shared/molecules/Card";
 import PageHeader from "@/components/shared/molecules/PageHeader";
 import SearchInputBox from "@/components/shared/molecules/SearchInputBox";
 import ProductCategoryList from "@/components/ui/lists/admin/ProductCategoryList";
-import CreateEditProductCategoryModal from "@/components/ui/modals/create-edit-product-category-modal/CreateEditProductCategoryModal";
+import ProductCategoryFormModal from "@/components/ui/modals/product-category-form-modal";
 import useBreakpoint from "@/hooks/general/useBreakpoints";
 import useModal from "@/hooks/general/useModal";
 import { PlusOutlined } from "@ant-design/icons";
+import { ProductCategory } from "@prisma/client";
+import { useState } from "react";
 
 export default function Categories() {
   const { upSm } = useBreakpoint();
   const { isOpen, openModalHandler, closeModalHandler } = useModal();
+
+  const [selectedProductCategory, setSelectedProductCategory] =
+    useState<ProductCategory>();
+
+  const closeModal = () => {
+    setSelectedProductCategory(undefined);
+    closeModalHandler();
+  };
 
   return (
     <>
@@ -36,12 +46,18 @@ export default function Categories() {
           </div>
         </Card>
 
-        <ProductCategoryList />
+        <ProductCategoryList
+          openEditModalHandler={(productCategory) => {
+            setSelectedProductCategory(productCategory);
+            openModalHandler();
+          }}
+        />
       </div>
 
-      <CreateEditProductCategoryModal
+      <ProductCategoryFormModal
         isOpen={isOpen}
-        closeHandler={closeModalHandler}
+        closeHandler={closeModal}
+        category={selectedProductCategory}
       />
     </>
   );

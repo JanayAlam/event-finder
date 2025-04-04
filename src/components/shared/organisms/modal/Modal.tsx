@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import Title from "../../atoms/typography/Title";
-import Button from "../../molecules/Button";
+import Button from "../../molecules/button";
 
 interface ModalFooterProps {
   okText?: string;
   okHandler?: () => void;
+  isOkLoading?: boolean;
   cancelText?: string;
   cancelHandler: () => void;
 }
@@ -24,13 +25,26 @@ interface ModalProps extends ModalFooterProps {
 
 const getFooter = (
   footer: React.ReactNode | undefined,
-  { okText, okHandler, cancelText, cancelHandler }: Partial<ModalFooterProps>
+  {
+    okText,
+    okHandler,
+    cancelText,
+    cancelHandler,
+    isOkLoading
+  }: Partial<ModalFooterProps>
 ) => {
   if (footer === undefined) {
     return (
       <div className="flex gap-2 items-center justify-end">
-        <Button onClick={cancelHandler}>{cancelText ?? "Cancel"}</Button>
-        <Button onClick={okHandler} colorType="primary">
+        <Button onClick={cancelHandler} type="button">
+          {cancelText ?? "Cancel"}
+        </Button>
+        <Button
+          onClick={okHandler}
+          colorType="primary"
+          type="submit"
+          isLoading={isOkLoading}
+        >
           {okText ?? "Ok"}
         </Button>
       </div>
@@ -46,6 +60,7 @@ const Modal: React.FC<ModalProps> = ({
   footer,
   width = 520,
   okText,
+  isOkLoading,
   okHandler,
   cancelText,
   cancelHandler,
@@ -144,7 +159,8 @@ const Modal: React.FC<ModalProps> = ({
               okText,
               okHandler,
               cancelText,
-              cancelHandler
+              cancelHandler,
+              isOkLoading
             })}
           </div>
         )}

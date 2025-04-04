@@ -21,7 +21,8 @@ interface InputFieldWithLabelProps<TFieldValues extends FieldValues> {
   >;
   error?: FieldError;
   className?: string;
-  disabled?: boolean;
+  isDisabled?: boolean;
+  isRequired?: boolean;
 }
 
 function InputFieldWithLabel<TFieldValues extends FieldValues>({
@@ -33,7 +34,8 @@ function InputFieldWithLabel<TFieldValues extends FieldValues>({
   rules,
   error,
   className = "",
-  disabled = false
+  isDisabled = false,
+  isRequired = false
 }: InputFieldWithLabelProps<TFieldValues>) {
   return (
     <div className={`flex flex-col w-full ${className}`}>
@@ -41,7 +43,7 @@ function InputFieldWithLabel<TFieldValues extends FieldValues>({
         <Label level={2} className="mb-2">
           {label}
         </Label>
-        {rules?.required && <Paragraph className="text-error">*</Paragraph>}
+        {isRequired && <Paragraph className="text-error">*</Paragraph>}
       </div>
       <Controller
         name={name}
@@ -53,15 +55,15 @@ function InputFieldWithLabel<TFieldValues extends FieldValues>({
             type={type}
             placeholder={placeholder}
             className={`w-full rounded-md border border-gray-300 px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${error ? "focus:border-error focus:ring-error" : ""}`}
-            disabled={disabled}
+            disabled={isDisabled}
           />
         )}
       />
-      {error && (
+      {error ? (
         <Paragraph level={4} className="text-error">
           {error.message}
         </Paragraph>
-      )}
+      ) : null}
     </div>
   );
 }

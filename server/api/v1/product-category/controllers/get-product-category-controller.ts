@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../../../db";
 import {
+  GetAllProductCategoryItemResponse,
   ProductCategoryGetAllParam,
   ProductCategoryGetAllQuery,
   ProductCategoryGetParam,
@@ -32,12 +33,20 @@ export const getAllProductCategoryHandler = async (
         }
       : { outletId };
 
-    const productCategories = await prisma.productCategory.findMany({
-      where: query,
-      include: {
-        childCategories: !!shouldIncludeChildProductCategories
-      }
-    });
+    const productCategories: GetAllProductCategoryItemResponse[] =
+      await prisma.productCategory.findMany({
+        where: query,
+        include: {
+          parentCategory: {
+            select: {
+              id: true,
+              title: true,
+              slug: true
+            }
+          },
+          childCategories: !!shouldIncludeChildProductCategories
+        }
+      });
 
     res.status(200).json(productCategories);
   } catch (err) {

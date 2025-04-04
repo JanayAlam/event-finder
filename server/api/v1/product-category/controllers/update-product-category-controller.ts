@@ -44,7 +44,24 @@ export const updateProductCategoryHandler = async (
       throw new ApiError(404, "Product category not found");
     }
 
-    const data: ProductCategoryUpdateRequest = {
+    if (slug) {
+      const existingSlugProductCategoryWithSlug =
+        await prisma.productCategory.findFirst({
+          where: {
+            slug,
+            outletId,
+            id: { not: productCategoryId }
+          }
+        });
+
+      if (existingSlugProductCategoryWithSlug) {
+        throw new ApiError(400, undefined, {
+          slug: "Category with this slug already exists"
+        });
+      }
+    }
+
+    const data: ProductCategoryUpdateRequest & { parentCategory?: any } = {
       title,
       subtitle,
       metaTitle,
@@ -71,7 +88,9 @@ export const updateProductCategoryHandler = async (
         });
       }
 
-      data.parentCategoryId = parentProductCategory.id;
+      data.parentCategory = {
+        connect: { id: parentProductCategory.id }
+      };
     }
 
     let bannerPhotoKey: string | undefined;
@@ -133,9 +152,6 @@ export const updateProductCategoryHandler = async (
         bannerPhoto: bannerPhotoKey || existingProductCategory.bannerPhoto,
         coverPhoto: coverPhotoKey || existingProductCategory.coverPhoto,
         icon: iconKey || existingProductCategory.icon
-      },
-      include: {
-        childCategories: true
       }
     });
 

@@ -27,7 +27,9 @@ interface SelectWithLabelProps<TFieldValues extends FieldValues> {
   error?: FieldError;
   className?: string;
   isDisabled?: boolean;
+  isRequired?: boolean;
   defaultValue?: string | number;
+  allowClear?: boolean;
 }
 
 function SelectFieldWithLabel<TFieldValues extends FieldValues>({
@@ -39,8 +41,10 @@ function SelectFieldWithLabel<TFieldValues extends FieldValues>({
   rules,
   error,
   className = "",
+  defaultValue = "",
   isDisabled = false,
-  defaultValue = ""
+  isRequired = false,
+  allowClear = false
 }: SelectWithLabelProps<TFieldValues>) {
   return (
     <div className={`flex flex-col w-full ${className}`}>
@@ -48,9 +52,7 @@ function SelectFieldWithLabel<TFieldValues extends FieldValues>({
         <Label level={2} className="mb-2">
           {label}
         </Label>
-        {rules?.required ? (
-          <Paragraph className="text-error">*</Paragraph>
-        ) : null}
+        {isRequired ? <Paragraph className="text-error">*</Paragraph> : null}
       </div>
       <div className="relative">
         <Controller
@@ -83,8 +85,7 @@ function SelectFieldWithLabel<TFieldValues extends FieldValues>({
                 ))}
               </select>
 
-              {/* Clear button (X icon) */}
-              {field.value && (
+              {field.value && allowClear ? (
                 <button
                   type="button"
                   className="absolute inset-y-0 right-7 flex items-center pr-1 text-gray-500 hover:text-primary"
@@ -105,9 +106,8 @@ function SelectFieldWithLabel<TFieldValues extends FieldValues>({
                     />
                   </svg>
                 </button>
-              )}
+              ) : null}
 
-              {/* Dropdown icon */}
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

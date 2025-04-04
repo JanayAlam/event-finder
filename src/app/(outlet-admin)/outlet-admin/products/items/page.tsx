@@ -1,7 +1,7 @@
 "use client";
 
 import { ADD_PRODUCT_ROUTE } from "@/app/_routes/outlet-admin-routes";
-import Button from "@/components/shared/molecules/Button";
+import Button from "@/components/shared/molecules/button";
 import Card from "@/components/shared/molecules/Card";
 import PageHeader from "@/components/shared/molecules/PageHeader";
 import SearchInputBox from "@/components/shared/molecules/SearchInputBox";

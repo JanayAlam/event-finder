@@ -36,6 +36,20 @@ export const createProductCategoryHandler = async (
       throw new ApiError(403, "Forbidden");
     }
 
+    const existingCategory = await prisma.productCategory.findFirst({
+      where: {
+        outletId,
+        slug
+      },
+      select: { id: true }
+    });
+
+    if (existingCategory) {
+      throw new ApiError(400, "Category with this slug already exists", {
+        slug: "Category with this slug already exists"
+      });
+    }
+
     const data: ProductCategoryCreateRequest = {
       title,
       subtitle,

@@ -1,75 +1,80 @@
-import useProductCategorySelectList from "@/hooks/fetch/useProductCategorySelectList";
-import { MenuOutlined } from "@ant-design/icons";
+import { getAllProductCategoryApi } from "@/api/product-categories";
+import Label from "@/components/shared/atoms/typography/Label";
+import TagButton from "@/components/shared/buttons/tag-button";
+import { useAuthStore } from "@/store/auth-store";
+import { ProductCategory } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 import { Table, TableProps } from "antd";
-import Link from "next/link";
 import React from "react";
+import { GetAllProductCategoryItemResponse } from "../../../../../../server/types/product-category";
 
-interface DataType {
-  key: string;
-  id: string;
-  title: string;
-  subtitle: string;
-  parentCategory?: {
-    id: string;
-    title: string;
-  };
+interface ProductCategoryListProps {
+  openEditModalHandler: (productCategory: ProductCategory) => void;
 }
 
-interface ProductCategoryListProps {}
+const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
+  openEditModalHandler
+}) => {
+  const user = useAuthStore((state) => state.user);
 
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Category title",
-    dataIndex: "title",
-    key: "title",
-    render: (title: string) => <Link href={""}>{title}</Link>
-  },
-  {
-    title: "Parent category",
-    dataIndex: "parentCategory",
-    key: "parentCategory",
-    render: (parentCategory: any) =>
-      parentCategory?.title ? (
-        <Link href={""}>{parentCategory.title}</Link>
-      ) : (
-        "---"
+  const { data, isLoading } = useQuery<
+    GetAllProductCategoryItemResponse[] | undefined
+  >({
+    queryKey: ["productCategoryList"],
+    queryFn: async () => {
+      if (!user?.outlet?.id) return;
+
+      const { data } = await getAllProductCategoryApi(user.outlet.id);
+      return data;
+    },
+    placeholderData: (previousData) => previousData
+  });
+
+  const columns: TableProps<ProductCategory>["columns"] = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (title: string) => (
+        <Label level={2} fontWeight="bold">
+          {title}
+        </Label>
       )
-  },
-  {
-    title: "",
-    dataIndex: "",
-    key: "actions",
-    render: () => <MenuOutlined />
-  }
-];
-
-const data: DataType[] = [
-  {
-    key: "1",
-    id: "1",
-    title: "Category 1",
-    subtitle: "Subtitle 1",
-    parentCategory: {
-      id: "1",
-      title: "Parent 1"
+    },
+    {
+      title: "Parent Category",
+      dataIndex: "parentCategory",
+      key: "parentCategory",
+      render: (
+        parentCategory: GetAllProductCategoryItemResponse["parentCategory"]
+      ) => <Label level={2}>{parentCategory?.title || "---"}</Label>
+    },
+    {
+      title: "",
+      dataIndex: "",
+      key: "x",
+      width: 150,
+      render: (_, record) => (
+        <div className="flex gap-2">
+          <TagButton
+            colorType="edit"
+            onClick={() => {
+              openEditModalHandler(record);
+            }}
+            title="Edit"
+          />
+          <TagButton colorType="delete" onClick={() => {}} title="Delete" />
+        </div>
+      )
     }
-  },
-  {
-    key: "2",
-    id: "2",
-    title: "Category 2",
-    subtitle: "Subtitle 2"
-  }
-];
-
-const ProductCategoryList: React.FC<ProductCategoryListProps> = () => {
-  const { productCategorySelectOption } = useProductCategorySelectList();
+  ];
 
   return (
-    <Table<DataType>
+    <Table<GetAllProductCategoryItemResponse>
+      loading={isLoading}
       bordered
       columns={columns}
-      dataSource={data}
+      dataSource={data?.map((item) => ({ key: item.id, ...item }))}
       style={{ borderRadius: 6 }}
     />
   );

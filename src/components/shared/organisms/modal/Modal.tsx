@@ -8,6 +8,7 @@ interface ModalFooterProps {
   isOkLoading?: boolean;
   cancelText?: string;
   cancelHandler: () => void;
+  okButtonColorType?: "primary" | "secondary" | "error" | "default";
 }
 
 interface ModalProps extends ModalFooterProps {
@@ -30,7 +31,8 @@ const getFooter = (
     okHandler,
     cancelText,
     cancelHandler,
-    isOkLoading
+    isOkLoading,
+    okButtonColorType
   }: Partial<ModalFooterProps>
 ) => {
   if (footer === undefined) {
@@ -41,7 +43,7 @@ const getFooter = (
         </Button>
         <Button
           onClick={okHandler}
-          colorType="primary"
+          colorType={okButtonColorType || "primary"}
           type="submit"
           isLoading={isOkLoading}
         >
@@ -64,6 +66,7 @@ const Modal: React.FC<ModalProps> = ({
   okHandler,
   cancelText,
   cancelHandler,
+  okButtonColorType,
   maskClosable = true,
   centered = false,
   className = "",
@@ -157,10 +160,11 @@ const Modal: React.FC<ModalProps> = ({
           <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
             {getFooter(footer, {
               okText,
-              okHandler,
               cancelText,
-              cancelHandler,
-              isOkLoading
+              isOkLoading,
+              okButtonColorType,
+              okHandler,
+              cancelHandler
             })}
           </div>
         )}

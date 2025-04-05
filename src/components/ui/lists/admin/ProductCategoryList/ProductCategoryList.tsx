@@ -5,7 +5,9 @@ import {
 } from "@/api/product-categories";
 import { useConfirmModalContext } from "@/app/_contexts/confirm-modal-context/useConfirmModalContext";
 import Label from "@/components/shared/atoms/typography/Label";
+import Paragraph from "@/components/shared/atoms/typography/Paragraph";
 import TagButton from "@/components/shared/buttons/tag-button";
+import Card from "@/components/shared/molecules/Card";
 import { useAuthStore } from "@/store/auth-store";
 import { ProductCategory } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -195,13 +197,26 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
     }
   ];
 
+  const dataSource = filteredData?.map((item) => ({ key: item.id, ...item }));
+
+  if (!dataSource?.length) {
+    return (
+      <Card>
+        <div className="flex justify-center items-center h-full">
+          <Paragraph level={4}>No product category found</Paragraph>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Table<GetAllProductCategoryItemResponse>
       loading={isLoading}
       bordered
       columns={columns}
-      dataSource={filteredData?.map((item) => ({ key: item.id, ...item }))}
+      dataSource={dataSource}
       style={{ borderRadius: 6 }}
+      pagination={false}
     />
   );
 };

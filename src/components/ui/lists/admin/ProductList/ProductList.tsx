@@ -1,4 +1,5 @@
 import { getProductListApi, updateProductStatusApi } from "@/api/products";
+import Paragraph from "@/components/shared/atoms/typography/Paragraph";
 import { useAuthStore } from "@/store/auth-store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pagination, Spin } from "antd";
@@ -106,7 +107,7 @@ const ProductList: React.FC<ProductListProps> = () => {
   if (isError || !products.length) {
     return (
       <div className="flex justify-center items-center h-full">
-        <p>No products found</p>
+        <Paragraph level={4}>No product found</Paragraph>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { createContext } from "react";
 export interface IOpenConfirmModalParam {
   title: string;
   message?: string;
-  modalType: "default" | "error";
+  modalType: "default" | "error" | "warning";
   onConfirm: () => Promise<void> | void;
 }
 

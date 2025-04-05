@@ -1,12 +1,17 @@
-import { getAllProductCategoryApi } from "@/api/product-categories";
+import {
+  deleteProductCategoryApi,
+  getAllProductCategoryApi,
+  removeParentCategoryApi
+} from "@/api/product-categories";
 import { useConfirmModalContext } from "@/app/_contexts/confirm-modal-context/useConfirmModalContext";
 import Label from "@/components/shared/atoms/typography/Label";
 import TagButton from "@/components/shared/buttons/tag-button";
 import { useAuthStore } from "@/store/auth-store";
 import { ProductCategory } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Table, TableProps } from "antd";
 import React from "react";
+import toast from "react-hot-toast";
 import { GetAllProductCategoryItemResponse } from "../../../../../../server/types/product-category";
 
 interface ProductCategoryListProps {
@@ -18,6 +23,8 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
   openEditModalHandler,
   searchTerm = ""
 }) => {
+  const queryClient = useQueryClient();
+
   const user = useAuthStore((state) => state.user);
   const { openConfirmModal } = useConfirmModalContext();
 
@@ -31,6 +38,44 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
       return data;
     },
     placeholderData: (previousData) => previousData
+  });
+
+  const removeParentCategoryMutation = useMutation({
+    mutationFn: ({
+      outletId,
+      productId
+    }: {
+      outletId: string;
+      productId: string;
+    }) => removeParentCategoryApi(outletId, productId),
+    onSuccess: () => {
+      toast.success("Parent category is removed");
+      queryClient.invalidateQueries({
+        queryKey: ["productCategoryList"]
+      });
+    },
+    onError: () => {
+      toast.error("Error removing parent category");
+    }
+  });
+
+  const deleteProductCategoryMutation = useMutation({
+    mutationFn: ({
+      outletId,
+      productId
+    }: {
+      outletId: string;
+      productId: string;
+    }) => deleteProductCategoryApi(outletId, productId),
+    onSuccess: () => {
+      toast.success("Product category is removed");
+      queryClient.invalidateQueries({
+        queryKey: ["productCategoryList"]
+      });
+    },
+    onError: () => {
+      toast.error("Error deleting category");
+    }
   });
 
   const filteredData = React.useMemo(() => {
@@ -65,14 +110,30 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
       dataIndex: "parentCategory",
       key: "parentCategory",
       render: (
-        parentCategory: GetAllProductCategoryItemResponse["parentCategory"]
+        parentCategory: GetAllProductCategoryItemResponse["parentCategory"],
+        record
       ) =>
         parentCategory?.title ? (
           <div className="flex gap-2">
             <Label level={2}>{parentCategory.title}</Label>
             <TagButton
               hasNoPadding
-              onClick={() => {}}
+              onClick={() => {
+                openConfirmModal({
+                  title: "Remove parent category",
+                  message:
+                    "Are you sure you want to remove this category's parent?",
+                  modalType: "warning",
+                  onConfirm: async () => {
+                    if (!user?.outlet?.id) return;
+
+                    await removeParentCategoryMutation.mutateAsync({
+                      outletId: user.outlet.id,
+                      productId: record.id
+                    });
+                  }
+                });
+              }}
               colorType="warning"
               title={
                 <svg
@@ -114,11 +175,17 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
             colorType="delete"
             onClick={() => {
               openConfirmModal({
-                title: "Delete Product Category",
-                message:
-                  "Are you sure you want to delete this product category?",
+                title: "Delete product category",
+                message: "Are you sure you want to delete this category?",
                 modalType: "error",
-                onConfirm: async () => {}
+                onConfirm: async () => {
+                  if (!user?.outlet?.id) return;
+
+                  await deleteProductCategoryMutation.mutateAsync({
+                    outletId: user.outlet.id,
+                    productId: record.id
+                  });
+                }
               });
             }}
             title="Delete"

@@ -29,7 +29,7 @@ export const getAllProductCategoryHandler = async (
     const query = !!shouldIncludeChildProductCategories
       ? {
           outletId,
-          patentCategoryId: null
+          parentCategoryId: null
         }
       : { outletId };
 
@@ -115,7 +115,7 @@ export const getAvailableParentsHandler = async (
               )
             ]
           },
-          patentCategoryId: null
+          parentCategoryId: null
         },
         select: {
           id: true,

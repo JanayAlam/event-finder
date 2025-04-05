@@ -28,6 +28,24 @@ export const updateProductCategoryApi = (
   );
 };
 
+export const deleteProductCategoryApi = (
+  outletId: string,
+  productCategoryId: string
+) => {
+  return axiosInstance.delete<void>(
+    `/outlets/${outletId}/product-categories/${productCategoryId}`
+  );
+};
+
+export const removeParentCategoryApi = (
+  outletId: string,
+  productCategoryId: string
+) => {
+  return axiosInstance.delete<void>(
+    `/outlets/${outletId}/product-categories/${productCategoryId}/remove-parent`
+  );
+};
+
 export const getAllProductCategoryApi = (
   outletId: string,
   query?: ProductCategoryGetAllQuery

@@ -8,7 +8,7 @@ interface ModalFooterProps {
   isOkLoading?: boolean;
   cancelText?: string;
   cancelHandler: () => void;
-  okButtonColorType?: "primary" | "secondary" | "error" | "default";
+  okButtonColorType?: "primary" | "secondary" | "error" | "warning" | "default";
 }
 
 interface ModalProps extends ModalFooterProps {

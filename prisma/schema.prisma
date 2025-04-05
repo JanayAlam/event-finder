@@ -97,24 +97,25 @@ enum PRODUCT_CATEGORY_TYPE {
 }
 
 model ProductCategory {
-  id               String                @id @default(cuid())
-  parentCategory   ProductCategory?      @relation("ParentCategoryHistory", fields: [patentCategoryId], references: [id], onDelete: SetNull)
-  patentCategoryId String?
-  childCategories  ProductCategory[]     @relation("ParentCategoryHistory")
-  products         Product[]
-  title            String
-  subtitle         String?
-  metaTitle        String?
-  metaDescription  String?               @db.LongText
-  slug             String                @db.VarChar(150)
-  categoryType     PRODUCT_CATEGORY_TYPE @default(PHYSICAL)
-  bannerPhoto      String?
-  coverPhoto       String?
-  icon             String?
-  outlet           Outlet                @relation(fields: [outletId], references: [id])
-  outletId         String
-  updatedAt        DateTime              @updatedAt
-  createdAt        DateTime              @default(now())
+  id               String            @id @default(cuid())
+  parentCategory   ProductCategory?  @relation("ParentChild", fields: [parentCategoryId], references: [id], onDelete: SetNull)
+  parentCategoryId String?
+  childCategories  ProductCategory[] @relation("ParentChild")
+
+  products        Product[]
+  title           String
+  subtitle        String?
+  metaTitle       String?
+  metaDescription String?               @db.LongText
+  slug            String                @db.VarChar(150)
+  categoryType    PRODUCT_CATEGORY_TYPE @default(PHYSICAL)
+  bannerPhoto     String?
+  coverPhoto      String?
+  icon            String?
+  outlet          Outlet                @relation(fields: [outletId], references: [id])
+  outletId        String
+  updatedAt       DateTime              @updatedAt
+  createdAt       DateTime              @default(now())
 
   @@index(fields: [slug])
 }

@@ -15,7 +15,10 @@ import {
   ProductCategoryUpdateDTOSchema
 } from "../../../validationSchemas/product-category";
 import { createProductCategoryHandler } from "./controllers/create-product-category-controller";
-import { deleteProductCategoryHandler } from "./controllers/delete-product-category-controller";
+import {
+  deleteProductCategoryHandler,
+  removeParentCategoryHandler
+} from "./controllers/delete-product-category-controller";
 import {
   getAllProductCategoryHandler,
   getAvailableParentsHandler,
@@ -82,6 +85,14 @@ productCategoryRouter.delete(
   inputValidator(null, ProductCategoryDeleteDTOParamSchema),
   authenticator([USER_ROLE.OUTLET_ADMIN]),
   deleteProductCategoryHandler
+);
+
+// Remove parent category
+productCategoryRouter.delete(
+  "/:productCategoryId/remove-parent",
+  inputValidator(null, ProductCategoryDeleteDTOParamSchema),
+  authenticator([USER_ROLE.OUTLET_ADMIN]),
+  removeParentCategoryHandler
 );
 
 // Get product category's available parents

@@ -50,7 +50,7 @@ export const createProductCategoryHandler = async (
       });
     }
 
-    const data: ProductCategoryCreateRequest = {
+    const baseData = {
       title,
       subtitle,
       metaTitle,
@@ -95,39 +95,16 @@ export const createProductCategoryHandler = async (
       }
     }
 
-    if (parentCategoryId) {
-      const parentCategory = await prisma.productCategory.findUnique({
-        where: { id: parentCategoryId, parentCategory: null }
-      });
-
-      if (!parentCategory) {
-        throw new ApiError(404, "Parent category not found");
-      }
-
-      const productCategory = await prisma.productCategory.create({
-        data: {
-          ...data,
-          bannerPhoto: bannerPhotoKey,
-          coverPhoto: coverPhotoKey,
-          icon: iconKey,
-          outlet: { connect: { id: outletId } },
-          parentCategory: {
-            connect: { id: parentCategoryId }
-          }
-        }
-      });
-
-      res.status(201).json(productCategory);
-      return;
-    }
-
     const productCategory = await prisma.productCategory.create({
       data: {
-        ...data,
+        ...baseData,
         bannerPhoto: bannerPhotoKey,
         coverPhoto: coverPhotoKey,
         icon: iconKey,
-        outlet: { connect: { id: outletId } }
+        outlet: { connect: { id: outletId } },
+        ...(parentCategoryId
+          ? { parentCategory: { connect: { id: parentCategoryId } } }
+          : {})
       }
     });
 

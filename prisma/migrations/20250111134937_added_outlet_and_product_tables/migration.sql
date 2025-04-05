@@ -29,7 +29,7 @@ CREATE TABLE `ProductBrand` (
 -- CreateTable
 CREATE TABLE `ProductCategory` (
     `id` VARCHAR(191) NOT NULL,
-    `patentCategoryId` VARCHAR(191) NULL,
+    `parentCategoryId` VARCHAR(191) NULL,
     `updatedAt` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -73,7 +73,7 @@ CREATE TABLE `Product` (
 ALTER TABLE `ProductBrand` ADD CONSTRAINT `ProductBrand_outletId_fkey` FOREIGN KEY (`outletId`) REFERENCES `Outlet`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ProductCategory` ADD CONSTRAINT `ProductCategory_patentCategoryId_fkey` FOREIGN KEY (`patentCategoryId`) REFERENCES `ProductCategory`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `ProductCategory` ADD CONSTRAINT `ProductCategory_patentCategoryId_fkey` FOREIGN KEY (`parentCategoryId`) REFERENCES `ProductCategory`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ProductSizeAndPrice` ADD CONSTRAINT `ProductSizeAndPrice_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -57,7 +57,7 @@ const ProductCategoryFormModal: React.FC<
       slug: category?.slug || "",
       metaTitle: category?.metaTitle || "",
       metaDescription: category?.metaDescription || "",
-      parentCategoryId: category?.patentCategoryId || undefined,
+      parentCategoryId: category?.parentCategoryId || undefined,
       categoryType: category?.categoryType || "PHYSICAL"
     }
   });
@@ -226,6 +226,16 @@ const ProductCategoryFormModal: React.FC<
             />
 
             <InputFieldWithLabel
+              isRequired
+              control={control}
+              label="Slug"
+              name="slug"
+              type="text"
+              placeholder="e.g., smartphones-category"
+              error={errors.slug}
+            />
+
+            <InputFieldWithLabel
               control={control}
               label="Subtitle"
               name="subtitle"
@@ -244,16 +254,6 @@ const ProductCategoryFormModal: React.FC<
                 { label: "Physical", value: "PHYSICAL" },
                 { label: "Digital", value: "DIGITAL" }
               ]}
-            />
-
-            <InputFieldWithLabel
-              isRequired
-              control={control}
-              label="Slug"
-              name="slug"
-              type="text"
-              placeholder="e.g., smartphones-category"
-              error={errors.slug}
             />
 
             <InputFieldWithLabel

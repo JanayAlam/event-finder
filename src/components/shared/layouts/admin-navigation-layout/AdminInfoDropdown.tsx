@@ -1,11 +1,8 @@
 "use client";
 
-import { logoutApi } from "@/api/auth";
-import { CommonApiError } from "@/app/_types/common/error";
 import { useAuthStore } from "@/store/auth-store";
 import { getUIAvatar } from "@/utils/avatars";
 import { getAWSLinkFromKey } from "@/utils/aws";
-import { handlePrivateApiError } from "@/utils/error-handlers";
 import {
   DownOutlined,
   LogoutOutlined,
@@ -14,24 +11,12 @@ import {
 import { Avatar, Dropdown } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
-import toast from "react-hot-toast";
 
 const AdminInfoDropdown: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
-
   const router = useRouter();
 
-  const logout = async () => {
-    try {
-      await logoutApi();
-      setUser(null);
-      router.push("/admin/login");
-    } catch (err) {
-      const { data, error } = handlePrivateApiError(err as CommonApiError);
-      toast.error(data?.message || error || "Could not logout");
-    }
-  };
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   if (!user) return;
 
@@ -51,7 +36,7 @@ const AdminInfoDropdown: React.FC = () => {
             danger: true,
             icon: <LogoutOutlined />,
             label: "Logout",
-            onClick: logout
+            onClick: () => logout(router)
           }
         ]
       }}

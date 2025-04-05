@@ -2,45 +2,27 @@
 
 import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-
-interface SearchFormValues {
-  searchTerm: string;
-}
+import { Control, Controller } from "react-hook-form";
 
 interface SearchInputProps {
+  control: Control<any>;
+  searchTerm: string;
+  onClear: () => void;
   placeholder?: string;
   allowClear?: boolean;
-  onSearch: (value: string) => void;
   className?: string;
   size?: "small" | "medium" | "large";
-  defaultValue?: string;
 }
 
 const SearchInputBox: React.FC<SearchInputProps> = ({
+  control,
+  searchTerm,
+  onClear,
   placeholder = "Search...",
   allowClear = true,
-  onSearch,
   className = "",
-  size = "medium",
-  defaultValue = ""
+  size = "medium"
 }) => {
-  const { control, handleSubmit, setValue, watch } = useForm<SearchFormValues>({
-    defaultValues: {
-      searchTerm: defaultValue
-    }
-  });
-
-  const searchTerm = watch("searchTerm");
-
-  const handleClear = () => {
-    setValue("searchTerm", "");
-  };
-
-  const onSubmit = (data: SearchFormValues) => {
-    onSearch(data.searchTerm);
-  };
-
   const sizeClasses = {
     small: "h-8 text-sm",
     medium: "h-10 text-base",
@@ -48,10 +30,7 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className={`relative inline-block w-full ${className}`}
-    >
+    <div className={`relative inline-block w-full ${className}`}>
       <div
         className={`flex items-center relative rounded-md border border-gray-300 bg-white hover:border-primary focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all ${sizeClasses[size]}`}
       >
@@ -72,7 +51,7 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
           {allowClear && searchTerm && (
             <button
               type="button"
-              onClick={handleClear}
+              onClick={onClear}
               className="p-1 text-gray-400 hover:text-warning focus:outline-none"
               aria-label="Clear search"
             >
@@ -80,16 +59,12 @@ const SearchInputBox: React.FC<SearchInputProps> = ({
             </button>
           )}
 
-          <button
-            type="submit"
-            className="p-1 text-gray-400 hover:text-primary focus:outline-none"
-            aria-label="Search"
-          >
+          <div className="p-1 text-gray-400 pointer-events-none">
             <SearchOutlined style={{ height: 16, width: 16 }} />
-          </button>
+          </div>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

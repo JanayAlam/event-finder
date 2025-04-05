@@ -8,7 +8,7 @@ interface IErrorData<T> {
 
 export function handlePrivateApiError<T>(
   err: AxiosError<T>,
-  logoutAction?: () => void
+  logoutAction?: () => Promise<void>
 ): IErrorData<T> {
   if (err && err.response && err.response.status) {
     switch (err.response.status) {

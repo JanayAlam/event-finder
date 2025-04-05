@@ -15,6 +15,7 @@ const AdminLoginForm: React.FC = () => {
   const router = useRouter();
 
   const setUser = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.logout);
 
   const {
     register,
@@ -28,7 +29,10 @@ const AdminLoginForm: React.FC = () => {
 
   const formSubmitHandler = useCallback(
     async (loginFormData: TAdminLoginRequest) => {
-      const { user, error } = await adminLoginFormSubmitAction(loginFormData);
+      const { user, error } = await adminLoginFormSubmitAction(
+        loginFormData,
+        logout
+      );
       if (error) {
         toast.error(error.message);
         return;

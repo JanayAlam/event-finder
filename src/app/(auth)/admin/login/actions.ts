@@ -20,7 +20,8 @@ type AdminLoginFormSubmitActionResponse = Promise<{
 }>;
 
 export const adminLoginFormSubmitAction = async (
-  requestBody: TAdminLoginRequest
+  requestBody: TAdminLoginRequest,
+  logout: () => Promise<void>
 ): AdminLoginFormSubmitActionResponse => {
   try {
     const { data } = await adminLoginApi(requestBody);
@@ -53,7 +54,8 @@ export const adminLoginFormSubmitAction = async (
     };
   } catch (err) {
     const { data, error, status } = handlePrivateApiError(
-      err as CommonApiError
+      err as CommonApiError,
+      logout
     );
     return {
       error: {

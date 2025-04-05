@@ -11,13 +11,14 @@ import { GetAllProductCategoryItemResponse } from "../../../../../../server/type
 
 interface ProductCategoryListProps {
   openEditModalHandler: (productCategory: ProductCategory) => void;
+  searchTerm?: string;
 }
 
 const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
-  openEditModalHandler
+  openEditModalHandler,
+  searchTerm = ""
 }) => {
   const user = useAuthStore((state) => state.user);
-
   const { openConfirmModal } = useConfirmModalContext();
 
   const { data, isLoading } = useQuery<
@@ -26,12 +27,27 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
     queryKey: ["productCategoryList"],
     queryFn: async () => {
       if (!user?.outlet?.id) return;
-
       const { data } = await getAllProductCategoryApi(user.outlet.id);
       return data;
     },
     placeholderData: (previousData) => previousData
   });
+
+  const filteredData = React.useMemo(() => {
+    if (!searchTerm) return data;
+
+    return data?.filter((item) => {
+      const titleMatch = item.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const parentTitleMatch = item.parentCategory?.title
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      return titleMatch || parentTitleMatch;
+    });
+  }, [data, searchTerm]);
 
   const columns: TableProps<ProductCategory>["columns"] = [
     {
@@ -50,7 +66,35 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
       key: "parentCategory",
       render: (
         parentCategory: GetAllProductCategoryItemResponse["parentCategory"]
-      ) => <Label level={2}>{parentCategory?.title || "---"}</Label>
+      ) =>
+        parentCategory?.title ? (
+          <div className="flex gap-2">
+            <Label level={2}>{parentCategory.title}</Label>
+            <TagButton
+              hasNoPadding
+              onClick={() => {}}
+              colorType="warning"
+              title={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              }
+            />
+          </div>
+        ) : (
+          <Label level={2}>---</Label>
+        )
     },
     {
       title: "",
@@ -89,7 +133,7 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
       loading={isLoading}
       bordered
       columns={columns}
-      dataSource={data?.map((item) => ({ key: item.id, ...item }))}
+      dataSource={filteredData?.map((item) => ({ key: item.id, ...item }))}
       style={{ borderRadius: 6 }}
     />
   );

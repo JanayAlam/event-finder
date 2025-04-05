@@ -7,10 +7,13 @@ import PageHeader from "@/components/shared/molecules/PageHeader";
 import SearchInputBox from "@/components/shared/molecules/SearchInputBox";
 import ProductList from "@/components/ui/lists/admin/ProductList";
 import useBreakpoint from "@/hooks/general/useBreakpoints";
+import useSearch from "@/hooks/general/useSearch";
 import { PlusOutlined } from "@ant-design/icons";
 
 export default function Items() {
   const { upSm } = useBreakpoint();
+
+  const { control, searchTerm, debouncedSearchTerm, handleClear } = useSearch();
 
   return (
     <div className="flex flex-col gap-4 md:gap-7">
@@ -19,7 +22,9 @@ export default function Items() {
       <Card>
         <div className="flex justify-between items-center gap-3">
           <SearchInputBox
-            onSearch={() => {}}
+            control={control}
+            searchTerm={searchTerm}
+            onClear={handleClear}
             className="w-full md:max-w-[375px]"
             placeholder="Search products..."
           />

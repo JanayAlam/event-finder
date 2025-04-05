@@ -40,6 +40,7 @@ const ProductCategoryFormModal: React.FC<
   CreateEditProductCategoryModalProps
 > = ({ isOpen, closeHandler, category }) => {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   const queryClient = useQueryClient();
 
@@ -72,11 +73,7 @@ const ProductCategoryFormModal: React.FC<
     onSuccess: () => {
       toast.success("Category created successfully");
       queryClient.invalidateQueries({
-        queryKey: [
-          "productCategoryList",
-          "productCategories",
-          "availableParentCategories"
-        ]
+        queryKey: ["productCategoryList"]
       });
       reset();
       closeHandler();
@@ -99,11 +96,7 @@ const ProductCategoryFormModal: React.FC<
     onSuccess: () => {
       toast.success("Category updated successfully");
       queryClient.invalidateQueries({
-        queryKey: [
-          "productCategoryList",
-          "productCategories",
-          "availableParentCategories"
-        ]
+        queryKey: ["productCategoryList"]
       });
       reset();
       closeHandler();
@@ -147,7 +140,10 @@ const ProductCategoryFormModal: React.FC<
         const { data } = await getProductCategorySelectListApi(user.outlet.id);
         return data;
       } catch (err) {
-        const { data, error } = handlePrivateApiError(err as CommonApiError);
+        const { data, error } = handlePrivateApiError(
+          err as CommonApiError,
+          logout
+        );
         toast.error(
           data?.message ||
             error ||
@@ -171,7 +167,10 @@ const ProductCategoryFormModal: React.FC<
           );
           return data;
         } catch (err) {
-          const { data, error } = handlePrivateApiError(err as CommonApiError);
+          const { data, error } = handlePrivateApiError(
+            err as CommonApiError,
+            logout
+          );
           toast.error(
             data?.message ||
               error ||

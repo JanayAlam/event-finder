@@ -15,7 +15,7 @@ const PRIVATE_ROUTES: string[] = [
 
 const AUTH_ROUTES = ["/login"];
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const authAccessToken = request.cookies.get(

@@ -1,4 +1,3 @@
-import { USER_ROLE } from "@prisma/client";
 import { Router } from "express";
 import { authenticator } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
@@ -23,11 +22,7 @@ authRouter.delete("/logout", logoutHandler);
 // get auth user
 authRouter.get(
   "/user",
-  authenticator([
-    USER_ROLE.SUPER_ADMIN,
-    USER_ROLE.OUTLET_ADMIN,
-    USER_ROLE.CUSTOMER
-  ]),
+  authenticator([]),
   getAuthUser
 );
 
@@ -35,9 +30,7 @@ authRouter.get(
 authRouter.patch(
   "/user/update/info",
   authenticator([
-    USER_ROLE.SUPER_ADMIN,
-    USER_ROLE.OUTLET_ADMIN,
-    USER_ROLE.CUSTOMER
+    
   ]),
   inputValidator(UpdateUserInfoDTOSchema),
   updateAuthUserInfo
@@ -47,9 +40,7 @@ authRouter.patch(
 authRouter.patch(
   "/user/update/photo",
   authenticator([
-    USER_ROLE.SUPER_ADMIN,
-    USER_ROLE.OUTLET_ADMIN,
-    USER_ROLE.CUSTOMER
+    
   ]),
   uploadImages.single("profilePhoto"),
   updateAuthUserPhoto
@@ -58,7 +49,7 @@ authRouter.patch(
 // change password
 authRouter.patch(
   "/user/update/password",
-  authenticator([USER_ROLE.SUPER_ADMIN, USER_ROLE.OUTLET_ADMIN]),
+  authenticator([]),
   inputValidator(UpdateUserPasswordDTOSchema),
   updateAuthUserPassword
 );

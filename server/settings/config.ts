@@ -27,16 +27,6 @@ export const SMTP_PORT: number = parseInt(process.env.SMTP_PORT || "2525");
 export const SMTP_USER = process.env.SMTP_USER || "";
 export const SMTP_PASS = process.env.SMTP_PASS || "";
 
-export const MAIL_SENDER = process.env.MAIL_SENDER || "admin@bhalothaki.com";
-
-export const SSL_SMS_SEND_API = process.env.SSL_SMS_SEND_API;
-export const SSL_API_TOKEN = process.env.SSL_API_TOKEN;
-export const SSL_SID = process.env.SSL_SID;
-
-export const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-export const AWS_ACCESS_SECRET_KEY = process.env.AWS_ACCESS_SECRET_KEY;
-export const AWS_REGION = process.env.AWS_REGION;
-
-export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
+export const MAIL_SENDER = process.env.MAIL_SENDER || "admin@tripmate.com";
 
 export const GOOGLE_MAP_API_KEY = process.env.GOOGLE_MAP_API_KEY;

@@ -1,7 +1,5 @@
-import { User, USER_ROLE } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { prisma } from "../db";
 import { serializeUserResponse } from "../serializers/user";
 import {
   ACCESS_TOKEN_EXPIRATION_TIME_SECOND,
@@ -43,18 +41,12 @@ const refreshController = async (
       return sendUnauthorized(res);
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: decodedUser.id
-      },
-      include: {
-        outlet: decodedUser.role === USER_ROLE.OUTLET_ADMIN
-      }
-    });
+    // find user
+    let user: any = {}
 
-    if (!user) {
-      return sendUnauthorized(res);
-    }
+    // if (!user) {
+    //   return sendUnauthorized(res);
+    // }
 
     const tokenData: TJWTPayload = {
       id: user.id,
@@ -120,15 +112,10 @@ const authProcessor = async (
         return;
       }
 
-      const user = await prisma.user.findUnique({
-        where: {
-          id: (tokenData as User).id
-        },
-        include: {
-          outlet: role === USER_ROLE.OUTLET_ADMIN
-        }
-      });
+      // find user
 
+      let user: any = {}
+      
       if (!user) {
         sendUnauthorized(res);
         return;

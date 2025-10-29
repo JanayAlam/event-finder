@@ -1,16 +1,14 @@
-import { logoutApi } from "@/api/auth";
+// import { logoutApi } from "@/api/auth";
 import { CommonApiError } from "@/app/_types/common/error";
 import { handlePrivateApiError } from "@/utils/error-handlers";
-import { Outlet, USER_ROLE } from "@prisma/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { TUserResponse } from "../../server/types/auth";
 
-type AuthUser = TUserResponse & {
-  outlet?: Outlet | null;
+type AuthUser = {
+  name: string;
 };
 
 interface AuthStoreStates {
@@ -28,25 +26,21 @@ const initialState: AuthStoreStates = {
 
 export const useAuthStore = create<AuthStoreStates & AuthStoreActions>()(
   persist(
-    immer((set, get) => ({
+    immer((set) => ({
       ...initialState,
       setUser(user) {
         set({ user });
       },
       logout: async (router?: AppRouterInstance) => {
         try {
-          const user = get().user;
+          // const user = get().user;
 
-          await logoutApi();
+          // await logoutApi();
           set({ user: null });
 
           if (!router) return;
 
-          if (user?.role !== USER_ROLE.CUSTOMER) {
-            router.push("/admin/login");
-          } else {
-            router.push("/login");
-          }
+          router.push("/login");
         } catch (err) {
           const { data, error } = handlePrivateApiError(err as CommonApiError);
           toast.error(data?.message || error || "Could not logout");

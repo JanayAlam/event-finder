@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_KEYS } from "../server/settings/cookies";
 
-const SUPER_ADMIN_ONLY_ROUTES: string[] = [];
+const ADMIN_ONLY_ROUTES: string[] = [];
 
-const OUTLET_ADMIN_ONLY_ROUTES: string[] = [
-  "/outlet-admin",
-  "/outlet-admin/dashboard"
-];
-
-const CUSTOMER_ONLY_ROUTES: string[] = [];
+const USER_ONLY_ROUTES: string[] = [];
 
 const AUTH_COMMON_ROUTES: string[] = [];
 
 const PRIVATE_ROUTES: string[] = [
-  ...SUPER_ADMIN_ONLY_ROUTES,
-  ...OUTLET_ADMIN_ONLY_ROUTES,
   ...AUTH_COMMON_ROUTES,
-  ...CUSTOMER_ONLY_ROUTES
+  ...ADMIN_ONLY_ROUTES,
+  ...USER_ONLY_ROUTES
 ];
 
-const AUTH_ROUTES = ["/login", "/admin/login"];
+const AUTH_ROUTES = ["/login"];
 
 export default function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -40,12 +34,6 @@ export default function middleware(request: NextRequest) {
 
   if (!isLoggedIn && PRIVATE_ROUTES.includes(path)) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
-  }
-
-  if (path === "/outlet-admin") {
-    return NextResponse.redirect(
-      new URL("/outlet-admin/dashboard", request.url)
-    );
   }
 }
 

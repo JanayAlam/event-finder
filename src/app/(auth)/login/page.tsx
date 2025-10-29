@@ -6,10 +6,10 @@ const page = () => {
   return (
     <>
       <Head>
-        <title>Customer Login</title>
+        <title>Login</title>
       </Head>
       <div>
-        <p>Customer login</p>
+        <p>login</p>
       </div>
     </>
   );

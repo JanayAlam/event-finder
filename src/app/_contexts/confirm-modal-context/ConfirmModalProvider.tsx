@@ -1,4 +1,3 @@
-import Paragraph from "@/components/shared/atoms/typography/Paragraph";
 import Modal from "@/components/shared/organisms/modal";
 import useModal from "@/hooks/general/useModal";
 import React, {
@@ -34,7 +33,7 @@ export const ConfirmModalProvider: React.FC<PropsWithChildren> = (props) => {
       setOnConfirm(() => onConfirm);
       openModalHandler();
     },
-    []
+    [openModalHandler]
   );
 
   const closeConfirmModal = useCallback(() => {
@@ -43,7 +42,7 @@ export const ConfirmModalProvider: React.FC<PropsWithChildren> = (props) => {
     setModalType("default");
     setOnConfirm(() => () => {});
     closeModalHandler();
-  }, []);
+  }, [closeModalHandler]);
 
   const okHandler = useCallback(async () => {
     setIsLoading(true);
@@ -72,7 +71,8 @@ export const ConfirmModalProvider: React.FC<PropsWithChildren> = (props) => {
           okButtonColorType={modalType}
           cancelHandler={closeConfirmModal}
         >
-          <Paragraph level={4}>{message}</Paragraph>
+          {/* TODO */}
+          <p>{message}</p>
         </Modal>
       ) : null}
     </ConfirmModalContext.Provider>

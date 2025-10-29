@@ -1,4 +1,3 @@
-import { Outlet, User, USER_ROLE } from "@prisma/client";
 import { z } from "zod";
 import {
   UpdateUserInfoDTOSchema,
@@ -9,7 +8,7 @@ export type TJWTPayload = {
   id: string;
   email?: string | null;
   phone?: string | null;
-  role: USER_ROLE;
+  role: "admin" | "user"; // TODO
 };
 
 export type TUpdateUserInfoRequest = z.infer<typeof UpdateUserInfoDTOSchema>;
@@ -18,6 +17,4 @@ export type TUpdateUserPasswordRequest = z.infer<
   typeof UpdateUserPasswordDTOSchema
 >;
 
-export type TUserResponse = Omit<User, "password"> & {
-  outlet?: Outlet;
-};
+export type TUserResponse = {};

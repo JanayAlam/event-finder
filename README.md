@@ -1,4 +1,4 @@
-# Bhalo Thaki
+# Trip Mate
 
 ## Getting Started
 

@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_EXPIRATION_TIME_SECOND,
@@ -8,7 +7,7 @@ import {
 } from "../../settings/config";
 import { TJWTPayload } from "../../types/auth";
 
-export const generateAccessAndRefreshToken = (user: User) => {
+export const generateAccessAndRefreshToken = (user: any) => { // TODO
   const userPayload: TJWTPayload = {
     id: user.id,
     email: user.email,

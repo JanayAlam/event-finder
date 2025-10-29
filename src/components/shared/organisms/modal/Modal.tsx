@@ -1,6 +1,4 @@
 import { useEffect, useRef } from "react";
-import Title from "../../atoms/typography/Title";
-import Button from "../../molecules/button";
 
 interface ModalFooterProps {
   okText?: string;
@@ -26,29 +24,22 @@ interface ModalProps extends ModalFooterProps {
 
 const getFooter = (
   footer: React.ReactNode | undefined,
-  {
-    okText,
-    okHandler,
-    cancelText,
-    cancelHandler,
-    isOkLoading,
-    okButtonColorType
-  }: Partial<ModalFooterProps>
+  { okText, okHandler, cancelText, cancelHandler }: Partial<ModalFooterProps>
 ) => {
   if (footer === undefined) {
     return (
       <div className="flex gap-2 items-center justify-end">
-        <Button onClick={cancelHandler} type="button">
+        <button onClick={cancelHandler} type="button">
           {cancelText ?? "Cancel"}
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={okHandler}
-          colorType={okButtonColorType || "primary"}
+          // colorType={okButtonColorType || "primary"}
           type="submit"
-          isLoading={isOkLoading}
+          // isLoading={isOkLoading}
         >
           {okText ?? "Ok"}
-        </Button>
+        </button>
       </div>
     );
   }
@@ -126,7 +117,8 @@ const Modal: React.FC<ModalProps> = ({
         {/* Modal Header with bottom border */}
         {title && (
           <div className="px-6 py-3 flex items-center justify-between border-b border-gray-200">
-            <Title level={1}>{title}</Title>
+            {/* TODO */}
+            <div>{title}</div>
             <button
               onClick={cancelHandler}
               className="p-1 rounded-md hover:bg-gray-100 text-gray-600 focus:outline-none"

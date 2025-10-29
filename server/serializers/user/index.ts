@@ -1,7 +1,4 @@
-import { User } from "@prisma/client";
-import { TUserResponse } from "../../types/auth";
-
-export const serializeUserResponse = (user: User): TUserResponse => {
+export const serializeUserResponse = (user: any): any => {
   const { password: _, ...rest } = user;
   return rest;
 };

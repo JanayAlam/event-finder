@@ -1,6 +1,5 @@
 import "./reset.css";
 
-import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -13,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Bhalo Thaki",
-  description: "Bhalo Thaki e-commerce platform"
+  title: "Trip Mate",
+  description: "Trip Mate platform"
 };
 
 export default function RootLayout({

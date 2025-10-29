@@ -41,7 +41,7 @@ const useBreakpoint = () => {
   const upXl = width >= breakpoints.xl;
   const up2xl = width >= breakpoints["2xl"];
 
-  return { upSm, upMd, upLg, upXl, up2xl };
+  return { breakpoint, upSm, upMd, upLg, upXl, up2xl };
 };
 
 export default useBreakpoint;

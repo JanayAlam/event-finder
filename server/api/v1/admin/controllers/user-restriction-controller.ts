@@ -1,28 +1,13 @@
-import { USER_ROLE } from "@prisma/client";
 import { Request, Response } from "express";
-import { prisma } from "../../../../db";
-import {
-  TBlockUserRequest,
-  TUnblockUserRequest
-} from "../../../../types/admin";
 
 export const blockUserHandler = async (
-  req: Request<any, any, TBlockUserRequest, any>,
+  req: Request<any, any, any, any>,
   res: Response
 ) => {
   const { userId } = req.body;
 
   try {
-    await prisma.user.update({
-      where: {
-        id: userId,
-        role: { not: USER_ROLE.SUPER_ADMIN },
-        isUserBlocked: false
-      },
-      data: {
-        isUserBlocked: true
-      }
-    });
+    //
     res.status(204).send();
   } catch (err) {
     res.status(404).json({
@@ -32,22 +17,13 @@ export const blockUserHandler = async (
 };
 
 export const unblockUserHandler = async (
-  req: Request<any, any, TUnblockUserRequest, any>,
+  req: Request<any, any, any, any>,
   res: Response
 ) => {
   const { userId } = req.body;
 
   try {
-    await prisma.user.update({
-      where: {
-        id: userId,
-        role: { not: USER_ROLE.SUPER_ADMIN },
-        isUserBlocked: true
-      },
-      data: {
-        isUserBlocked: false
-      }
-    });
+    //
     res.status(204).send();
   } catch (err) {
     res.status(404).json({

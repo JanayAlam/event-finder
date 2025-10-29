@@ -2,10 +2,10 @@ import { CookieOptions } from "express";
 import { NODE_ENV } from "./config";
 
 export const COOKIE_KEYS = {
-  authAccessToken: "bhalothaki.authAccessToken",
-  authRefreshToken: "bhalothaki.authRefreshToken",
-  authUser: "bhalothaki.user",
-  guestId: "bhalothaki.guestId"
+  authAccessToken: "trip-mate.authAccessToken",
+  authRefreshToken: "trip-mate.authRefreshToken",
+  authUser: "trip-mate.user",
+  guestId: "trip-mate.guestId"
 } as const;
 
 export const cookieOptions: CookieOptions = {

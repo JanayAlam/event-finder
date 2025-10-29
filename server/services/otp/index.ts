@@ -1,6 +1,9 @@
-import { OTP_TYPE } from "@prisma/client";
 import dayjs, { Dayjs } from "dayjs";
-import { prisma } from "../../db";
+
+// TODO
+enum OTP_TYPE {
+  register
+}
 
 const generateOTP = (otpLength = 6) => {
   return Math.floor(
@@ -20,18 +23,18 @@ export const createOTP = async (
   const otp = generateOTP(options?.otpLength);
   const expireAt = options?.expireAt || dayjs().add(5, "minute");
 
-  await prisma.oTPDetails.deleteMany({
-    where: { otpType, identifier }
-  });
+  // await prisma.oTPDetails.deleteMany({
+  //   where: { otpType, identifier }
+  // });
 
-  return prisma.oTPDetails.create({
-    data: {
-      otpType,
-      identifier,
-      otp,
-      expireAt: expireAt.toDate()
-    }
-  });
+  // return prisma.oTPDetails.create({
+  //   data: {
+  //     otpType,
+  //     identifier,
+  //     otp,
+  //     expireAt: expireAt.toDate()
+  //   }
+  // });
 };
 
 export const verifyAndRemoveOTP = async (
@@ -41,22 +44,22 @@ export const verifyAndRemoveOTP = async (
 ) => {
   const queryObj = { otpType, identifier, otp };
 
-  const oTPDetails = await prisma.oTPDetails.findFirst({
-    where: queryObj
-  });
+  // const oTPDetails = await prisma.oTPDetails.findFirst({
+  //   where: queryObj
+  // });
 
-  if (!oTPDetails) return false;
+  // if (!oTPDetails) return false;
 
-  if (dayjs(oTPDetails.expireAt).diff(dayjs(), "minutes") < 0) {
-    await prisma.oTPDetails.deleteMany({
-      where: queryObj
-    });
-    return false;
-  }
+  // if (dayjs(oTPDetails.expireAt).diff(dayjs(), "minutes") < 0) {
+  //   await prisma.oTPDetails.deleteMany({
+  //     where: queryObj
+  //   });
+  //   return false;
+  // }
 
-  await prisma.oTPDetails.deleteMany({
-    where: queryObj
-  });
+  // await prisma.oTPDetails.deleteMany({
+  //   where: queryObj
+  // });
 
   return true;
 };

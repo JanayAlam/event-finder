@@ -1,14 +1,21 @@
+import { TUserRole } from "../../enums/role.enum";
+import User from "../../models/User";
 
-export const findAdminUserByEmailOrPhone = (where: {
-  email?: string;
-  phone?: string;
-}) =>
-  // prisma.user.findFirst({
-  //   where: {
-  //     OR: [
-  //       { ...where, role: USER_ROLE.SUPER_ADMIN },
-  //       { ...where, role: USER_ROLE.OUTLET_ADMIN }
-  //     ]
-  //   }
-  // });
-  undefined // TODO
+export const getUserByKindeId = (kindeId: string) => {
+  return User.findOne({ kindeId });
+};
+
+type TUpsertUserDto = {
+  kindeId: string;
+  email: string;
+  role?: TUserRole;
+};
+
+export const upsertUser = async (requestDto: TUpsertUserDto) => {
+  const { kindeId, email, role } = requestDto;
+  return User.findOneAndUpdate(
+    { kindeId },
+    { kindeId, email, role },
+    { upsert: true, new: true }
+  );
+};

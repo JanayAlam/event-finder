@@ -5,7 +5,7 @@ export const COOKIE_KEYS = {
   authAccessToken: "trip-mate.authAccessToken",
   authRefreshToken: "trip-mate.authRefreshToken",
   authUser: "trip-mate.user",
-  guestId: "trip-mate.guestId"
+  oauthState: "trip-mate.oauthState"
 } as const;
 
 export const cookieOptions: CookieOptions = {

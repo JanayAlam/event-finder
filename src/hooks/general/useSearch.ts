@@ -6,7 +6,7 @@ interface SearchFormValues {
   searchTerm: string;
 }
 
-const useSearch = (defaultValue = "", debounceDelay = 300) => {
+const useSearch = (defaultValue = "", debounceDelay = 500) => {
   const { control, watch, setValue } = useForm<SearchFormValues>({
     defaultValues: {
       searchTerm: defaultValue

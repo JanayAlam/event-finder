@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import PageNotFoundImage from "/public/images/page-not-found-page.svg";
 
 const NotFound = () => {
   return (
@@ -9,8 +8,10 @@ const NotFound = () => {
         <div className="text-center">
           <Image
             className="mx-auto h-56 w-auto text-black sm:h-64"
-            src={PageNotFoundImage}
-            alt={"Page not found image"}
+            src="/images/page-not-found-page.svg"
+            width={200}
+            height={150}
+            alt="Page not found image"
           />
 
           <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">

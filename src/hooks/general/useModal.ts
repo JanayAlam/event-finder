@@ -4,9 +4,10 @@ const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModalHandler = () => setIsOpen(true);
-  const closeModalHandler = () => setIsOpen(false);
+  const closeModalHandler = (cb?: () => void) => setIsOpen(false);
+  const submitModalHandler = (cb?: () => void) => {};
 
-  return { isOpen, openModalHandler, closeModalHandler };
+  return { isOpen, openModalHandler, closeModalHandler, submitModalHandler };
 };
 
 export default useModal;

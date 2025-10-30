@@ -5,22 +5,21 @@ export const LOGGLY_SUBDOMAIN = process.env.LOGGLY_SUBDOMAIN;
 export const LOGGLY_TOKEN = process.env.LOGGLY_TOKEN;
 export const LOGGLY_TAG = process.env.LOGGLY_TAG || "Winston-NodeJS";
 
-export const ACCESS_TOKEN_JWT_SECRET =
-  process.env.ACCESS_TOKEN_JWT_SECRET || "access-secret";
-export const REFRESH_TOKEN_JWT_SECRET =
-  process.env.REFRESH_TOKEN_JWT_SECRET || "refresh-secret";
+export const DB_URL =
+  process.env.DB_URL ??
+  "mongodb+srv://<db_username>:<db_password>@<cluster_name>.ahemwpn.mongodb.net/tripmate-dev";
 
-export const ACCESS_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.ACCESS_TOKEN_EXPIRATION_TIME_SECOND || "900"
-);
-export const REFRESH_TOKEN_EXPIRATION_TIME_SECOND: number = parseInt(
-  process.env.REFRESH_TOKEN_EXPIRATION_TIME_SECOND || "21600"
-);
+export const KINDE_SITE_URL =
+  process.env.KINDE_SITE_URL ?? "http://localhost:5000";
+export const KINDE_DOMAIN = process.env.KINDE_DOMAIN ?? "";
+export const KINDE_CLIENT_ID = process.env.KINDE_CLIENT_ID ?? "";
+export const KINDE_CLIENT_SECRET = process.env.KINDE_CLIENT_SECRET ?? "";
+export const KINDE_REDIRECT_URI = process.env.KINDE_REDIRECT_URI ?? "";
+export const KINDE_LOGOUT_REDIRECT_URI =
+  process.env.KINDE_LOGOUT_REDIRECT_URI ?? "";
 
 export const PUBLIC_SERVER_URL =
   process.env.PUBLIC_SERVER_URL || "http://localhost:5000";
-export const NEXT_PUBLIC_LOCAL_SERVER_URL =
-  process.env.NEXT_PUBLIC_LOCAL_SERVER_URL || "http://localhost:5000";
 
 export const SMTP_HOST = process.env.SMTP_HOST || "sandbox.smtp.mailtrap.io";
 export const SMTP_PORT: number = parseInt(process.env.SMTP_PORT || "2525");

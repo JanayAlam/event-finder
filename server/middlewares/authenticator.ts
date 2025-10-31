@@ -4,9 +4,11 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { getUser } from "../services/user";
 import {
+  ACCESS_TOKEN_EXPIRY,
   KINDE_CLIENT_ID,
   KINDE_CLIENT_SECRET,
-  KINDE_SITE_URL
+  KINDE_SITE_URL,
+  REFRESH_TOKEN_EXPIRY
 } from "../settings/config";
 import { COOKIE_KEYS, cookieOptions } from "../settings/cookies";
 import ApiError from "../utils/api-error";
@@ -87,17 +89,15 @@ export function authenticate(allowedRoles?: string[]) {
           newTokens.idToken || newTokens.accessToken
         ) as JwtPayload;
 
-        res.cookie(
-          COOKIE_KEYS.authAccessToken,
-          newTokens.accessToken,
-          cookieOptions
-        );
+        res.cookie(COOKIE_KEYS.authAccessToken, newTokens.accessToken, {
+          ...cookieOptions,
+          maxAge: ACCESS_TOKEN_EXPIRY * 1000
+        });
 
-        res.cookie(
-          COOKIE_KEYS.authRefreshToken,
-          newTokens.refreshToken,
-          cookieOptions
-        );
+        res.cookie(COOKIE_KEYS.authRefreshToken, newTokens.refreshToken, {
+          ...cookieOptions,
+          maxAge: REFRESH_TOKEN_EXPIRY * 1000
+        });
       }
 
       if (!decoded) {
@@ -125,8 +125,8 @@ export function authenticate(allowedRoles?: string[]) {
       }
 
       next();
-    } catch (error) {
-      next(error);
+    } catch (err) {
+      next(err);
     }
   };
 }

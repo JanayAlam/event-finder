@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { getOrCreateUser } from "../../../../services/user";
 import {
+  ACCESS_TOKEN_EXPIRY,
   KINDE_CLIENT_ID,
   KINDE_CLIENT_SECRET,
   KINDE_DOMAIN,
   KINDE_REDIRECT_URI,
-  PUBLIC_SERVER_URL
+  PUBLIC_SERVER_URL,
+  REFRESH_TOKEN_EXPIRY
 } from "../../../../settings/config";
 import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
 
@@ -50,8 +52,14 @@ export const kindeCallbackController = async (req: Request, res: Response) => {
     email
   });
 
-  res.cookie(COOKIE_KEYS.authAccessToken, access_token, cookieOptions);
-  res.cookie(COOKIE_KEYS.authRefreshToken, refresh_token, cookieOptions);
+  res.cookie(COOKIE_KEYS.authAccessToken, access_token, {
+    ...cookieOptions,
+    maxAge: ACCESS_TOKEN_EXPIRY * 1000
+  });
+  res.cookie(COOKIE_KEYS.authRefreshToken, refresh_token, {
+    ...cookieOptions,
+    maxAge: REFRESH_TOKEN_EXPIRY * 1000
+  });
   res.cookie(
     COOKIE_KEYS.authUser,
     JSON.stringify({ id: user._id, email: user.email, role: user.role }),

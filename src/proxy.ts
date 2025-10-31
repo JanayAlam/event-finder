@@ -1,10 +1,11 @@
+import { API_BASE_URL } from "@/config";
 import { NextRequest, NextResponse } from "next/server";
 import { TUserRole, userRoles } from "../server/enums/role.enum";
 import { COOKIE_KEYS } from "../server/settings/cookies";
 
-const ADMIN_ONLY_ROUTES: string[] = ["/admin", "/admin/settings"];
-const USER_ONLY_ROUTES: string[] = ["/dashboard", "/profile"];
-const AUTH_COMMON_ROUTES: string[] = ["/orders", "/account"];
+const ADMIN_ONLY_ROUTES: string[] = [];
+const USER_ONLY_ROUTES: string[] = [];
+const AUTH_COMMON_ROUTES: string[] = ["/"];
 
 const PRIVATE_ROUTES: string[] = [
   ...AUTH_COMMON_ROUTES,
@@ -12,7 +13,7 @@ const PRIVATE_ROUTES: string[] = [
   ...USER_ONLY_ROUTES
 ];
 
-const AUTH_ROUTES = ["/login", "/register"];
+const AUTH_ROUTES = ["/login"];
 
 export default function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -36,7 +37,8 @@ export default function proxy(request: NextRequest) {
   }
 
   if (!isLoggedIn && PRIVATE_ROUTES.some((route) => path.startsWith(route))) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const backendLoginUrl = `${API_BASE_URL}/auth/login`;
+    return NextResponse.redirect(backendLoginUrl);
   }
 
   if (

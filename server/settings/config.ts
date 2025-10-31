@@ -18,6 +18,15 @@ export const KINDE_REDIRECT_URI = process.env.KINDE_REDIRECT_URI ?? "";
 export const KINDE_LOGOUT_REDIRECT_URI =
   process.env.KINDE_LOGOUT_REDIRECT_URI ?? "";
 
+export const ACCESS_TOKEN_EXPIRY = parseInt(
+  process.env.ACCESS_TOKEN_EXPIRY_SEC ?? "",
+  86400
+);
+export const REFRESH_TOKEN_EXPIRY = parseInt(
+  process.env.REFRESH_TOKEN_EXPIRY_SEC ?? "",
+  1296000
+);
+
 export const PUBLIC_SERVER_URL =
   process.env.PUBLIC_SERVER_URL || "http://localhost:5000";
 

@@ -1,8 +1,13 @@
+import { QueryOptions } from "mongoose";
 import { TUserRole } from "../../enums/role.enum";
-import User from "../../models/User";
+import User, { TUser } from "../../models/User";
 
 export const getUserByKindeId = (kindeId: string) => {
   return User.findOne({ kindeId });
+};
+
+export const getUser = (query: QueryOptions<TUser>) => {
+  return User.findOne(query);
 };
 
 type TUpsertUserDto = {
@@ -11,11 +16,17 @@ type TUpsertUserDto = {
   role?: TUserRole;
 };
 
-export const upsertUser = async (requestDto: TUpsertUserDto) => {
+export const getOrCreateUser = async (requestDto: TUpsertUserDto) => {
   const { kindeId, email, role } = requestDto;
-  return User.findOneAndUpdate(
-    { kindeId },
-    { kindeId, email, role },
-    { upsert: true, new: true }
-  );
+  let user = await User.findOne({ kindeId, email });
+
+  if (!user) {
+    user = await User.create({
+      kindeId,
+      email,
+      role
+    });
+  }
+
+  return user;
 };

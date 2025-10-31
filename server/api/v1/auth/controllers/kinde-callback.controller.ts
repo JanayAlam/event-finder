@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { upsertUser } from "../../../../services/user";
+import { getOrCreateUser } from "../../../../services/user";
 import {
   KINDE_CLIENT_ID,
   KINDE_CLIENT_SECRET,
@@ -45,7 +45,7 @@ export const kindeCallbackController = async (req: Request, res: Response) => {
   const decoded = jwt.decode(id_token) as any;
   const { sub, email } = decoded;
 
-  const user = await upsertUser({
+  const user = await getOrCreateUser({
     kindeId: sub,
     email
   });

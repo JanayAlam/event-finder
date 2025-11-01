@@ -121,7 +121,7 @@ const Modal: React.FC<ModalProps> = ({
             <div>{title}</div>
             <button
               onClick={cancelHandler}
-              className="p-1 rounded-md hover:bg-gray-100 text-gray-600 focus:outline-none"
+              className="p-1 rounded-md hover:bg-gray-100 text-gray-600 focus:outline-hidden"
               aria-label="Close"
             >
               <svg

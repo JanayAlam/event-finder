@@ -2,7 +2,8 @@ import "./reset.css";
 
 import "./globals.css";
 
-import TapNavbar from "@/components/shared/organisms/top-navbar";
+import SecondaryNavbar from "@/components/ui/secondary-navbar";
+import TapNavbar from "@/components/ui/top-navbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -24,11 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>
           <Toaster reverseOrder={false} />
           <TapNavbar />
+          <SecondaryNavbar />
           {children}
         </Providers>
       </body>

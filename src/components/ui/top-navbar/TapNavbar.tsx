@@ -1,12 +1,10 @@
-"use client";
-
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
-import Button from "../../atoms/button";
-import ThemeToggleButton from "../../ui/theme-toggle-button";
+import { Button } from "../../shared/atoms/button";
+import ThemeToggleButton from "../theme-toggle-button";
 
 const leagueSpartan = League_Spartan({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -14,11 +12,9 @@ const leagueSpartan = League_Spartan({
   display: "swap"
 });
 
-interface TapNavbarProps {}
-
-const TapNavbar: React.FC<TapNavbarProps> = () => {
+const TapNavbar: React.FC = () => {
   return (
-    <div className="border-b border-b-borders-1 w-full flex justify-center">
+    <div className="border-b border-b-borders-1 w-full flex justify-center sticky top-0">
       <div
         className={cn(
           PAGE_WIDTH_CLASS_NAME,

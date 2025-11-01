@@ -1,7 +1,9 @@
+"use client";
+
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import React from "react";
-import Button from "../../atoms/button";
+import { Button } from "../../shared/atoms/button";
 
 interface ThemeToggleButtonProps {}
 

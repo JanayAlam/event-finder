@@ -2,17 +2,33 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../shared/atoms/button";
 
-interface ThemeToggleButtonProps {}
+const ThemeToggleButton: React.FC = () => {
+  const { theme, setTheme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
 
-const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = () => {
-  const { setTheme } = useTheme();
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
   };
+
+  if (!isMounted) {
+    return (
+      <Button variant="outline" size="icon" disabled>
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
+  }
 
   return (
     <Button variant="outline" size="icon" onClick={toggleTheme}>

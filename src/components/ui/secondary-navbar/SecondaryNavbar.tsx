@@ -1,13 +1,16 @@
+"use client";
+
 import { Input } from "@/components/shared/atoms/input";
-import { TypographyMuted } from "@/components/shared/atoms/typography";
+import { NavbarLink } from "@/components/shared/atoms/links";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
-import Link from "next/link";
 import React from "react";
 
 const SecondaryNavbar: React.FC = () => {
   return (
-    <div className="w-full flex justify-center border-b border-b-borders-1">
+    <div
+      className={cn("w-full flex justify-center border-b border-b-borders-1")}
+    >
       <div
         className={cn(
           PAGE_WIDTH_CLASS_NAME,
@@ -16,18 +19,10 @@ const SecondaryNavbar: React.FC = () => {
         )}
       >
         <div className="flex justify-between items-center gap-6">
-          <Link href={"#"}>
-            <TypographyMuted>Explore trips</TypographyMuted>
-          </Link>
-          <Link href={"#"}>
-            <TypographyMuted>My trips</TypographyMuted>
-          </Link>
-          <Link href={"#"}>
-            <TypographyMuted>How it works</TypographyMuted>
-          </Link>
-          <Link href={"#"}>
-            <TypographyMuted>About us</TypographyMuted>
-          </Link>
+          <NavbarLink href="#" isActive label="Explore trips" />
+          <NavbarLink href="#" isActive={false} label="My trips" />
+          <NavbarLink href="#" isActive={false} label="How it works" />
+          <NavbarLink href="#" isActive={false} label="About us" />
         </div>
         <div>
           <Input placeholder="Search trips..." />

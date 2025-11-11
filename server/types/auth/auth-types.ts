@@ -1,20 +1,21 @@
 import { z } from "zod";
+import { TUser } from "../../models/user.model";
 import {
-  UpdateUserInfoDTOSchema,
-  UpdateUserPasswordDTOSchema
+  RefreshAccessTokenDtoSchema,
+  UpdateUserInfoDtoSchema,
+  UpdateUserPasswordDtoSchema
 } from "../../validationSchemas/auth";
 
-export type TJWTPayload = {
-  id: string;
-  email?: string | null;
-  phone?: string | null;
-  role: "admin" | "user"; // TODO
-};
-
-export type TUpdateUserInfoRequest = z.infer<typeof UpdateUserInfoDTOSchema>;
-
-export type TUpdateUserPasswordRequest = z.infer<
-  typeof UpdateUserPasswordDTOSchema
+export type TUpdateUserInfoRequestBodyDto = z.infer<
+  typeof UpdateUserInfoDtoSchema
 >;
 
-export type TUserResponse = {};
+export type TUpdateUserPasswordRequestBodyDro = z.infer<
+  typeof UpdateUserPasswordDtoSchema
+>;
+
+export type TRefreshAccessTokenRequestBodyDto = z.infer<
+  typeof RefreshAccessTokenDtoSchema
+>;
+
+export type TUserResponse = TUser;

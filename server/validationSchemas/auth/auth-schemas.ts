@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const UpdateUserInfoDTOSchema = z.object({
+export const UpdateUserInfoDtoSchema = z.object({
   firstName: z
     .string()
     .min(3, "First name should be at least 3 characters long")
@@ -11,7 +11,7 @@ export const UpdateUserInfoDTOSchema = z.object({
     .optional()
 });
 
-export const UpdateUserPasswordDTOSchema = z
+export const UpdateUserPasswordDtoSchema = z
   .object({
     oldPassword: z
       .string()
@@ -27,3 +27,7 @@ export const UpdateUserPasswordDTOSchema = z
     message: "Confirm password did not match",
     path: ["confirmPassword"]
   });
+
+export const RefreshAccessTokenDtoSchema = z.object({
+  refreshToken: z.string().trim()
+});

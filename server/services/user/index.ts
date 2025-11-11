@@ -1,6 +1,6 @@
 import { QueryOptions } from "mongoose";
 import { TUserRole } from "../../enums/role.enum";
-import User, { TUser } from "../../models/User";
+import User, { TUser } from "../../models/user.model";
 
 export const getUserByKindeId = (kindeId: string) => {
   return User.findOne({ kindeId });

@@ -1,111 +1,69 @@
-import axios from "axios";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import jwksClient from "jwks-rsa";
+import { TUserRole } from "../enums/role.enum";
+import { getKindePublicKey } from "../services/kinde";
 import { getUser } from "../services/user";
-import {
-  ACCESS_TOKEN_EXPIRY,
-  KINDE_CLIENT_ID,
-  KINDE_CLIENT_SECRET,
-  KINDE_SITE_URL,
-  REFRESH_TOKEN_EXPIRY
-} from "../settings/config";
-import { COOKIE_KEYS, cookieOptions } from "../settings/cookies";
 import ApiError from "../utils/api-error";
+import logger from "../utils/winston";
 
-function getKey(header: any, callback: any) {
-  const client = jwksClient({
-    jwksUri: `${KINDE_SITE_URL}/.well-known/jwks.json`
-  });
-  client.getSigningKey(header.kid, (_err, key) => {
-    callback(null, key?.getPublicKey());
-  });
-}
+export function authenticate(allowedRoles?: TUserRole[]) {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    const authorizationHeader = req.headers.authorization;
 
-async function refreshKindeToken(refreshToken: string) {
-  try {
-    const { data } = await axios.post(
-      `${KINDE_SITE_URL}/oauth2/token`,
-      new URLSearchParams({
-        grant_type: "refresh_token",
-        client_id: KINDE_CLIENT_ID!,
-        client_secret: KINDE_CLIENT_SECRET!,
-        refresh_token: refreshToken
-      }),
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      }
-    );
-    return {
-      idToken: data.id_token,
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token
-    };
-  } catch {
-    throw new ApiError(401, "Failed to refresh token");
-  }
-}
-
-export function authenticate(allowedRoles?: string[]) {
-  return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken =
-        req.cookies?.[COOKIE_KEYS.authAccessToken] ||
-        req.headers.authorization?.split(" ")[1];
-      if (!accessToken) {
-        throw new ApiError(401, "Access token not found");
+      if (!authorizationHeader) {
+        throw new ApiError(401, "Authorization header not not found");
       }
 
-      let decoded: JwtPayload | null = null;
-      try {
-        const verified = await new Promise<JwtPayload | string>(
-          (resolve, reject) => {
-            jwt.verify(
-              accessToken as string,
-              getKey as any,
-              { algorithms: ["RS256"] },
-              (err, payload) => {
-                if (err) return reject(err);
-                resolve(payload as JwtPayload | string);
-              }
-            );
-          }
-        );
+      const isBearerToken = authorizationHeader.startsWith("Bearer ");
 
-        decoded =
-          typeof verified === "string"
-            ? (jwt.decode(verified) as JwtPayload)
-            : (verified as JwtPayload);
-      } catch (err) {
-        const refreshToken = req.cookies?.[COOKIE_KEYS.authRefreshToken];
+      if (!isBearerToken) {
+        throw new ApiError(401, "Token must be a bearer token");
+      }
+    } catch (err) {
+      next(err);
+      return;
+    }
 
-        if (!refreshToken) {
-          throw new ApiError(401, "Token expired and no refresh token");
+    const bearerToken = authorizationHeader.replace("Bearer ", "");
+
+    let decodedPayload: JwtPayload | null = null;
+
+    try {
+      const payload = await new Promise<JwtPayload | string>(
+        (resolve, reject) => {
+          jwt.verify(
+            bearerToken,
+            getKindePublicKey,
+            { algorithms: ["RS256"] },
+            (err, payload) => {
+              if (err) return reject(err);
+              resolve(payload as JwtPayload | string);
+            }
+          );
         }
+      );
 
-        const newTokens = await refreshKindeToken(refreshToken as string);
+      decodedPayload =
+        typeof payload === "string"
+          ? (jwt.decode(payload) as JwtPayload)
+          : (payload as JwtPayload);
+    } catch (err) {
+      logger.error("JWT verification failed", {
+        error: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined
+      });
+      next(new ApiError(401, "Access token is not verified"));
+      return;
+    }
 
-        decoded = jwt.decode(
-          newTokens.idToken || newTokens.accessToken
-        ) as JwtPayload;
-
-        res.cookie(COOKIE_KEYS.authAccessToken, newTokens.accessToken, {
-          ...cookieOptions,
-          maxAge: ACCESS_TOKEN_EXPIRY * 1000
-        });
-
-        res.cookie(COOKIE_KEYS.authRefreshToken, newTokens.refreshToken, {
-          ...cookieOptions,
-          maxAge: REFRESH_TOKEN_EXPIRY * 1000
-        });
-      }
-
-      if (!decoded) {
+    try {
+      if (!decodedPayload) {
         throw new ApiError(403, "Invalid token");
       }
 
-      const kindeId = decoded.sub;
-      const emailAddr = decoded.email;
+      const kindeId = decodedPayload.sub;
+      const emailAddr = decodedPayload.email;
 
       if (typeof kindeId !== "string" || typeof emailAddr !== "string") {
         throw new ApiError(403, "Invalid token payload");
@@ -117,12 +75,12 @@ export function authenticate(allowedRoles?: string[]) {
         throw new ApiError(403, "Authorized user not found");
       }
 
-      req.user = user;
-      req.kindeUser = { sub: kindeId, email: emailAddr };
-
       if (allowedRoles?.length && !allowedRoles.includes(user.role)) {
         throw new ApiError(403, `Access denied for role: ${user.role}`);
       }
+
+      req.user = user;
+      req.kindeUser = { sub: kindeId, email: emailAddr };
 
       next();
     } catch (err) {

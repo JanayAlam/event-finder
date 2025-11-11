@@ -1,4 +1,4 @@
-import { IUserDoc } from "../../server/models/User";
+import { IUserDoc } from "../../server/models/user.model";
 
 // to make the file a module and avoid the TypeScript error
 export {};

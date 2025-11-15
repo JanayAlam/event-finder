@@ -9,7 +9,7 @@ class AuthRepository extends BaseRepository {
 
   static logout() {
     const url = `${AuthRepository.apiRouter}/logout`;
-    return this.request(url, "get", undefined);
+    return this.request<undefined, { message: string }>(url, "get", undefined);
   }
 }
 

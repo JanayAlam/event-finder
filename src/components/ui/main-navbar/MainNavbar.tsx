@@ -22,6 +22,7 @@ import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
+import toast from "react-hot-toast";
 import { Button } from "../../shared/atoms/button";
 import ThemeToggleButton from "../theme-toggle-button";
 
@@ -35,8 +36,9 @@ const MainNavbar: React.FC = () => {
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const handleLogoutAction = async () => {
-    await AuthRepository.logout();
+    const { data } = await AuthRepository.logout();
     clearAuth();
+    toast.success(data.message);
   };
 
   const handleLoginAction = () => {
@@ -56,7 +58,8 @@ const MainNavbar: React.FC = () => {
             href={"/"}
             className="text-4xl font-extrabold text-brand-primary-main select-none"
           >
-            tripmate.
+            <span className="xs:hidden">tr.</span>
+            <span className="hidden xs:block">tripmate.</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
@@ -78,7 +81,7 @@ const MainNavbar: React.FC = () => {
                         {user.email.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col">
+                    <div className="hidden sm:flex flex-col">
                       <div className="text-sm">{user.email.split("@")[0]}</div>
                       <div className="text-muted-foreground text-xs capitalize">
                         {user.role}

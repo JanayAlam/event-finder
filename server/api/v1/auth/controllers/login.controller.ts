@@ -13,7 +13,7 @@ export const loginController = async (_req: Request, res: Response) => {
 
   const authorizeUrl = `${KINDE_DOMAIN}/oauth2/auth?client_id=${KINDE_CLIENT_ID}&redirect_uri=${encodeURIComponent(
     KINDE_REDIRECT_URI
-  )}&response_type=code&scope=openid%20profile%20email%20offline&state=${state}`;
+  )}&response_type=code&scope=openid%20profile%20email%20offline&state=${state}&prompt=login`;
 
   res.redirect(authorizeUrl);
 };

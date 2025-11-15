@@ -1,8 +1,9 @@
 import { Router } from "express";
+import { authenticate } from "../../../middlewares/authenticator";
 import { getHealthController } from "./controllers/get-health.controller";
 
 const statusRouter = Router({ mergeParams: true });
 
-statusRouter.get("/health", getHealthController);
+statusRouter.get("/health", authenticate(), getHealthController);
 
 export default statusRouter;

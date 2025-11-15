@@ -49,5 +49,9 @@ export const refreshAccessTokenController = async (
   });
   res.cookie(COOKIE_KEYS.authUser, JSON.stringify(user), cookieOptions);
 
-  res.status(200).json(tokens);
+  res.status(200).json({
+    user,
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken
+  });
 };

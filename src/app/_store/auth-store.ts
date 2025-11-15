@@ -1,31 +1,26 @@
+import axios from "axios";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TUserRole } from "../../../server/enums/role.enum";
-
-export type TUserFromTokenPayload = {
-  id: string;
-  email: string;
-  role: TUserRole;
-};
+import { TUser } from "../../../server/models/user.model";
 
 type TAuthState = {
-  user: TUserFromTokenPayload | null;
-  isAuthenticated: boolean;
-  role: TUserRole | null;
+  isInitialLoading: boolean;
+  user: TUser | null;
+  isLoggedIn: boolean;
   accessToken: string | null;
   refreshToken: string | null;
 };
 
 type TAuthActions = {
   setAuth: (
-    user: TUserFromTokenPayload,
+    user: TUser | null,
     accessToken: string,
     refreshToken: string
   ) => void;
   clearAuth: () => void;
-  updateUser: (user: Partial<TUserFromTokenPayload>) => void;
+  updateUser: (user: Partial<TUser>) => void;
   initAuth: (
-    user: TUserFromTokenPayload | null,
+    user: TUser | null,
     accessToken: string | null,
     refreshToken: string | null
   ) => void;
@@ -34,9 +29,9 @@ type TAuthActions = {
 export type TAuthStore = TAuthState & TAuthActions;
 
 const initialState: TAuthState = {
+  isInitialLoading: true,
   user: null,
-  isAuthenticated: false,
-  role: null,
+  isLoggedIn: false,
   accessToken: null,
   refreshToken: null
 };
@@ -51,8 +46,7 @@ export const useAuthStore = create<TAuthStore>()(
           user,
           accessToken,
           refreshToken,
-          isAuthenticated: !!(user && accessToken && refreshToken),
-          role: user?.role || null
+          isLoggedIn: !!(user && accessToken && refreshToken)
         });
       },
 
@@ -61,8 +55,7 @@ export const useAuthStore = create<TAuthStore>()(
           user,
           accessToken,
           refreshToken,
-          isAuthenticated: true,
-          role: user.role
+          isLoggedIn: true
         });
       },
 
@@ -72,8 +65,7 @@ export const useAuthStore = create<TAuthStore>()(
 
       updateUser: (userUpdates) => {
         set((state) => ({
-          user: state.user ? { ...state.user, ...userUpdates } : null,
-          role: userUpdates.role || state.role
+          user: state.user ? { ...state.user, ...userUpdates } : null
         }));
       }
     }),
@@ -81,9 +73,35 @@ export const useAuthStore = create<TAuthStore>()(
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated,
-        role: state.role
-      })
+        isLoggedIn: state.isLoggedIn,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken
+      }),
+      onRehydrateStorage: () => {
+        return async () => {
+          try {
+            const { data } = await axios.get("/api/auth", {
+              withCredentials: true
+            });
+
+            useAuthStore.setState({
+              user: data.user || null,
+              isLoggedIn: !!(data.user && data.accessToken),
+              accessToken: data.accessToken || null,
+              refreshToken: data.refreshToken || null
+            });
+          } catch (err) {
+            useAuthStore.setState({
+              user: null,
+              isLoggedIn: false,
+              accessToken: null,
+              refreshToken: null
+            });
+          } finally {
+            useAuthStore.setState({ isInitialLoading: false });
+          }
+        };
+      }
     }
   )
 );

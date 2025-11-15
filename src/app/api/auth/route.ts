@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { COOKIE_KEYS } from "../../../../../server/settings/cookies";
+import { COOKIE_KEYS } from "../../../../server/settings/cookies";
 
 export async function GET(request: NextRequest) {
   const accessToken = request.cookies.get(COOKIE_KEYS.authAccessToken)?.value;
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
   if (!accessToken || !refreshToken || !userCookie) {
     return NextResponse.json(
-      { user: null, accessToken: null, refreshToken: null },
+      { isLoggedIn: false, user: null, accessToken: null, refreshToken: null },
       { status: 200 }
     );
   }
@@ -18,12 +18,13 @@ export async function GET(request: NextRequest) {
     user = JSON.parse(userCookie);
   } catch {
     return NextResponse.json(
-      { user: null, accessToken: null, refreshToken: null },
+      { isLoggedIn: false, user: null, accessToken: null, refreshToken: null },
       { status: 200 }
     );
   }
 
   return NextResponse.json({
+    isLoggedIn: true,
     user,
     accessToken,
     refreshToken

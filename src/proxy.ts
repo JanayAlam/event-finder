@@ -5,7 +5,7 @@ import { COOKIE_KEYS } from "../server/settings/cookies";
 
 const ADMIN_ONLY_ROUTES: string[] = [];
 const USER_ONLY_ROUTES: string[] = [];
-const AUTH_COMMON_ROUTES: string[] = ["/"];
+const AUTH_COMMON_ROUTES: string[] = [];
 
 const PRIVATE_ROUTES: string[] = [
   ...AUTH_COMMON_ROUTES,
@@ -24,6 +24,7 @@ export default function proxy(request: NextRequest) {
   const userCookie = request.cookies.get(COOKIE_KEYS.authUser)?.value;
 
   const isLoggedIn = accessToken && refreshToken && userCookie;
+
   let userRole: TUserRole | null = null;
 
   try {

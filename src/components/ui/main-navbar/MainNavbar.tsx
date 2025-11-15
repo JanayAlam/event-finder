@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthStore } from "@/app/_store/auth-store";
-import { axiosInstance } from "@/axios";
 import {
   Avatar,
   AvatarFallback,
@@ -17,6 +16,7 @@ import {
 } from "@/components/shared/atoms/menu";
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
+import AuthRepository from "@/repositories/auth.repository";
 import { cn } from "@/utils/tailwind-utils";
 import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
@@ -32,19 +32,15 @@ const leagueSpartan = League_Spartan({
 });
 
 const MainNavbar: React.FC = () => {
-  const { isAuthenticated, user, clearAuth } = useAuthStore();
+  const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const handleLogoutAction = async () => {
-    const response = await fetch("/api/auth/logout", {
-      method: "POST"
-    });
-    if (response.ok) {
-      clearAuth();
-    }
+    await AuthRepository.logout();
+    clearAuth();
   };
 
-  const handleLoginAction = async () => {
-    await axiosInstance(`${API_BASE_URL}/auth/login`);
+  const handleLoginAction = () => {
+    window.location.href = `${API_BASE_URL}/auth/login`;
   };
 
   return (
@@ -64,7 +60,7 @@ const MainNavbar: React.FC = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          {isAuthenticated && user ? (
+          {isLoggedIn && user ? (
             <div className="flex items-center">
               <Button variant="ghost">
                 <Bell />

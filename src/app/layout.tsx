@@ -25,26 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  if (theme === 'dark' || theme === 'light') {
-                    document.documentElement.classList.toggle('dark', theme === 'dark');
-                  } else {
-                    var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                    document.documentElement.classList.toggle('dark', systemTheme === 'dark');
-                  }
-                } catch (e) {}
-              })();
-            `
-          }}
-        />
-      </head>
+    <html lang="en" className="light" style={{ colorScheme: "light" }}>
       <body className={inter.className}>
         <Providers>
           <Toaster reverseOrder={false} />

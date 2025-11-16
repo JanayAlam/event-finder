@@ -1,17 +1,13 @@
 {
-  "cSpell.words": [
-    "Anika",
-    "Anmol",
-    "anmolsara",
-    "autoincrement",
-    "cuid",
-    "heroui",
-    "janayalam",
-    "kinde",
-    "LOGGLY",
-    "MILLILITRE",
-    "partialize",
-    "TJWT",
-    "tripmate"
-  ]
+  "eslint.useFlatConfig": true,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }

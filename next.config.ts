@@ -13,9 +13,6 @@ const nextConfig: NextConfig = {
     // Disable these in development for faster compilation
     typescript: {
       ignoreBuildErrors: false // Keep false to catch errors
-    },
-    eslint: {
-      ignoreDuringBuilds: false
     }
   }),
   images: {

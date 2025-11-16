@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TProfile } from "../../models/profile.model";
 import { TUser } from "../../models/user.model";
 import {
   RefreshAccessTokenDtoSchema,
@@ -19,3 +20,4 @@ export type TRefreshAccessTokenRequestBodyDto = z.infer<
 >;
 
 export type TUserResponse = TUser;
+export type TUserWithProfileResponse = TUser & { profile: TProfile };

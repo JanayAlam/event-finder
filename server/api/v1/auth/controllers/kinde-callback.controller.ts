@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { createUserAndProfile } from "../../../../services/aggregations/user-profile";
 import { getAuthorizationTokens } from "../../../../services/kinde";
-import { getOrCreateUser } from "../../../../services/user";
+import { getUser } from "../../../../services/user";
 import {
   ACCESS_TOKEN_EXPIRY,
   PUBLIC_SERVER_URL,
@@ -36,16 +37,32 @@ export const kindeCallbackController = async (
 
     const decoded = jwt.decode(tokens.idToken) as JwtPayload;
 
-    const { sub, email } = decoded;
+    const {
+      sub,
+      email,
+      given_name: firstName,
+      family_name: lastName
+    } = decoded;
 
     if (!sub || !email) {
       throw new ApiError(500, "Invalid JWT payload");
     }
 
-    const user = await getOrCreateUser({
-      kindeId: sub,
-      email
-    });
+    let user = await getUser({ kindeId: sub, email }, "profile");
+
+    if (!user) {
+      const { user: createdUser, profile } = await createUserAndProfile({
+        kindeId: sub,
+        email,
+        firstName,
+        lastName
+      });
+
+      user = {
+        ...createdUser.toObject(),
+        profile
+      };
+    }
 
     res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {
       ...cookieOptions,

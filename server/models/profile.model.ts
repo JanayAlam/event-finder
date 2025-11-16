@@ -4,6 +4,7 @@ import User from "./user.model";
 
 interface IProfileBase extends ITimestamps {
   userId: Types.ObjectId;
+  profileImage?: string;
   firstName: string;
   lastName: string;
 }
@@ -18,6 +19,9 @@ const profileSchema = new Schema<IProfileDoc>(
       unique: true,
       required: true,
       index: true
+    },
+    profileImage: {
+      type: String
     },
     firstName: {
       type: String,

@@ -1,11 +1,13 @@
 import axios from "axios";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TUser } from "../../../server/models/user.model";
+import { TUserWithProfileResponse } from "../../../server/types/auth";
+
+type TUserWithProfile = TUserWithProfileResponse;
 
 type TAuthState = {
   isInitialLoading: boolean;
-  user: TUser | null;
+  user: TUserWithProfile | null;
   isLoggedIn: boolean;
   accessToken: string | null;
   refreshToken: string | null;
@@ -13,14 +15,13 @@ type TAuthState = {
 
 type TAuthActions = {
   setAuth: (
-    user: TUser | null,
+    user: TUserWithProfile | null,
     accessToken: string,
     refreshToken: string
   ) => void;
   clearAuth: () => void;
-  updateUser: (user: Partial<TUser>) => void;
   initAuth: (
-    user: TUser | null,
+    user: TUserWithProfile | null,
     accessToken: string | null,
     refreshToken: string | null
   ) => void;
@@ -61,12 +62,6 @@ export const useAuthStore = create<TAuthStore>()(
 
       clearAuth: () => {
         set(initialState);
-      },
-
-      updateUser: (userUpdates) => {
-        set((state) => ({
-          user: state.user ? { ...state.user, ...userUpdates } : null
-        }));
       }
     }),
     {
@@ -90,7 +85,7 @@ export const useAuthStore = create<TAuthStore>()(
               accessToken: data.accessToken || null,
               refreshToken: data.refreshToken || null
             });
-          } catch (err) {
+          } catch {
             useAuthStore.setState({
               user: null,
               isLoggedIn: false,

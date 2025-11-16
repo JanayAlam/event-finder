@@ -21,7 +21,7 @@ import { cn } from "@/utils/tailwind-utils";
 import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import toast from "react-hot-toast";
 import { Button } from "../../shared/atoms/button";
 import ThemeToggleButton from "../theme-toggle-button";
@@ -44,6 +44,18 @@ const MainNavbar: React.FC = () => {
   const handleLoginAction = () => {
     window.location.href = `${API_BASE_URL}/auth/login`;
   };
+
+  const userNameInitials = useMemo(() => {
+    if (!user) return "";
+    const { firstName, lastName } = user.profile;
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }, [user]);
+
+  const userFullName = useMemo(() => {
+    if (!user) return "";
+    const { firstName, lastName } = user.profile;
+    return `${firstName} ${lastName}`;
+  }, [user]);
 
   return (
     <div className="border-b border-b-borders-1 w-full flex justify-center sticky top-0">
@@ -74,15 +86,13 @@ const MainNavbar: React.FC = () => {
                   <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
                     <Avatar>
                       <AvatarImage
-                        src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2)}`}
+                        src={`https://ui-avatars.com/api/?name=${userNameInitials}`}
                         alt="User profile picture"
                       />
-                      <AvatarFallback>
-                        {user.email.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
+                      <AvatarFallback>{userNameInitials}</AvatarFallback>
                     </Avatar>
                     <div className="hidden sm:flex flex-col">
-                      <div className="text-sm">{user.email.split("@")[0]}</div>
+                      <div className="text-sm">{userFullName}</div>
                       <div className="text-muted-foreground text-xs capitalize">
                         {user.role}
                       </div>

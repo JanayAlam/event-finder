@@ -1,9 +1,9 @@
 import axios from "axios";
-import { TUserWithProfileResponse } from "../../server/types/auth";
+import { TUserResponse } from "../../server/types/auth";
 
 type AuthStatusResponse = {
   isLoggedIn: boolean;
-  user: TUserWithProfileResponse | null;
+  user: TUserResponse | null;
   accessToken: string | null;
   refreshToken: string | null;
 };

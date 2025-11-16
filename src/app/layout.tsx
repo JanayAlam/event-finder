@@ -3,7 +3,8 @@ import "./reset.css";
 import "./globals.css";
 
 import MainNavbar from "@/components/ui/main-navbar";
-import SecondaryNavbar from "@/components/ui/secondary-navbar";
+import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
+import { cn } from "@/utils/tailwind-utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -30,8 +31,9 @@ export default function RootLayout({
         <Providers>
           <Toaster reverseOrder={false} />
           <MainNavbar />
-          <SecondaryNavbar />
-          {children}
+          <div className="w-full flex justify-center py-4">
+            <div className={cn(PAGE_WIDTH_CLASS_NAME)}>{children}</div>
+          </div>
         </Providers>
       </body>
     </html>

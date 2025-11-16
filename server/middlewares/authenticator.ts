@@ -69,7 +69,7 @@ export function authenticate(allowedRoles?: TUserRole[]) {
         throw new ApiError(403, "Invalid token payload");
       }
 
-      const user = await getUser({ kindeId, email: emailAddr }, "profile");
+      const user = await getUser({ kindeId, email: emailAddr });
 
       if (!user) {
         throw new ApiError(403, "Authorized user not found");

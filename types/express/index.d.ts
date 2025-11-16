@@ -1,4 +1,3 @@
-import { IProfileDoc } from "../../server/models/profile.model";
 import { IUserDoc } from "../../server/models/user.model";
 
 // to make the file a module and avoid the TypeScript error
@@ -11,7 +10,7 @@ declare global {
         sub: string;
         email: string;
       } | null;
-      user: (IUserDoc & { profile: IProfileDoc }) | null;
+      user: IUserDoc | null;
     }
   }
 }

@@ -6,6 +6,7 @@ import {
   AvatarFallback,
   AvatarImage
 } from "@/components/shared/atoms/avatar";
+import { Kbd } from "@/components/shared/atoms/kdb";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +18,12 @@ import {
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
+import { PRIVATE_PAGE_ROUTE } from "@/routes";
 import { cn } from "@/utils/tailwind-utils";
-import { Bell, ChevronDownIcon } from "lucide-react";
+import { Bell, ChevronDownIcon, SearchIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
-import React, { useMemo } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 import { Button } from "../../shared/atoms/button";
 import ThemeToggleButton from "../theme-toggle-button";
@@ -45,20 +47,14 @@ const MainNavbar: React.FC = () => {
     window.location.href = `${API_BASE_URL}/auth/login`;
   };
 
-  const userNameInitials = useMemo(() => {
-    if (!user) return "";
-    const { firstName, lastName } = user.profile;
-    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-  }, [user]);
-
-  const userFullName = useMemo(() => {
-    if (!user) return "";
-    const { firstName, lastName } = user.profile;
-    return `${firstName} ${lastName}`;
-  }, [user]);
-
   return (
-    <div className="border-b border-b-borders-1 w-full flex justify-center sticky top-0">
+    <div
+      className={cn(
+        "sticky top-0",
+        "w-full flex justify-center",
+        "border-b border-b-borders-1"
+      )}
+    >
       <div
         className={cn(
           PAGE_WIDTH_CLASS_NAME,
@@ -70,64 +66,79 @@ const MainNavbar: React.FC = () => {
             href={"/"}
             className="text-4xl font-extrabold text-brand-primary-main select-none"
           >
-            <span className="xs:hidden">tr.</span>
-            <span className="hidden xs:block">tripmate.</span>
+            <span className="sm:hidden">tr.</span>
+            <span className="hidden sm:block">tripmate.</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
-          {isLoggedIn && user ? (
-            <div className="flex items-center">
-              <Button variant="ghost">
-                <Bell />
-              </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
-                    <Avatar>
-                      <AvatarImage
-                        src={`https://ui-avatars.com/api/?name=${userNameInitials}`}
-                        alt="User profile picture"
-                      />
-                      <AvatarFallback>{userNameInitials}</AvatarFallback>
-                    </Avatar>
-                    <div className="hidden sm:flex flex-col">
-                      <div className="text-sm">{userFullName}</div>
-                      <div className="text-muted-foreground text-xs capitalize">
-                        {user.role}
-                      </div>
-                    </div>
-                    <ChevronDownIcon
-                      height={18}
-                      width={18}
-                      className="text-muted-foreground"
+        {isLoggedIn && user ? (
+          <div className="flex items-center gap-2">
+            <Button variant="outline">
+              <div className="sm:hidden">
+                <SearchIcon />
+              </div>
+              <div className="hidden sm:flex justify-between items-center gap-4">
+                <span className="text-gray-400">Search Trips</span>
+                <span>
+                  <Kbd>Ctrl</Kbd>
+                  <span className="text-gray-400">+</span>
+                  <Kbd>k</Kbd>
+                </span>
+              </div>
+            </Button>
+            <Button variant="ghost">
+              <Bell />
+            </Button>
+            <ThemeToggleButton />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
+                  <Avatar>
+                    <AvatarImage
+                      src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2).toUpperCase()}`}
+                      alt="User profile picture"
                     />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-50 flex flex-col gap-1"
-                  align="start"
-                >
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <AvatarFallback>
+                      {user.email.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <ChevronDownIcon
+                    height={18}
+                    width={18}
+                    className="text-muted-foreground"
+                  />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-50 flex flex-col gap-1"
+                align="start"
+              >
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <Link href={PRIVATE_PAGE_ROUTE.ACCOUNT_SETTINGS}>
                     <DropdownMenuItem>Account settings</DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={handleLogoutAction}>
-                      Log out
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          ) : (
+                  </Link>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={handleLogoutAction}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size="icon">
+              <SearchIcon />
+            </Button>
+            <ThemeToggleButton />
             <Button variant="outline" onClick={handleLoginAction}>
               Login/Signup
             </Button>
-          )}
-          <ThemeToggleButton />
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

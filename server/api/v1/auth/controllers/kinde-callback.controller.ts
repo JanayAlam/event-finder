@@ -48,20 +48,17 @@ export const kindeCallbackController = async (
       throw new ApiError(500, "Invalid JWT payload");
     }
 
-    let user = await getUser({ kindeId: sub, email }, "profile");
+    let user = await getUser({ kindeId: sub, email });
 
     if (!user) {
-      const { user: createdUser, profile } = await createUserAndProfile({
+      const { user: createdUser } = await createUserAndProfile({
         kindeId: sub,
         email,
         firstName,
         lastName
       });
 
-      user = {
-        ...createdUser.toObject(),
-        profile
-      };
+      user = createdUser;
     }
 
     res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {

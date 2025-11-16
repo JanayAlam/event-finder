@@ -15,7 +15,7 @@ import {
   ItemActions,
   ItemContent,
   ItemTitle
-} from "@/components/shared/atoms/item/Item";
+} from "@/components/shared/atoms/item";
 import { NavbarLink } from "@/components/shared/atoms/links";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";

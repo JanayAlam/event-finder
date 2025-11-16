@@ -29,6 +29,19 @@ export const getKindePublicKey = (header: any, callback: any) => {
   });
 };
 
+export const getAuthorizationUrl = (state: string) => {
+  const queryParams = new URLSearchParams({
+    client_id: KINDE_CLIENT_ID,
+    redirect_uri: KINDE_REDIRECT_URI,
+    response_type: "code",
+    scope: "openid profile email offline",
+    state,
+    prompt: "login"
+  });
+
+  return `${KINDE_DOMAIN}/oauth2/auth?${queryParams.toString()}`;
+};
+
 export const getAuthorizationTokens = async (code: string) => {
   try {
     const { data } = await axios.post(

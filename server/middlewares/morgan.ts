@@ -4,7 +4,7 @@ import logger from "../utils/winston";
 
 const configMorgan = (app: Express) => {
   morgan.token("body", (req: Request) => req.body);
-  morgan.token("res-body", (req: Request, res: Response) => res.locals.body);
+  morgan.token("res-body", (_req: Request, res: Response) => res.locals.body);
 
   app.use(
     morgan((tokens, req, res) => {

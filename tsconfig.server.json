@@ -10,12 +10,14 @@
     "isolatedModules": false,
     "noEmit": false,
     "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "typeRoots": [
       "types",
       "node_modules/@types"
     ]
   },
   "include": [
-    "server/index.ts"
+    "server/**/*.ts"
   ]
 }

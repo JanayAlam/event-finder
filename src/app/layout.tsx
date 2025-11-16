@@ -5,7 +5,6 @@ import "./globals.css";
 import MainNavbar from "@/components/ui/main-navbar";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./providers";
@@ -15,9 +14,12 @@ const inter = Inter({
   variable: "--font-inter"
 });
 
-export const metadata: Metadata = {
-  title: "Trip Mate",
-  description: "Trip Mate platform"
+export const metadata = {
+  title: {
+    default: "TripMate",
+    template: "%s | TripMate"
+  },
+  description: "TripMate — Find the best group trips around you"
 };
 
 export default function RootLayout({

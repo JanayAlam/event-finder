@@ -1,36 +1,34 @@
-import Image from "next/image";
+import { Button } from "@/components/shared/shadcn-components/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle
+} from "@/components/shared/shadcn-components/empty";
+import { H1 } from "@/components/shared/shadcn-components/typography";
+import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import Link from "next/link";
+import React from "react";
 
-const NotFound = () => {
+const NotFoundPage: React.FC = () => {
   return (
-    <div>
-      <div className="grid h-screen place-content-center bg-white">
-        <div className="text-center">
-          <Image
-            className="mx-auto h-56 w-auto text-black sm:h-64"
-            src="/images/page-not-found-page.svg"
-            width={200}
-            height={150}
-            alt="Page not found image"
-          />
-
-          <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Uh-oh!
-          </h1>
-
-          <p className="mt-4 text-gray-500">We can&rsquo;t find that page.</p>
-
-          <div className="mt-4">
-            <Link href={"/"}>
-              <button className="px-4 py-2 rounded-md border hover:border-green-600 border-green-200 bg-green-200">
-                Return to home
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Empty>
+      <EmptyHeader>
+        <EmptyTitle>
+          <H1>404 - Not Found</H1>
+        </EmptyTitle>
+        <EmptyDescription>
+          The page you&apos;re looking for doesn&apos;t exist.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Link href={PUBLIC_PAGE_ROUTE.HOME}>
+          <Button>Go to homepage</Button>
+        </Link>
+      </EmptyContent>
+    </Empty>
   );
 };
 
-export default NotFound;
+export default NotFoundPage;

@@ -1,4 +1,4 @@
-import SettingsCard from "@/components/ui/settings/settings-card";
+import SettingsCard from "@/components/ui/account-preferences/settings-card";
 
 export const metadata = {
   title: "Personal Info",

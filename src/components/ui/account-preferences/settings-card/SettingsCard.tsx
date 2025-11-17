@@ -4,8 +4,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from "@/components/shared/atoms/card";
-import { H3 } from "@/components/shared/atoms/typography";
+} from "@/components/shared/shadcn-components/card";
+import { H3 } from "@/components/shared/shadcn-components/typography";
 import React, { PropsWithChildren } from "react";
 
 type TSettingsCardProps = PropsWithChildren & {

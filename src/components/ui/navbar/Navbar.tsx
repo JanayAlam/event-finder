@@ -5,7 +5,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage
-} from "@/components/shared/atoms/avatar";
+} from "@/components/shared/shadcn-components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@/components/shared/atoms/menu";
+} from "@/components/shared/shadcn-components/menu";
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
@@ -24,7 +24,7 @@ import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
-import { Button } from "../../shared/atoms/button";
+import { Button } from "../../shared/shadcn-components/button";
 import ThemeToggleButton from "../theme-toggle-button";
 import SearchButton from "./SearchButton";
 
@@ -34,7 +34,7 @@ const leagueSpartan = League_Spartan({
   display: "swap"
 });
 
-const MainNavbar: React.FC = () => {
+const Navbar: React.FC = () => {
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const handleLogoutAction = async () => {
@@ -130,4 +130,4 @@ const MainNavbar: React.FC = () => {
   );
 };
 
-export default MainNavbar;
+export default Navbar;

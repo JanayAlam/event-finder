@@ -1,6 +1,6 @@
 import { PRIVATE_PAGE_ROUTE } from "@/routes";
 import React, { PropsWithChildren } from "react";
-import SettingsNavigation from "../../components/ui/settings/settings-navigation";
+import SettingsNavigation from "../../components/ui/account-preferences/settings-navigation";
 
 type TSideMenuItem = {
   key: string;

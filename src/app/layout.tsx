@@ -2,7 +2,7 @@ import "./reset.css";
 
 import "./globals.css";
 
-import MainNavbar from "@/components/ui/main-navbar";
+import Navbar from "@/components/ui/navbar";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
 import { Inter } from "next/font/google";
@@ -34,7 +34,7 @@ export default function RootLayout({
         <NextTopLoader showSpinner={false} color="#ff751f" />
         <Providers>
           <Toaster reverseOrder={false} />
-          <MainNavbar />
+          <Navbar />
           <div className="w-full flex justify-center py-4">
             <div className={cn(PAGE_WIDTH_CLASS_NAME)}>{children}</div>
           </div>

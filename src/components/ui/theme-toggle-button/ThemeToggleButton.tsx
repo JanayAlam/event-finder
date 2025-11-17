@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
-import { Button } from "../../shared/atoms/button";
+import { Button } from "../../shared/shadcn-components/button";
 
 export default function ThemeToggleButton() {
   const { resolvedTheme, setTheme } = useTheme();

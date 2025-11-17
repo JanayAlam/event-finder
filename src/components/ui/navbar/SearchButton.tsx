@@ -1,5 +1,8 @@
-import { Button, TButtonProps } from "@/components/shared/atoms/button";
-import { Kbd } from "@/components/shared/atoms/kdb";
+import {
+  Button,
+  TButtonProps
+} from "@/components/shared/shadcn-components/button";
+import { Kbd } from "@/components/shared/shadcn-components/kdb";
 import { SearchIcon } from "lucide-react";
 import React from "react";
 

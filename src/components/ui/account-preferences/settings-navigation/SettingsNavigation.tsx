@@ -5,7 +5,7 @@ import {
   ItemActions,
   ItemContent,
   ItemTitle
-} from "@/components/shared/atoms/item";
+} from "@/components/shared/shadcn-components/item";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue
-} from "@/components/shared/atoms/select";
+} from "@/components/shared/shadcn-components/select";
 import { cn } from "@/utils/tailwind-utils";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";

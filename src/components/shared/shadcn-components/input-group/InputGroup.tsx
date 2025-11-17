@@ -3,9 +3,9 @@
 import { cn } from "@/utils/tailwind-utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { Button } from "../../shadcn-components/button";
-import { Input } from "../../shadcn-components/input";
-import { Textarea } from "../../shadcn-components/textarea";
+import { Button } from "../button";
+import { Input } from "../input";
+import { Textarea } from "../textarea";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (

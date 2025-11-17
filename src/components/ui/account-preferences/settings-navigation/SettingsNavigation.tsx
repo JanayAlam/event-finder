@@ -85,7 +85,7 @@ const SettingsNavigation: React.FC<SettingsNavigationProps> = ({ items }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Settings</SelectLabel>
+              <SelectLabel>Account preferences</SelectLabel>
               {items.map((item) => (
                 <SelectItem key={item.key} value={item.key}>
                   {item.label}

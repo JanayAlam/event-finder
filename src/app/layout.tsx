@@ -6,6 +6,7 @@ import MainNavbar from "@/components/ui/main-navbar";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
 import { Inter } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./providers";
 
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <NextTopLoader showSpinner={false} color="#ff751f" />
         <Providers>
           <Toaster reverseOrder={false} />
           <MainNavbar />

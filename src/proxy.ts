@@ -5,14 +5,14 @@ import { COOKIE_KEYS } from "../server/settings/cookies";
 import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
   PRIVATE_PAGE_ROUTE,
-  PRIVATE_TRAVELLER_ONLY_PAGE_ROUTE
+  PRIVATE_TRAVELER_ONLY_PAGE_ROUTE
 } from "./routes";
 
 const ADMIN_ONLY_ROUTES: string[] = Object.values(
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE
 );
 const USER_ONLY_ROUTES: string[] = Object.values(
-  PRIVATE_TRAVELLER_ONLY_PAGE_ROUTE
+  PRIVATE_TRAVELER_ONLY_PAGE_ROUTE
 );
 
 const PRIVATE_ROUTES: string[] = [

@@ -6,7 +6,6 @@ import {
   AvatarFallback,
   AvatarImage
 } from "@/components/shared/atoms/avatar";
-import { Kbd } from "@/components/shared/atoms/kdb";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,13 +19,14 @@ import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
 import { PRIVATE_PAGE_ROUTE } from "@/routes";
 import { cn } from "@/utils/tailwind-utils";
-import { Bell, ChevronDownIcon, SearchIcon } from "lucide-react";
+import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
 import { Button } from "../../shared/atoms/button";
 import ThemeToggleButton from "../theme-toggle-button";
+import SearchButton from "./SearchButton";
 
 const leagueSpartan = League_Spartan({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -73,23 +73,10 @@ const MainNavbar: React.FC = () => {
 
         {isLoggedIn && user ? (
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <div className="sm:hidden">
-                <SearchIcon />
-              </div>
-              <div className="hidden sm:flex justify-between items-center gap-4">
-                <span className="text-gray-400">Search Trips</span>
-                <span>
-                  <Kbd>Ctrl</Kbd>
-                  <span className="text-gray-400">+</span>
-                  <Kbd>k</Kbd>
-                </span>
-              </div>
-            </Button>
+            <SearchButton />
             <Button variant="ghost">
               <Bell />
             </Button>
-            <ThemeToggleButton />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
@@ -115,8 +102,8 @@ const MainNavbar: React.FC = () => {
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <Link href={PRIVATE_PAGE_ROUTE.ACCOUNT_SETTINGS}>
-                    <DropdownMenuItem>Account settings</DropdownMenuItem>
+                  <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
+                    <DropdownMenuItem>Account preferences</DropdownMenuItem>
                   </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -127,16 +114,15 @@ const MainNavbar: React.FC = () => {
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
+            <ThemeToggleButton />
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon">
-              <SearchIcon />
-            </Button>
-            <ThemeToggleButton />
+            <SearchButton />
             <Button variant="outline" onClick={handleLoginAction}>
               Login/Signup
             </Button>
+            <ThemeToggleButton />
           </div>
         )}
       </div>

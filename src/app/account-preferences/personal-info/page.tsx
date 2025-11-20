@@ -1,4 +1,5 @@
 import SettingsCard from "@/components/ui/account-preferences/settings-card";
+import PersonalInfoForm from "./personal-info-form";
 
 export const metadata = {
   title: "Personal Info",
@@ -12,7 +13,7 @@ const PersonalInfoPage = () => {
       description="Manage your personal details and update your TripMate account
           information."
     >
-      Personal Information
+      <PersonalInfoForm />
     </SettingsCard>
   );
 };

@@ -15,7 +15,7 @@ const GRID_CLASSNAME = {
   "3": "xs:grid-cols-3"
 };
 
-type TFormProps<T extends z.ZodObject<any>> = {
+export type TFormProps<T extends z.ZodObject<any>> = {
   fields: Array<(TFormField | null)[]>;
   validationSchema?: T;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
@@ -43,7 +43,7 @@ function Form<T extends z.ZodObject<any>>(
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading }
+    formState: { errors, isSubmitting }
   } = useForm<z.infer<T>>({
     defaultValues: formDefaultValues as any,
     resolver: validationSchema
@@ -89,7 +89,7 @@ function Form<T extends z.ZodObject<any>>(
         ))}
       </div>
       <div className="flex gap-4">
-        <Button type="submit" isLoading={isLoading} disabled={isLoading}>
+        <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
           Submit
         </Button>
       </div>

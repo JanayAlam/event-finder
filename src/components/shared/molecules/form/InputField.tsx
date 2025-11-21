@@ -1,3 +1,4 @@
+import { cn } from "@/utils/tailwind-utils";
 import React, { useCallback } from "react";
 import {
   FieldError,
@@ -14,21 +15,30 @@ export type TInputFieldProps = {
   isRequired?: boolean;
   label: string;
   name: string;
-  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | string;
+  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   register?: UseFormRegister<FieldValues>;
 } & Omit<React.ComponentProps<"input">, "name">;
 
+const getErrorMessage = (
+  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>
+): string | undefined => {
+  if (!error) return undefined;
+
+  if (typeof error.message === "string") return error.message;
+
+  if (typeof error === "object") {
+    for (const key in error) {
+      const nested = (error as any)[key];
+      const msg = getErrorMessage(nested);
+      if (msg) return msg;
+    }
+  }
+
+  return undefined;
+};
+
 const InputField: React.FC<TInputFieldProps> = (props) => {
-  const {
-    id,
-    isRequired,
-    label,
-    name,
-    type,
-    error: _,
-    register,
-    ...rest
-  } = props;
+  const { id, isRequired, label, name, type, error, register, ...rest } = props;
 
   const renderLabel = useCallback((): React.ReactNode => {
     if (!label) return null;
@@ -45,13 +55,19 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
   return (
     <div className="flex flex-col gap-1.5">
       {renderLabel()}
-      <Input
-        {...(register ? register(name) : {})}
-        type={type ?? "text"}
-        id={id}
-        name={name}
-        {...rest}
-      />
+      <div className="flex flex-col gap-0.5">
+        <Input
+          {...(register ? register(name) : {})}
+          type={type ?? "text"}
+          id={id}
+          name={name}
+          className={cn(error && "border border-destructive")}
+          {...rest}
+        />
+        {error ? (
+          <p className="text-destructive text-sm">{getErrorMessage(error)}</p>
+        ) : null}
+      </div>
     </div>
   );
 };

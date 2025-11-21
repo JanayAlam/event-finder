@@ -1,8 +1,13 @@
+"use client";
+
 import { AuthProvider } from "@/app/_providers/auth-provider";
 import { ThemeProvider } from "@/app/_providers/theme-provider";
-import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useState } from "react";
 
 export function Providers({ children }: React.PropsWithChildren) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <main>
       <ThemeProvider
@@ -11,7 +16,9 @@ export function Providers({ children }: React.PropsWithChildren) {
         enableSystem
         disableTransitionOnChange
       >
-        <AuthProvider>{children}</AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientProvider>
       </ThemeProvider>
     </main>
   );

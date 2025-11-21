@@ -1,3 +1,4 @@
+import { TProfile } from "../../server/models/profile.model";
 import BaseRepository from "./base.repository";
 
 class AuthRepository extends BaseRepository {
@@ -10,6 +11,11 @@ class AuthRepository extends BaseRepository {
   static logout() {
     const url = `${AuthRepository.apiRouter}/logout`;
     return this.request<undefined, { message: string }>(url, "get", undefined);
+  }
+
+  static getMyProfile() {
+    const url = `${AuthRepository.apiRouter}/my-profile`;
+    return this.request<undefined, TProfile>(url, "get", undefined);
   }
 }
 

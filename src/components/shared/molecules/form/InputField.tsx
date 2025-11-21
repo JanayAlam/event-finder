@@ -41,7 +41,6 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
   const { id, isRequired, label, name, type, error, register, ...rest } = props;
 
   const renderLabel = useCallback((): React.ReactNode => {
-    if (!label) return null;
     return (
       <Label htmlFor={id}>
         <div className="flex items-center">

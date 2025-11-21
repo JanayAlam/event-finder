@@ -7,9 +7,12 @@ interface IProfileBase extends ITimestamps {
   profileImage?: string;
   firstName: string;
   lastName: string;
+  dateOfBirth?: Date;
 }
 
-export interface IProfileDoc extends IProfileBase, Document {}
+export interface IProfileDoc extends IProfileBase, Document {
+  _id: Types.ObjectId;
+}
 
 const profileSchema = new Schema<IProfileDoc>(
   {
@@ -30,6 +33,9 @@ const profileSchema = new Schema<IProfileDoc>(
     lastName: {
       type: String,
       required: true
+    },
+    dateOfBirth: {
+      type: Date
     }
   },
   { timestamps: true }

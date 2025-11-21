@@ -1,11 +1,7 @@
 import { useAuthStore } from "@/app/_store/auth-store";
 import { API_BASE_URL } from "@/config";
 import { getAuthStatus } from "@/utils/auth-token";
-import axios, {
-  AxiosRequestConfig,
-  AxiosResponse,
-  InternalAxiosRequestConfig
-} from "axios";
+import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 
 type HttpMethod = "post" | "get" | "put" | "patch" | "delete";
@@ -133,7 +129,7 @@ class BaseRepository {
     id?: string,
     body?: InputBody,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<ResponseType>> {
+  ): Promise<ResponseType> {
     const finalUrl = `${url}${["post", "get"].includes(method) && !id ? "" : `/${id}`}`;
     const firstParam = ["post", "put", "patch"].includes(method)
       ? body
@@ -142,11 +138,13 @@ class BaseRepository {
       ? config
       : undefined;
 
-    return await this.http[method]<ResponseType>(
+    const { data } = await this.http[method]<ResponseType>(
       finalUrl,
       firstParam,
       secondParam
     );
+
+    return data;
   }
 }
 

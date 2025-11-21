@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { TUserRole, USER_ROLE } from "../../enums/role.enum";
-import Profile, { IProfileDoc } from "../../models/profile.model";
-import User, { IUserDoc } from "../../models/user.model";
+import Profile, { TProfile } from "../../models/profile.model";
+import User, { TUser } from "../../models/user.model";
 
 type TCreateUserAndProfileDto = {
   kindeId: string;
@@ -13,19 +13,38 @@ type TCreateUserAndProfileDto = {
 
 export const createUserAndProfile = async (
   data: TCreateUserAndProfileDto
-): Promise<{ user: IUserDoc; profile: IProfileDoc }> => {
+): Promise<{ user: TUser; profile: TProfile }> => {
   return await mongoose.connection.transaction(async () => {
-    const user = await User.create({
+    const userDoc = await User.create({
       kindeId: data.kindeId,
       email: data.email,
       role: data.role ?? USER_ROLE.TRAVELLER
     });
 
-    const profile = await Profile.create({
-      userId: user._id,
+    const profileDoc = await Profile.create({
+      userId: userDoc._id,
       firstName: data.firstName,
       lastName: data.lastName
     });
+
+    const user: TUser = {
+      _id: userDoc._id,
+      kindeId: userDoc.kindeId,
+      email: userDoc.email,
+      role: userDoc.role,
+      createdAt: userDoc.createdAt,
+      updatedAt: userDoc.updatedAt
+    };
+
+    const profile: TProfile = {
+      _id: profileDoc._id,
+      userId: profileDoc.userId,
+      firstName: profileDoc.firstName,
+      lastName: profileDoc.lastName,
+      profileImage: profileDoc.profileImage,
+      createdAt: profileDoc.createdAt,
+      updatedAt: profileDoc.updatedAt
+    };
 
     return { user, profile };
   });

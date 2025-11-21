@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { getProfileByUserId } from "../../../../services/profile";
 import { COOKIE_KEYS } from "../../../../settings/cookies";
 import ApiError from "../../../../utils/api-error";
 
@@ -30,6 +31,24 @@ export const getMeController = async (
       refreshToken,
       user
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getMyProfileController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const profile = await getProfileByUserId(req.user?._id);
+
+    if (!profile) {
+      throw new ApiError(404, "Profile not found");
+    }
+
+    res.json(profile);
   } catch (err) {
     next(err);
   }

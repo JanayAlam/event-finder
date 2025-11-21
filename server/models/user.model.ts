@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { TUserRole, USER_ROLE, userRoles } from "../enums/role.enum";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 
@@ -8,7 +8,9 @@ interface UserBase extends ITimestamps {
   role: TUserRole;
 }
 
-export interface IUserDoc extends UserBase, Document {}
+export interface IUserDoc extends UserBase, Document {
+  _id: Types.ObjectId;
+}
 
 const userSchema = new Schema<IUserDoc>(
   {

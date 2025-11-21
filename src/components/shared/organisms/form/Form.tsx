@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { InputField } from "../../molecules/form";
+import { InputField, InputFieldSkeleton } from "../../molecules/form";
 import { Button } from "../../shadcn-components/button";
+import { Skeleton } from "../../shadcn-components/skeleton";
 import { TFormField } from "./form.types";
 
 const GRID_CLASSNAME = {
@@ -18,13 +19,21 @@ const GRID_CLASSNAME = {
 export type TFormProps<T extends z.ZodObject<any>> = {
   fields: Array<(TFormField | null)[]>;
   validationSchema?: T;
+  isLoading?: boolean;
+  submitButtonLabel?: string;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
 };
 
 function Form<T extends z.ZodObject<any>>(
   props: TFormProps<T>
 ): React.ReactElement {
-  const { fields: fieldDimention, validationSchema, onSubmitCallback } = props;
+  const {
+    fields: fieldDimention,
+    validationSchema,
+    isLoading,
+    submitButtonLabel,
+    onSubmitCallback
+  } = props;
 
   const formDefaultValues = useMemo(
     () =>
@@ -72,15 +81,21 @@ function Form<T extends z.ZodObject<any>>(
           >
             {dimention.map((field, fieldIndex) =>
               field !== null ? (
-                <InputField
-                  key={`${field.name}${fieldIndex}`}
-                  register={register as any}
-                  type={field.type}
-                  label={field.label}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  error={errors[field.name]}
-                />
+                isLoading ? (
+                  <InputFieldSkeleton
+                    key={`skeleton-${field.name}${fieldIndex}`}
+                  />
+                ) : (
+                  <InputField
+                    key={`${field.name}${fieldIndex}`}
+                    register={register as any}
+                    type={field.type}
+                    label={field.label}
+                    name={field.name}
+                    placeholder={field.placeholder}
+                    error={errors[field.name]}
+                  />
+                )
               ) : (
                 <div key={`empty-${fieldIndex}`} />
               )
@@ -89,9 +104,17 @@ function Form<T extends z.ZodObject<any>>(
         ))}
       </div>
       <div className="flex gap-4">
-        <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
-          Submit
-        </Button>
+        {isLoading ? (
+          <Skeleton className="h-9 w-24" />
+        ) : (
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            {submitButtonLabel ?? "Submit"}
+          </Button>
+        )}
       </div>
     </form>
   );

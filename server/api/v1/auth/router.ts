@@ -1,7 +1,11 @@
 import { Router } from "express";
+import { authenticate } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import { RefreshAccessTokenDtoSchema } from "../../../validationSchemas/auth";
-import { getMeController } from "./controllers/get-me.controller";
+import {
+  getMeController,
+  getMyProfileController
+} from "./controllers/get-me.controller";
 import { kindeCallbackController } from "./controllers/kinde-callback.controller";
 import { loginController } from "./controllers/login.controller";
 import { logoutController } from "./controllers/logout.controller";
@@ -19,6 +23,7 @@ authRouter.post(
 
 authRouter.get("/logout", logoutController);
 
-authRouter.get("/me", getMeController);
+authRouter.get("/me", authenticate(), getMeController);
+authRouter.get("/my-profile", authenticate(), getMyProfileController);
 
 export default authRouter;

@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const handleLogoutAction = async () => {
-    const { data } = await AuthRepository.logout();
+    const data = await AuthRepository.logout();
     clearAuth();
     toast.success(data.message);
   };

@@ -19,10 +19,13 @@ class CRUDRepository<
   public async getAll(
     query?: Record<string, any>
   ): Promise<GetAllResponseType> {
-    const { data } = await CRUDRepository.request<
+    const data = await CRUDRepository.request<undefined, GetAllResponseType>(
+      CRUDRepository.apiRoute,
+      "get",
       undefined,
-      GetAllResponseType
-    >(CRUDRepository.apiRoute, "get", undefined, undefined, { params: query });
+      undefined,
+      { params: query }
+    );
     return data;
   }
 
@@ -30,7 +33,7 @@ class CRUDRepository<
     id: string,
     query?: Record<string, any>
   ): Promise<GetResponseType> {
-    const { data } = await CRUDRepository.request<undefined, GetResponseType>(
+    const data = await CRUDRepository.request<undefined, GetResponseType>(
       CRUDRepository.apiRoute,
       "get",
       id,

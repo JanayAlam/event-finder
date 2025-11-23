@@ -9,7 +9,7 @@ class StatusRepository extends BaseRepository {
 
   static async health() {
     const url = `${this.apiRoute}/health`;
-    const { data } = await this.request(url, "get");
+    const data = await this.request(url, "get");
     return data;
   }
 }

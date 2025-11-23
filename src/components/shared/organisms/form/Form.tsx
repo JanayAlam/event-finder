@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/tailwind-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
@@ -52,6 +52,7 @@ function Form<T extends z.ZodObject<any>>(
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting }
   } = useForm<z.infer<T>>({
     defaultValues: formDefaultValues as any,
@@ -59,6 +60,12 @@ function Form<T extends z.ZodObject<any>>(
       ? (zodResolver(validationSchema) as any)
       : undefined
   });
+
+  useEffect(() => {
+    if (!isLoading) {
+      reset(formDefaultValues as any);
+    }
+  }, [formDefaultValues, reset, isLoading]);
 
   return (
     <form
@@ -93,6 +100,7 @@ function Form<T extends z.ZodObject<any>>(
                     label={field.label}
                     name={field.name}
                     placeholder={field.placeholder}
+                    isRequired={field.isRequired}
                     error={errors[field.name]}
                   />
                 )

@@ -3,7 +3,7 @@ import { getProfileByUserId } from "../../../../services/profile";
 import ApiError from "../../../../utils/api-error";
 import { convertToObjectId } from "../../../../utils/object-id";
 
-export const getProfileController = async (
+export const getUserProfileController = async (
   req: Request,
   res: Response,
   next: NextFunction

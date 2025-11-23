@@ -7,7 +7,11 @@ const inputValidator = (
   paramsSchema?: z.ZodSchema<any> | null,
   querySchema?: z.ZodSchema<any>
 ) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, any>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (req.headers["content-type"]?.split("/")[0] === "multipart") {
         Object.keys(req.body).forEach((key) => {

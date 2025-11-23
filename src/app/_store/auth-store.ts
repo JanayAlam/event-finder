@@ -1,11 +1,11 @@
 import axios from "axios";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TUserResponse } from "../../../server/types/auth";
+import { TUser } from "../../../server/models/user.model";
 
 type TAuthState = {
   isInitialLoading: boolean;
-  user: TUserResponse | null;
+  user: TUser | null;
   isLoggedIn: boolean;
   accessToken: string | null;
   refreshToken: string | null;
@@ -13,13 +13,13 @@ type TAuthState = {
 
 type TAuthActions = {
   setAuth: (
-    user: TUserResponse | null,
+    user: TUser | null,
     accessToken: string,
     refreshToken: string
   ) => void;
   clearAuth: () => void;
   initAuth: (
-    user: TUserResponse | null,
+    user: TUser | null,
     accessToken: string | null,
     refreshToken: string | null
   ) => void;

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { z } from "zod";
+import { RefreshAccessTokenDtoSchema } from "../../../../../validation-schemas/auth-schemas";
 import { refreshAccessToken } from "../../../../services/kinde";
 import { getUser } from "../../../../services/user";
 import {
@@ -7,8 +9,11 @@ import {
   REFRESH_TOKEN_EXPIRY
 } from "../../../../settings/config";
 import { COOKIE_KEYS, cookieOptions } from "../../../../settings/cookies";
-import { TRefreshAccessTokenRequestBodyDto } from "../../../../types/auth";
 import ApiError from "../../../../utils/api-error";
+
+type TRefreshAccessTokenRequestBodyDto = z.infer<
+  typeof RefreshAccessTokenDtoSchema
+>;
 
 export const refreshAccessTokenController = async (
   req: Request<unknown, unknown, TRefreshAccessTokenRequestBodyDto>,

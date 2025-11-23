@@ -1,7 +1,7 @@
 import { Router } from "express";
+import { RefreshAccessTokenDtoSchema } from "../../../../validation-schemas/auth-schemas";
 import { authenticate } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
-import { RefreshAccessTokenDtoSchema } from "../../../validationSchemas/auth";
 import {
   getMeController,
   getMyProfileController

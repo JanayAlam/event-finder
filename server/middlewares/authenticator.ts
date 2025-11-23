@@ -7,7 +7,11 @@ import ApiError from "../utils/api-error";
 import logger from "../utils/winston";
 
 export function authenticate(allowedRoles?: TUserRole[]) {
-  return async (req: Request, _res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, any>,
+    _res: Response,
+    next: NextFunction
+  ) => {
     const authorizationHeader = req.headers.authorization;
 
     try {

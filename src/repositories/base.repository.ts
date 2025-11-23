@@ -126,11 +126,9 @@ class BaseRepository {
   static async request<InputBody, ResponseType>(
     url: string,
     method: HttpMethod,
-    id?: string,
     body?: InputBody,
     config?: AxiosRequestConfig
   ): Promise<ResponseType> {
-    const finalUrl = `${url}${["post", "get"].includes(method) && !id ? "" : `/${id}`}`;
     const firstParam = ["post", "put", "patch"].includes(method)
       ? body
       : config;
@@ -139,7 +137,7 @@ class BaseRepository {
       : undefined;
 
     const { data } = await this.http[method]<ResponseType>(
-      finalUrl,
+      url,
       firstParam,
       secondParam
     );

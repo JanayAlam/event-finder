@@ -10,12 +10,12 @@ class AuthRepository extends BaseRepository {
 
   static logout() {
     const url = `${AuthRepository.apiRouter}/logout`;
-    return this.request<undefined, { message: string }>(url, "get", undefined);
+    return this.request<undefined, { message: string }>(url, "get");
   }
 
   static getMyProfile() {
     const url = `${AuthRepository.apiRouter}/my-profile`;
-    return this.request<undefined, TProfile>(url, "get", undefined);
+    return this.request<undefined, TProfile>(url, "get");
   }
 }
 

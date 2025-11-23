@@ -12,3 +12,5 @@ export const PersonalInfoRequestSchema = z.object({
   ),
   dateOfBirth: dateOptional()
 });
+
+export type TPersonalInfoRequestDto = z.infer<typeof PersonalInfoRequestSchema>;

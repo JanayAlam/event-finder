@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/tailwind-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
@@ -18,10 +18,12 @@ const GRID_CLASSNAME = {
 
 export type TFormProps<T extends z.ZodObject<any>> = {
   fields: Array<(TFormField | null)[]>;
+  defaultValues?: any;
   validationSchema?: T;
   isLoading?: boolean;
   submitButtonLabel?: string;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
+  isSubmitButtonLoading?: boolean;
 };
 
 function Form<T extends z.ZodObject<any>>(
@@ -29,25 +31,13 @@ function Form<T extends z.ZodObject<any>>(
 ): React.ReactElement {
   const {
     fields: fieldDimention,
+    defaultValues,
     validationSchema,
     isLoading,
     submitButtonLabel,
-    onSubmitCallback
+    onSubmitCallback,
+    isSubmitButtonLoading
   } = props;
-
-  const formDefaultValues = useMemo(
-    () =>
-      fieldDimention.flat().reduce(
-        (acc, cur) => {
-          if (cur !== null) {
-            acc[cur.name] = cur.value;
-          }
-          return acc;
-        },
-        {} as Record<string, any>
-      ),
-    [fieldDimention]
-  );
 
   const {
     register,
@@ -55,17 +45,18 @@ function Form<T extends z.ZodObject<any>>(
     reset,
     formState: { errors, isSubmitting }
   } = useForm<z.infer<T>>({
-    defaultValues: formDefaultValues as any,
+    defaultValues: defaultValues as any,
     resolver: validationSchema
       ? (zodResolver(validationSchema) as any)
-      : undefined
+      : undefined,
+    reValidateMode: "onBlur"
   });
 
   useEffect(() => {
-    if (!isLoading) {
-      reset(formDefaultValues as any);
+    if (!isLoading && defaultValues) {
+      reset(defaultValues as any);
     }
-  }, [formDefaultValues, reset, isLoading]);
+  }, [defaultValues, reset, isLoading]);
 
   return (
     <form
@@ -95,7 +86,7 @@ function Form<T extends z.ZodObject<any>>(
                 ) : (
                   <InputField
                     key={`${field.name}${fieldIndex}`}
-                    register={register as any}
+                    register={register(field.name as any)}
                     type={field.type}
                     label={field.label}
                     name={field.name}
@@ -117,8 +108,8 @@ function Form<T extends z.ZodObject<any>>(
         ) : (
           <Button
             type="submit"
-            isLoading={isSubmitting}
-            disabled={isSubmitting}
+            isLoading={isSubmitting || isSubmitButtonLoading}
+            disabled={isSubmitting || isSubmitButtonLoading}
           >
             {submitButtonLabel ?? "Submit"}
           </Button>

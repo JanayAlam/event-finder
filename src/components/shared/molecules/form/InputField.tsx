@@ -3,9 +3,8 @@ import React, { useCallback } from "react";
 import {
   FieldError,
   FieldErrorsImpl,
-  FieldValues,
   Merge,
-  UseFormRegister
+  UseFormRegisterReturn
 } from "react-hook-form";
 import { Input } from "../../shadcn-components/input";
 import { Label } from "../../shadcn-components/label";
@@ -14,10 +13,9 @@ export type TInputFieldProps = {
   id?: string;
   isRequired?: boolean;
   label: string;
-  name: string;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
-  register?: UseFormRegister<FieldValues>;
-} & Omit<React.ComponentProps<"input">, "name">;
+  register?: UseFormRegisterReturn<string>;
+} & React.ComponentProps<"input">;
 
 const getErrorMessage = (
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>
@@ -38,7 +36,7 @@ const getErrorMessage = (
 };
 
 const InputField: React.FC<TInputFieldProps> = (props) => {
-  const { id, isRequired, label, name, type, error, register, ...rest } = props;
+  const { id, isRequired, label, type, error, register, ...rest } = props;
 
   const renderLabel = useCallback((): React.ReactNode => {
     return (
@@ -56,12 +54,11 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
       {renderLabel()}
       <div className="flex flex-col gap-0.5">
         <Input
-          {...(register ? register(name) : {})}
           type={type ?? "text"}
           id={id}
-          name={name}
           className={cn(error && "border border-destructive")}
           {...rest}
+          {...register}
         />
         {error ? (
           <p className="text-destructive text-sm">{getErrorMessage(error)}</p>

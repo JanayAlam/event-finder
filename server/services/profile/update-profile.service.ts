@@ -7,5 +7,7 @@ export const updatePersonalInfo = (
   id: Types.ObjectId,
   data: z.infer<typeof PersonalInfoRequestSchema>
 ) => {
-  return Profile.findOneAndUpdate({ _id: id }, data).select("-__v").lean();
+  return Profile.findOneAndUpdate({ _id: id }, data, { new: true })
+    .select("-__v")
+    .lean();
 };

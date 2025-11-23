@@ -23,7 +23,6 @@ class CRUDRepository<
       CRUDRepository.apiRoute,
       "get",
       undefined,
-      undefined,
       { params: query }
     );
     return data;
@@ -34,9 +33,8 @@ class CRUDRepository<
     query?: Record<string, any>
   ): Promise<GetResponseType> {
     const data = await CRUDRepository.request<undefined, GetResponseType>(
-      CRUDRepository.apiRoute,
+      `${CRUDRepository.apiRoute}/${id}`,
       "get",
-      id,
       undefined,
       { params: query }
     );

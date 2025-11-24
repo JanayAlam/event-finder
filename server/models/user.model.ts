@@ -6,6 +6,7 @@ interface UserBase extends ITimestamps {
   kindeId: string;
   email: string;
   role: TUserRole;
+  isBlocked?: boolean;
 }
 
 export interface IUserDoc extends UserBase, Document {
@@ -21,7 +22,8 @@ const userSchema = new Schema<IUserDoc>(
       enum: userRoles,
       required: true,
       default: USER_ROLE.TRAVELLER
-    }
+    },
+    isBlocked: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

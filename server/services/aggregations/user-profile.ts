@@ -22,7 +22,7 @@ export const createUserAndProfile = async (
     });
 
     const profileDoc = await Profile.create({
-      userId: userDoc._id,
+      user: userDoc._id,
       firstName: data.firstName,
       lastName: data.lastName
     });
@@ -38,7 +38,7 @@ export const createUserAndProfile = async (
 
     const profile: TProfile = {
       _id: profileDoc._id,
-      userId: profileDoc.userId,
+      user: profileDoc.user,
       firstName: profileDoc.firstName,
       lastName: profileDoc.lastName,
       profileImage: profileDoc.profileImage,

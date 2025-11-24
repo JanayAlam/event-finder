@@ -18,16 +18,15 @@ const VerificationPage = () => {
       <div className="flex flex-col gap-4">
         <Card
           rootClassName={cn(
-            "border border-brand-primary-light-1",
-            "bg-brand-primary-light-2",
-            "dark:border-brand-primary-light-2",
-            "dark:bg-brand-primary-light-2",
+            "border border-info",
+            "bg-info-foreground",
+            "dark:bg-info-light-foreground",
             "sm:px-4 sm:py-4"
           )}
         >
           <div className="grid grid-cols-[auto_1fr] items-center gap-4">
-            <BadgeInfo className="text-brand-primary-main size-6 sm:size-7" />
-            <Paragraph className="text-brand-primary-main">
+            <BadgeInfo className="text-info size-6 sm:size-7" />
+            <Paragraph className="text-info">
               You can verify your account by providing either your NID or your
               passport
             </Paragraph>

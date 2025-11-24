@@ -3,7 +3,7 @@ import { ITimestamps, ModelWithObjectId } from "../types/common";
 import User from "./user.model";
 
 interface IProfileBase extends ITimestamps {
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
   profileImage?: string;
   firstName: string;
   lastName: string;
@@ -16,27 +16,17 @@ export interface IProfileDoc extends IProfileBase, Document {
 
 const profileSchema = new Schema<IProfileDoc>(
   {
-    userId: {
+    user: {
       type: Schema.ObjectId,
       ref: User,
       unique: true,
       required: true,
       index: true
     },
-    profileImage: {
-      type: String
-    },
-    firstName: {
-      type: String,
-      required: true
-    },
-    lastName: {
-      type: String,
-      required: true
-    },
-    dateOfBirth: {
-      type: Date
-    }
+    profileImage: { type: String },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    dateOfBirth: { type: Date }
   },
   { timestamps: true }
 );

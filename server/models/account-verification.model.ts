@@ -3,9 +3,15 @@ import {
   ACCOUNT_VERIFICATION_STATUS,
   accountVerificationStatuses,
   TAccountVerificationStatus
-} from "../enums/account-verification.enum";
+} from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 import User from "./user.model";
+
+interface IAccountVerificationReview {
+  status: TAccountVerificationStatus;
+  reviewedBy: Types.ObjectId;
+  reviewedAt: Date;
+}
 
 interface IAccountVerificationBase extends ITimestamps {
   user: Types.ObjectId;
@@ -14,9 +20,7 @@ interface IAccountVerificationBase extends ITimestamps {
   nidBackImage?: string;
   passportNumber?: string;
   passportImage?: string;
-  status: TAccountVerificationStatus;
-  reviewedBy?: Types.ObjectId;
-  reviewedAt?: Date;
+  review?: IAccountVerificationReview[];
 }
 
 export interface IAccountVerificationDoc
@@ -24,6 +28,20 @@ export interface IAccountVerificationDoc
     Document {
   _id: Types.ObjectId;
 }
+
+const accountVerificationReviewSchema = new Schema<IAccountVerificationReview>(
+  {
+    status: {
+      type: String,
+      enum: accountVerificationStatuses,
+      default: ACCOUNT_VERIFICATION_STATUS.PENDING,
+      required: true
+    },
+    reviewedBy: { type: Schema.ObjectId, ref: User, required: true },
+    reviewedAt: { type: Date, default: new Date(), required: true }
+  },
+  { _id: false }
+);
 
 const accountVerificationSchema = new Schema<IAccountVerificationDoc>(
   {
@@ -39,14 +57,7 @@ const accountVerificationSchema = new Schema<IAccountVerificationDoc>(
     nidBackImage: { type: String },
     passportNumber: { type: String },
     passportImage: { type: String },
-    status: {
-      type: String,
-      enum: accountVerificationStatuses,
-      default: ACCOUNT_VERIFICATION_STATUS.PENDING,
-      required: true
-    },
-    reviewedBy: { type: Schema.ObjectId, ref: User },
-    reviewedAt: { type: Date }
+    review: { type: accountVerificationReviewSchema }
   },
   { timestamps: true }
 );

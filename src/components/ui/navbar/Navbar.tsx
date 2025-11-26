@@ -52,7 +52,9 @@ const Navbar: React.FC = () => {
       className={cn(
         "sticky top-0",
         "w-full flex justify-center",
-        "border-b border-b-borders-1"
+        "border-b border-b-borders-1",
+        "bg-background",
+        "z-10"
       )}
     >
       <div

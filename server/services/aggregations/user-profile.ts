@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { TUserRole, USER_ROLE } from "../../enums/role.enum";
+import { TUserRole, USER_ROLE } from "../../enums";
 import Profile, { TProfile } from "../../models/profile.model";
 import User, { TUser } from "../../models/user.model";
 

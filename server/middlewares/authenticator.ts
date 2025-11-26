@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { TUserRole } from "../enums/role.enum";
+import { TUserRole } from "../enums";
 import { getKindePublicKey } from "../services/kinde";
 import { getUser } from "../services/user";
 import ApiError from "../utils/api-error";

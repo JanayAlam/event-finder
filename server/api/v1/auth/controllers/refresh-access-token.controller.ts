@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { z } from "zod";
-import { RefreshAccessTokenDtoSchema } from "../../../../../validation-schemas/auth-schemas";
+import { RefreshAccessTokenDtoSchema } from "../../../../../validation-schemas";
 import { refreshAccessToken } from "../../../../services/kinde";
 import { getUser } from "../../../../services/user";
 import {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { createUserAndProfile } from "../../../../services/aggregations/user-profile";
+import { createUserAndProfile } from "../../../../services/aggregations";
 import { getAuthorizationTokens } from "../../../../services/kinde";
 import { getUser } from "../../../../services/user";
 import {

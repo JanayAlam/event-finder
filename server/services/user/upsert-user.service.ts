@@ -1,4 +1,4 @@
-import { TUserRole } from "../../enums/role.enum";
+import { TUserRole } from "../../enums";
 import User from "../../models/user.model";
 
 type TUpsertUserDto = {

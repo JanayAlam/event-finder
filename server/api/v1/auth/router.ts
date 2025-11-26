@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { RefreshAccessTokenDtoSchema } from "../../../../validation-schemas/auth-schemas";
+import { RefreshAccessTokenDtoSchema } from "../../../../validation-schemas";
 import { authenticate } from "../../../middlewares/authenticator";
 import inputValidator from "../../../middlewares/input-validator";
 import {

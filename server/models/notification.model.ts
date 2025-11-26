@@ -6,7 +6,7 @@ interface NotificationBase extends ITimestamps {
   user: Types.ObjectId;
   message: string;
   link?: string;
-  isReaded: boolean;
+  isRead: boolean;
 }
 
 export interface INotificationDoc extends NotificationBase, Document {
@@ -24,7 +24,7 @@ const notificationSchema = new Schema<INotificationDoc>(
     },
     message: { type: String, required: true },
     link: { type: String },
-    isReaded: { type: Boolean, default: false, required: true }
+    isRead: { type: Boolean, default: false, required: true }
   },
   { timestamps: true }
 );

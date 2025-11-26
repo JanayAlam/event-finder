@@ -4,6 +4,7 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import next from "next";
+import "./events/register-event-listeners";
 import errorHandler from "./middlewares/error-handler";
 import configMorgan from "./middlewares/morgan";
 import router from "./routers";

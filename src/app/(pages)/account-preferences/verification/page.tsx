@@ -2,7 +2,7 @@ import Card from "@/components/shared/molecules/card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { cn } from "@/utils/tailwind-utils";
 import { BadgeInfo } from "lucide-react";
-import VerificationTabs from "./verification-tabs";
+import AccountVerificationForm from "./account-verification-form";
 
 export const metadata = {
   title: "Verification",
@@ -27,13 +27,13 @@ const VerificationPage = () => {
           <div className="grid grid-cols-[auto_1fr] items-center gap-4">
             <BadgeInfo className="text-info size-6 sm:size-7" />
             <Paragraph className="text-info">
-              You can verify your account by providing either your NID or your
-              passport
+              You can verify your account by providing your NID, your passport,
+              or both
             </Paragraph>
           </div>
         </Card>
 
-        <VerificationTabs />
+        <AccountVerificationForm />
       </div>
     </Card>
   );

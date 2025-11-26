@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { TUserRole, USER_ROLE, userRoles } from "../enums/role.enum";
+import { TUserRole, USER_ROLE, userRoles } from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 
 interface UserBase extends ITimestamps {

@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config";
 import { NextRequest, NextResponse } from "next/server";
-import { TUserRole, USER_ROLE, userRoles } from "../server/enums/role.enum";
+import { TUserRole, USER_ROLE, userRoles } from "../server/enums";
 import { COOKIE_KEYS } from "../server/settings/cookies";
 import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,

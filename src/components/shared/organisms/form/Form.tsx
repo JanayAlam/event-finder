@@ -16,12 +16,19 @@ const GRID_CLASSNAME = {
   "3": "xs:grid-cols-3"
 };
 
+const isFormField = (
+  field: TFormField | React.ReactNode | null
+): field is TFormField => {
+  return field !== null && typeof field === "object" && "name" in field;
+};
+
 export type TFormProps<T extends z.ZodObject<any>> = {
-  fields: Array<(TFormField | null)[]>;
+  fields: Array<(TFormField | React.ReactNode | null)[]>;
   defaultValues?: any;
   validationSchema?: T;
   isLoading?: boolean;
   submitButtonLabel?: string;
+  submitButtonClassName?: string;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
   isSubmitButtonLoading?: boolean;
 };
@@ -35,6 +42,7 @@ function Form<T extends z.ZodObject<any>>(
     validationSchema,
     isLoading,
     submitButtonLabel,
+    submitButtonClassName,
     onSubmitCallback,
     isSubmitButtonLoading
   } = props;
@@ -78,7 +86,7 @@ function Form<T extends z.ZodObject<any>>(
             )}
           >
             {dimention.map((field, fieldIndex) =>
-              field !== null ? (
+              isFormField(field) ? (
                 isLoading ? (
                   <InputFieldSkeleton
                     key={`skeleton-${field.name}${fieldIndex}`}
@@ -95,8 +103,12 @@ function Form<T extends z.ZodObject<any>>(
                     error={errors[field.name]}
                   />
                 )
+              ) : field ? (
+                <React.Fragment key={`node-${Math.random()}-${fieldIndex}`}>
+                  {field}
+                </React.Fragment>
               ) : (
-                <div key={`empty-${fieldIndex}`} />
+                <div key={`empty-${fieldIndex}`} className="hidden sm:block" />
               )
             )}
           </div>
@@ -110,6 +122,7 @@ function Form<T extends z.ZodObject<any>>(
             type="submit"
             isLoading={isSubmitting || isSubmitButtonLoading}
             disabled={isSubmitting || isSubmitButtonLoading}
+            className={submitButtonClassName}
           >
             {submitButtonLabel ?? "Submit"}
           </Button>

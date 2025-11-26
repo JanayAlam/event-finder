@@ -7,18 +7,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React from "react";
 import toast from "react-hot-toast";
-import { TProfile } from "../../../../server/models/profile.model";
+import { TProfile } from "../../../../../server/models/profile.model";
 import {
   PersonalInfoRequestSchema,
   TPersonalInfoRequestDto
-} from "../../../../validation-schemas";
+} from "../../../../../validation-schemas";
 
 const PersonalInfoForm: React.FC = () => {
   const queryClient = useQueryClient();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["my-profile"],
-    queryFn: () => AuthRepository.getMyProfile()
+    queryFn: () => AuthRepository.getMyProfile(),
+    retry: false
   });
 
   const { mutate, isPending } = useMutation({

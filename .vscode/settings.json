@@ -11,6 +11,7 @@
     "source.fixAll.eslint": "explicit"
   },
   "cSpell.words": [
-    "kinde"
+    "kinde",
+    "shadcn"
   ]
 }

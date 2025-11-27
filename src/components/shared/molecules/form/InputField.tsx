@@ -6,6 +6,7 @@ import {
   Merge,
   UseFormRegisterReturn
 } from "react-hook-form";
+import { ImageInput } from "../../atoms/inputs";
 import { Input } from "../../shadcn-components/input";
 import { Label } from "../../shadcn-components/label";
 
@@ -53,13 +54,23 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
     <div className="flex flex-col gap-1.5">
       {renderLabel()}
       <div className="flex flex-col gap-0.5">
-        <Input
-          type={type ?? "text"}
-          id={id}
-          className={cn(error && "border border-destructive")}
-          {...rest}
-          {...register}
-        />
+        {type === "file" ? (
+          <ImageInput
+            type="file"
+            id={id}
+            className={cn(error && "border border-destructive")}
+            {...rest}
+            {...register}
+          />
+        ) : (
+          <Input
+            type={type ?? "text"}
+            id={id}
+            className={cn(error && "border border-destructive")}
+            {...rest}
+            {...register}
+          />
+        )}
         {error ? (
           <p className="text-destructive text-sm">{getErrorMessage(error)}</p>
         ) : null}

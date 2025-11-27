@@ -7,17 +7,18 @@ import {
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
 import React from "react";
-import { accountVerificationSchema } from "../../../../../validation-schemas";
+import { accountVerificationSchema } from "../../../../../../validation-schemas";
 
 const AccountVerificationForm: React.FC = () => {
   return (
     <Form
       fields={[
         [
-          <div key="nid-verification" className="flex flex-col gap-2 mb-2!">
+          <div key="nid-verification" className="flex flex-col gap-2">
             <H4>NID information</H4>
             <TypographyMuted>
-              Please upload a clear photo of your NID and enter your NID number
+              Please upload clear front and back photos of your NID and enter
+              your NID number
             </TypographyMuted>
             <Separator />
           </div>
@@ -39,12 +40,12 @@ const AccountVerificationForm: React.FC = () => {
             label: "NID number",
             name: "nidNumber",
             type: "text",
-            placeholder: "e.g. 511 098 145 689"
+            placeholder: "e.g. 5110981456895"
           },
           null
         ],
         [
-          <div key="nid-verification" className="flex flex-col gap-2 mb-2!">
+          <div key="nid-verification" className="flex flex-col gap-2">
             <H4>Passport information</H4>
             <TypographyMuted>
               Please upload a clear photo of your passport and enter your
@@ -59,19 +60,15 @@ const AccountVerificationForm: React.FC = () => {
             name: "passportImage",
             type: "file"
           },
-          null
-        ],
-        [
           {
             label: "Passport number",
             name: "passportNumber",
             type: "text",
             placeholder: "e.g. 110058145611"
-          },
-          null
+          }
         ]
       ]}
-      submitButtonLabel="Save"
+      submitButtonLabel="Request for verification"
       validationSchema={accountVerificationSchema}
       onSubmitCallback={async (_data) => {}}
     />

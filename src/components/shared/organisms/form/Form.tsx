@@ -37,7 +37,7 @@ function Form<T extends z.ZodObject<any>>(
   props: TFormProps<T>
 ): React.ReactElement {
   const {
-    fields: fieldDimention,
+    fields: fieldDimension,
     defaultValues,
     validationSchema,
     isLoading,
@@ -56,8 +56,7 @@ function Form<T extends z.ZodObject<any>>(
     defaultValues: defaultValues as any,
     resolver: validationSchema
       ? (zodResolver(validationSchema) as any)
-      : undefined,
-    reValidateMode: "onBlur"
+      : undefined
   });
 
   useEffect(() => {
@@ -72,20 +71,20 @@ function Form<T extends z.ZodObject<any>>(
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
-        {fieldDimention.map((dimention, idx) => (
+        {fieldDimension.map((dimension, idx) => (
           <div
-            key={`${dimention.length}${idx}`}
+            key={`${dimension.length}${idx}`}
             className={cn(
               "grid gap-4",
               "grid-cols-1",
-              dimention.length === 3
+              dimension.length === 3
                 ? GRID_CLASSNAME["3"]
-                : dimention.length === 2
+                : dimension.length === 2
                   ? GRID_CLASSNAME["2"]
                   : GRID_CLASSNAME["1"]
             )}
           >
-            {dimention.map((field, fieldIndex) =>
+            {dimension.map((field, fieldIndex) =>
               isFormField(field) ? (
                 isLoading ? (
                   <InputFieldSkeleton

@@ -1,6 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
 import {
-  ACCOUNT_VERIFICATION_STATUS,
   accountVerificationStatuses,
   TAccountVerificationStatus
 } from "../enums";
@@ -20,7 +19,8 @@ interface IAccountVerificationBase extends ITimestamps {
   nidBackImage?: string;
   passportNumber?: string;
   passportImage?: string;
-  review?: IAccountVerificationReview[];
+  isReviewed: boolean;
+  reviews?: IAccountVerificationReview[];
 }
 
 export interface IAccountVerificationDoc
@@ -34,7 +34,6 @@ const accountVerificationReviewSchema = new Schema<IAccountVerificationReview>(
     status: {
       type: String,
       enum: accountVerificationStatuses,
-      default: ACCOUNT_VERIFICATION_STATUS.PENDING,
       required: true
     },
     reviewedBy: { type: Schema.ObjectId, ref: User, required: true },
@@ -57,7 +56,8 @@ const accountVerificationSchema = new Schema<IAccountVerificationDoc>(
     nidBackImage: { type: String },
     passportNumber: { type: String },
     passportImage: { type: String },
-    review: { type: accountVerificationReviewSchema }
+    isReviewed: { type: Boolean, default: false, required: true },
+    reviews: { type: [accountVerificationReviewSchema] }
   },
   { timestamps: true }
 );

@@ -1,6 +1,6 @@
 export const USER_ROLE = {
   ADMIN: "admin",
-  TRAVELLER: "traveller"
+  TRAVELER: "traveler"
 } as const;
 
 export const userRoles = Object.values(USER_ROLE);

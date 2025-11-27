@@ -1,5 +1,4 @@
 export const ACCOUNT_VERIFICATION_STATUS = {
-  PENDING: "pending",
   NID_VERIFIED: "nid_verified",
   PASSPORT_VERIFIED: "passport_verified",
   DECLINED: "declined"

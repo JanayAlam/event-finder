@@ -21,7 +21,7 @@ const userSchema = new Schema<IUserDoc>(
       type: String,
       enum: userRoles,
       required: true,
-      default: USER_ROLE.TRAVELLER
+      default: USER_ROLE.TRAVELER
     },
     isBlocked: { type: Boolean, default: false }
   },

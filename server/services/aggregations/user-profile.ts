@@ -18,7 +18,7 @@ export const createUserAndProfile = async (
     const userDoc = await User.create({
       kindeId: data.kindeId,
       email: data.email,
-      role: data.role ?? USER_ROLE.TRAVELLER
+      role: data.role ?? USER_ROLE.TRAVELER
     });
 
     const profileDoc = await Profile.create({

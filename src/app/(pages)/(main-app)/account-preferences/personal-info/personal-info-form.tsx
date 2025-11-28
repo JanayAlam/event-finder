@@ -55,14 +55,14 @@ const PersonalInfoForm: React.FC = () => {
       fields={[
         [
           {
-            label: "Given name",
+            label: "Given Name",
             name: "firstName",
             type: "text",
             placeholder: "e.g. Anika Anmol",
             isRequired: true
           },
           {
-            label: "Family name",
+            label: "Family Name",
             name: "lastName",
             type: "text",
             placeholder: "e.g. Sara",
@@ -71,7 +71,7 @@ const PersonalInfoForm: React.FC = () => {
         ],
         [
           {
-            label: "Date of birth",
+            label: "Date of Birth",
             name: "dateOfBirth",
             type: "date"
           },

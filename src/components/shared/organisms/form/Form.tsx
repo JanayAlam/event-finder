@@ -3,7 +3,7 @@
 import { cn } from "@/utils/tailwind-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm, UseFormRegister } from "react-hook-form";
 import z from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
 import { Button } from "../../shadcn-components/button";
@@ -23,7 +23,7 @@ const isFormField = (
 };
 
 export type TFormProps<T extends z.ZodObject<any>> = {
-  fields: Array<(TFormField | React.ReactNode | null)[]>;
+  fields?: Array<(TFormField | React.ReactNode | null)[]>;
   defaultValues?: any;
   validationSchema?: T;
   isLoading?: boolean;
@@ -31,6 +31,11 @@ export type TFormProps<T extends z.ZodObject<any>> = {
   submitButtonClassName?: string;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
   isSubmitButtonLoading?: boolean;
+  render?: (
+    register: UseFormRegister<z.core.output<T>>,
+    errors: FieldErrors<z.core.output<T>>,
+    isSubmitting?: boolean
+  ) => React.ReactNode;
 };
 
 function Form<T extends z.ZodObject<any>>(
@@ -43,8 +48,9 @@ function Form<T extends z.ZodObject<any>>(
     isLoading,
     submitButtonLabel,
     submitButtonClassName,
-    onSubmitCallback,
-    isSubmitButtonLoading
+    isSubmitButtonLoading,
+    render,
+    onSubmitCallback
   } = props;
 
   const {
@@ -65,68 +71,81 @@ function Form<T extends z.ZodObject<any>>(
     }
   }, [defaultValues, reset, isLoading]);
 
+  if (!fieldDimension && !render) {
+    throw new Error(
+      "One of field or render is required props of Form component"
+    );
+  }
+
   return (
     <form
       onSubmit={handleSubmit(onSubmitCallback)}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
-        {fieldDimension.map((dimension, idx) => (
-          <div
-            key={`${dimension.length}${idx}`}
-            className={cn(
-              "grid gap-4",
-              "grid-cols-1",
-              dimension.length === 3
-                ? GRID_CLASSNAME["3"]
-                : dimension.length === 2
-                  ? GRID_CLASSNAME["2"]
-                  : GRID_CLASSNAME["1"]
-            )}
-          >
-            {dimension.map((field, fieldIndex) =>
-              isFormField(field) ? (
-                isLoading ? (
-                  <InputFieldSkeleton
-                    key={`skeleton-${field.name}${fieldIndex}`}
-                  />
-                ) : (
-                  <InputField
-                    key={`${field.name}${fieldIndex}`}
-                    register={register(field.name as any)}
-                    type={field.type}
-                    label={field.label}
-                    name={field.name}
-                    placeholder={field.placeholder}
-                    isRequired={field.isRequired}
-                    error={errors[field.name]}
-                  />
-                )
-              ) : field ? (
-                <React.Fragment key={`node-${Math.random()}-${fieldIndex}`}>
-                  {field}
-                </React.Fragment>
-              ) : (
-                <div key={`empty-${fieldIndex}`} className="hidden sm:block" />
-              )
-            )}
-          </div>
-        ))}
+        {render
+          ? render(register, errors, isSubmitting)
+          : fieldDimension?.map((dimension, idx) => (
+              <div
+                key={`${dimension.length}${idx}`}
+                className={cn(
+                  "grid gap-4",
+                  "grid-cols-1",
+                  dimension.length === 3
+                    ? GRID_CLASSNAME["3"]
+                    : dimension.length === 2
+                      ? GRID_CLASSNAME["2"]
+                      : GRID_CLASSNAME["1"]
+                )}
+              >
+                {dimension.map((field, fieldIndex) =>
+                  isFormField(field) ? (
+                    isLoading ? (
+                      <InputFieldSkeleton
+                        key={`skeleton-${field.name}${fieldIndex}`}
+                      />
+                    ) : (
+                      <InputField
+                        key={`${field.name}${fieldIndex}`}
+                        register={register(field.name as any)}
+                        type={field.type}
+                        label={field.label}
+                        name={field.name}
+                        placeholder={field.placeholder}
+                        isRequired={field.isRequired}
+                        error={errors[field.name]}
+                      />
+                    )
+                  ) : field ? (
+                    <React.Fragment key={`node-${Math.random()}-${fieldIndex}`}>
+                      {field}
+                    </React.Fragment>
+                  ) : (
+                    <div
+                      key={`empty-${fieldIndex}`}
+                      className="hidden sm:block"
+                    />
+                  )
+                )}
+              </div>
+            ))}
       </div>
-      <div className="flex gap-4">
-        {isLoading ? (
-          <Skeleton className="h-9 w-24" />
-        ) : (
-          <Button
-            type="submit"
-            isLoading={isSubmitting || isSubmitButtonLoading}
-            disabled={isSubmitting || isSubmitButtonLoading}
-            className={submitButtonClassName}
-          >
-            {submitButtonLabel ?? "Submit"}
-          </Button>
-        )}
-      </div>
+      {!render ? (
+        <div className="flex gap-4">
+          {isLoading ? (
+            <Skeleton className="h-9 w-24" />
+          ) : (
+            <Button
+              type="submit"
+              isLoading={isSubmitting || isSubmitButtonLoading}
+              disabled={isSubmitting || isSubmitButtonLoading}
+              className={submitButtonClassName}
+            >
+              {submitButtonLabel ?? "Submit"}
+            </Button>
+          )}
+        </div>
+      ) : null}
     </form>
   );
 }

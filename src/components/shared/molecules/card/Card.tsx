@@ -10,7 +10,7 @@ import { cn } from "@/utils/tailwind-utils";
 import React, { PropsWithChildren } from "react";
 
 type TSettingsCardProps = PropsWithChildren & {
-  title?: string;
+  title?: string | React.ReactNode;
   description?: string;
   rootClassName?: string;
   headerClassName?: string;
@@ -31,7 +31,7 @@ const Card: React.FC<TSettingsCardProps> = ({
         <CardHeader className={headerClassName}>
           {title ? (
             <CardTitle>
-              <H3>{title}</H3>
+              {typeof title === "string" ? <H3>{title}</H3> : title}
             </CardTitle>
           ) : null}
           {description ? (

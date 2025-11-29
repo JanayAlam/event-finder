@@ -7,7 +7,7 @@ import { ACCOUNT_VERIFICATION_STATUS } from "../../../enums";
 import { getAccountVerificationByUserId } from "../../../libs/use-cases/account-verification.use-case";
 
 class AccountVerificationController {
-  static async getStatus(req: Request, res: Response, next: NextFunction) {
+  static async status(req: Request, res: Response, next: NextFunction) {
     const userId = req.user?._id;
 
     try {

@@ -12,6 +12,7 @@ import {
 } from "../../../libs/external-services/kinde.service";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
 import { getUser } from "../../../libs/use-cases/user.use-case";
+import { TUser } from "../../../models/user.model";
 import {
   ACCESS_TOKEN_EXPIRY,
   KINDE_DOMAIN,
@@ -26,6 +27,22 @@ type TRefreshAccessTokenRequestBodyDto = z.infer<
 >;
 
 class AuthController {
+  private static setAuthCookies(
+    res: Response,
+    tokens: { accessToken: string; refreshToken: string },
+    user: TUser
+  ) {
+    res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {
+      ...cookieOptions,
+      maxAge: ACCESS_TOKEN_EXPIRY * 1000
+    });
+    res.cookie(COOKIE_KEYS.authRefreshToken, tokens.refreshToken, {
+      ...cookieOptions,
+      maxAge: REFRESH_TOKEN_EXPIRY * 1000
+    });
+    res.cookie(COOKIE_KEYS.authUser, JSON.stringify(user), cookieOptions);
+  }
+
   static async login(_req: Request, res: Response) {
     const state = crypto.randomBytes(16).toString("hex");
     res.cookie(COOKIE_KEYS.oauthState, state, cookieOptions);
@@ -80,15 +97,7 @@ class AuthController {
         user = createdUser;
       }
 
-      res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {
-        ...cookieOptions,
-        maxAge: ACCESS_TOKEN_EXPIRY * 1000
-      });
-      res.cookie(COOKIE_KEYS.authRefreshToken, tokens.refreshToken, {
-        ...cookieOptions,
-        maxAge: REFRESH_TOKEN_EXPIRY * 1000
-      });
-      res.cookie(COOKIE_KEYS.authUser, JSON.stringify(user), cookieOptions);
+      this.setAuthCookies(res, tokens, user);
 
       res.cookie(COOKIE_KEYS.oauthState, "", {
         ...cookieOptions,
@@ -131,15 +140,7 @@ class AuthController {
       throw new ApiError(404, "User not found");
     }
 
-    res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {
-      ...cookieOptions,
-      maxAge: ACCESS_TOKEN_EXPIRY * 1000
-    });
-    res.cookie(COOKIE_KEYS.authRefreshToken, tokens.refreshToken, {
-      ...cookieOptions,
-      maxAge: REFRESH_TOKEN_EXPIRY * 1000
-    });
-    res.cookie(COOKIE_KEYS.authUser, JSON.stringify(user), cookieOptions);
+    this.setAuthCookies(res, tokens, user);
 
     res.status(200).json({
       user,

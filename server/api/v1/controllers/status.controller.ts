@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
 
-export const getHealthController = (_req: Request, res: Response) => {
-  res.status(200).send("Ok");
-};
+class StatusController {
+  static async health(_req: Request, res: Response) {
+    res.status(200).send("Ok");
+  }
+}
+
+export default StatusController;

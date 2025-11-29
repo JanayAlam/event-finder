@@ -4,17 +4,14 @@ import { USER_ROLE } from "../../../enums";
 import { authenticate } from "../../../middlewares/authenticator.middleware";
 import { imageUpload } from "../../../middlewares/image-upload.middleware";
 import inputValidator from "../../../middlewares/input-validator.middleware";
-import {
-  getVerificationStatusController,
-  initiateAccountVerificationController
-} from "../controllers/account-verification.controller";
+import AccountVerificationController from "../controllers/account-verification.controller";
 
 const accountVerificationRouter = Router({ mergeParams: true });
 
 accountVerificationRouter.get(
   "/status",
   authenticate([USER_ROLE.TRAVELER]),
-  getVerificationStatusController
+  AccountVerificationController.getStatus
 );
 
 accountVerificationRouter.put(
@@ -26,7 +23,7 @@ accountVerificationRouter.put(
     { name: "passportImage", maxCount: 1 }
   ]),
   inputValidator(InitiateAccountVerificationApiSchema),
-  initiateAccountVerificationController
+  AccountVerificationController.initiate
 );
 
 export default accountVerificationRouter;

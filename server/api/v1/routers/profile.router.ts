@@ -5,7 +5,7 @@ import {
 } from "../../../../common/validation-schemas";
 import { authenticate } from "../../../middlewares/authenticator.middleware";
 import inputValidator from "../../../middlewares/input-validator.middleware";
-import { updatePersonalInfoController } from "../controllers/profile.controller";
+import ProfileController from "../controllers/profile.controller";
 
 const profileRouter = Router();
 
@@ -13,7 +13,7 @@ profileRouter.patch(
   "/:id/personal-info",
   authenticate(),
   inputValidator(PersonalInfoRequestSchema, IdParamsSchema),
-  updatePersonalInfoController
+  ProfileController.update
 );
 
 export default profileRouter;

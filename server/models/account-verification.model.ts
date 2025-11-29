@@ -42,7 +42,7 @@ const accountVerificationReviewSchema = new Schema<IAccountVerificationReview>(
   { _id: false }
 );
 
-const accountVerificationSchema = new Schema<IAccountVerificationDoc>(
+const AccountVerificationSchema = new Schema<IAccountVerificationDoc>(
   {
     user: {
       type: Schema.ObjectId,
@@ -64,7 +64,7 @@ const accountVerificationSchema = new Schema<IAccountVerificationDoc>(
 
 const AccountVerification = model<IAccountVerificationDoc>(
   "account_verifications",
-  accountVerificationSchema
+  AccountVerificationSchema
 );
 
 export type TAccountVerification = ModelWithObjectId<IAccountVerificationBase>;

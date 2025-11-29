@@ -2,7 +2,7 @@ import http from "node:http";
 import app from "./app";
 import { connectMongoDB } from "./db";
 import { PORT } from "./settings/config";
-import logger from "./utils/winston";
+import logger from "./utils/winston.util";
 
 const server = http.createServer(app);
 

@@ -1,84 +1,100 @@
 "use client";
 
-import Card from "@/components/shared/molecules/card";
 import { InputField } from "@/components/shared/molecules/form";
 import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
-import { Separator } from "@/components/shared/shadcn-components/separator";
 import { H4 } from "@/components/shared/shadcn-components/typography";
 import React from "react";
-import { accountVerificationSchema } from "../../../../../../validation-schemas";
+import { AccountVerificationSchema } from "../../../../../../common/validation-schemas";
 
-const formSectionRootCardClassName =
-  "max-sm:border-0 max-sm:p-0 max-sm:rounded-none";
+interface VerificationSectionProps {
+  title: string;
+  fields: Array<{
+    name: string;
+    type: string;
+    label: string;
+    placeholder?: string;
+    error?: any;
+    register: any;
+  }>;
+}
+
+const VerificationSection: React.FC<VerificationSectionProps> = ({
+  title,
+  fields
+}) => (
+  <div className="flex flex-col gap-4 w-full">
+    <H4>{title}</H4>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {fields.map(({ name, type, label, placeholder, error, register }) => (
+        <InputField
+          key={name}
+          register={register}
+          type={type}
+          label={label}
+          name={name}
+          placeholder={placeholder}
+          error={error}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const AccountVerificationForm: React.FC = () => {
   return (
     <Form
       render={(register, errors, isSubmitting) => {
+        const nidFields = [
+          {
+            name: "nidFrontImage",
+            type: "file",
+            label: "NID Front Image",
+            error: errors.nidFrontImage,
+            register: register("nidFrontImage")
+          },
+          {
+            name: "nidBackImage",
+            type: "file",
+            label: "NID Back Image",
+            error: errors.nidBackImage,
+            register: register("nidBackImage")
+          },
+          {
+            name: "nidNumber",
+            type: "text",
+            label: "NID No.",
+            placeholder: "e.g. 5110981456895",
+            error: errors.nidNumber,
+            register: register("nidNumber")
+          }
+        ];
+
+        const passportFields = [
+          {
+            name: "passportImage",
+            type: "file",
+            label: "Passport Image",
+            error: errors.passportImage,
+            register: register("passportImage")
+          },
+          {
+            name: "passportNumber",
+            type: "text",
+            label: "Passport No.",
+            placeholder: "e.g. AC110058145611",
+            error: errors.passportNumber,
+            register: register("passportNumber")
+          }
+        ];
+
         return (
-          <div className="flex flex-col gap-4 w-full">
-            <Card
-              rootClassName={formSectionRootCardClassName}
-              title={<H4>NID Verification</H4>}
-              description="Please upload clear front and back photos of your NID and enter your NID number"
-            >
-              <div className="flex flex-col gap-4 w-full">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputField
-                    register={register("nidFrontImage")}
-                    type="file"
-                    label="NID Front Image"
-                    name="nidFrontImage"
-                    error={errors.nidFrontImage}
-                  />
-                  <InputField
-                    register={register("nidBackImage")}
-                    type="file"
-                    label="NID Back Image"
-                    name="nidBackImage"
-                    error={errors.nidBackImage}
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2">
-                  <InputField
-                    register={register("nidNumber")}
-                    type="text"
-                    label="NID Number"
-                    name="nidNumber"
-                    placeholder="e.g. 5110981456895"
-                    error={errors.nidNumber}
-                  />
-                </div>
-              </div>
-            </Card>
-
-            <Separator className="sm:hidden" />
-
-            <Card
-              rootClassName={formSectionRootCardClassName}
-              title={<H4>Passport Verification</H4>}
-              description="Please upload a clear photo of your passport and enter your
-                passport number"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <InputField
-                  register={register("passportImage")}
-                  type="file"
-                  label="Passport Image"
-                  name="passportImage"
-                  error={errors.passportImage}
-                />
-                <InputField
-                  register={register("passportNumber")}
-                  type="text"
-                  label="Passport Number"
-                  name="passportNumber"
-                  placeholder="e.g. AC110058145611"
-                  error={errors.passportNumber}
-                />
-              </div>
-            </Card>
+          <div className="flex flex-col gap-6 w-full">
+            <VerificationSection title="NID Verification" fields={nidFields} />
+            <VerificationSection
+              title="Passport Verification"
+              fields={passportFields}
+            />
 
             <div>
               <Button
@@ -92,7 +108,7 @@ const AccountVerificationForm: React.FC = () => {
           </div>
         );
       }}
-      validationSchema={accountVerificationSchema}
+      validationSchema={AccountVerificationSchema}
       onSubmitCallback={async (_data) => {}}
     />
   );

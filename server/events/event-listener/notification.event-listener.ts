@@ -3,9 +3,9 @@ import { EVENT_KEYS, USER_ROLE } from "../../enums";
 import {
   createBulkNotifications,
   createNotification
-} from "../../services/notification";
-import { getAllUsers } from "../../services/user";
-import logger from "../../utils/winston";
+} from "../../libs/use-cases/notification.use-case";
+import { getAllUsers } from "../../libs/use-cases/user.use-case";
+import logger from "../../utils/winston.util";
 import { notificationEventEmitter } from "../event-emitters";
 
 type TNotifyEventListenerParam = {

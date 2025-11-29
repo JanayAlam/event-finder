@@ -4,12 +4,12 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import next from "next";
+import router from "./api/v1/routers";
 import "./events/register-event-listeners";
-import errorHandler from "./middlewares/error-handler";
-import configMorgan from "./middlewares/morgan";
-import router from "./routers";
+import errorHandler from "./middlewares/error-handler.middleware";
+import configMorgan from "./middlewares/morgan.middleware";
 import { NODE_ENV, PUBLIC_SERVER_URL } from "./settings/config";
-import logger from "./utils/winston";
+import logger from "./utils/winston.util";
 
 const app = express();
 const nextApp = next({ dev: NODE_ENV === "development" });

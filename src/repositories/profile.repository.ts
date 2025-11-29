@@ -1,5 +1,5 @@
+import { TPersonalInfoRequestDto } from "../../common/validation-schemas";
 import { TProfile } from "../../server/models/profile.model";
-import { TPersonalInfoRequestDto } from "../../validation-schemas";
 import BaseRepository from "./base.repository";
 
 class ProfileRepository extends BaseRepository {

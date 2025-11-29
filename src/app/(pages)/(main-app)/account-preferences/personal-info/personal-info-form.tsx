@@ -7,11 +7,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React from "react";
 import toast from "react-hot-toast";
-import { TProfile } from "../../../../../../server/models/profile.model";
 import {
   PersonalInfoRequestSchema,
   TPersonalInfoRequestDto
-} from "../../../../../../validation-schemas";
+} from "../../../../../../common/validation-schemas";
+import { TProfile } from "../../../../../../server/models/profile.model";
 
 const PersonalInfoForm: React.FC = () => {
   const queryClient = useQueryClient();

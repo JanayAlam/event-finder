@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { DB_URL } from "../settings/config";
-import logger from "../utils/winston";
+import logger from "../utils/winston.util";
 
 const connectMongoDB = async () => {
   await mongoose.connect(DB_URL, { autoIndex: false });

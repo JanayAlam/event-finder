@@ -81,7 +81,7 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
           role="button"
           onClick={handleClick}
           className={cn(
-            `w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-primary bg-primary-foreground`,
+            `w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-input bg-primary-foreground`,
             inputClassName
           )}
           style={{ position: "relative" }}

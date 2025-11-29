@@ -4,14 +4,16 @@ import {
   VerificationStatus
 } from "../../../../common/types";
 import { ACCOUNT_VERIFICATION_STATUS } from "../../../enums";
-import { getAccountVerificationByUserId } from "../../../libs/use-cases/account-verification.use-case";
+import AccountVerificationUseCase from "../../../libs/use-cases/account-verification.use-case";
 
 class AccountVerificationController {
   static async status(req: Request, res: Response, next: NextFunction) {
     const userId = req.user?._id;
 
     try {
-      const accountVerification = await getAccountVerificationByUserId(userId!);
+      const accountVerification = await AccountVerificationUseCase.getByUserId(
+        userId!
+      );
 
       if (!accountVerification) {
         const responseBody: TVerificationStatusResponse = {
@@ -61,7 +63,9 @@ class AccountVerificationController {
     }
   }
 
-  static async initiate(_req: Request, _res: Response, next: NextFunction) {
+  static async initiate(req: Request, res: Response, next: NextFunction) {
+    const userId = req.user?._id;
+
     try {
     } catch (err) {
       next(err);

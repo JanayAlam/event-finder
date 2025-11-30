@@ -1,0 +1,103 @@
+import fs from "fs/promises";
+import { assert } from "node:console";
+import path from "node:path";
+import ApiError from "../../utils/api-error.util";
+import logger from "../../utils/winston.util";
+
+export type FileCategory = "profile-photo" | "account-verification";
+
+interface FileUploadResponse {
+  filename: string;
+  path: string;
+  size: number;
+  mimetype: string;
+}
+
+class FileUploadService {
+  private static readonly UPLOAD_DIR = "uploads";
+  private static readonly CATEGORY_DIRS: Record<FileCategory, string> = {
+    "profile-photo": "profile",
+    "account-verification": "verification"
+  };
+
+  static getImagePath(filename: string, category: FileCategory): string {
+    assert(
+      Object.keys(this.CATEGORY_DIRS).includes(category),
+      `Invalid category: ${category}`
+    );
+    const categoryDir = this.CATEGORY_DIRS[category];
+    return path.join(this.UPLOAD_DIR, categoryDir, filename);
+  }
+
+  static async upload(
+    file: Express.Multer.File,
+    category: FileCategory
+  ): Promise<FileUploadResponse> {
+    assert(!!file, "No file provided");
+    assert(
+      Object.keys(this.CATEGORY_DIRS).includes(category),
+      `Invalid category: ${category}`
+    );
+
+    const categoryDir = this.CATEGORY_DIRS[category];
+
+    try {
+      // create category directory if it doesn't exist
+      const categoryPath = path.join(this.UPLOAD_DIR, categoryDir);
+      await fs.mkdir(categoryPath, { recursive: true });
+
+      // move file from temp location to category directory
+      const oldPath = file.path;
+      const newFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
+      const newPath = path.join(categoryPath, newFilename);
+
+      await fs.rename(oldPath, newPath);
+
+      return {
+        filename: newFilename,
+        path: newPath,
+        size: file.size,
+        mimetype: file.mimetype
+      };
+    } catch {
+      if (file.path) {
+        try {
+          await fs.unlink(file.path);
+        } catch (err) {
+          logger.error(
+            "Error while removing the file which was failed to upload",
+            err
+          );
+        }
+      }
+
+      throw new ApiError(500, "Failed to upload image");
+    }
+  }
+
+  static async remove(filePath: string): Promise<boolean> {
+    assert(!!filePath, "No file path provided");
+
+    try {
+      // validate that the file is within the uploads directory (security check)
+      const resolvedPath = path.resolve(filePath);
+      const uploadsPath = path.resolve(this.UPLOAD_DIR);
+
+      if (!resolvedPath.startsWith(uploadsPath)) {
+        throw new ApiError(403, "Invalid file path");
+      }
+
+      await fs.unlink(resolvedPath);
+      return true;
+    } catch (error) {
+      // file doesn't exist
+      if (error instanceof Error && error.message.includes("ENOENT")) {
+        return false;
+      }
+
+      throw new ApiError(500, "Failed to remove image");
+    }
+  }
+}
+
+export default FileUploadService;

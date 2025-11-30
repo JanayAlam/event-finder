@@ -14,3 +14,11 @@ declare global {
     }
   }
 }
+
+export interface AuthenticatedRequest extends Request {
+  kindeUser: {
+    sub: string;
+    email: string;
+  };
+  user: TUser;
+}

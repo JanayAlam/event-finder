@@ -67,3 +67,7 @@ export const InitiateAccountVerificationApiSchema =
     nidNumber: true,
     passportNumber: true
   });
+
+export type TInitiateAccountVerificationRequestDto = z.infer<
+  typeof InitiateAccountVerificationApiSchema
+>;

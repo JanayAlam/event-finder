@@ -57,7 +57,7 @@ const AccountVerificationSchema = new Schema<IAccountVerificationDoc>(
     passportNumber: { type: String },
     passportImage: { type: String },
     isReviewed: { type: Boolean, default: false, required: true },
-    reviews: { type: [accountVerificationReviewSchema] }
+    reviews: { type: [accountVerificationReviewSchema], default: [] }
   },
   { timestamps: true }
 );

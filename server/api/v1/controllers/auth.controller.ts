@@ -97,7 +97,7 @@ class AuthController {
         user = createdUser;
       }
 
-      this.setAuthCookies(res, tokens, user);
+      AuthController.setAuthCookies(res, tokens, user);
 
       res.cookie(COOKIE_KEYS.oauthState, "", {
         ...cookieOptions,
@@ -140,7 +140,7 @@ class AuthController {
       throw new ApiError(404, "User not found");
     }
 
-    this.setAuthCookies(res, tokens, user);
+    AuthController.setAuthCookies(res, tokens, user);
 
     res.status(200).json({
       user,

@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+# upload folder
+/uploads
+
 # testing
 /coverage
 

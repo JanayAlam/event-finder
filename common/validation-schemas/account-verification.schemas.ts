@@ -62,12 +62,6 @@ export const AccountVerificationSchema = z
     }
   );
 
-export const InitiateAccountVerificationApiSchema =
-  AccountVerificationSchema.pick({
-    nidNumber: true,
-    passportNumber: true
-  });
-
-export type TInitiateAccountVerificationRequestDto = z.infer<
-  typeof InitiateAccountVerificationApiSchema
+export type TAccountVerificationRequestDto = z.infer<
+  typeof AccountVerificationSchema
 >;

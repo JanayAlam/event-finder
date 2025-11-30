@@ -4,7 +4,7 @@ import {
   TVerificationStatusResponse,
   VerificationStatus
 } from "../../../../common/types";
-import { TInitiateAccountVerificationRequestDto } from "../../../../common/validation-schemas";
+import { TAccountVerificationRequestDto } from "../../../../common/validation-schemas";
 import { ACCOUNT_VERIFICATION_STATUS } from "../../../enums";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import AccountVerificationUseCase from "../../../libs/use-cases/account-verification.use-case";
@@ -69,7 +69,11 @@ class AccountVerificationController {
   }
 
   static async initiate(
-    req: Request<any, any, TInitiateAccountVerificationRequestDto>,
+    req: Request<
+      any,
+      any,
+      Pick<TAccountVerificationRequestDto, "nidNumber" | "passportNumber">
+    >,
     res: Response,
     next: NextFunction
   ) {

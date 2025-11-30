@@ -4,8 +4,14 @@ import { InputField } from "@/components/shared/molecules/form";
 import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { H4 } from "@/components/shared/shadcn-components/typography";
-import React from "react";
-import { AccountVerificationSchema } from "../../../../../../common/validation-schemas";
+import AccountVerificationRepository from "@/repositories/account-verification.repository";
+import { useMutation } from "@tanstack/react-query";
+import React, { useRef } from "react";
+import toast from "react-hot-toast";
+import {
+  AccountVerificationSchema,
+  TAccountVerificationRequestDto
+} from "../../../../../../common/validation-schemas";
 
 interface VerificationSectionProps {
   title: string;
@@ -42,9 +48,22 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 );
 
 const AccountVerificationForm: React.FC = () => {
+  const dirtyFieldsRef = useRef<Record<string, boolean>>({});
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (requestBody: TAccountVerificationRequestDto) => {
+      const data = await AccountVerificationRepository.initiate(requestBody);
+      return data;
+    },
+    onSuccess: () => {
+      toast.success("Account verification submitted successfully");
+    }
+  });
+
   return (
     <Form
-      render={(register, errors, isSubmitting) => {
+      render={(register, { errors, isSubmitting, dirtyFields }) => {
+        dirtyFieldsRef.current = dirtyFields;
         const nidFields = [
           {
             name: "nidFrontImage",
@@ -97,11 +116,7 @@ const AccountVerificationForm: React.FC = () => {
             />
 
             <div>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                isLoading={isSubmitting}
-              >
+              <Button type="submit" isLoading={isSubmitting || isPending}>
                 Submit
               </Button>
             </div>
@@ -109,7 +124,16 @@ const AccountVerificationForm: React.FC = () => {
         );
       }}
       validationSchema={AccountVerificationSchema}
-      onSubmitCallback={async (_data) => {}}
+      onSubmitCallback={async (data) => {
+        const changedFields = Object.keys(dirtyFieldsRef.current).reduce(
+          (acc, field) => {
+            acc[field] = (data as Record<string, any>)[field];
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+        mutate(changedFields as TAccountVerificationRequestDto);
+      }}
     />
   );
 };

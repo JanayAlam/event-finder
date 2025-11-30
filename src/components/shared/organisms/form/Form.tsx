@@ -3,7 +3,7 @@
 import { cn } from "@/utils/tailwind-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
-import { FieldErrors, useForm, UseFormRegister } from "react-hook-form";
+import { FormState, useForm, UseFormRegister } from "react-hook-form";
 import z from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
 import { Button } from "../../shadcn-components/button";
@@ -33,8 +33,7 @@ export type TFormProps<T extends z.ZodObject<any>> = {
   isSubmitButtonLoading?: boolean;
   render?: (
     register: UseFormRegister<z.core.output<T>>,
-    errors: FieldErrors<z.core.output<T>>,
-    isSubmitting?: boolean
+    formState: FormState<z.core.output<T>>
   ) => React.ReactNode;
 };
 
@@ -53,17 +52,14 @@ function Form<T extends z.ZodObject<any>>(
     onSubmitCallback
   } = props;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting }
-  } = useForm<z.infer<T>>({
+  const { register, handleSubmit, reset, formState } = useForm<z.infer<T>>({
     defaultValues: defaultValues as any,
     resolver: validationSchema
       ? (zodResolver(validationSchema) as any)
       : undefined
   });
+
+  const { errors, isSubmitting } = formState;
 
   useEffect(() => {
     if (!isLoading && defaultValues) {
@@ -84,7 +80,7 @@ function Form<T extends z.ZodObject<any>>(
     >
       <div className="flex flex-col gap-4">
         {render
-          ? render(register, errors, isSubmitting)
+          ? render(register, formState)
           : fieldDimension?.map((dimension, idx) => (
               <div
                 key={`${dimension.length}${idx}`}

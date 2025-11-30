@@ -123,6 +123,24 @@ class BaseRepository {
     BaseRepository.initializeInterceptor();
   }
 
+  static convertToFormData<InputBody extends Record<string, any>>(
+    data: InputBody
+  ): FormData {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof File) {
+        formData.append(key, value);
+      } else if (value instanceof FileList) {
+        Array.from(value).forEach((file) => {
+          formData.append(key, file);
+        });
+      } else if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, `${value}`);
+      }
+    });
+    return formData;
+  }
+
   static async request<InputBody, ResponseType>(
     url: string,
     method: HttpMethod,
@@ -135,6 +153,11 @@ class BaseRepository {
     const secondParam = ["post", "put", "patch"].includes(method)
       ? config
       : undefined;
+
+    // ff body is FormData, let axios handle it automatically
+    if (body instanceof FormData && secondParam) {
+      delete secondParam.headers?.["Content-Type"];
+    }
 
     const { data } = await this.http[method]<ResponseType>(
       url,

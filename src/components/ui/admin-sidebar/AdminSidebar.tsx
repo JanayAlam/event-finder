@@ -21,6 +21,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from "@/components/shared/shadcn-components/sidebar";
+import SidebarFooterDropdown from "./SidebarFooterDropdown";
 
 type AdminNavItem = {
   key: string;
@@ -124,7 +125,9 @@ export default function AdminSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="my-6"></div>
+        <div className="my-6!">
+          <SidebarFooterDropdown />
+        </div>
       </SidebarFooter>
     </>
   );

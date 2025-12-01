@@ -14,7 +14,7 @@ const VerifiedCard: React.FC = () => {
       )}
     >
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-[auto_1fr] items-start gap-4">
+        <div className="grid grid-cols-[auto_1fr] items-center gap-4">
           <div className="relative">
             <CheckCircle2 className="text-success dark:text-success size-6 sm:size-7" />
             <div className="absolute -bottom-1 -right-1 size-3 bg-success dark:bg-success rounded-full" />

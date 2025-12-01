@@ -14,7 +14,7 @@ const DeclinedVerificationCard: React.FC = () => {
       )}
     >
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-[auto_1fr] items-start gap-4">
+        <div className="grid grid-cols-[auto_1fr] items-center gap-4">
           <div className="relative">
             <XCircle className="text-destructive dark:text-destructive size-6 sm:size-7" />
             <div className="absolute -bottom-1 -right-1 size-3 bg-destructive dark:bg-destructive rounded-full" />

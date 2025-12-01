@@ -23,7 +23,7 @@ import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Button } from "../../shared/shadcn-components/button";
 import ThemeToggleButton from "../theme-toggle-button";
 import SearchButton from "./SearchButton";

@@ -2,7 +2,7 @@ import { useAuthStore } from "@/app/_store/auth-store";
 import { API_BASE_URL } from "@/config";
 import { getAuthStatus } from "@/utils/auth-token";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 type HttpMethod = "post" | "get" | "put" | "patch" | "delete";
 

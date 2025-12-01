@@ -1,6 +1,7 @@
 "use client";
 
-import { ThemeProvider } from "@/app/_providers/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/shared/shadcn-components/sonner/Sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
 
@@ -15,6 +16,7 @@ export function Providers({ children }: React.PropsWithChildren) {
         enableSystem
         disableTransitionOnChange
       >
+        <Toaster />
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

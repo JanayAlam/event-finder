@@ -7,7 +7,7 @@ import { H4 } from "@/components/shared/shadcn-components/typography";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useRef } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   AccountVerificationSchema,
   TAccountVerificationRequestDto

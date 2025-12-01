@@ -7,7 +7,6 @@ import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import { Toaster } from "react-hot-toast";
 import { Providers } from "./providers";
 
 const inter = Inter({
@@ -33,7 +32,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextTopLoader showSpinner={false} color="#ff751f" />
         <Providers>
-          <Toaster reverseOrder={false} />
           <Navbar />
           <div className="w-full flex justify-center py-4">
             <div className={cn(PAGE_WIDTH_CLASS_NAME)}>{children}</div>

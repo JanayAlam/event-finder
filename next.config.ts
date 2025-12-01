@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
   experimental: {
-    optimizePackageImports: ["@tanstack/react-query", "react-hot-toast"]
+    optimizePackageImports: ["@tanstack/react-query"]
   },
   ...(process.env.NODE_ENV === "development" && {
     typescript: {

@@ -6,7 +6,7 @@ import ProfileRepository from "@/repositories/profile.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   PersonalInfoRequestSchema,
   TPersonalInfoRequestDto

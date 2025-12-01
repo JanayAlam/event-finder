@@ -1,5 +1,5 @@
 import Card from "@/components/shared/molecules/card";
-import AccountVerificationStatus from "./account-verification-status";
+import { AccountVerificationStatus } from "../../../../../components/ui/account-preferences/account-verification";
 
 export const metadata = {
   title: "Verification",

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { assert } from "node:console";
 import {
   TVerificationStatusResponse,
-  VerificationStatus
+  VERIFICATION_STATUS
 } from "../../../../common/types";
 import { TAccountVerificationRequestDto } from "../../../../common/validation-schemas";
 import { ACCOUNT_VERIFICATION_STATUS } from "../../../enums";
@@ -22,7 +22,7 @@ class AccountVerificationController {
 
       if (!accountVerification) {
         const responseBody: TVerificationStatusResponse = {
-          status: VerificationStatus.NOT_INITIATED,
+          status: VERIFICATION_STATUS.NOT_INITIATED,
           accountVerification: null
         };
         res.status(200).json(responseBody);
@@ -36,7 +36,7 @@ class AccountVerificationController {
       );
       if (hasDeclined) {
         const responseBody: TVerificationStatusResponse = {
-          status: VerificationStatus.DECLINED,
+          status: VERIFICATION_STATUS.DECLINED,
           accountVerification
         };
         res.status(200).json(responseBody);
@@ -51,7 +51,7 @@ class AccountVerificationController {
 
       if (hasVerified) {
         const responseBody: TVerificationStatusResponse = {
-          status: VerificationStatus.VERIFIED,
+          status: VERIFICATION_STATUS.VERIFIED,
           accountVerification
         };
         res.status(200).json(responseBody);
@@ -59,7 +59,7 @@ class AccountVerificationController {
       }
 
       const responseBody: TVerificationStatusResponse = {
-        status: VerificationStatus.PENDING,
+        status: VERIFICATION_STATUS.PENDING,
         accountVerification
       };
       res.status(200).json(responseBody);

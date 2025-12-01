@@ -1,5 +1,5 @@
 import Card from "@/components/shared/molecules/card";
-import PersonalInfoForm from "./personal-info-form";
+import { PersonalInfoForm } from "../../../../../components/ui/account-preferences/personal-info";
 
 export const metadata = {
   title: "Personal Info",

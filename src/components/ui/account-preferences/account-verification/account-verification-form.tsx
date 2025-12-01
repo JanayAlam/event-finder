@@ -5,13 +5,14 @@ import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { H4 } from "@/components/shared/shadcn-components/typography";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useRef } from "react";
 import toast from "react-hot-toast";
 import {
   AccountVerificationSchema,
   TAccountVerificationRequestDto
-} from "../../../../../../common/validation-schemas";
+} from "../../../../../common/validation-schemas";
+import { TAccountVerification } from "../../../../../server/models/account-verification.model";
 
 interface VerificationSectionProps {
   title: string;
@@ -48,6 +49,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 );
 
 const AccountVerificationForm: React.FC = () => {
+  const queryClient = useQueryClient();
+
   const dirtyFieldsRef = useRef<Record<string, boolean>>({});
 
   const { mutate, isPending } = useMutation({
@@ -55,8 +58,15 @@ const AccountVerificationForm: React.FC = () => {
       const data = await AccountVerificationRepository.initiate(requestBody);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Account verification submitted successfully");
+      queryClient.setQueryData(
+        ["account-verification-status"],
+        (old: TAccountVerification) => ({
+          ...old,
+          accountVerification: data
+        })
+      );
     }
   });
 

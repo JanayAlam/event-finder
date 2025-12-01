@@ -10,8 +10,8 @@ import toast from "react-hot-toast";
 import {
   PersonalInfoRequestSchema,
   TPersonalInfoRequestDto
-} from "../../../../../../common/validation-schemas";
-import { TProfile } from "../../../../../../server/models/profile.model";
+} from "../../../../../common/validation-schemas";
+import { TProfile } from "../../../../../server/models/profile.model";
 
 const PersonalInfoForm: React.FC = () => {
   const queryClient = useQueryClient();

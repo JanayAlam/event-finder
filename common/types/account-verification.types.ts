@@ -1,6 +1,6 @@
 import { TAccountVerification } from "../../server/models/account-verification.model";
 
-export enum VerificationStatus {
+export enum VERIFICATION_STATUS {
   NOT_INITIATED = "not_initiated",
   PENDING = "pending",
   VERIFIED = "verified",
@@ -8,6 +8,6 @@ export enum VerificationStatus {
 }
 
 export type TVerificationStatusResponse = {
-  status: VerificationStatus;
+  status: VERIFICATION_STATUS;
   accountVerification: TAccountVerification | null;
 };

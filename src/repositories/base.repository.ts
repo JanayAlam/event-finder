@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/app/_store/auth-store";
 import { API_BASE_URL } from "@/config";
+import { useAuthStore } from "@/stores/auth-store";
 import { getAuthStatus } from "@/utils/auth-token";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";

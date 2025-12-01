@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TUser } from "../../../server/models/user.model";
+import { TUser } from "../../server/models/user.model";
 
 type TAuthState = {
   isInitialLoading: boolean;

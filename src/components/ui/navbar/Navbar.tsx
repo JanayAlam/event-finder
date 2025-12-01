@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuthStore } from "@/app/_store/auth-store";
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +17,7 @@ import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
 import { PRIVATE_PAGE_ROUTE } from "@/routes";
+import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/utils/tailwind-utils";
 import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";

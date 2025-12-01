@@ -1,4 +1,4 @@
-import { StringMap } from "@/app/_types/common/mappers";
+import { StringMap } from "@/types/common/mappers";
 import { ZodError } from "zod";
 
 export const convertZodErrors = (err: ZodError): StringMap => {

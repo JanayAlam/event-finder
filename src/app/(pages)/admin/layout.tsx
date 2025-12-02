@@ -29,7 +29,9 @@ export default function AdminDashboardLayout({
           </div>
         </header>
 
-        <main>{children}</main>
+        <main>
+          <div className="m-4! sm:m-6!">{children}</div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

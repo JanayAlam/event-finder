@@ -25,8 +25,20 @@ const userSchema = new Schema<IUserDoc>(
     },
     isBlocked: { type: Boolean, default: false }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
+
+// Virtual populate for profile (reverse relationship)
+userSchema.virtual("profile", {
+  ref: "profiles",
+  localField: "_id",
+  foreignField: "user",
+  justOne: true
+});
 
 const User = model<IUserDoc>("users", userSchema);
 

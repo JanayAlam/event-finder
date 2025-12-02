@@ -1,4 +1,7 @@
-import { TVerificationStatusResponse } from "../../common/types";
+import {
+  TAllPendingAccountVerificationResponse,
+  TVerificationStatusResponse
+} from "../../common/types";
 import { TAccountVerificationRequestDto } from "../../common/validation-schemas";
 import { TAccountVerification } from "../../server/models/account-verification.model";
 import BaseRepository from "./base.repository";
@@ -25,6 +28,15 @@ class AccountVerificationRepository extends BaseRepository {
       "put",
       formData
     );
+    return data;
+  }
+
+  static async pendingReviews() {
+    const url = `${this.apiRoute}/pending-reviews`;
+    const data = await this.request<
+      undefined,
+      TAllPendingAccountVerificationResponse
+    >(url, "get");
     return data;
   }
 }

@@ -7,7 +7,7 @@ export const H1: React.FC<TH1Props> = ({ className, children, ...rest }) => {
   return (
     <h1
       className={cn(
-        "scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance",
+        "text-4xl font-extrabold tracking-tight text-balance",
         className
       )}
       {...rest}

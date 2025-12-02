@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { TAllPendingAccountVerificationResponse } from "../../../common/types";
 import AccountVerification, {
   IAccountVerificationDoc,
   TAccountVerification
@@ -67,6 +68,20 @@ class AccountVerificationUseCase extends UserCase {
         .exec();
 
     return updatedAccountVerification;
+  }
+
+  static async getPendingVerificationAccounts(): Promise<TAllPendingAccountVerificationResponse> {
+    const result = await AccountVerification.find({ isReviewed: false })
+      .populate({
+        path: "user",
+        populate: {
+          path: "profile"
+        }
+      })
+      .lean<TAllPendingAccountVerificationResponse>()
+      .exec();
+
+    return result;
   }
 }
 

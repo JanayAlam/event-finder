@@ -41,12 +41,12 @@ const NAV_ITEMS: AdminNavItem[] = [
       {
         key: "1-1",
         label: "Host approval",
-        href: "#"
+        href: "/admin/approvals/host"
       },
       {
         key: "1.2",
         label: "Account approval",
-        href: "#"
+        href: "/admin/approvals/account-verifiaction"
       }
     ]
   }
@@ -91,6 +91,7 @@ export default function AdminSidebar() {
                     isActive(child.href)
                   )}
                   className="group/collapsible"
+                  suppressHydrationWarning
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>

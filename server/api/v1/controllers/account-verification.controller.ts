@@ -245,6 +245,20 @@ class AccountVerificationController {
       next(err);
     }
   }
+
+  static async pendingReviews(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accountVerifications =
+        await AccountVerificationUseCase.getPendingVerificationAccounts();
+      res.status(200).json(accountVerifications);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default AccountVerificationController;

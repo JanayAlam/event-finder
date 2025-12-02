@@ -1,6 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
-import User from "./user.model";
 
 interface IProfileBase extends ITimestamps {
   user: Types.ObjectId;
@@ -18,7 +17,7 @@ const profileSchema = new Schema<IProfileDoc>(
   {
     user: {
       type: Schema.ObjectId,
-      ref: User,
+      ref: "users",
       unique: true,
       required: true,
       index: true

@@ -26,4 +26,10 @@ accountVerificationRouter.put(
   AccountVerificationController.initiate
 );
 
+accountVerificationRouter.get(
+  "/pending-reviews",
+  authenticate([USER_ROLE.ADMIN]),
+  AccountVerificationController.pendingReviews
+);
+
 export default accountVerificationRouter;

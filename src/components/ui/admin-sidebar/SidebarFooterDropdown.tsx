@@ -59,13 +59,13 @@ const SidebarFooterDropdown: React.FC = () => {
             </Avatar>
 
             <div className="flex-1 flex flex-col gap-0">
-              <Paragraph>
-                {isLoading ? (
-                  <Skeleton className="h-4 w-24" />
-                ) : (
-                  profile?.firstName + " " + profile?.lastName
-                )}
-              </Paragraph>
+              {isLoading ? (
+                <Skeleton className="h-4 w-24" />
+              ) : (
+                <Paragraph>
+                  {profile?.firstName + " " + profile?.lastName}
+                </Paragraph>
+              )}
             </div>
           </div>
           <ChevronDownIcon

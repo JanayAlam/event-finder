@@ -3,9 +3,16 @@
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 
 function Collapsible({
+  suppressHydrationWarning,
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
-  return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
+  return (
+    <CollapsiblePrimitive.Root
+      data-slot="collapsible"
+      suppressHydrationWarning={suppressHydrationWarning}
+      {...props}
+    />
+  );
 }
 
 function CollapsibleTrigger({

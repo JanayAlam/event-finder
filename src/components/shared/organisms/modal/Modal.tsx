@@ -1,168 +1,116 @@
-import { useEffect, useRef } from "react";
+"use client";
 
-interface ModalFooterProps {
-  okText?: string;
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/shared/shadcn-components/dialog";
+import { cn } from "@/utils/tailwind-utils";
+import { X } from "lucide-react";
+import * as React from "react";
+import { Button } from "../../shadcn-components/button";
+
+export type TModalProps = {
+  isOpen: boolean;
+  closeHandler: () => void;
   okHandler?: () => void;
-  isOkLoading?: boolean;
+  loading?: boolean;
+  title?: string;
+
+  footer?: React.ReactNode;
+
+  isCrossButtonVisible?: boolean;
+
+  contentClassName?: string;
+  headerClassName?: string;
+  footerClassName?: string;
+
   cancelText?: string;
-  cancelHandler: () => void;
-  okButtonColorType?: "primary" | "secondary" | "error" | "warning" | "default";
-}
-
-interface ModalProps extends ModalFooterProps {
-  isOpen?: boolean;
-  title?: React.ReactNode;
-  children?: React.ReactNode;
-  footer?: React.ReactNode | null;
-  width?: number | string;
-  maskClosable?: boolean;
-  centered?: boolean;
-  className?: string;
-  destroyOnClose?: boolean;
-  zIndex?: number;
-}
-
-const getFooter = (
-  footer: React.ReactNode | undefined,
-  { okText, okHandler, cancelText, cancelHandler }: Partial<ModalFooterProps>
-) => {
-  if (footer === undefined) {
-    return (
-      <div className="flex gap-2 items-center justify-end">
-        <button onClick={cancelHandler} type="button">
-          {cancelText ?? "Cancel"}
-        </button>
-        <button
-          onClick={okHandler}
-          // colorType={okButtonColorType || "primary"}
-          type="submit"
-          // isLoading={isOkLoading}
-        >
-          {okText ?? "Ok"}
-        </button>
-      </div>
-    );
-  }
-  return footer;
+  okText?: string;
 };
 
-const Modal: React.FC<ModalProps> = ({
-  isOpen = false,
-  title = "",
+export default function Modal({
+  isOpen,
+  closeHandler,
+  okHandler,
+  loading = false,
+  title,
   children,
   footer,
-  width = 520,
-  okText,
-  isOkLoading,
-  okHandler,
-  cancelText,
-  cancelHandler,
-  okButtonColorType,
-  maskClosable = true,
-  centered = false,
-  className = "",
-  destroyOnClose = false,
-  zIndex = 1000
-}) => {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        cancelHandler();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen, cancelHandler]);
-
-  const handleMaskClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      modalRef.current &&
-      !modalRef.current.contains(e.target as Node) &&
-      maskClosable
-    ) {
-      cancelHandler();
-    }
-  };
-
-  if (!isOpen && destroyOnClose) return null;
-
-  if (!isOpen) return null;
-
+  isCrossButtonVisible = true,
+  contentClassName,
+  headerClassName,
+  footerClassName,
+  cancelText = "Cancel",
+  okText = "Ok"
+}: React.PropsWithChildren<TModalProps>) {
   return (
-    <div
-      className={`fixed inset-0 z-${zIndex} flex ${
-        centered ? "items-center" : "items-start pt-24"
-      } justify-center bg-black bg-opacity-50 transition-opacity duration-800 ease-in-out`}
-      onClick={handleMaskClick}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        ref={modalRef}
-        className={`bg-white rounded-none md:rounded-md shadow-lg overflow-hidden ${className} transform transition-all duration-300 ease-in-out ${
-          isOpen ? "translate-y-0 opacity-100" : "-translate-y-8 opacity-0"
-        }`}
-        style={{ width: typeof width === "number" ? `${width}px` : width }}
+    <Dialog open={isOpen} onOpenChange={(open) => !open && closeHandler()}>
+      <DialogContent
+        className={cn(
+          "sm:max-w-lg p-0 overflow-hidden gap-0",
+          "border-border/60",
+          "[&>button]:hidden",
+          contentClassName
+        )}
       >
-        {/* Modal Header with bottom border */}
-        {title && (
-          <div className="px-6 py-3 flex items-center justify-between border-b border-gray-200">
-            {/* TODO */}
-            <div>{title}</div>
-            <button
-              onClick={cancelHandler}
-              className="p-1 rounded-md hover:bg-gray-100 text-gray-600 focus:outline-hidden"
-              aria-label="Close"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+        {(title || isCrossButtonVisible) && (
+          <DialogHeader
+            className={cn(
+              "flex flex-row items-center justify-between space-y-0",
+              "border-b border-b-border/60",
+              "px-4 py-2 sm:px-4 sm:py-4",
+              headerClassName
+            )}
+          >
+            {title ? (
+              <DialogTitle className="text-base font-semibold">
+                {title}
+              </DialogTitle>
+            ) : (
+              <span />
+            )}
+
+            {isCrossButtonVisible && (
+              <DialogClose asChild>
+                <button
+                  onClick={closeHandler}
+                  className="rounded-md p-1 hover:bg-accent"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </DialogClose>
+            )}
+          </DialogHeader>
         )}
 
-        {/* Modal Body */}
-        <div className="px-6 py-4 max-h-[300px] md:max-h-[500px] overflow-auto">
+        {/* BODY */}
+        <div className="bg-background px-4 py-4 sm:px-4 sm:py-6 max-h-[70vh] sm:max-h-[60vh] overflow-y-auto">
           {children}
         </div>
 
-        {/* Modal Footer with top border */}
-        {footer !== null && (
-          <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-            {getFooter(footer, {
-              okText,
-              cancelText,
-              isOkLoading,
-              okButtonColorType,
-              okHandler,
-              cancelHandler
-            })}
-          </div>
-        )}
-      </div>
-    </div>
+        {/* FOOTER */}
+        <div className="border-t border-t-border/60 px-4 py-2 sm:px-4 sm:py-4">
+          {footer ? (
+            footer
+          ) : (
+            <div className={cn("flex justify-end gap-2", footerClassName)}>
+              <Button variant="outline" onClick={closeHandler}>
+                {cancelText}
+              </Button>
+              <Button
+                onClick={okHandler}
+                isLoading={loading}
+                disabled={loading}
+              >
+                {okText}
+              </Button>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
-
-export default Modal;
+}

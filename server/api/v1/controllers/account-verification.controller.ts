@@ -5,9 +5,14 @@ import {
   VERIFICATION_STATUS
 } from "../../../../common/types";
 import { TAccountVerificationRequestDto } from "../../../../common/validation-schemas";
-import { ACCOUNT_VERIFICATION_STATUS } from "../../../enums";
+import {
+  ACCOUNT_VERIFICATION_STATUS,
+  TAccountVerificationStatus
+} from "../../../enums";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import AccountVerificationUseCase from "../../../libs/use-cases/account-verification.use-case";
+import ApiError from "../../../utils/api-error.util";
+import { convertToObjectId } from "../../../utils/object-id.util";
 import logger from "../../../utils/winston.util";
 
 class AccountVerificationController {
@@ -255,6 +260,57 @@ class AccountVerificationController {
       const accountVerifications =
         await AccountVerificationUseCase.getPendingVerificationAccounts();
       res.status(200).json(accountVerifications);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async acceptRequest(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { nid, passport } = req.query;
+      const id = convertToObjectId(req.params.accountVerificationId);
+
+      const statuses: TAccountVerificationStatus[] = [];
+
+      if (nid === "true") {
+        statuses.push(ACCOUNT_VERIFICATION_STATUS.NID_VERIFIED);
+      }
+
+      if (passport === "true") {
+        statuses.push(ACCOUNT_VERIFICATION_STATUS.PASSPORT_VERIFIED);
+      }
+
+      const accountVerification = await AccountVerificationUseCase.addReview(
+        id!,
+        req.user!,
+        statuses
+      );
+
+      if (!accountVerification) {
+        throw new ApiError(404, "Account verification not found");
+      }
+
+      res.status(200).json(accountVerification);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async declineRequest(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = convertToObjectId(req.params.accountVerificationId);
+
+      const accountVerification = await AccountVerificationUseCase.addReview(
+        id!,
+        req.user!,
+        [ACCOUNT_VERIFICATION_STATUS.DECLINED]
+      );
+
+      if (!accountVerification) {
+        throw new ApiError(404, "Account verification not found");
+      }
+
+      res.status(200).json(accountVerification);
     } catch (err) {
       next(err);
     }

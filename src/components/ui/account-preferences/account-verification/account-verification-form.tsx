@@ -12,7 +12,6 @@ import {
   AccountVerificationSchema,
   TAccountVerificationRequestDto
 } from "../../../../../common/validation-schemas";
-import { TAccountVerification } from "../../../../../server/models/account-verification.model";
 
 interface VerificationSectionProps {
   title: string;
@@ -58,15 +57,11 @@ const AccountVerificationForm: React.FC = () => {
       const data = await AccountVerificationRepository.initiate(requestBody);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Account verification submitted successfully");
-      queryClient.setQueryData(
-        ["account-verification-status"],
-        (old: TAccountVerification) => ({
-          ...old,
-          accountVerification: data
-        })
-      );
+      queryClient.invalidateQueries({
+        queryKey: ["account-verification-status"]
+      });
     }
   });
 

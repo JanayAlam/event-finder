@@ -39,6 +39,26 @@ class AccountVerificationRepository extends BaseRepository {
     >(url, "get");
     return data;
   }
+
+  static async acceptRequest(id: string) {
+    const url = `${this.apiRoute}/${id}/accept`;
+    const data = await this.request<undefined, TAccountVerification>(
+      url,
+      "patch",
+      undefined,
+      { params: { nid: true, passport: true } }
+    );
+    return data;
+  }
+
+  static async declineRequest(id: string) {
+    const url = `${this.apiRoute}/${id}/decline`;
+    const data = await this.request<undefined, TAccountVerification>(
+      url,
+      "patch"
+    );
+    return data;
+  }
 }
 
 export default AccountVerificationRepository;

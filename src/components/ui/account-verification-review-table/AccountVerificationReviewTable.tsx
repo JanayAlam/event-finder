@@ -4,42 +4,222 @@ import {
   DataTable,
   useDataTable
 } from "@/components/shared/organisms/data-table";
-import { Spinner } from "@/components/shared/shadcn-components/spinner";
+import Modal from "@/components/shared/organisms/modal";
+import PrivateImage from "@/components/shared/organisms/private-image";
+import { Button } from "@/components/shared/shadcn-components/button";
+import { Label } from "@/components/shared/shadcn-components/label";
+import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { TPendingAccountVerificationItem } from "../../../../common/types";
 import { createColumns } from "./columns";
 
+type TViewModal = {
+  isOpen: boolean;
+  accountVerification: TPendingAccountVerificationItem | null;
+};
+
 export default function AccountVerificationReviewTable() {
+  const queryClient = useQueryClient();
+
+  const [viewModal, setViewModal] = useState<TViewModal>({
+    isOpen: false,
+    accountVerification: null
+  });
+
   const { data, isLoading } = useQuery({
     queryKey: ["get-pending-reviews"],
     queryFn: () => AccountVerificationRepository.pendingReviews()
   });
 
+  const { mutate: mutateAcceptRequest, isPending: isAcceptingRequest } =
+    useMutation({
+      mutationKey: ["accept-request"],
+      mutationFn: (id: string) =>
+        AccountVerificationRepository.acceptRequest(id),
+      onSuccess: () => {
+        toast.success("Request accepted");
+        setViewModal({ isOpen: false, accountVerification: null });
+        queryClient.invalidateQueries({ queryKey: ["get-pending-reviews"] });
+      }
+    });
+
+  const { mutate: mutateDeclineRequest, isPending: isDecliningRequest } =
+    useMutation({
+      mutationKey: ["decline-request"],
+      mutationFn: (id: string) =>
+        AccountVerificationRepository.declineRequest(id),
+      onSuccess: () => {
+        toast.success("Request declined");
+        setViewModal({ isOpen: false, accountVerification: null });
+        queryClient.invalidateQueries({ queryKey: ["get-pending-reviews"] });
+      }
+    });
+
   const columns = createColumns({
-    onView(accountVerificationId) {},
-    onAccept(accountVerificationId) {},
-    onDecline(accountVerificationId) {}
+    onView(accountVerificationId) {
+      const accountVerification = data?.find(
+        (a) => a._id.toString() === accountVerificationId
+      );
+      if (accountVerification) {
+        setViewModal({
+          isOpen: true,
+          accountVerification
+        });
+      }
+    },
+    onAccept(accountVerificationId: string) {
+      mutateAcceptRequest(accountVerificationId);
+    },
+    onDecline(accountVerificationId: string) {
+      mutateDeclineRequest(accountVerificationId);
+    }
   });
 
-  const { table } = useDataTable({
-    columns,
-    data:
+  const tableData = useMemo(
+    () =>
       data?.map((item) => ({
         accountVerificationId: item._id.toString(),
         name: `${item.user.profile?.firstName ?? ""} ${item.user.profile?.lastName ?? ""}`,
         email: item.user.email,
         requestedAt: dayjs(item.createdAt).format("DD/MM/YYYY")
-      })) ?? []
+      })) ?? [],
+    [data]
+  );
+
+  const { table } = useDataTable({
+    columns,
+    data: tableData
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center space-y-10">
-        <Spinner />
-      </div>
-    );
-  }
+  return (
+    <>
+      <DataTable
+        isLoading={isLoading}
+        containerClassName="w-full"
+        table={table}
+      />
 
-  return <DataTable containerClassName="w-full" table={table} />;
+      <Modal
+        title="Account verification"
+        isOpen={viewModal.isOpen}
+        closeHandler={() =>
+          setViewModal({ isOpen: false, accountVerification: null })
+        }
+        footer={
+          <div className="flex items-center gap-2 justify-end">
+            <Button
+              variant="outline"
+              className="px-4"
+              onClick={() =>
+                setViewModal({ isOpen: false, accountVerification: null })
+              }
+            >
+              Close
+            </Button>
+            <Button
+              className="px-4 bg-destructive hover:bg-destructive/80 text-white"
+              isLoading={isDecliningRequest}
+              onClick={() =>
+                viewModal.accountVerification &&
+                mutateDeclineRequest(
+                  viewModal.accountVerification._id.toString()
+                )
+              }
+            >
+              Decline
+            </Button>
+            <Button
+              className="px-4 bg-success hover:bg-success/80 text-white"
+              isLoading={isAcceptingRequest}
+              onClick={() =>
+                viewModal.accountVerification &&
+                mutateAcceptRequest(
+                  viewModal.accountVerification._id.toString()
+                )
+              }
+            >
+              Accept
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-6">
+          {/* NID Section */}
+          {(viewModal.accountVerification?.nidFrontImage ||
+            viewModal.accountVerification?.nidBackImage ||
+            viewModal.accountVerification?.nidNumber) && (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                {viewModal.accountVerification?.nidFrontImage && (
+                  <div className="flex flex-col gap-2 w-full md:w-1/2">
+                    <Label>NID Front Image</Label>
+                    <PrivateImage
+                      filePath={viewModal.accountVerification.nidFrontImage}
+                      alt="NID front image"
+                      width={0}
+                      height={100}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                {viewModal.accountVerification?.nidBackImage && (
+                  <div className="flex flex-col gap-2 w-full md:w-1/2">
+                    <Label>NID Back Image</Label>
+                    <PrivateImage
+                      filePath={viewModal.accountVerification.nidBackImage}
+                      alt="NID back image"
+                      width={0}
+                      height={100}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {viewModal.accountVerification?.nidNumber && (
+                <div className="flex flex-col gap-2 w-full md:w-1/2">
+                  <Label>NID No.</Label>
+                  <Paragraph>
+                    {viewModal.accountVerification.nidNumber}
+                  </Paragraph>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Passport Section */}
+          {(viewModal.accountVerification?.passportImage ||
+            viewModal.accountVerification?.passportNumber) && (
+            <div className="flex flex-col gap-4">
+              {viewModal.accountVerification?.passportImage && (
+                <div className="flex flex-col gap-2 w-full md:w-1/2">
+                  <Label>Passport Image</Label>
+                  <PrivateImage
+                    filePath={viewModal.accountVerification.passportImage}
+                    alt="Passport image"
+                    width={0}
+                    height={100}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {viewModal.accountVerification?.passportNumber && (
+                <div className="flex flex-col gap-2 w-full md:w-1/2">
+                  <Label>Passport No.</Label>
+                  <Paragraph>
+                    {viewModal.accountVerification.passportNumber}
+                  </Paragraph>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Modal>
+    </>
+  );
 }

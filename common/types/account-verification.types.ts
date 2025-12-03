@@ -14,7 +14,7 @@ export type TVerificationStatusResponse = {
   accountVerification: TAccountVerification | null;
 };
 
-export type TPendingAccountVeificationItem = Omit<
+export type TPendingAccountVerificationItem = Omit<
   TAccountVerification,
   "user"
 > & {
@@ -24,4 +24,4 @@ export type TPendingAccountVeificationItem = Omit<
 };
 
 export type TAllPendingAccountVerificationResponse =
-  Array<TPendingAccountVeificationItem>;
+  Array<TPendingAccountVerificationItem>;

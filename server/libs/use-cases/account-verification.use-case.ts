@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
 import { TAllPendingAccountVerificationResponse } from "../../../common/types";
+import { TAccountVerificationStatus } from "../../enums";
 import AccountVerification, {
   IAccountVerificationDoc,
   TAccountVerification
 } from "../../models/account-verification.model";
+import { TUser } from "../../models/user.model";
 import UserCase from "./base.use-case";
 
 interface ICreateAccountVerificationDto {
@@ -26,6 +28,15 @@ interface IUpdateAccountVerificationDto {
 class AccountVerificationUseCase extends UserCase {
   constructor() {
     super();
+  }
+
+  static getById(
+    id: string | Types.ObjectId
+  ): Promise<TAccountVerification | null> {
+    return AccountVerification.findById(id)
+      .select(this.defaultSelect)
+      .lean<TAccountVerification>()
+      .exec();
   }
 
   static getByUserId(
@@ -82,6 +93,25 @@ class AccountVerificationUseCase extends UserCase {
       .exec();
 
     return result;
+  }
+
+  static async addReview(
+    accountVerificationId: Types.ObjectId,
+    admin: TUser,
+    reviewStatuses: TAccountVerificationStatus[]
+  ) {
+    return AccountVerification.findOneAndUpdate(
+      { _id: accountVerificationId },
+      {
+        reviews: reviewStatuses.map((status) => ({
+          status: status,
+          reviewedBy: admin._id,
+          reviewedAt: new Date()
+        })),
+        isReviewed: true
+      },
+      { new: true }
+    );
   }
 }
 

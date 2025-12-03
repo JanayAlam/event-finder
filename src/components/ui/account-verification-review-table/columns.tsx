@@ -89,7 +89,7 @@ export const createColumns = (
     enableHiding: false,
     enableSorting: false,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Requested At" />
+      <DataTableColumnHeader column={column} title="Requested at" />
     ),
     cell: ({ row }) => <Paragraph>{row.getValue("requestedAt")}</Paragraph>
   },

@@ -11,8 +11,10 @@ import {
   TableRow
 } from "@/components/shared/shadcn-components/table";
 import { cn } from "@/utils/tailwind-utils";
+import { Spinner } from "../../shadcn-components/spinner";
 
 interface DataTableProps<TData> {
+  isLoading?: boolean;
   table: TanStackTable<TData>;
   containerClassName?: string;
   showContainer?: boolean;
@@ -20,6 +22,7 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({
+  isLoading,
   table,
   containerClassName,
   showContainer = true,
@@ -67,7 +70,18 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex justify-center items-center">
+                    <Spinner className="size-10" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

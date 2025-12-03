@@ -3,8 +3,8 @@ import {
   H3,
   Paragraph
 } from "@/components/shared/shadcn-components/typography";
+import AccountVerificationReviewTable from "@/components/ui/account-verification-review-table";
 import { Metadata } from "next";
-import PendingReviewsTable from "./PendingReviewsTable";
 
 export const metadata: Metadata = {
   title: "Account verification approvals",
@@ -20,11 +20,11 @@ export default function AccountVerificationPage() {
           <H3 className="xl:hidden">Account verifications</H3>
         </div>
         <Paragraph>
-          Approve, declines all the pending account verifiaction requests
+          Approve, declines all the pending account verification requests
         </Paragraph>
       </div>
 
-      <PendingReviewsTable />
+      <AccountVerificationReviewTable />
     </div>
   );
 }

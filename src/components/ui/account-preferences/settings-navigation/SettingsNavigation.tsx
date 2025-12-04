@@ -15,12 +15,21 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/shared/shadcn-components/select";
+import { PRIVATE_PAGE_ROUTE, PRIVATE_TRAVELER_ONLY_PAGE_ROUTE } from "@/routes";
+import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/utils/tailwind-utils";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-import React from "react";
+import React, { useMemo } from "react";
+import { USER_ROLE } from "../../../../../server/enums";
+
+type TSideMenuItem = {
+  key: string;
+  label: string;
+  href: string;
+};
 
 export type SettingsNavItem = {
   key: string;
@@ -28,13 +37,31 @@ export type SettingsNavItem = {
   href: string;
 };
 
-type SettingsNavigationProps = {
-  items: SettingsNavItem[];
-};
-
-const SettingsNavigation: React.FC<SettingsNavigationProps> = ({ items }) => {
+const SettingsNavigation: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
+
+  const { user } = useAuthStore();
+
+  const items: TSideMenuItem[] = useMemo(() => {
+    const menuItems: TSideMenuItem[] = [
+      {
+        key: "personal-info",
+        href: PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO,
+        label: "Personal info"
+      }
+    ];
+
+    if (user?.role === USER_ROLE.TRAVELER) {
+      menuItems.push({
+        key: "verification",
+        href: PRIVATE_TRAVELER_ONLY_PAGE_ROUTE.SETTINGS_VERIFICATION,
+        label: "Verification"
+      });
+    }
+
+    return menuItems;
+  }, [user]);
 
   const activeItem =
     items.find((item) => pathname?.startsWith(item.href)) ?? items[0];

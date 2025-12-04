@@ -16,7 +16,7 @@ import {
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
-import { PRIVATE_PAGE_ROUTE } from "@/routes";
+import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE, PRIVATE_PAGE_ROUTE } from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/utils/tailwind-utils";
 import { Bell, ChevronDownIcon } from "lucide-react";
@@ -24,6 +24,7 @@ import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
 import { toast } from "sonner";
+import { USER_ROLE } from "../../../../server/enums";
 import { Button } from "../../shared/shadcn-components/button";
 import ThemeToggleButton from "../theme-toggle-button";
 import SearchButton from "./SearchButton";
@@ -107,6 +108,11 @@ const Navbar: React.FC = () => {
                   <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
                     <DropdownMenuItem>Account preferences</DropdownMenuItem>
                   </Link>
+                  {user.role === USER_ROLE.ADMIN ? (
+                    <Link href={PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD}>
+                      <DropdownMenuItem>Admin portal</DropdownMenuItem>
+                    </Link>
+                  ) : null}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>

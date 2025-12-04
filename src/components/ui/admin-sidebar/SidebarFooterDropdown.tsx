@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import AuthRepository from "@/repositories/auth.repository";
 import UserRepository from "@/repositories/user.repository";
-import { PRIVATE_PAGE_ROUTE } from "@/routes";
+import { PRIVATE_PAGE_ROUTE, PUBLIC_PAGE_ROUTE } from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
@@ -77,6 +77,9 @@ const SidebarFooterDropdown: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50 flex flex-col gap-1" align="start">
         <DropdownMenuGroup>
+          <Link href={PUBLIC_PAGE_ROUTE.HOME}>
+            <DropdownMenuItem>Home</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
             <DropdownMenuItem>Account preferences</DropdownMenuItem>

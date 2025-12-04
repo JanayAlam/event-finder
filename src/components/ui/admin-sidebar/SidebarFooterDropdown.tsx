@@ -22,10 +22,12 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { toast } from "sonner";
 
 const SidebarFooterDropdown: React.FC = () => {
+  const router = useRouter();
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const { data: profile, isLoading } = useQuery({
@@ -37,6 +39,7 @@ const SidebarFooterDropdown: React.FC = () => {
     const data = await AuthRepository.logout();
     clearAuth();
     toast.success(data.message);
+    router.push(PUBLIC_PAGE_ROUTE.HOME);
   };
 
   if (!isLoggedIn || !user) {

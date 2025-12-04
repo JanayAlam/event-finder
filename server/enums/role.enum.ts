@@ -1,5 +1,6 @@
 export const USER_ROLE = {
   ADMIN: "admin",
+  HOST: "host",
   TRAVELER: "traveler"
 } as const;
 

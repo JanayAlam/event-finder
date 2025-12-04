@@ -1,7 +1,9 @@
 import { Router } from "express";
 import accountVerificationRouter from "./account-verification.router";
+import adminRouter from "./admin.router";
 import authRouter from "./auth.router";
 import profileRouter from "./profile.router";
+import promotionRequestRouter from "./promotion-request.router";
 import statusRouter from "./status.router";
 import userRouter from "./user.router";
 
@@ -12,5 +14,7 @@ router.use("/auth", authRouter);
 router.use("/users", userRouter);
 router.use("/profiles", profileRouter);
 router.use("/account-verifications", accountVerificationRouter);
+router.use("/admins", adminRouter);
+router.use("/promotion-requests", promotionRequestRouter);
 
 export default router;

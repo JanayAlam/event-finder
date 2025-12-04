@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { TUserRole } from "../enums";
 import { getKindePublicKey } from "../libs/external-services/kinde.service";
-import { getUser } from "../libs/use-cases/user.use-case";
+import UserUseCase from "../libs/use-cases/user.use-case";
 import ApiError from "../utils/api-error.util";
 import logger from "../utils/winston.util";
 
@@ -73,7 +73,7 @@ export function authenticate(allowedRoles?: TUserRole[]) {
         throw new ApiError(403, "Invalid token payload");
       }
 
-      const user = await getUser({ kindeId, email: emailAddr });
+      const user = await UserUseCase.getUser({ kindeId, email: emailAddr });
 
       if (!user) {
         throw new ApiError(403, "Authorized user not found");

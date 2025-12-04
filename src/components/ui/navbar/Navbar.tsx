@@ -16,12 +16,17 @@ import {
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import AuthRepository from "@/repositories/auth.repository";
-import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE, PRIVATE_PAGE_ROUTE } from "@/routes";
+import {
+  PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
+  PRIVATE_PAGE_ROUTE,
+  PUBLIC_PAGE_ROUTE
+} from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/utils/tailwind-utils";
 import { Bell, ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { toast } from "sonner";
 import { USER_ROLE } from "../../../../server/enums";
@@ -36,12 +41,14 @@ const leagueSpartan = League_Spartan({
 });
 
 const Navbar: React.FC = () => {
+  const router = useRouter();
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const handleLogoutAction = async () => {
     const data = await AuthRepository.logout();
     clearAuth();
     toast.success(data.message);
+    router.push(PUBLIC_PAGE_ROUTE.HOME);
   };
 
   const handleLoginAction = () => {

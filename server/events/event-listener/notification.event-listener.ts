@@ -4,7 +4,7 @@ import {
   createBulkNotifications,
   createNotification
 } from "../../libs/use-cases/notification.use-case";
-import { getAllUsers } from "../../libs/use-cases/user.use-case";
+import UserUseCase from "../../libs/use-cases/user.use-case";
 import logger from "../../utils/winston.util";
 import { notificationEventEmitter } from "../event-emitters";
 
@@ -32,7 +32,7 @@ notificationEventEmitter.on(
   EVENT_KEYS.NOTIFY_ADMINS,
   async (param: TNotifyAllEventListenerParam) => {
     try {
-      const allAdmins = await getAllUsers({
+      const allAdmins = await UserUseCase.getAllUsers({
         filter: { role: USER_ROLE.ADMIN },
         projection: { _id: true }
       });

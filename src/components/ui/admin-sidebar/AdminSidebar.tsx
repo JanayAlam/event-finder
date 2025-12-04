@@ -21,6 +21,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from "@/components/shared/shadcn-components/sidebar";
+import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE } from "@/routes";
 import SidebarFooterDropdown from "./SidebarFooterDropdown";
 
 type AdminNavItem = {
@@ -32,7 +33,12 @@ type AdminNavItem = {
 };
 
 const NAV_ITEMS: AdminNavItem[] = [
-  { key: "0", label: "Dashboard", icon: <LayoutDashboard />, href: "#" },
+  {
+    key: "0",
+    label: "Dashboard",
+    icon: <LayoutDashboard />,
+    href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD
+  },
   {
     key: "1",
     label: "Approvals",
@@ -41,12 +47,12 @@ const NAV_ITEMS: AdminNavItem[] = [
       {
         key: "1-1",
         label: "Host approval",
-        href: "/admin/approvals/host"
+        href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.APPROVAL_HOST_VERIFICATION
       },
       {
         key: "1.2",
         label: "Account approval",
-        href: "/admin/approvals/account-verifiaction"
+        href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.APPROVAL_ACCOUNT_VERIFICATION
       }
     ]
   }

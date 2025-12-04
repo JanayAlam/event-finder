@@ -11,7 +11,7 @@ import {
   refreshAccessToken
 } from "../../../libs/external-services/kinde.service";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
-import { getUser } from "../../../libs/use-cases/user.use-case";
+import UserUseCase from "../../../libs/use-cases/user.use-case";
 import { TUser } from "../../../models/user.model";
 import {
   ACCESS_TOKEN_EXPIRY,
@@ -84,7 +84,7 @@ class AuthController {
         throw new ApiError(500, "Invalid JWT payload");
       }
 
-      let user = await getUser({ kindeId: sub, email });
+      let user = await UserUseCase.getUser({ kindeId: sub, email });
 
       if (!user) {
         const { user: createdUser } = await createUserAndProfile({
@@ -131,7 +131,7 @@ class AuthController {
       throw new ApiError(500, "Invalid JWT payload");
     }
 
-    const user = await getUser({
+    const user = await UserUseCase.getUser({
       kindeId: sub,
       email
     });

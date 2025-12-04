@@ -20,7 +20,7 @@ type TViewModal = {
   accountVerification: TPendingAccountVerificationItem | null;
 };
 
-export default function AccountVerificationReviewTable() {
+export default function HostVerificationReviewTable() {
   const queryClient = useQueryClient();
 
   const [viewModal, setViewModal] = useState<TViewModal>({
@@ -116,7 +116,7 @@ export default function AccountVerificationReviewTable() {
       />
 
       <Modal
-        title="Account verification"
+        title="Host verification"
         isOpen={viewModal.isOpen}
         closeHandler={() =>
           setViewModal({ isOpen: false, accountVerification: null })

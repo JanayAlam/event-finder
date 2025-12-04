@@ -29,6 +29,7 @@ export type TModalProps = {
 
   cancelText?: string;
   okText?: string;
+  buttonDisabled?: boolean;
 };
 
 export default function Modal({
@@ -44,7 +45,8 @@ export default function Modal({
   headerClassName,
   footerClassName,
   cancelText = "Cancel",
-  okText = "Ok"
+  okText = "Ok",
+  buttonDisabled = false
 }: React.PropsWithChildren<TModalProps>) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeHandler()}>
@@ -97,13 +99,17 @@ export default function Modal({
             footer
           ) : (
             <div className={cn("flex justify-end gap-2", footerClassName)}>
-              <Button variant="outline" onClick={closeHandler}>
+              <Button
+                variant="outline"
+                onClick={closeHandler}
+                disabled={buttonDisabled}
+              >
                 {cancelText}
               </Button>
               <Button
                 onClick={okHandler}
                 isLoading={loading}
-                disabled={loading}
+                disabled={buttonDisabled || loading}
               >
                 {okText}
               </Button>

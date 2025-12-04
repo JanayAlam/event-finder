@@ -31,20 +31,20 @@ export default function AccountVerificationReviewTable() {
   const [rowSelection, setRowSelection] = useState({});
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get-pending-reviews"],
-    queryFn: () => AccountVerificationRepository.pendingReviews()
+    queryKey: ["account-verification-pending-reviews"],
+    queryFn: async () => await AccountVerificationRepository.pendingReviews()
   });
 
   const { mutate: mutateAcceptRequest, isPending: isAcceptingRequest } =
     useMutation({
-      mutationKey: ["accept-request"],
+      mutationKey: ["accept-account-verification-request"],
       mutationFn: async (id: string) => {
         await AccountVerificationRepository.acceptRequest(id);
       },
       onSuccess: async () => {
         toast.success("Request accepted");
         await queryClient.invalidateQueries({
-          queryKey: ["get-pending-reviews"]
+          queryKey: ["account-verification-pending-reviews"]
         });
         setViewModal({ isOpen: false, accountVerification: null });
       }
@@ -52,14 +52,14 @@ export default function AccountVerificationReviewTable() {
 
   const { mutate: mutateDeclineRequest, isPending: isDecliningRequest } =
     useMutation({
-      mutationKey: ["decline-request"],
+      mutationKey: ["decline-account-verification-request"],
       mutationFn: async (id: string) => {
         await AccountVerificationRepository.declineRequest(id);
       },
       onSuccess: async () => {
         toast.success("Request declined");
         await queryClient.invalidateQueries({
-          queryKey: ["get-pending-reviews"]
+          queryKey: ["account-verification-pending-reviews"]
         });
         setViewModal({ isOpen: false, accountVerification: null });
       }

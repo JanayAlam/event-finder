@@ -1,40 +1,34 @@
 import { DataTableColumnHeader } from "@/components/shared/organisms/data-table";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from "@/components/shared/shadcn-components/avatar";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Checkbox } from "@/components/shared/shadcn-components/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/shared/shadcn-components/dropdown-menu";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
-import { getUIAvatar } from "@/utils/avatars";
 import { ColumnDef } from "@tanstack/react-table";
-import { EllipsisVertical } from "lucide-react";
+import { Ban, CircleCheckBig } from "lucide-react";
 
-export type TPendingReviewTableColumn = {
-  accountVerificationId: string;
-  name: string;
+export type TPendingHostRequestTableColumn = {
+  promotionPendingId: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  dateOfBirth: string;
   requestedAt: string;
 };
 
 export type TColumnHandlers = {
-  onView: (accountVerificationId: string) => void;
-  onAccept: (accountVerificationId: string) => void;
-  onDecline: (accountVerificationId: string) => void;
+  onView: (promotionPendingId: string) => void;
+  onAccept: (promotionPendingId: string) => void;
+  onReject: (promotionPendingId: string) => void;
 };
 
 export const createColumns = (
   handlers: TColumnHandlers
-): ColumnDef<TPendingReviewTableColumn>[] => [
+): ColumnDef<TPendingHostRequestTableColumn>[] => [
   {
-    id: "select",
+    accessorKey: "select",
+    enableHiding: false,
+    enableSorting: false,
+    enableColumnFilter: false,
+    size: 40,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -51,29 +45,41 @@ export const createColumns = (
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    size: 40
+    )
   },
   {
-    accessorKey: "name",
+    accessorKey: "firstName",
     enableSorting: false,
     enableHiding: false,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account" />
+      <DataTableColumnHeader column={column} title="First name" />
     ),
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <Avatar>
-          <AvatarImage
-            src={getUIAvatar(row.getValue("name"))}
-            alt="User profile picture"
-          />
-          <AvatarFallback>{row.getValue("name")}</AvatarFallback>
-        </Avatar>
-        <Paragraph className="font-medium">{row.getValue("name")}</Paragraph>
-      </div>
+      <Paragraph className="font-medium">{row.getValue("firstName")}</Paragraph>
+    )
+  },
+  {
+    accessorKey: "lastName",
+    enableSorting: false,
+    enableHiding: false,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last name" />
+    ),
+    cell: ({ row }) => (
+      <Paragraph className="font-medium">{row.getValue("lastName")}</Paragraph>
+    )
+  },
+  {
+    accessorKey: "dateOfBirth",
+    enableSorting: false,
+    enableHiding: false,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date of birth" />
+    ),
+    cell: ({ row }) => (
+      <Paragraph className="font-medium">
+        {row.getValue("dateOfBirth")}
+      </Paragraph>
     )
   },
   {
@@ -95,43 +101,57 @@ export const createColumns = (
     cell: ({ row }) => <Paragraph>{row.getValue("requestedAt")}</Paragraph>
   },
   {
+    accessorKey: "details",
+    enableHiding: false,
+    enableSorting: false,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Verification details"
+        align="center"
+      />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            onClick={() => {
+              handlers.onView(row.original.promotionPendingId);
+            }}
+          >
+            Details
+          </Button>
+        </div>
+      );
+    }
+  },
+  {
     id: "actions",
     enableHiding: false,
-    size: 60,
+    size: 100,
     cell: ({ row }) => {
-      const verification = row.original;
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <EllipsisVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onView(verification.accountVerificationId)
-              }
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onAccept(verification.accountVerificationId)
-              }
-            >
-              Accept
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onDecline(verification.accountVerificationId)
-              }
-            >
-              Decline
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-2 items-center justify-center">
+          <Button
+            size="icon"
+            variant="outline"
+            className="bg-success/10! border border-success! text-success hover:text-success"
+            title="Accept request"
+            onClick={() => handlers.onAccept(row.original.promotionPendingId)}
+          >
+            <CircleCheckBig />
+          </Button>
+          <Button
+            size="icon"
+            variant="outline"
+            className="bg-destructive/10! border border-destructive! text-destructive hover:text-destructive"
+            title="Reject request"
+            onClick={() => handlers.onReject(row.original.promotionPendingId)}
+          >
+            <Ban />
+          </Button>
+        </div>
       );
     }
   }

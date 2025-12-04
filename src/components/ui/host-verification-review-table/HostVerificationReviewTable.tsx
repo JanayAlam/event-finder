@@ -6,18 +6,22 @@ import PrivateImage from "@/components/shared/organisms/private-image";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Label } from "@/components/shared/shadcn-components/label";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
-import AccountVerificationRepository from "@/repositories/account-verification.repository";
+import PromotionRequestRepository from "@/repositories/promotion-request.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable
+} from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { TPendingAccountVerificationItem } from "../../../../common/types";
-import { createColumns } from "./columns";
+import { TPendingHostVerificationItem } from "../../../../common/types/host-verification.types";
+import { createColumns, TPendingHostRequestTableColumn } from "./columns";
 
 type TViewModal = {
   isOpen: boolean;
-  accountVerification: TPendingAccountVerificationItem | null;
+  promotionPending: TPendingHostVerificationItem | null;
 };
 
 export default function HostVerificationReviewTable() {
@@ -25,71 +29,76 @@ export default function HostVerificationReviewTable() {
 
   const [viewModal, setViewModal] = useState<TViewModal>({
     isOpen: false,
-    accountVerification: null
+    promotionPending: null
   });
 
   const [rowSelection, setRowSelection] = useState({});
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get-pending-reviews"],
-    queryFn: () => AccountVerificationRepository.pendingReviews()
+    queryKey: ["pending-host-request-reviews"],
+    queryFn: async () =>
+      await PromotionRequestRepository.getAllPendingRequests()
   });
 
   const { mutate: mutateAcceptRequest, isPending: isAcceptingRequest } =
     useMutation({
-      mutationKey: ["accept-request"],
+      mutationKey: ["accept-host-request"],
       mutationFn: async (id: string) => {
-        await AccountVerificationRepository.acceptRequest(id);
+        await PromotionRequestRepository.acceptRequest(id);
       },
       onSuccess: async () => {
         toast.success("Request accepted");
         await queryClient.invalidateQueries({
-          queryKey: ["get-pending-reviews"]
+          queryKey: ["pending-host-request-reviews"]
         });
-        setViewModal({ isOpen: false, accountVerification: null });
+        setViewModal({ isOpen: false, promotionPending: null });
       }
     });
 
-  const { mutate: mutateDeclineRequest, isPending: isDecliningRequest } =
+  const { mutate: mutateRejectRequest, isPending: isRejectingRequest } =
     useMutation({
-      mutationKey: ["decline-request"],
+      mutationKey: ["reject-host-request"],
       mutationFn: async (id: string) => {
-        await AccountVerificationRepository.declineRequest(id);
+        await PromotionRequestRepository.rejectRequest(id);
       },
       onSuccess: async () => {
-        toast.success("Request declined");
+        toast.success("Request rejected");
         await queryClient.invalidateQueries({
-          queryKey: ["get-pending-reviews"]
+          queryKey: ["pending-host-request-reviews"]
         });
-        setViewModal({ isOpen: false, accountVerification: null });
+        setViewModal({ isOpen: false, promotionPending: null });
       }
     });
 
   const columns = createColumns({
-    onView(accountVerificationId) {
-      const accountVerification = data?.find(
-        (a) => a._id.toString() === accountVerificationId
+    onView(promotionPendingId) {
+      const promotionPending = data?.find(
+        (a) => a._id.toString() === promotionPendingId
       );
-      if (accountVerification) {
+      if (promotionPending) {
         setViewModal({
           isOpen: true,
-          accountVerification
+          promotionPending
         });
       }
     },
-    onAccept(accountVerificationId: string) {
-      mutateAcceptRequest(accountVerificationId);
+    onAccept(promotionPendingId) {
+      mutateAcceptRequest(promotionPendingId);
     },
-    onDecline(accountVerificationId: string) {
-      mutateDeclineRequest(accountVerificationId);
+    onReject(promotionPendingId) {
+      mutateRejectRequest(promotionPendingId);
     }
   });
 
-  const tableData = useMemo(
+  const tableData: TPendingHostRequestTableColumn[] = useMemo(
     () =>
       data?.map((item) => ({
-        accountVerificationId: item._id.toString(),
-        name: `${item.user.profile?.firstName ?? ""} ${item.user.profile?.lastName ?? ""}`,
+        promotionPendingId: item._id.toString(),
+        firstName: item.user.profile?.firstName,
+        lastName: item.user.profile?.lastName,
+        dateOfBirth: item.user.profile.dateOfBirth
+          ? dayjs(item.user.profile.dateOfBirth).format("DD/MM/YYYY")
+          : "-",
         email: item.user.email,
         requestedAt: dayjs(item.updatedAt).format("DD/MM/YYYY")
       })) ?? [],
@@ -100,6 +109,7 @@ export default function HostVerificationReviewTable() {
     data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     state: {
       rowSelection
@@ -116,10 +126,10 @@ export default function HostVerificationReviewTable() {
       />
 
       <Modal
-        title="Host verification"
+        title="Verification details"
         isOpen={viewModal.isOpen}
         closeHandler={() =>
-          setViewModal({ isOpen: false, accountVerification: null })
+          setViewModal({ isOpen: false, promotionPending: null })
         }
         footer={
           <div className="flex items-center gap-2 justify-end">
@@ -127,50 +137,33 @@ export default function HostVerificationReviewTable() {
               variant="outline"
               className="px-4"
               onClick={() =>
-                setViewModal({ isOpen: false, accountVerification: null })
+                setViewModal({ isOpen: false, promotionPending: null })
               }
             >
               Close
-            </Button>
-            <Button
-              className="px-4 bg-destructive hover:bg-destructive/80 text-white"
-              isLoading={isDecliningRequest}
-              onClick={() =>
-                viewModal.accountVerification &&
-                mutateDeclineRequest(
-                  viewModal.accountVerification._id.toString()
-                )
-              }
-            >
-              Decline
-            </Button>
-            <Button
-              className="px-4 bg-success hover:bg-success/80 text-white"
-              isLoading={isAcceptingRequest}
-              onClick={() =>
-                viewModal.accountVerification &&
-                mutateAcceptRequest(
-                  viewModal.accountVerification._id.toString()
-                )
-              }
-            >
-              Accept
             </Button>
           </div>
         }
       >
         <div className="flex flex-col gap-6">
           {/* NID Section */}
-          {(viewModal.accountVerification?.nidFrontImage ||
-            viewModal.accountVerification?.nidBackImage ||
-            viewModal.accountVerification?.nidNumber) && (
+          {(viewModal.promotionPending?.user.accountVerification
+            ?.nidFrontImage ||
+            viewModal.promotionPending?.user.accountVerification
+              ?.nidBackImage ||
+            viewModal.promotionPending?.user.accountVerification
+              ?.nidNumber) && (
             <div className="flex flex-col gap-4">
               <div className="flex flex-col md:flex-row gap-4">
-                {viewModal.accountVerification?.nidFrontImage && (
+                {viewModal.promotionPending?.user.accountVerification
+                  ?.nidFrontImage && (
                   <div className="flex flex-col gap-2 w-full md:w-1/2">
                     <Label>NID Front Image</Label>
                     <PrivateImage
-                      filePath={viewModal.accountVerification.nidFrontImage}
+                      filePath={
+                        viewModal.promotionPending?.user.accountVerification
+                          .nidFrontImage
+                      }
                       alt="NID front image"
                       width={0}
                       height={100}
@@ -178,11 +171,15 @@ export default function HostVerificationReviewTable() {
                     />
                   </div>
                 )}
-                {viewModal.accountVerification?.nidBackImage && (
+                {viewModal.promotionPending?.user.accountVerification
+                  ?.nidBackImage && (
                   <div className="flex flex-col gap-2 w-full md:w-1/2">
                     <Label>NID Back Image</Label>
                     <PrivateImage
-                      filePath={viewModal.accountVerification.nidBackImage}
+                      filePath={
+                        viewModal.promotionPending?.user.accountVerification
+                          .nidBackImage
+                      }
                       alt="NID back image"
                       width={0}
                       height={100}
@@ -192,11 +189,15 @@ export default function HostVerificationReviewTable() {
                 )}
               </div>
 
-              {viewModal.accountVerification?.nidNumber && (
+              {viewModal.promotionPending?.user.accountVerification
+                ?.nidNumber && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>NID No.</Label>
                   <Paragraph>
-                    {viewModal.accountVerification.nidNumber}
+                    {
+                      viewModal.promotionPending?.user.accountVerification
+                        .nidNumber
+                    }
                   </Paragraph>
                 </div>
               )}
@@ -204,14 +205,20 @@ export default function HostVerificationReviewTable() {
           )}
 
           {/* Passport Section */}
-          {(viewModal.accountVerification?.passportImage ||
-            viewModal.accountVerification?.passportNumber) && (
+          {(viewModal.promotionPending?.user.accountVerification
+            ?.passportImage ||
+            viewModal.promotionPending?.user.accountVerification
+              ?.passportNumber) && (
             <div className="flex flex-col gap-4">
-              {viewModal.accountVerification?.passportImage && (
+              {viewModal.promotionPending?.user.accountVerification
+                ?.passportImage && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>Passport Image</Label>
                   <PrivateImage
-                    filePath={viewModal.accountVerification.passportImage}
+                    filePath={
+                      viewModal.promotionPending?.user.accountVerification
+                        .passportImage
+                    }
                     alt="Passport image"
                     width={0}
                     height={100}
@@ -220,11 +227,15 @@ export default function HostVerificationReviewTable() {
                 </div>
               )}
 
-              {viewModal.accountVerification?.passportNumber && (
+              {viewModal.promotionPending?.user.accountVerification
+                ?.passportNumber && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>Passport No.</Label>
                   <Paragraph>
-                    {viewModal.accountVerification.passportNumber}
+                    {
+                      viewModal.promotionPending?.user.accountVerification
+                        .passportNumber
+                    }
                   </Paragraph>
                 </div>
               )}

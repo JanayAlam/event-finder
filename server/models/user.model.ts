@@ -40,6 +40,14 @@ userSchema.virtual("profile", {
   justOne: true
 });
 
+// Virtual populate for account verification (reverse relationship)
+userSchema.virtual("accountVerification", {
+  ref: "account_verifications",
+  localField: "_id",
+  foreignField: "user",
+  justOne: true
+});
+
 const User = model<IUserDoc>("users", userSchema);
 
 export type TUser = ModelWithObjectId<UserBase>;

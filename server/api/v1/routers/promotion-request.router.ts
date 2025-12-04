@@ -11,4 +11,22 @@ promotionRequestRouter.post(
   PromotionRequestController.request
 );
 
+promotionRequestRouter.get(
+  "/",
+  authenticate([USER_ROLE.ADMIN]),
+  PromotionRequestController.allPendingRequests
+);
+
+promotionRequestRouter.patch(
+  "/:promotionRequestId/accept",
+  authenticate([USER_ROLE.ADMIN]),
+  PromotionRequestController.acceptPromotionRequest
+);
+
+promotionRequestRouter.patch(
+  "/:promotionRequestId/reject",
+  authenticate([USER_ROLE.ADMIN]),
+  PromotionRequestController.rejectPromotionRequest
+);
+
 export default promotionRequestRouter;

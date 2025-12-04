@@ -20,7 +20,7 @@ export default function HostApprovalPage() {
           <H3 className="xl:hidden">Host verifications</H3>
         </div>
         <Paragraph>
-          Approve, declines all the pending host verification requests
+          Approve, rejects all the pending host verification requests
         </Paragraph>
       </div>
 

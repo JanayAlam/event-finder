@@ -14,4 +14,4 @@ export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {
 
 export const PRIVATE_TRAVELER_ONLY_PAGE_ROUTE: Record<string, string> = {
   SETTINGS_VERIFICATION: "/account-preferences/verification"
-};
+} as const;

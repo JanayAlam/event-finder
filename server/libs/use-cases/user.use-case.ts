@@ -21,12 +21,19 @@ class UserUseCase extends UserCase {
     return User.find({ ...param.filter }, param.projection);
   }
 
-  static async promoteToHost(userId: Types.ObjectId) {
+  static async promoteToHost(id: Types.ObjectId) {
     return User.findOneAndUpdate(
-      { _id: userId },
+      { _id: id },
       { role: USER_ROLE.HOST },
       { new: true }
     )
+      .select(this.defaultSelect)
+      .lean<TUser>()
+      .exec();
+  }
+
+  static async update(id: Types.ObjectId, data: Partial<TUser>) {
+    return User.findOneAndUpdate({ _id: id }, { ...data }, { new: true })
       .select(this.defaultSelect)
       .lean<TUser>()
       .exec();

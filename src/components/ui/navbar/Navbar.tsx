@@ -58,7 +58,8 @@ const Navbar: React.FC = () => {
   const { data: accountVerificationStatus, isLoading } = useQuery({
     queryKey: ["account-verification-status"],
     queryFn: () => AccountVerificationRepository.status(),
-    retry: false
+    retry: false,
+    enabled: isLoggedIn
   });
 
   const handleLogoutAction = async () => {

@@ -9,6 +9,7 @@ export type TEventListItemDto = Pick<
   | "entryFee"
   | "dayCount"
   | "nightCount"
+  | "memberCapacity"
   | "host"
 >;
 

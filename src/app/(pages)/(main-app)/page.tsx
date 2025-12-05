@@ -1,11 +1,13 @@
+import AISearchSection from "@/components/ui/homepage/ai-search-section";
 import CreateEventSection from "@/components/ui/homepage/create-event-section";
-import AISearchSection from "@/components/ui/homepage/create-event-section/ai-search-section";
+import UpcomingTripsSection from "@/components/ui/homepage/upcoming-trips-section";
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-4">
       <CreateEventSection />
       <AISearchSection />
+      <UpcomingTripsSection />
     </div>
   );
 }

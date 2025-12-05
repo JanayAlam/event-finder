@@ -131,7 +131,7 @@ const Navbar: React.FC = () => {
               href={"/"}
               className="text-4xl font-extrabold text-brand-primary-main select-none"
             >
-              <span className="sm:hidden">tr.</span>
+              <span className="sm:hidden">tm.</span>
               <span className="hidden sm:block">tripmate.</span>
             </Link>
           </div>

@@ -8,7 +8,7 @@ const accountVerificationRouter = Router({ mergeParams: true });
 
 accountVerificationRouter.get(
   "/status",
-  authenticate([USER_ROLE.TRAVELER, USER_ROLE.HOST]),
+  authenticate(),
   AccountVerificationController.status
 );
 

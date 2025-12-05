@@ -2,6 +2,10 @@ export const PUBLIC_PAGE_ROUTE = {
   HOME: "/"
 };
 
+export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
+  EVENT_DETAILS: (eventId: string) => `/events/view/${eventId}`
+};
+
 export const PRIVATE_PAGE_ROUTE = {
   SETTINGS_PERSONAL_INFO: "/account-preferences/personal-info"
 };

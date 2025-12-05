@@ -9,14 +9,17 @@ import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
-import { PUBLIC_PAGE_ROUTE } from "@/routes";
+import EventRepository from "@/repositories/event.repository";
+import { PUBLIC_DYNAMIC_PAGE_ROUTE, PUBLIC_PAGE_ROUTE } from "@/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import {
   CalendarClockIcon,
   ClipboardList,
   Info,
   Map,
   NotebookText,
+  PiggyBank,
   PlusIcon,
   Trash2
 } from "lucide-react";
@@ -66,6 +69,7 @@ export default function CreateEventForm() {
       placeName: "",
       eventDate: undefined,
       entryFee: undefined,
+      memberCapacity: undefined,
       dayCount: undefined,
       nightCount: undefined,
       itinerary: []
@@ -77,17 +81,29 @@ export default function CreateEventForm() {
     name: "itinerary"
   });
 
-  const onSubmit = async (_data: TCreateEventDto) => {
-    try {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: TCreateEventDto) => {
+      const result = await EventRepository.create(data);
+      return result;
+    },
+    onSuccess: (data) => {
       toast.success("Event created successfully!");
-    } catch {
+      router.push(PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(data._id.toString()));
+    },
+    onError: () => {
       toast.error("Failed to create event");
-    } finally {
     }
-  };
+  });
 
   const handleGoToHomepageAction = () => {
     router.push(PUBLIC_PAGE_ROUTE.HOME);
+  };
+
+  const handleRemoveItinerary = (index: number) => {
+    remove(index);
+    setTimeout(() => {
+      form.clearErrors("itinerary");
+    }, 0);
   };
 
   return (
@@ -139,27 +155,16 @@ export default function CreateEventForm() {
               subtitle="When is the event and how long will it last?"
             >
               <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputField
-                    isRequired
-                    register={register("eventDate")}
-                    type="datetime-local"
-                    label="Event Date"
-                    name="eventDate"
-                    error={errors.eventDate}
-                  />
-                  <InputField
-                    isRequired
-                    register={register("entryFee")}
-                    type="number"
-                    label="Entry Fee"
-                    name="entryFee"
-                    placeholder="e.g., 7500"
-                    error={errors.entryFee}
-                  />
-                </div>
                 <div className="flex flex-col gap-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <InputField
+                      isRequired
+                      register={register("eventDate")}
+                      type="datetime-local"
+                      label="Event Date"
+                      name="eventDate"
+                      error={errors.eventDate}
+                    />
                     <InputField
                       isRequired
                       register={register("dayCount")}
@@ -187,6 +192,32 @@ export default function CreateEventForm() {
                     </TypographyMuted>
                   </div>
                 </div>
+              </div>
+            </FormCard>
+
+            <FormCard
+              icon={<PiggyBank />}
+              title="Fees & Members"
+              subtitle="What is the entry fee and member capacity?"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputField
+                  isRequired
+                  register={register("entryFee")}
+                  type="number"
+                  label="Entry Fee"
+                  name="entryFee"
+                  placeholder="e.g., 7500"
+                  error={errors.entryFee}
+                />
+                <InputField
+                  register={register("memberCapacity")}
+                  type="number"
+                  label="Member Capacity"
+                  name="memberCapacity"
+                  placeholder="e.g., 30"
+                  error={errors.memberCapacity}
+                />
               </div>
             </FormCard>
 
@@ -233,7 +264,7 @@ export default function CreateEventForm() {
                             type="button"
                             variant="ghost"
                             size="icon"
-                            onClick={() => remove(index)}
+                            onClick={() => handleRemoveItinerary(index)}
                             className="h-8 w-8"
                           >
                             <Trash2 className="h-4 w-4 text-brand-primary-main" />
@@ -256,11 +287,10 @@ export default function CreateEventForm() {
                               label="Activity Title"
                               name={`itinerary.${index}.title`}
                               placeholder="e.g., Morning Hike to Summit"
-                              error={errors.itinerary?.[index]?.moment}
+                              error={errors.itinerary?.[index]?.title}
                             />
                           </div>
                           <TextareaField
-                            isRequired
                             register={register(
                               `itinerary.${index}.description`
                             )}
@@ -285,14 +315,14 @@ export default function CreateEventForm() {
                   variant="outline"
                   className="px-6 max-xs:flex-1"
                   onClick={handleGoToHomepageAction}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isPending}
                 >
                   Cancel
                 </Button>
                 <Button
                   size="lg"
                   className="px-6 max-xs:flex-1 bg-brand-primary-main hover:bg-brand-primary-main/90 dark:text-primary"
-                  isLoading={isSubmitting}
+                  isLoading={isSubmitting || isPending}
                 >
                   Create
                 </Button>
@@ -302,7 +332,16 @@ export default function CreateEventForm() {
         );
       }}
       validationSchema={CreateEventSchema}
-      onSubmitCallback={async (_data) => {}}
+      onSubmitCallback={(data) => {
+        // Clean up itinerary - remove any empty or invalid items
+        const cleanedData = {
+          ...data,
+          itinerary: (data.itinerary || []).filter(
+            (item) => item && item.title && item.moment
+          )
+        };
+        mutate(cleanedData);
+      }}
     />
   );
 }

@@ -26,15 +26,30 @@ export const CreateEventSchema = z.object({
       { message: "Event date must be a valid future date" }
     )
     .transform((val) => new Date(val)),
-  entryFee: z
-    .number({ message: "Entry fee must be a number" })
-    .min(0, "Entry fee cannot be negative"),
-  dayCount: z
-    .number({ message: "Day count must be a number" })
-    .min(1, "Day count must be at least 1"),
-  nightCount: z
-    .number({ message: "Night count must be a number" })
-    .min(0, "Night count cannot be negative"),
+  entryFee: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : val),
+    z.coerce
+      .number({
+        error: "Entry fee is required"
+      })
+      .min(0, "Entry fee cannot be negative")
+  ),
+  dayCount: z.coerce
+    .number({ message: "Number of days count must be a number" })
+    .min(1, "Number of days count must be at least 1")
+    .default(1),
+  nightCount: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : val),
+    z.coerce
+      .number({
+        error: "Number of nights is required"
+      })
+      .min(0, "Number of nights cannot be negative")
+  ),
+  memberCapacity: z.coerce
+    .number({ message: "Member capacity must be a number" })
+    .min(0, "Member capacity should be positive")
+    .optional(),
   itinerary: z
     .array(
       z.object({
@@ -52,10 +67,14 @@ export const CreateEventSchema = z.object({
           100,
           "Itinerary title cannot be longer than 100 characters"
         ),
-        description: stringRequired("Itinerary description").max(
-          500,
-          "Itinerary description cannot be longer than 500 characters"
-        )
+        description: z
+          .string()
+          .trim()
+          .max(
+            500,
+            "Itinerary description cannot be longer than 500 characters"
+          )
+          .optional()
       })
     )
     .optional()

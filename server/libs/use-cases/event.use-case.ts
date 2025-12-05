@@ -23,10 +23,11 @@ class EventUseCase {
     entryFee: number;
     dayCount: number;
     nightCount: number;
+    memberCapacity?: number;
     itinerary?: Array<{
       moment: Date;
       title: string;
-      description: string;
+      description?: string;
     }>;
   }): Promise<TEvent | null> {
     const event = new Event(data);

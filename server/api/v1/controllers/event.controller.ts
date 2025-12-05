@@ -30,6 +30,7 @@ class EventController {
         placeName: req.body.placeName,
         eventDate: req.body.eventDate,
         entryFee: req.body.entryFee,
+        memberCapacity: req.body.memberCapacity,
         dayCount: req.body.dayCount,
         nightCount: req.body.nightCount,
         itinerary: req.body.itinerary || [],
@@ -93,6 +94,7 @@ class EventController {
           entryFee: 1,
           dayCount: 1,
           nightCount: 1,
+          memberCapacity: 1,
           host: 1,
           createdAt: 1
         } as any
@@ -106,6 +108,7 @@ class EventController {
         entryFee: event.entryFee,
         dayCount: event.dayCount,
         nightCount: event.nightCount,
+        memberCapacity: event.memberCapacity,
         host: event.host
       }));
 

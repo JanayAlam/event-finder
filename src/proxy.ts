@@ -4,6 +4,7 @@ import { TUserRole, USER_ROLE, userRoles } from "../server/enums";
 import { COOKIE_KEYS } from "../server/settings/cookies";
 import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
+  PRIVATE_HOST_ONLY_PAGE_ROUTE,
   PRIVATE_PAGE_ROUTE,
   PRIVATE_TRAVELER_ONLY_PAGE_ROUTE
 } from "./routes";
@@ -11,6 +12,7 @@ import {
 const ADMIN_ONLY_ROUTES: string[] = Object.values(
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE
 );
+const HOST_ONLY_ROUTES: string[] = Object.values(PRIVATE_HOST_ONLY_PAGE_ROUTE);
 const USER_ONLY_ROUTES: string[] = Object.values(
   PRIVATE_TRAVELER_ONLY_PAGE_ROUTE
 );
@@ -18,7 +20,8 @@ const USER_ONLY_ROUTES: string[] = Object.values(
 const PRIVATE_ROUTES: string[] = [
   ...Object.values(PRIVATE_PAGE_ROUTE),
   ...ADMIN_ONLY_ROUTES,
-  ...USER_ONLY_ROUTES
+  ...USER_ONLY_ROUTES,
+  ...HOST_ONLY_ROUTES
 ];
 
 export default function proxy(request: NextRequest) {
@@ -47,6 +50,13 @@ export default function proxy(request: NextRequest) {
   if (
     ADMIN_ONLY_ROUTES.some((route) => path.startsWith(route)) &&
     userRole !== USER_ROLE.ADMIN
+  ) {
+    return NextResponse.redirect(new URL("/403", request.url)); // forbidden page
+  }
+
+  if (
+    HOST_ONLY_ROUTES.some((route) => path.startsWith(route)) &&
+    userRole !== USER_ROLE.HOST
   ) {
     return NextResponse.redirect(new URL("/403", request.url)); // forbidden page
   }

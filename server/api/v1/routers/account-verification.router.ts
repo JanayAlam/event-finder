@@ -8,13 +8,13 @@ const accountVerificationRouter = Router({ mergeParams: true });
 
 accountVerificationRouter.get(
   "/status",
-  authenticate([USER_ROLE.TRAVELER]),
+  authenticate([USER_ROLE.TRAVELER, USER_ROLE.HOST]),
   AccountVerificationController.status
 );
 
 accountVerificationRouter.put(
   "/",
-  authenticate([USER_ROLE.TRAVELER]),
+  authenticate([USER_ROLE.TRAVELER, USER_ROLE.HOST]),
   imageUpload.fields([
     { name: "nidFrontImage", maxCount: 1 },
     { name: "nidBackImage", maxCount: 1 },

@@ -12,6 +12,10 @@ export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {
   APPROVAL_ACCOUNT_VERIFICATION: "/admin/approvals/account-verification"
 } as const;
 
+export const PRIVATE_HOST_ONLY_PAGE_ROUTE: Record<string, string> = {
+  CREATE_EVENT: "/events/create"
+} as const;
+
 export const PRIVATE_TRAVELER_ONLY_PAGE_ROUTE: Record<string, string> = {
   SETTINGS_VERIFICATION: "/account-preferences/verification"
 } as const;

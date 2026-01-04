@@ -5,6 +5,7 @@ import {
   TIdParam,
   TUpdateEventDto
 } from "../../../../common/validation-schemas";
+import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import ApiError from "../../../utils/api-error.util";
 
@@ -169,6 +170,38 @@ class EventController {
       await EventUseCase.delete(id);
 
       res.status(200).json({ message: "Event deleted successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async publishToFacebook(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+
+      const event = await EventUseCase.getById(id);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (!event.host._id.equals(req.user!._id)) {
+        throw new ApiError(
+          403,
+          "Only event creator can publish event to Facebook"
+        );
+      }
+
+      const facebookPost = await postEventToFacebookPage(event);
+
+      res.status(200).json({
+        message: "Event posted to Facebook successfully",
+        facebookPostId: facebookPost.id
+      });
     } catch (err) {
       next(err);
     }

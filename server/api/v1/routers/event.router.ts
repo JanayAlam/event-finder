@@ -29,6 +29,14 @@ eventRouter.get(
 // Get all events - public list with basic fields
 eventRouter.get("/", EventController.getAll);
 
+// Publish event to Facebook - only creator (HOST) can publish
+eventRouter.post(
+  "/:id/publish/facebook",
+  authenticate([USER_ROLE.HOST]),
+  inputValidator(null, IdParamsSchema),
+  EventController.publishToFacebook
+);
+
 // Get single event - everyone can view
 eventRouter.get(
   "/:id",

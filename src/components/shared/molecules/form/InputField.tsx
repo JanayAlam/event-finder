@@ -51,7 +51,7 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
   }, [id, isRequired, label]);
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       {renderLabel()}
       <div className="flex flex-col gap-0.5">
         {type === "file" ? (

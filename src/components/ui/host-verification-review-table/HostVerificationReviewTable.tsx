@@ -40,35 +40,33 @@ export default function HostVerificationReviewTable() {
       await PromotionRequestRepository.getAllPendingRequests()
   });
 
-  const { mutate: mutateAcceptRequest, isPending: isAcceptingRequest } =
-    useMutation({
-      mutationKey: ["accept-host-request"],
-      mutationFn: async (id: string) => {
-        await PromotionRequestRepository.acceptRequest(id);
-      },
-      onSuccess: async () => {
-        toast.success("Request accepted");
-        await queryClient.invalidateQueries({
-          queryKey: ["pending-host-request-reviews"]
-        });
-        setViewModal({ isOpen: false, promotionPending: null });
-      }
-    });
+  const { mutate: mutateAcceptRequest } = useMutation({
+    mutationKey: ["accept-host-request"],
+    mutationFn: async (id: string) => {
+      await PromotionRequestRepository.acceptRequest(id);
+    },
+    onSuccess: async () => {
+      toast.success("Request accepted");
+      await queryClient.invalidateQueries({
+        queryKey: ["pending-host-request-reviews"]
+      });
+      setViewModal({ isOpen: false, promotionPending: null });
+    }
+  });
 
-  const { mutate: mutateRejectRequest, isPending: isRejectingRequest } =
-    useMutation({
-      mutationKey: ["reject-host-request"],
-      mutationFn: async (id: string) => {
-        await PromotionRequestRepository.rejectRequest(id);
-      },
-      onSuccess: async () => {
-        toast.success("Request rejected");
-        await queryClient.invalidateQueries({
-          queryKey: ["pending-host-request-reviews"]
-        });
-        setViewModal({ isOpen: false, promotionPending: null });
-      }
-    });
+  const { mutate: mutateRejectRequest } = useMutation({
+    mutationKey: ["reject-host-request"],
+    mutationFn: async (id: string) => {
+      await PromotionRequestRepository.rejectRequest(id);
+    },
+    onSuccess: async () => {
+      toast.success("Request rejected");
+      await queryClient.invalidateQueries({
+        queryKey: ["pending-host-request-reviews"]
+      });
+      setViewModal({ isOpen: false, promotionPending: null });
+    }
+  });
 
   const columns = createColumns({
     onView(promotionPendingId) {
@@ -105,6 +103,7 @@ export default function HostVerificationReviewTable() {
     [data]
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: tableData,
     columns,

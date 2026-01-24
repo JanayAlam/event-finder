@@ -1,6 +1,11 @@
 "use client";
 
-import { ChevronRight, LayoutDashboard, UserLock } from "lucide-react";
+import {
+  ChevronRight,
+  Facebook,
+  LayoutDashboard,
+  UserLock
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -55,6 +60,12 @@ const NAV_ITEMS: AdminNavItem[] = [
         href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.APPROVAL_ACCOUNT_VERIFICATION
       }
     ]
+  },
+  {
+    key: "2",
+    label: "Facebook Management",
+    icon: <Facebook />,
+    href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.FACEBOOK_INTEGRATION
   }
 ];
 

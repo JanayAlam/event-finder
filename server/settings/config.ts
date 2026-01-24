@@ -39,6 +39,5 @@ export const MAIL_SENDER = process.env.MAIL_SENDER || "admin@tripmate.com";
 
 export const GOOGLE_MAP_API_KEY = process.env.GOOGLE_MAP_API_KEY;
 
-export const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
-export const FACEBOOK_PAGE_ACCESS_TOKEN =
-  process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+export const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+export const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;

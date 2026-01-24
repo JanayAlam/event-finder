@@ -196,7 +196,11 @@ class EventController {
         );
       }
 
-      const facebookPost = await postEventToFacebookPage(event);
+      if (event.isPostedToFacebook) {
+        throw new ApiError(400, "Event has already been posted to Facebook");
+      }
+
+      const facebookPost = await postEventToFacebookPage(id.toString());
 
       res.status(200).json({
         message: "Event posted to Facebook successfully",

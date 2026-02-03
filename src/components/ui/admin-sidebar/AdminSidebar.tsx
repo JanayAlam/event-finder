@@ -4,7 +4,8 @@ import {
   ChevronRight,
   Facebook,
   LayoutDashboard,
-  UserLock
+  UserLock,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -43,6 +44,12 @@ const NAV_ITEMS: AdminNavItem[] = [
     label: "Dashboard",
     icon: <LayoutDashboard />,
     href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD
+  },
+  {
+    key: "user-management",
+    label: "Users",
+    icon: <Users />,
+    href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.USER_MANAGEMENT
   },
   {
     key: "1",

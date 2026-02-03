@@ -14,7 +14,8 @@ export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {
   ADMIN_DASHBOARD: "/admin",
   APPROVAL_HOST_VERIFICATION: "/admin/approvals/host",
   APPROVAL_ACCOUNT_VERIFICATION: "/admin/approvals/account-verification",
-  FACEBOOK_INTEGRATION: "/admin/facebook"
+  FACEBOOK_INTEGRATION: "/admin/facebook",
+  USER_MANAGEMENT: "/admin/users"
 } as const;
 
 export const PRIVATE_HOST_ONLY_PAGE_ROUTE: Record<string, string> = {

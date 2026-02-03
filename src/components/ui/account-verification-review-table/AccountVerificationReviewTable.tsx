@@ -35,35 +35,49 @@ export default function AccountVerificationReviewTable() {
     queryFn: async () => await AccountVerificationRepository.pendingReviews()
   });
 
-  const { mutate: mutateAcceptRequest, isPending: isAcceptingRequest } =
-    useMutation({
-      mutationKey: ["accept-account-verification-request"],
-      mutationFn: async (id: string) => {
-        await AccountVerificationRepository.acceptRequest(id);
-      },
-      onSuccess: async () => {
-        toast.success("Request accepted");
-        await queryClient.invalidateQueries({
-          queryKey: ["account-verification-pending-reviews"]
-        });
-        setViewModal({ isOpen: false, accountVerification: null });
-      }
-    });
+  const { mutate: mutateAcceptRequest } = useMutation({
+    mutationKey: ["accept-account-verification-request"],
+    mutationFn: async (id: string) => {
+      await AccountVerificationRepository.acceptRequest(id);
+    },
+    onMutate: () => {
+      return { toastId: toast.loading("Accepting request...") };
+    },
+    onSuccess: async (_, __, context) => {
+      toast.success("Request accepted", { id: context?.toastId });
+      await queryClient.invalidateQueries({
+        queryKey: ["account-verification-pending-reviews"]
+      });
+      setViewModal({ isOpen: false, accountVerification: null });
+    },
+    onError: (error: any, __, context) => {
+      toast.error(error?.message || "Failed to accept request", {
+        id: context?.toastId
+      });
+    }
+  });
 
-  const { mutate: mutateDeclineRequest, isPending: isDecliningRequest } =
-    useMutation({
-      mutationKey: ["decline-account-verification-request"],
-      mutationFn: async (id: string) => {
-        await AccountVerificationRepository.declineRequest(id);
-      },
-      onSuccess: async () => {
-        toast.success("Request declined");
-        await queryClient.invalidateQueries({
-          queryKey: ["account-verification-pending-reviews"]
-        });
-        setViewModal({ isOpen: false, accountVerification: null });
-      }
-    });
+  const { mutate: mutateDeclineRequest } = useMutation({
+    mutationKey: ["decline-account-verification-request"],
+    mutationFn: async (id: string) => {
+      await AccountVerificationRepository.declineRequest(id);
+    },
+    onMutate: () => {
+      return { toastId: toast.loading("Declining request...") };
+    },
+    onSuccess: async (_, __, context) => {
+      toast.success("Request declined", { id: context?.toastId });
+      await queryClient.invalidateQueries({
+        queryKey: ["account-verification-pending-reviews"]
+      });
+      setViewModal({ isOpen: false, accountVerification: null });
+    },
+    onError: (error: any, __, context) => {
+      toast.error(error?.message || "Failed to decline request", {
+        id: context?.toastId
+      });
+    }
+  });
 
   const columns = createColumns({
     onView(accountVerificationId) {
@@ -96,6 +110,7 @@ export default function AccountVerificationReviewTable() {
     [data]
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: tableData,
     columns,
@@ -134,7 +149,6 @@ export default function AccountVerificationReviewTable() {
             </Button>
             <Button
               className="px-4 bg-destructive hover:bg-destructive/80 text-white"
-              isLoading={isDecliningRequest}
               onClick={() =>
                 viewModal.accountVerification &&
                 mutateDeclineRequest(
@@ -146,7 +160,6 @@ export default function AccountVerificationReviewTable() {
             </Button>
             <Button
               className="px-4 bg-success hover:bg-success/80 text-white"
-              isLoading={isAcceptingRequest}
               onClick={() =>
                 viewModal.accountVerification &&
                 mutateAcceptRequest(

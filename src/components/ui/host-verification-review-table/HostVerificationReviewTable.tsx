@@ -45,12 +45,20 @@ export default function HostVerificationReviewTable() {
     mutationFn: async (id: string) => {
       await PromotionRequestRepository.acceptRequest(id);
     },
-    onSuccess: async () => {
-      toast.success("Request accepted");
+    onMutate: () => {
+      return { toastId: toast.loading("Accepting request...") };
+    },
+    onSuccess: async (_, __, context) => {
+      toast.success("Request accepted", { id: context?.toastId });
       await queryClient.invalidateQueries({
         queryKey: ["pending-host-request-reviews"]
       });
       setViewModal({ isOpen: false, promotionPending: null });
+    },
+    onError: (error: any, __, context) => {
+      toast.error(error?.message || "Failed to accept request", {
+        id: context?.toastId
+      });
     }
   });
 
@@ -59,12 +67,20 @@ export default function HostVerificationReviewTable() {
     mutationFn: async (id: string) => {
       await PromotionRequestRepository.rejectRequest(id);
     },
-    onSuccess: async () => {
-      toast.success("Request rejected");
+    onMutate: () => {
+      return { toastId: toast.loading("Rejecting request...") };
+    },
+    onSuccess: async (_, __, context) => {
+      toast.success("Request rejected", { id: context?.toastId });
       await queryClient.invalidateQueries({
         queryKey: ["pending-host-request-reviews"]
       });
       setViewModal({ isOpen: false, promotionPending: null });
+    },
+    onError: (error: any, __, context) => {
+      toast.error(error?.message || "Failed to reject request", {
+        id: context?.toastId
+      });
     }
   });
 

@@ -63,10 +63,15 @@ const Navbar: React.FC = () => {
   });
 
   const handleLogoutAction = async () => {
-    const data = await AuthRepository.logout();
-    clearAuth();
-    toast.success(data.message);
-    router.push(PUBLIC_PAGE_ROUTE.HOME);
+    const toastId = toast.loading("Logging out...");
+    try {
+      const data = await AuthRepository.logout();
+      clearAuth();
+      toast.success(data.message, { id: toastId });
+      router.push(PUBLIC_PAGE_ROUTE.HOME);
+    } catch (error: any) {
+      toast.error(error?.message || "Logout failed", { id: toastId });
+    }
   };
 
   const handleLoginAction = () => {

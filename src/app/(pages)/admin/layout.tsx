@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/shared/shadcn-components/button";
 import AdminSidebar from "@/components/ui/admin-sidebar/AdminSidebar";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
+import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/utils/tailwind-utils";
 import { Bell } from "lucide-react";
 
@@ -41,8 +42,15 @@ export default function AdminDashboardLayout({
           </div>
         </header>
 
-        <main>
-          <div className="m-4! sm:m-6!">{children}</div>
+        <main className="w-full flex items-center justify-center">
+          <div
+            className={cn(
+              "py-4 sm:py-6 px-0! sm:px-6! mx-auto",
+              PAGE_WIDTH_CLASS_NAME
+            )}
+          >
+            {children}
+          </div>
         </main>
       </SidebarInset>
     </SidebarProvider>

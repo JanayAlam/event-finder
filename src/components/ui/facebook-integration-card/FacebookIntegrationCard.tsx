@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-import Card from "@/components/shared/molecules/card";
 import Modal from "@/components/shared/organisms/modal";
+import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Label } from "@/components/shared/shadcn-components/label";
 import {
@@ -17,11 +17,12 @@ import {
 } from "@/components/shared/shadcn-components/select";
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import {
-  H3,
+  H4,
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
 import FacebookRepository from "@/repositories/facebook.repository";
+import { Facebook, Link2, Settings2, Unlink } from "lucide-react";
 
 const FacebookIntegrationCard: React.FC = () => {
   const queryClient = useQueryClient();
@@ -88,143 +89,176 @@ const FacebookIntegrationCard: React.FC = () => {
 
   if (isTokenLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Spinner className="size-10" />
+      <div className="flex items-center justify-center p-12 w-full">
+        <Spinner className="size-8" />
       </div>
     );
   }
 
   if (!facebookToken) {
     return (
-      <Card rootClassName="w-full max-w-4xl py-6">
-        <div className="flex flex-col items-center justify-center py-4 gap-4">
-          <div className="bg-muted rounded-full p-6">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-16 h-16 fill-muted-foreground/40"
-            >
-              <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
-            </svg>
+      <div className="flex flex-col items-center justify-center py-10 px-4 w-full bg-muted/5 gap-4">
+        <div className="relative mb-6">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full blur opacity-25" />
+          <div className="relative bg-background rounded-full p-5 border border-blue-100 dark:border-blue-900">
+            <Facebook className="size-12 text-[#1877F2]" />
           </div>
-          <div className="max-w-md flex flex-col gap-4 text-center">
-            <H3 className="font-bold">Not Connected</H3>
-            <TypographyMuted>
-              Connecting your Facebook account allows TripMate to post your
-              event details directly to your Page&apos;s feed.
-            </TypographyMuted>
-          </div>
-          <Button
-            onClick={() => handleConnect()}
-            size="lg"
-            isLoading={isConnecting}
-            className="bg-[#1877F2] hover:bg-[#166fe5] text-white gap-2 px-8 h-12 shadow-lg shadow-blue-500/20"
-          >
-            Link Facebook Account
-          </Button>
         </div>
-      </Card>
+
+        <div className="max-w-sm flex flex-col text-center mb-8 items-center gap-4">
+          <Badge variant="secondary" className="mx-auto mb-2 font-semibold">
+            Status: Disconnected
+          </Badge>
+          <Paragraph className="text-lg font-semibold">
+            Connect Facebook Account
+          </Paragraph>
+          <TypographyMuted>
+            Allow TripMate to automatically post your travel events to your
+            Facebook Page feed.
+          </TypographyMuted>
+        </div>
+
+        <Button
+          onClick={() => handleConnect()}
+          size="lg"
+          isLoading={isConnecting}
+          className="gap-2"
+        >
+          {!isConnecting ? <Link2 className="size-5" /> : null}
+          Link Account
+        </Button>
+      </div>
     );
   }
 
   return (
-    <div className="grid gap-6">
-      <Card
-        title={
-          <div className="flex max-sm:flex-col sm:items-center justify-between gap-4 w-full">
-            <div className="flex items-center gap-2 text-lg font-bold">
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-7 h-7 fill-blue-600"
-              >
-                <title>Facebook</title>
-                <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
-              </svg>
-              <span>Facebook Account</span>
-            </div>
-            <div className="max-sm:w-full flex justify-end">
-              <Button
-                className="bg-destructive dark:bg-destructive/80 hover:bg-destructive/90 dark:hover:bg-destructive text-white h-9"
-                onClick={() => setIsDisconnectModalOpen(true)}
-              >
-                Disconnect
-              </Button>
-            </div>
+    <div className="w-full flex flex-col gap-4 py-2">
+      {/* Account Info Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 rounded-xl border bg-muted/30">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
+            <Facebook className="size-8 text-[#1877F2]" />
           </div>
-        }
-        rootClassName="w-full max-w-2xl"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-          <div className="flex flex-col gap-2">
-            <Label>Facebook Page</Label>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-lg text-foreground">
+                Facebook Integrated
+              </span>
+              <Badge
+                variant="default"
+                className="bg-success text-white border-transparent"
+              >
+                Active
+              </Badge>
+            </div>
+            <TypographyMuted className="text-sm">
+              Successfully linked to your Facebook account
+            </TypographyMuted>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-10 text-destructive border-destructive/20 hover:bg-destructive/5 hover:text-destructive gap-2 px-6"
+          onClick={() => setIsDisconnectModalOpen(true)}
+        >
+          <Unlink className="size-4" />
+          Disconnect
+        </Button>
+      </div>
+
+      {/* Page Configuration */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <Settings2 className="size-5 text-primary" />
+          <H4>Active facebook page</H4>
+        </div>
+
+        <TypographyMuted className="text-sm italic">
+          Tip: TripMate will only post to the facebook page you select below.
+        </TypographyMuted>
+
+        <div className="flex flex-col md:flex-row items-end gap-6">
+          <div className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-2">
+            <Label className="text-sm font-semibold opacity-80">
+              Target page
+            </Label>
             <Select
               value={activePageId}
               onValueChange={setSelectedPageId}
               disabled={isPagesLoading || pages.length === 0}
             >
-              <SelectTrigger className="w-full h-10">
+              <SelectTrigger className="w-full h-12 bg-background border-muted-foreground/20">
                 <SelectValue
                   placeholder={
-                    isPagesLoading ? "Loading pages..." : "Select a Page"
+                    isPagesLoading ? "Fetching pages..." : "Choose a Page"
                   }
                 />
               </SelectTrigger>
               <SelectContent>
-                {pages.map((page) => (
-                  <SelectItem key={page.id} value={page.id}>
-                    {page.name}
-                  </SelectItem>
-                ))}
+                {pages.length > 0 ? (
+                  pages.map((page) => (
+                    <SelectItem key={page.id} value={page.id}>
+                      {page.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    No pages found
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
-          <div className="w-full sm:max-w-lg">
-            <Button
-              onClick={() => handleSavePage(activePageId)}
-              disabled={
-                isSavingPage ||
-                !activePageId ||
-                activePageId === facebookToken.pageId
-              }
-              isLoading={isSavingPage}
-              className="w-full sm:w-auto h-10"
-            >
-              Set as Active Page
-            </Button>
-          </div>
-        </div>
-      </Card>
 
+          <Button
+            onClick={() => handleSavePage(activePageId)}
+            disabled={
+              isSavingPage ||
+              !activePageId ||
+              activePageId === facebookToken.pageId
+            }
+            isLoading={isSavingPage}
+            className="shadow-sm px-6"
+          >
+            Save
+          </Button>
+        </div>
+      </div>
+
+      {/* Disconnect Confirmation Modal */}
       <Modal
         isOpen={isDisconnectModalOpen}
         closeHandler={() => setIsDisconnectModalOpen(false)}
-        title="Disconnect Facebook"
+        title="Unlink Facebook Account"
         footer={
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3 p-2">
             <Button
-              variant="outline"
+              variant="ghost"
               onClick={() => setIsDisconnectModalOpen(false)}
               disabled={isDisconnecting}
             >
-              Cancel
+              Keep connected
             </Button>
             <Button
               variant="destructive"
               onClick={() => handleDisconnect()}
               isLoading={isDisconnecting}
+              className="px-6"
             >
               Disconnect
             </Button>
           </div>
         }
       >
-        <Paragraph>
-          Are you sure you want to disconnect your Facebook account? This will
-          stop automatic event posting.
-        </Paragraph>
+        <div className="py-2">
+          <Paragraph className="text-muted-foreground leading-relaxed">
+            Are you sure you want to disconnect your Facebook account? This will
+            completely disable automatic event posting and remove all stored
+            page tokens.
+          </Paragraph>
+        </div>
       </Modal>
     </div>
   );

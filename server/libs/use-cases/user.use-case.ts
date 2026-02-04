@@ -55,10 +55,7 @@ class UserUseCase extends UserCase {
     const [users, total] = await Promise.all([
       User.find(query)
         .populate("profile")
-        .populate({
-          path: "accountVerification",
-          select: "status"
-        })
+        .populate({ path: "accountVerification" })
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })

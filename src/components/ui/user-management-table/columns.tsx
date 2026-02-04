@@ -88,12 +88,14 @@ export const createColumns = (
             status = VERIFICATION_STATUS.DECLINED;
           }
         }
+      } else {
+        return null;
       }
 
       const getVariant = (s: VERIFICATION_STATUS) => {
         switch (s) {
           case VERIFICATION_STATUS.VERIFIED:
-            return "default";
+            return "success";
           case VERIFICATION_STATUS.PENDING:
             return "secondary";
           case VERIFICATION_STATUS.DECLINED:

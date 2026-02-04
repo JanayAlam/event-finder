@@ -20,8 +20,6 @@ export function TablePagination({
   isLoading,
   className
 }: TablePaginationProps) {
-  if (!isLoading && totalPages <= 1) return null;
-
   return (
     <div className={`flex items-center justify-end gap-4 py-2 ${className}`}>
       {isLoading ? (

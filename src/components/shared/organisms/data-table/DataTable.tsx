@@ -12,6 +12,13 @@ import {
 import { cn } from "@/utils/tailwind-utils";
 import { ReactNode } from "react";
 
+import { FileX } from "lucide-react";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "../../shadcn-components/empty";
 import { TablePagination } from "./TablePagination";
 
 export interface IDataTableColumn<T> {
@@ -37,7 +44,7 @@ export function DataTable<T>({
   data,
   columns,
   isLoading,
-  emptyMessage = "No results found.",
+  emptyMessage = "No Records Found",
   className,
   pagination
 }: IDataTableProps<T>) {
@@ -74,7 +81,14 @@ export function DataTable<T>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {emptyMessage}
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <FileX />
+                      </EmptyMedia>
+                      <EmptyTitle>{emptyMessage}</EmptyTitle>
+                    </EmptyHeader>
+                  </Empty>
                 </TableCell>
               </TableRow>
             ) : (

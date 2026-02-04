@@ -31,8 +31,9 @@ const SidebarFooterDropdown: React.FC = () => {
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const { data: profile, isLoading } = useQuery({
-    queryKey: ["self-profile"],
-    queryFn: () => UserRepository.getUserProfile(user?._id.toString() ?? "")
+    queryKey: ["self-profile", user?._id],
+    queryFn: () => UserRepository.getUserProfile(user!._id.toString()),
+    enabled: !!user?._id
   });
 
   const handleLogoutAction = async () => {

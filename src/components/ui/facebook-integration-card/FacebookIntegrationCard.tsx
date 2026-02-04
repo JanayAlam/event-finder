@@ -170,14 +170,16 @@ const FacebookIntegrationCard: React.FC = () => {
 
       {/* Page Configuration */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <Settings2 className="size-5 text-primary" />
-          <H4>Active facebook page</H4>
-        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <Settings2 className="size-5 text-primary" />
+            <H4>Active facebook page</H4>
+          </div>
 
-        <TypographyMuted className="text-sm italic">
-          Tip: TripMate will only post to the facebook page you select below.
-        </TypographyMuted>
+          <TypographyMuted className="text-sm italic">
+            Tip: TripMate will only post to the facebook page you select below.
+          </TypographyMuted>
+        </div>
 
         <div className="flex flex-col md:flex-row items-end gap-6">
           <div className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-2">
@@ -220,7 +222,7 @@ const FacebookIntegrationCard: React.FC = () => {
               activePageId === facebookToken.pageId
             }
             isLoading={isSavingPage}
-            className="shadow-sm px-6"
+            className="shadow-sm px-6 bg-success hover:bg-success/90 dark:text-white"
           >
             Save
           </Button>

@@ -10,7 +10,15 @@ export const PersonalInfoRequestSchema = z.object({
     15,
     "Family name cannot be longer than 15 characters"
   ),
-  dateOfBirth: dateOptional()
+  dateOfBirth: dateOptional().refine(
+    (date) => {
+      if (!date) return true;
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+      return date <= eighteenYearsAgo;
+    },
+    { message: "You must be at least 18 years old" }
+  )
 });
 
 export type TPersonalInfoRequestDto = z.infer<typeof PersonalInfoRequestSchema>;

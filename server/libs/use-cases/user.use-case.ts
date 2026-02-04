@@ -2,6 +2,7 @@ import { FilterQuery, QueryOptions, Types } from "mongoose";
 import { USER_ROLE } from "../../enums";
 import Profile from "../../models/profile.model";
 import User, { IUserDoc, TUser } from "../../models/user.model";
+import ApiError from "../../utils/api-error.util";
 import UserCase from "./base.use-case";
 
 class UserUseCase extends UserCase {
@@ -70,6 +71,11 @@ class UserUseCase extends UserCase {
   }
 
   static async blockUser(id: Types.ObjectId) {
+    const user = await User.findById(id);
+    if (user?.role === USER_ROLE.ADMIN) {
+      throw new ApiError(400, "Cannot block an admin user");
+    }
+
     return User.findOneAndUpdate(
       { _id: id },
       { isBlocked: true },

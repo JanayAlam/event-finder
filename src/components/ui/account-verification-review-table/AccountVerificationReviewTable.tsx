@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/shared/organisms/data-table";
+import { DataTable } from "@/components/shared/organisms/data-table/DataTable";
 import Modal from "@/components/shared/organisms/modal";
 import PrivateImage from "@/components/shared/organisms/private-image";
 import { Button } from "@/components/shared/shadcn-components/button";
@@ -8,16 +8,15 @@ import { Label } from "@/components/shared/shadcn-components/label";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { TPendingAccountVerificationItem } from "../../../../common/types";
-import { createColumns } from "./columns";
+import { createColumns, TPendingReviewTableColumn } from "./columns";
 
 type TViewModal = {
   isOpen: boolean;
-  accountVerification: TPendingAccountVerificationItem | null;
+  verification: TPendingAccountVerificationItem | null;
 };
 
 export default function AccountVerificationReviewTable() {
@@ -25,147 +24,139 @@ export default function AccountVerificationReviewTable() {
 
   const [viewModal, setViewModal] = useState<TViewModal>({
     isOpen: false,
-    accountVerification: null
+    verification: null
   });
 
-  const [rowSelection, setRowSelection] = useState({});
-
   const { data, isLoading } = useQuery({
-    queryKey: ["account-verification-pending-reviews"],
+    queryKey: ["pending-account-verification-reviews"],
     queryFn: async () => await AccountVerificationRepository.pendingReviews()
   });
 
-  const { mutate: mutateAcceptRequest } = useMutation({
-    mutationKey: ["accept-account-verification-request"],
+  const { mutate: mutateAcceptVerification } = useMutation({
+    mutationKey: ["accept-account-verification"],
     mutationFn: async (id: string) => {
       await AccountVerificationRepository.acceptRequest(id);
     },
     onMutate: () => {
-      return { toastId: toast.loading("Accepting request...") };
+      return { toastId: toast.loading("Accepting verification...") };
     },
     onSuccess: async (_, __, context) => {
-      toast.success("Request accepted", { id: context?.toastId });
+      toast.success("Verification accepted", { id: context?.toastId });
       await queryClient.invalidateQueries({
-        queryKey: ["account-verification-pending-reviews"]
+        queryKey: ["pending-account-verification-reviews"]
       });
-      setViewModal({ isOpen: false, accountVerification: null });
+      setViewModal({ isOpen: false, verification: null });
     },
     onError: (error: any, __, context) => {
-      toast.error(error?.message || "Failed to accept request", {
+      toast.error(error?.message || "Failed to accept verification", {
         id: context?.toastId
       });
     }
   });
 
-  const { mutate: mutateDeclineRequest } = useMutation({
-    mutationKey: ["decline-account-verification-request"],
+  const { mutate: mutateDeclineVerification } = useMutation({
+    mutationKey: ["decline-account-verification"],
     mutationFn: async (id: string) => {
       await AccountVerificationRepository.declineRequest(id);
     },
     onMutate: () => {
-      return { toastId: toast.loading("Declining request...") };
+      return { toastId: toast.loading("Declining verification...") };
     },
     onSuccess: async (_, __, context) => {
-      toast.success("Request declined", { id: context?.toastId });
+      toast.success("Verification declined", { id: context?.toastId });
       await queryClient.invalidateQueries({
-        queryKey: ["account-verification-pending-reviews"]
+        queryKey: ["pending-account-verification-reviews"]
       });
-      setViewModal({ isOpen: false, accountVerification: null });
+      setViewModal({ isOpen: false, verification: null });
     },
     onError: (error: any, __, context) => {
-      toast.error(error?.message || "Failed to decline request", {
+      toast.error(error?.message || "Failed to decline verification", {
         id: context?.toastId
       });
     }
   });
 
-  const columns = createColumns({
-    onView(accountVerificationId) {
-      const accountVerification = data?.find(
-        (a) => a._id.toString() === accountVerificationId
-      );
-      if (accountVerification) {
-        setViewModal({
-          isOpen: true,
-          accountVerification
-        });
-      }
-    },
-    onAccept(accountVerificationId: string) {
-      mutateAcceptRequest(accountVerificationId);
-    },
-    onDecline(accountVerificationId: string) {
-      mutateDeclineRequest(accountVerificationId);
-    }
-  });
-
-  const tableData = useMemo(
+  const columns = useMemo(
     () =>
-      data?.map((item) => ({
+      createColumns({
+        onView(accountVerificationId) {
+          const verification = data?.find(
+            (a) => a._id.toString() === accountVerificationId
+          );
+          if (verification) {
+            setViewModal({
+              isOpen: true,
+              verification
+            });
+          }
+        },
+        onAccept(accountVerificationId) {
+          mutateAcceptVerification(accountVerificationId);
+        },
+        onDecline(accountVerificationId) {
+          mutateDeclineVerification(accountVerificationId);
+        }
+      }),
+    [data, mutateAcceptVerification, mutateDeclineVerification]
+  );
+
+  const tableData: TPendingReviewTableColumn[] = useMemo(
+    () =>
+      data?.map((item: any) => ({
         accountVerificationId: item._id.toString(),
-        name: `${item.user.profile?.firstName ?? ""} ${item.user.profile?.lastName ?? ""}`,
+        name: `${item.user.profile?.firstName} ${item.user.profile?.lastName}`,
         email: item.user.email,
         requestedAt: dayjs(item.updatedAt).format("DD/MM/YYYY")
       })) ?? [],
     [data]
   );
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: {
-      rowSelection
-    }
-  });
-
   return (
     <>
       <DataTable
-        key={data?.length ?? 0}
         isLoading={isLoading}
-        containerClassName="w-full"
-        table={table}
+        data={tableData}
+        columns={columns}
+        className="w-full"
       />
 
       <Modal
-        title="Account verification"
+        title="Verification details"
         isOpen={viewModal.isOpen}
-        closeHandler={() =>
-          setViewModal({ isOpen: false, accountVerification: null })
-        }
+        closeHandler={() => setViewModal({ isOpen: false, verification: null })}
         footer={
           <div className="flex items-center gap-2 justify-end">
             <Button
               variant="outline"
               className="px-4"
               onClick={() =>
-                setViewModal({ isOpen: false, accountVerification: null })
+                setViewModal({ isOpen: false, verification: null })
               }
             >
               Close
             </Button>
             <Button
-              className="px-4 bg-destructive hover:bg-destructive/80 text-white"
-              onClick={() =>
-                viewModal.accountVerification &&
-                mutateDeclineRequest(
-                  viewModal.accountVerification._id.toString()
-                )
-              }
+              variant="destructive"
+              className="px-4"
+              onClick={() => {
+                if (viewModal.verification) {
+                  mutateDeclineVerification(
+                    viewModal.verification._id.toString()
+                  );
+                }
+              }}
             >
               Decline
             </Button>
             <Button
-              className="px-4 bg-success hover:bg-success/80 text-white"
-              onClick={() =>
-                viewModal.accountVerification &&
-                mutateAcceptRequest(
-                  viewModal.accountVerification._id.toString()
-                )
-              }
+              className="px-4"
+              onClick={() => {
+                if (viewModal.verification) {
+                  mutateAcceptVerification(
+                    viewModal.verification._id.toString()
+                  );
+                }
+              }}
             >
               Accept
             </Button>
@@ -174,16 +165,16 @@ export default function AccountVerificationReviewTable() {
       >
         <div className="flex flex-col gap-6">
           {/* NID Section */}
-          {(viewModal.accountVerification?.nidFrontImage ||
-            viewModal.accountVerification?.nidBackImage ||
-            viewModal.accountVerification?.nidNumber) && (
+          {(viewModal.verification?.nidFrontImage ||
+            viewModal.verification?.nidBackImage ||
+            viewModal.verification?.nidNumber) && (
             <div className="flex flex-col gap-4">
               <div className="flex flex-col md:flex-row gap-4">
-                {viewModal.accountVerification?.nidFrontImage && (
+                {viewModal.verification?.nidFrontImage && (
                   <div className="flex flex-col gap-2 w-full md:w-1/2">
                     <Label>NID Front Image</Label>
                     <PrivateImage
-                      filePath={viewModal.accountVerification.nidFrontImage}
+                      filePath={viewModal.verification?.nidFrontImage}
                       alt="NID front image"
                       width={0}
                       height={100}
@@ -191,11 +182,11 @@ export default function AccountVerificationReviewTable() {
                     />
                   </div>
                 )}
-                {viewModal.accountVerification?.nidBackImage && (
+                {viewModal.verification?.nidBackImage && (
                   <div className="flex flex-col gap-2 w-full md:w-1/2">
                     <Label>NID Back Image</Label>
                     <PrivateImage
-                      filePath={viewModal.accountVerification.nidBackImage}
+                      filePath={viewModal.verification?.nidBackImage}
                       alt="NID back image"
                       width={0}
                       height={100}
@@ -205,26 +196,24 @@ export default function AccountVerificationReviewTable() {
                 )}
               </div>
 
-              {viewModal.accountVerification?.nidNumber && (
+              {viewModal.verification?.nidNumber && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>NID No.</Label>
-                  <Paragraph>
-                    {viewModal.accountVerification.nidNumber}
-                  </Paragraph>
+                  <Paragraph>{viewModal.verification?.nidNumber}</Paragraph>
                 </div>
               )}
             </div>
           )}
 
           {/* Passport Section */}
-          {(viewModal.accountVerification?.passportImage ||
-            viewModal.accountVerification?.passportNumber) && (
+          {(viewModal.verification?.passportImage ||
+            viewModal.verification?.passportNumber) && (
             <div className="flex flex-col gap-4">
-              {viewModal.accountVerification?.passportImage && (
+              {viewModal.verification?.passportImage && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>Passport Image</Label>
                   <PrivateImage
-                    filePath={viewModal.accountVerification.passportImage}
+                    filePath={viewModal.verification?.passportImage}
                     alt="Passport image"
                     width={0}
                     height={100}
@@ -233,11 +222,11 @@ export default function AccountVerificationReviewTable() {
                 </div>
               )}
 
-              {viewModal.accountVerification?.passportNumber && (
+              {viewModal.verification?.passportNumber && (
                 <div className="flex flex-col gap-2 w-full md:w-1/2">
                   <Label>Passport No.</Label>
                   <Paragraph>
-                    {viewModal.accountVerification.passportNumber}
+                    {viewModal.verification?.passportNumber}
                   </Paragraph>
                 </div>
               )}

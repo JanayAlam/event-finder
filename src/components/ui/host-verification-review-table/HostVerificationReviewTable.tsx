@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/shared/organisms/data-table";
+import { DataTable } from "@/components/shared/organisms/data-table/DataTable";
 import Modal from "@/components/shared/organisms/modal";
 import PrivateImage from "@/components/shared/organisms/private-image";
 import { Button } from "@/components/shared/shadcn-components/button";
@@ -8,11 +8,6 @@ import { Label } from "@/components/shared/shadcn-components/label";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import PromotionRequestRepository from "@/repositories/promotion-request.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable
-} from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -31,8 +26,6 @@ export default function HostVerificationReviewTable() {
     isOpen: false,
     promotionPending: null
   });
-
-  const [rowSelection, setRowSelection] = useState({});
 
   const { data, isLoading } = useQuery({
     queryKey: ["pending-host-request-reviews"],
@@ -84,25 +77,29 @@ export default function HostVerificationReviewTable() {
     }
   });
 
-  const columns = createColumns({
-    onView(promotionPendingId) {
-      const promotionPending = data?.find(
-        (a) => a._id.toString() === promotionPendingId
-      );
-      if (promotionPending) {
-        setViewModal({
-          isOpen: true,
-          promotionPending
-        });
-      }
-    },
-    onAccept(promotionPendingId) {
-      mutateAcceptRequest(promotionPendingId);
-    },
-    onReject(promotionPendingId) {
-      mutateRejectRequest(promotionPendingId);
-    }
-  });
+  const columns = useMemo(
+    () =>
+      createColumns({
+        onView(promotionPendingId) {
+          const promotionPending = data?.find(
+            (a) => a._id.toString() === promotionPendingId
+          );
+          if (promotionPending) {
+            setViewModal({
+              isOpen: true,
+              promotionPending
+            });
+          }
+        },
+        onAccept(promotionPendingId) {
+          mutateAcceptRequest(promotionPendingId);
+        },
+        onReject(promotionPendingId) {
+          mutateRejectRequest(promotionPendingId);
+        }
+      }),
+    [data, mutateAcceptRequest, mutateRejectRequest]
+  );
 
   const tableData: TPendingHostRequestTableColumn[] = useMemo(
     () =>
@@ -119,25 +116,13 @@ export default function HostVerificationReviewTable() {
     [data]
   );
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: {
-      rowSelection
-    }
-  });
-
   return (
     <>
       <DataTable
-        key={data?.length ?? 0}
         isLoading={isLoading}
-        containerClassName="w-full"
-        table={table}
+        data={tableData}
+        columns={columns}
+        className="w-full"
       />
 
       <Modal

@@ -1,11 +1,10 @@
-import { DataTableColumnHeader } from "@/components/shared/organisms/data-table";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage
 } from "@/components/shared/shadcn-components/avatar";
 import { Button } from "@/components/shared/shadcn-components/button";
-import { Checkbox } from "@/components/shared/shadcn-components/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +13,6 @@ import {
 } from "@/components/shared/shadcn-components/dropdown-menu";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { getUIAvatar } from "@/utils/avatars";
-import { ColumnDef } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 
 export type TPendingReviewTableColumn = {
@@ -32,106 +30,61 @@ export type TColumnHandlers = {
 
 export const createColumns = (
   handlers: TColumnHandlers
-): ColumnDef<TPendingReviewTableColumn>[] => [
+): IDataTableColumn<TPendingReviewTableColumn>[] => [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    size: 40
-  },
-  {
-    accessorKey: "name",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account" />
-    ),
-    cell: ({ row }) => (
+    header: "Account",
+    cell: (item) => (
       <div className="flex items-center gap-2">
-        <Avatar>
+        <Avatar className="size-8">
           <AvatarImage
-            src={getUIAvatar(row.getValue("name"))}
+            src={getUIAvatar(item.name)}
             alt="User profile picture"
           />
-          <AvatarFallback>{row.getValue("name")}</AvatarFallback>
+          <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <Paragraph className="font-medium">{row.getValue("name")}</Paragraph>
+        <Paragraph className="font-medium">{item.name}</Paragraph>
       </div>
     )
   },
   {
-    accessorKey: "email",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email address" />
-    ),
-    cell: ({ row }) => <Paragraph>{row.getValue("email")}</Paragraph>
+    header: "Email address",
+    cell: (item) => <Paragraph>{item.email}</Paragraph>
   },
   {
-    accessorKey: "requestedAt",
-    enableHiding: false,
-    enableSorting: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Requested at" />
-    ),
-    cell: ({ row }) => <Paragraph>{row.getValue("requestedAt")}</Paragraph>
+    header: "Requested at",
+    cell: (item) => <Paragraph>{item.requestedAt}</Paragraph>
   },
   {
-    id: "actions",
-    enableHiding: false,
-    size: 60,
-    cell: ({ row }) => {
-      const verification = row.original;
-
+    header: "",
+    className: "w-[50px] text-right",
+    cell: (item) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <EllipsisVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onView(verification.accountVerificationId)
-              }
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onAccept(verification.accountVerificationId)
-              }
-            >
-              Accept
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                handlers.onDecline(verification.accountVerificationId)
-              }
-            >
-              Decline
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8">
+                <EllipsisVertical className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => handlers.onView(item.accountVerificationId)}
+              >
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handlers.onAccept(item.accountVerificationId)}
+              >
+                Accept
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handlers.onDecline(item.accountVerificationId)}
+              >
+                Decline
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     }
   }

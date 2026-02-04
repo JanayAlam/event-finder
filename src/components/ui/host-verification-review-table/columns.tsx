@@ -1,8 +1,6 @@
-import { DataTableColumnHeader } from "@/components/shared/organisms/data-table";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
 import { Button } from "@/components/shared/shadcn-components/button";
-import { Checkbox } from "@/components/shared/shadcn-components/checkbox";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
-import { ColumnDef } from "@tanstack/react-table";
 import { Ban, CircleCheckBig } from "lucide-react";
 
 export type TPendingHostRequestTableColumn = {
@@ -22,102 +20,43 @@ export type TColumnHandlers = {
 
 export const createColumns = (
   handlers: TColumnHandlers
-): ColumnDef<TPendingHostRequestTableColumn>[] => [
+): IDataTableColumn<TPendingHostRequestTableColumn>[] => [
   {
-    accessorKey: "select",
-    enableHiding: false,
-    enableSorting: false,
-    enableColumnFilter: false,
-    size: 40,
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+    header: "First name",
+    cell: (item) => (
+      <Paragraph className="font-medium">{item.firstName}</Paragraph>
     )
   },
   {
-    accessorKey: "firstName",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="First name" />
-    ),
-    cell: ({ row }) => (
-      <Paragraph className="font-medium">{row.getValue("firstName")}</Paragraph>
+    header: "Last name",
+    cell: (item) => (
+      <Paragraph className="font-medium">{item.lastName}</Paragraph>
     )
   },
   {
-    accessorKey: "lastName",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last name" />
-    ),
-    cell: ({ row }) => (
-      <Paragraph className="font-medium">{row.getValue("lastName")}</Paragraph>
+    header: "Date of birth",
+    cell: (item) => (
+      <Paragraph className="font-medium">{item.dateOfBirth}</Paragraph>
     )
   },
   {
-    accessorKey: "dateOfBirth",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date of birth" />
-    ),
-    cell: ({ row }) => (
-      <Paragraph className="font-medium">
-        {row.getValue("dateOfBirth")}
-      </Paragraph>
-    )
+    header: "Email address",
+    cell: (item) => <Paragraph>{item.email}</Paragraph>
   },
   {
-    accessorKey: "email",
-    enableSorting: false,
-    enableHiding: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email address" />
-    ),
-    cell: ({ row }) => <Paragraph>{row.getValue("email")}</Paragraph>
+    header: "Requested at",
+    cell: (item) => <Paragraph>{item.requestedAt}</Paragraph>
   },
   {
-    accessorKey: "requestedAt",
-    enableHiding: false,
-    enableSorting: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Requested at" />
-    ),
-    cell: ({ row }) => <Paragraph>{row.getValue("requestedAt")}</Paragraph>
-  },
-  {
-    accessorKey: "details",
-    enableHiding: false,
-    enableSorting: false,
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Verification details"
-        align="center"
-      />
-    ),
-    cell: ({ row }) => {
+    header: "Verification details",
+    className: "text-center",
+    cell: (item) => {
       return (
         <div className="flex justify-center">
           <Button
             variant="outline"
             onClick={() => {
-              handlers.onView(row.original.promotionPendingId);
+              handlers.onView(item.promotionPendingId);
             }}
           >
             Details
@@ -127,10 +66,9 @@ export const createColumns = (
     }
   },
   {
-    id: "actions",
-    enableHiding: false,
-    size: 100,
-    cell: ({ row }) => {
+    header: "Actions",
+    className: "text-center",
+    cell: (item) => {
       return (
         <div className="flex gap-2 items-center justify-center">
           <Button
@@ -138,18 +76,18 @@ export const createColumns = (
             variant="outline"
             className="bg-success/10! border border-success! text-success hover:text-success"
             title="Accept request"
-            onClick={() => handlers.onAccept(row.original.promotionPendingId)}
+            onClick={() => handlers.onAccept(item.promotionPendingId)}
           >
-            <CircleCheckBig />
+            <CircleCheckBig className="size-4" />
           </Button>
           <Button
             size="icon"
             variant="outline"
             className="bg-destructive/10! border border-destructive! text-destructive hover:text-destructive"
             title="Reject request"
-            onClick={() => handlers.onReject(row.original.promotionPendingId)}
+            onClick={() => handlers.onReject(item.promotionPendingId)}
           >
-            <Ban />
+            <Ban className="size-4" />
           </Button>
         </div>
       );

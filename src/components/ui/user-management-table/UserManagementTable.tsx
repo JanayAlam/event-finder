@@ -1,13 +1,10 @@
 "use client";
 
-import { DataTable } from "@/components/shared/organisms/data-table";
-import { Button } from "@/components/shared/shadcn-components/button";
+import { DataTable } from "@/components/shared/organisms/data-table/DataTable";
 import { Input } from "@/components/shared/shadcn-components/input";
-import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import UserRepository from "@/repositories/user.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
@@ -15,10 +12,11 @@ import { createColumns } from "./columns";
 
 export default function UserManagementTable() {
   const queryClient = useQueryClient();
+
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 500);
   const [page, setPage] = useState(1);
-  const limit = 10;
+
+  const [debouncedSearch] = useDebounce(search, 500);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users", debouncedSearch, page],
@@ -26,7 +24,7 @@ export default function UserManagementTable() {
       UserRepository.getAllUsers({
         search: debouncedSearch || undefined,
         page,
-        limit
+        limit: 10
       })
   });
 
@@ -62,21 +60,18 @@ export default function UserManagementTable() {
     }
   });
 
-  const columns = createColumns({
-    onBlock: (id) => mutateBlock(id),
-    onUnblock: (id) => mutateUnblock(id)
-  });
+  const columns = useMemo(
+    () =>
+      createColumns({
+        onBlock: (id) => mutateBlock(id),
+        onUnblock: (id) => mutateUnblock(id)
+      }),
+    [mutateBlock, mutateUnblock]
+  );
 
   const tableData = useMemo(() => data?.users ?? [], [data]);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel()
-  });
-
-  const totalPages = Math.ceil((data?.total ?? 0) / limit);
+  const totalPages = Math.ceil((data?.total ?? 0) / (data?.limit ?? 10));
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -95,35 +90,15 @@ export default function UserManagementTable() {
 
       <DataTable
         isLoading={isLoading}
-        table={table}
-        containerClassName="rounded-md overflow-hidden"
+        data={tableData}
+        columns={columns}
+        className="rounded-md"
+        pagination={{
+          page,
+          totalPages,
+          onPageChange: (p) => setPage(p)
+        }}
       />
-
-      <div className="flex items-center justify-end gap-4 py-2">
-        <Paragraph className="text-sm text-muted-foreground">
-          Page {page} of {totalPages}
-        </Paragraph>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="size-9"
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-            className="size-9"
-          >
-            <ChevronRight className="size-4" />
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }

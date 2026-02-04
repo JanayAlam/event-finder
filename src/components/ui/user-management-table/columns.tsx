@@ -1,4 +1,4 @@
-import { DataTableColumnHeader } from "@/components/shared/organisms/data-table";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
 import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
@@ -8,11 +8,13 @@ import {
   DropdownMenuTrigger
 } from "@/components/shared/shadcn-components/dropdown-menu";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
-import { TUserWithProfile } from "@/repositories/user.repository";
-import { ColumnDef } from "@tanstack/react-table";
+import { TUserWithProfileAndAccountVerification } from "@/repositories/user.repository";
 import { EllipsisVertical } from "lucide-react";
 import { VERIFICATION_STATUS } from "../../../../common/types";
-import { USER_ROLE } from "../../../../server/enums";
+import {
+  ACCOUNT_VERIFICATION_STATUS,
+  USER_ROLE
+} from "../../../../server/enums";
 
 export type TColumnHandlers = {
   onBlock: (userId: string) => void;
@@ -21,14 +23,10 @@ export type TColumnHandlers = {
 
 export const createColumns = (
   handlers: TColumnHandlers
-): ColumnDef<TUserWithProfile>[] => [
+): IDataTableColumn<TUserWithProfileAndAccountVerification>[] => [
   {
-    accessorKey: "fullName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Full name" />
-    ),
-    cell: ({ row }) => {
-      const user = row.original;
+    header: "Full name",
+    cell: (user) => {
       const fullName = `${user.profile?.firstName ?? ""} ${user.profile?.lastName ?? ""}`;
       return (
         <div className="flex items-center gap-2">
@@ -43,24 +41,16 @@ export const createColumns = (
           )}
         </div>
       );
-    },
-    enableSorting: false
+    }
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
-    ),
-    cell: ({ row }) => <Paragraph>{row.original.email}</Paragraph>,
-    enableSorting: false
+    header: "Email",
+    cell: (user) => <Paragraph>{user.email}</Paragraph>
   },
   {
-    accessorKey: "role",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
-    ),
-    cell: ({ row }) => {
-      const role = row.original.role;
+    header: "Role",
+    cell: (user) => {
+      const role = user.role;
       return (
         <Badge
           variant={
@@ -75,18 +65,30 @@ export const createColumns = (
           {role}
         </Badge>
       );
-    },
-    enableSorting: false
+    }
   },
   {
-    accessorKey: "verificationStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Verification" />
-    ),
-    cell: ({ row }) => {
-      const status =
-        row.original.accountVerification?.status ??
-        VERIFICATION_STATUS.NOT_INITIATED;
+    header: "Verification",
+    cell: (user) => {
+      const accountVerification = user.accountVerification;
+      let status = VERIFICATION_STATUS.NOT_INITIATED;
+
+      if (accountVerification) {
+        if (!accountVerification.isReviewed) {
+          status = VERIFICATION_STATUS.PENDING;
+        } else {
+          const reviews = accountVerification.reviews || [];
+          const hasPositiveReview = reviews.some(
+            (r) => r.status !== ACCOUNT_VERIFICATION_STATUS.DECLINED
+          );
+
+          if (hasPositiveReview) {
+            status = VERIFICATION_STATUS.VERIFIED;
+          } else if (reviews.length > 0) {
+            status = VERIFICATION_STATUS.DECLINED;
+          }
+        }
+      }
 
       const getVariant = (s: VERIFICATION_STATUS) => {
         switch (s) {
@@ -106,40 +108,42 @@ export const createColumns = (
           {status.replace("_", " ")}
         </Badge>
       );
-    },
-    enableSorting: false
+    }
   },
   {
-    id: "actions",
-    enableHiding: false,
-    size: 60,
-    cell: ({ row }) => {
-      const user = row.original;
+    header: "",
+    className: "w-[50px] text-right",
+    cell: (user) => {
+      if (user.role === USER_ROLE.ADMIN) {
+        return null;
+      }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <EllipsisVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {user.isBlocked ? (
-              <DropdownMenuItem
-                onClick={() => handlers.onUnblock(user._id.toString())}
-              >
-                Unblock
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem
-                onClick={() => handlers.onBlock(user._id.toString())}
-                className="text-destructive focus:text-destructive"
-              >
-                Block
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8">
+                <EllipsisVertical className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {user.isBlocked ? (
+                <DropdownMenuItem
+                  onClick={() => handlers.onUnblock(user._id.toString())}
+                >
+                  Unblock
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => handlers.onBlock(user._id.toString())}
+                  className="text-destructive focus:text-destructive"
+                >
+                  Block
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     }
   }

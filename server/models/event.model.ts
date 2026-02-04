@@ -20,6 +20,8 @@ interface EventBase extends ITimestamps {
   memberCapacity?: number;
   members: Types.ObjectId[];
   itinerary: TEventItinerary[];
+  coverPhoto?: string;
+  additionalPhotos?: string[];
   facebookPostId?: string;
   isPostedToFacebook: boolean;
 }
@@ -55,6 +57,8 @@ const eventSchema = new Schema<IEventDoc>(
     memberCapacity: { type: Number, min: 0 },
     members: [{ type: Schema.Types.ObjectId, ref: User, required: true }],
     itinerary: { type: [itinerarySchema], default: [] },
+    coverPhoto: { type: String },
+    additionalPhotos: { type: [String], default: [] },
     facebookPostId: { type: String },
     isPostedToFacebook: { type: Boolean, default: false }
   },

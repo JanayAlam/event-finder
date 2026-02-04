@@ -1,12 +1,17 @@
 "use client";
 
+import { API_BASE_URL } from "@/config";
 import { cn } from "@/utils/tailwind-utils";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Trash2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { Button } from "../../shadcn-components/button";
+import { Spinner } from "../../shadcn-components/spinner/Spinner";
 
 type TImageInputProps = React.ComponentProps<"input"> & {
-  /** Height = width * ratio. e.g. 0.75 means 3:4 (height 75% of width) */
   ratio?: number;
+  isLoading?: boolean;
+  value?: string | null;
+  onRemove?: () => void;
 };
 
 const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
@@ -15,6 +20,9 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
       ratio = 0.5,
       onChange: originalOnChange,
       className: inputClassName,
+      isLoading = false,
+      value = null,
+      onRemove,
       ...inputProps
     },
     forwardedRef
@@ -33,6 +41,7 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
     };
 
     const handleClick = () => {
+      if (isLoading) return;
       internalRef.current?.click();
     };
 
@@ -66,6 +75,10 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
 
     const paddingTop = `${ratio * 100}%`;
 
+    // Priority: internal preview (selected file) > value prop (server path)
+    const effectivePreview =
+      preview || (value ? `${API_BASE_URL}/${value}` : null);
+
     return (
       <div>
         <input
@@ -74,30 +87,48 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
           type="file"
           onChange={handleChange}
           className="hidden"
-          accept="Image/*"
+          accept="image/*"
         />
 
         <div
           role="button"
           onClick={handleClick}
           className={cn(
-            `w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-input bg-primary-foreground`,
-            inputClassName
+            "w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-input bg-primary-foreground relative transition-opacity group",
+            inputClassName,
+            isLoading && "opacity-60 cursor-not-allowed"
           )}
-          style={{ position: "relative" }}
         >
           <div style={{ paddingTop }} />
-          <div
-            style={{ position: "absolute", inset: 0 }}
-            className="flex items-center justify-center"
-          >
-            {preview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={preview}
-                alt="Selected"
-                className="w-full h-full object-cover"
-              />
+          <div className="absolute inset-0 flex items-center justify-center transition-all">
+            {isLoading ? (
+              <Spinner className="text-brand-primary-main" />
+            ) : effectivePreview ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={effectivePreview}
+                  alt="Selected"
+                  className="w-full h-full object-cover"
+                />
+                {onRemove && (
+                  <Button
+                    type="button"
+                    size="icon"
+                    className="absolute top-2 right-2 size-7 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (internalRef.current) {
+                        internalRef.current.value = "";
+                      }
+                      setPreview(null);
+                      onRemove();
+                    }}
+                  >
+                    <Trash2 className="size-4 text-destructive" />
+                  </Button>
+                )}
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center gap-1 text-sm text-muted-foreground">
                 <ImagePlus className="size-4" />

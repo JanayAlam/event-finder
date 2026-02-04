@@ -59,6 +59,40 @@ class EventRepository extends BaseRepository {
     const data = await this.request<undefined, TEvent[]>(url, "get");
     return data;
   }
+
+  static async uploadCoverPhoto(file: File) {
+    const url = `${this.apiRoute}/upload/cover`;
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await this.request<FormData, { path: string }>(
+      url,
+      "post",
+      formData
+    );
+    return data;
+  }
+
+  static async uploadAdditionalPhoto(file: File) {
+    const url = `${this.apiRoute}/upload/additional`;
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await this.request<FormData, { path: string }>(
+      url,
+      "post",
+      formData
+    );
+    return data;
+  }
+
+  static async removePhoto(path: string) {
+    const url = `${this.apiRoute}/remove-photo`;
+    const data = await this.request<{ path: string }, { message: string }>(
+      url,
+      "post",
+      { path }
+    );
+    return data;
+  }
 }
 
 export default EventRepository;

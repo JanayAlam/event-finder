@@ -29,6 +29,9 @@ class EventUseCase {
       title: string;
       description?: string;
     }>;
+    coverPhoto?: string;
+    additionalPhotos?: string[];
+    members?: Types.ObjectId[];
   }): Promise<TEvent | null> {
     const event = new Event(data);
     const savedEvent = await event.save();

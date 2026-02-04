@@ -154,9 +154,12 @@ class BaseRepository {
       ? config
       : undefined;
 
-    // ff body is FormData, let axios handle it automatically
-    if (body instanceof FormData && secondParam) {
-      delete secondParam.headers?.["Content-Type"];
+    if (body instanceof FormData) {
+      if (secondParam) {
+        if (secondParam.headers) {
+          delete (secondParam.headers as any)["Content-Type"];
+        }
+      }
     }
 
     const { data } = await this.http[method]<ResponseType>(

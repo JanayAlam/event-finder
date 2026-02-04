@@ -78,7 +78,9 @@ export const CreateEventSchema = z.object({
       })
     )
     .optional()
-    .default([])
+    .default([]),
+  coverPhoto: z.any().optional(),
+  additionalPhotos: z.array(z.any()).optional().default([])
 });
 
 export const UpdateEventSchema = CreateEventSchema.partial();

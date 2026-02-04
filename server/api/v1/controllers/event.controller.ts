@@ -6,6 +6,7 @@ import {
   TUpdateEventDto
 } from "../../../../common/validation-schemas";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
+import FileUploadService from "../../../libs/external-services/file-upload.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import ApiError from "../../../utils/api-error.util";
 
@@ -25,26 +26,69 @@ class EventController {
       }
 
       const eventData = {
+        ...req.body,
         host: req.user._id,
-        title: req.body.title,
-        description: req.body.description,
-        placeName: req.body.placeName,
-        eventDate: req.body.eventDate,
-        entryFee: req.body.entryFee,
-        memberCapacity: req.body.memberCapacity,
-        dayCount: req.body.dayCount,
-        nightCount: req.body.nightCount,
-        itinerary: req.body.itinerary || [],
         members: [req.user._id]
       };
 
-      const event = await EventUseCase.create(eventData);
+      const event = await EventUseCase.create(eventData as any);
 
       if (!event) {
         throw new ApiError(500, "Failed to create event");
       }
 
       res.status(201).json(event);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async uploadCoverPhoto(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+      }
+
+      const uploaded = await FileUploadService.upload(req.file, "event-cover");
+      res.status(200).json({ path: uploaded.path });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async uploadAdditionalPhoto(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+      }
+
+      const uploaded = await FileUploadService.upload(
+        req.file,
+        "event-additional-photos"
+      );
+      res.status(200).json({ path: uploaded.path });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removePhoto(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { path: filePath } = req.body;
+      if (!filePath) {
+        throw new ApiError(400, "File path is required");
+      }
+
+      await FileUploadService.remove(filePath);
+      res.status(200).json({ message: "Photo removed successfully" });
     } catch (err) {
       next(err);
     }

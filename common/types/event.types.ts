@@ -11,6 +11,7 @@ export type TEventListItemDto = Pick<
   | "nightCount"
   | "memberCapacity"
   | "host"
+  | "coverPhoto"
 >;
 
 export type TEventDetailDto = TEvent;

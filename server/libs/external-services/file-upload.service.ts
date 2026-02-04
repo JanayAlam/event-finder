@@ -4,7 +4,11 @@ import path from "node:path";
 import ApiError from "../../utils/api-error.util";
 import logger from "../../utils/winston.util";
 
-export type FileCategory = "profile-photo" | "account-verification";
+export type FileCategory =
+  | "profile-photo"
+  | "account-verification"
+  | "event-cover"
+  | "event-additional-photos";
 
 interface FileUploadResponse {
   filename: string;
@@ -17,7 +21,9 @@ class FileUploadService {
   private static readonly UPLOAD_DIR = "uploads";
   private static readonly CATEGORY_DIRS: Record<FileCategory, string> = {
     "profile-photo": "profile",
-    "account-verification": "verification"
+    "account-verification": "verification",
+    "event-cover": "event/cover",
+    "event-additional-photos": "event/additional-photos"
   };
 
   static getImagePath(filename: string, category: FileCategory): string {

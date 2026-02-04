@@ -4,6 +4,7 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import next from "next";
+import path from "node:path";
 import router from "./api/v1/routers";
 import "./events/register-event-listeners";
 import errorHandler from "./middlewares/error-handler.middleware";
@@ -42,6 +43,8 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 });
 
 configMorgan(app);
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api/v1", router);
 

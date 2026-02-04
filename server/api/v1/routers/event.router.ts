@@ -6,6 +6,7 @@ import {
 } from "../../../../common/validation-schemas";
 import { USER_ROLE } from "../../../enums";
 import { authenticate } from "../../../middlewares/authenticator.middleware";
+import { imageUpload } from "../../../middlewares/image-upload.middleware";
 import inputValidator from "../../../middlewares/input-validator.middleware";
 import EventController from "../controllers/event.controller";
 
@@ -17,6 +18,27 @@ eventRouter.post(
   authenticate([USER_ROLE.HOST]),
   inputValidator(CreateEventSchema),
   EventController.create
+);
+
+// Photo upload endpoints
+eventRouter.post(
+  "/upload/cover",
+  authenticate([USER_ROLE.HOST]),
+  imageUpload.single("file"),
+  EventController.uploadCoverPhoto
+);
+
+eventRouter.post(
+  "/upload/additional",
+  authenticate([USER_ROLE.HOST]),
+  imageUpload.single("file"),
+  EventController.uploadAdditionalPhoto
+);
+
+eventRouter.post(
+  "/remove-photo",
+  authenticate([USER_ROLE.HOST]),
+  EventController.removePhoto
 );
 
 // Get all events (admin only) - full details

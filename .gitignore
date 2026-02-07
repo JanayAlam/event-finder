@@ -49,3 +49,5 @@ next-env.d.ts
 
 # build files
 dist/
+
+.cursor

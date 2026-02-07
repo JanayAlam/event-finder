@@ -1,1 +1,1 @@
-export { default } from "./HostVerificationReviewTable";
+export { default } from "./host-verification-review-table";

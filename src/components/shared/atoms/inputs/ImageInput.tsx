@@ -1,11 +1,11 @@
 "use client";
 
 import { API_BASE_URL } from "@/config";
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import { ImagePlus, Trash2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../../shadcn-components/button";
-import { Spinner } from "../../shadcn-components/spinner/Spinner";
+import { Spinner } from "../../shadcn-components/spinner";
 
 type TImageInputProps = React.ComponentProps<"input"> & {
   ratio?: number;
@@ -102,7 +102,7 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
           <div style={{ paddingTop }} />
           <div className="absolute inset-0 flex items-center justify-center transition-all">
             {isLoading ? (
-              <Spinner className="text-brand-primary-main" />
+              <Spinner className="text-primary" />
             ) : effectivePreview ? (
               <>
                 {/* eslint-disable-next-line @next/next/no-img-element */}

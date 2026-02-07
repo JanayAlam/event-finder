@@ -1,5 +1,5 @@
-import AdminSectionCardLayout from "@/components/shared/layouts/AdminSectionCardLayout";
-import FacebookIntegrationCard from "@/components/ui/facebook-integration-card/FacebookIntegrationCard";
+import AdminSectionCardLayout from "@/components/shared/layouts/admin-section-card-layout";
+import FacebookIntegrationCard from "@/components/ui/facebook-integration-card";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

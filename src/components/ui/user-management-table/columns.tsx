@@ -1,4 +1,4 @@
-import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/data-table";
 import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
@@ -92,7 +92,9 @@ export const createColumns = (
         return null;
       }
 
-      const getVariant = (s: VERIFICATION_STATUS) => {
+      const getVariant = (
+        s: VERIFICATION_STATUS
+      ): "default" | "secondary" | "destructive" | "outline" | "success" => {
         switch (s) {
           case VERIFICATION_STATUS.VERIFIED:
             return "success";

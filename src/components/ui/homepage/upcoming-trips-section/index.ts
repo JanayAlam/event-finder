@@ -1,1 +1,1 @@
-export { default } from "./UpcomingTripsSection";
+export { default } from "./upcoming-trips-section";

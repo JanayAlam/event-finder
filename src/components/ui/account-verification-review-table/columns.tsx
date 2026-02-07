@@ -1,4 +1,4 @@
-import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/data-table";
 import {
   Avatar,
   AvatarFallback,

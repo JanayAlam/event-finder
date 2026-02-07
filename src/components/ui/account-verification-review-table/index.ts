@@ -1,1 +1,1 @@
-export { default } from "./AccountVerificationReviewTable";
+export { default } from "./account-verification-review-table";

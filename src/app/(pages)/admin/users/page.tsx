@@ -1,5 +1,5 @@
-import AdminSectionCardLayout from "@/components/shared/layouts/AdminSectionCardLayout";
-import UserManagementTable from "@/components/ui/user-management-table/UserManagementTable";
+import AdminSectionCardLayout from "@/components/shared/layouts/admin-section-card-layout";
+import UserManagementTable from "@/components/ui/user-management-table/user-management-table";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

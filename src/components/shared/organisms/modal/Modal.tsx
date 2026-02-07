@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/shared/shadcn-components/dialog";
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import * as React from "react";
 import { Button } from "../../shadcn-components/button";

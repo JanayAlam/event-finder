@@ -1,4 +1,4 @@
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import React, { PropsWithChildren } from "react";
 
 type TH1Props = React.ComponentProps<"h1"> & PropsWithChildren;

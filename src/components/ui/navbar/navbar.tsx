@@ -1,0 +1,246 @@
+"use client";
+
+import Modal from "@/components/shared/organisms/modal";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from "@/components/shared/shadcn-components/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/shared/shadcn-components/menu";
+import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
+import { Paragraph } from "@/components/shared/shadcn-components/typography";
+import { API_BASE_URL } from "@/config";
+import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
+import { cn } from "@/lib/utils";
+import AccountVerificationRepository from "@/repositories/account-verification.repository";
+import AuthRepository from "@/repositories/auth.repository";
+import PromotionRequestRepository from "@/repositories/promotion-request.repository";
+import {
+  PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
+  PRIVATE_PAGE_ROUTE,
+  PRIVATE_TRAVELER_ONLY_PAGE_ROUTE,
+  PUBLIC_PAGE_ROUTE
+} from "@/routes";
+import { useAuthStore } from "@/stores/auth-store";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
+import { Bell, ChevronDownIcon } from "lucide-react";
+import { League_Spartan } from "next/font/google";
+import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import { VERIFICATION_STATUS } from "../../../../common/types";
+import { USER_ROLE } from "../../../../server/enums";
+import { Button } from "../../shared/shadcn-components/button";
+import ThemeToggleButton from "../theme-toggle-button";
+import SearchButton from "./search-button";
+
+const leagueSpartan = League_Spartan({
+  weight: ["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+  display: "swap"
+});
+
+const Navbar: React.FC = () => {
+  const router = useRouter();
+  const { isLoggedIn, user, clearAuth } = useAuthStore();
+
+  const [becomeHostModalOpen, setBecomeHostModalOpen] = useState(false);
+
+  const { data: accountVerificationStatus, isLoading } = useQuery({
+    queryKey: ["account-verification-status"],
+    queryFn: () => AccountVerificationRepository.status(),
+    retry: false,
+    enabled: isLoggedIn
+  });
+
+  const handleLogoutAction = async () => {
+    const toastId = toast.loading("Logging out...");
+    try {
+      const data = await AuthRepository.logout();
+      clearAuth();
+      toast.success(data.message, { id: toastId });
+      router.push(PUBLIC_PAGE_ROUTE.HOME);
+    } catch (error: any) {
+      toast.error(error?.message || "Logout failed", { id: toastId });
+    }
+  };
+
+  const handleLoginAction = () => {
+    window.location.href = `${API_BASE_URL}/auth/login`;
+  };
+
+  const handleBecomeHostAction = () => {
+    setBecomeHostModalOpen(true);
+  };
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["host-request"],
+    mutationFn: async () => {
+      if (!user?._id) {
+        return;
+      }
+      await PromotionRequestRepository.create(user._id.toString());
+    },
+    onSuccess: async () => {
+      toast.success("Request submitted");
+      setBecomeHostModalOpen(false);
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message);
+        return;
+      }
+      toast.error(err.message);
+    }
+  });
+
+  const handleBecomeHostSubmitAction = async () => {
+    if (accountVerificationStatus?.status !== VERIFICATION_STATUS.VERIFIED) {
+      router.push(PRIVATE_TRAVELER_ONLY_PAGE_ROUTE.SETTINGS_VERIFICATION);
+      setBecomeHostModalOpen(false);
+    } else {
+      await mutate();
+    }
+  };
+
+  return (
+    <>
+      <div
+        className={cn(
+          "sticky top-0 z-50!",
+          "w-full flex justify-center",
+          "border-b border-b-borders-1",
+          "bg-background",
+          "z-10"
+        )}
+      >
+        <div
+          className={cn(
+            PAGE_WIDTH_CLASS_NAME,
+            "h-16 flex items-center justify-between"
+          )}
+        >
+          <div
+            className={cn(leagueSpartan.className, "flex items-center gap-1")}
+          >
+            <Link
+              href={"/"}
+              className="text-4xl font-extrabold text-primary select-none"
+            >
+              <span className="sm:hidden">tm.</span>
+              <span className="hidden sm:block">tripmate.</span>
+            </Link>
+          </div>
+
+          {isLoggedIn && user ? (
+            <div className="flex items-center gap-2">
+              <SearchButton />
+              <Button variant="ghost">
+                <Bell />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
+                    <Avatar>
+                      <AvatarImage
+                        src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2).toUpperCase()}`}
+                        alt="User profile picture"
+                      />
+                      <AvatarFallback>
+                        {user.email.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <ChevronDownIcon
+                      height={18}
+                      width={18}
+                      className="text-muted-foreground"
+                    />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-50 flex flex-col gap-1"
+                  align="start"
+                >
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
+                      <DropdownMenuItem>Account preferences</DropdownMenuItem>
+                    </Link>
+                    {user.role === USER_ROLE.TRAVELER ? (
+                      <DropdownMenuItem onClick={handleBecomeHostAction}>
+                        Become host
+                      </DropdownMenuItem>
+                    ) : null}
+                    {user.role === USER_ROLE.ADMIN ? (
+                      <Link
+                        href={PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD}
+                      >
+                        <DropdownMenuItem>Admin portal</DropdownMenuItem>
+                      </Link>
+                    ) : null}
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={handleLogoutAction}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <ThemeToggleButton />
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <SearchButton />
+              <Button variant="outline" onClick={handleLoginAction}>
+                Login/Signup
+              </Button>
+              <ThemeToggleButton />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <Modal
+        title="Host request"
+        buttonDisabled={isLoading}
+        isOpen={becomeHostModalOpen}
+        closeHandler={() => setBecomeHostModalOpen(false)}
+        okText={
+          accountVerificationStatus?.status !== VERIFICATION_STATUS.VERIFIED
+            ? "Verify"
+            : "Submit"
+        }
+        okHandler={handleBecomeHostSubmitAction}
+        loading={isPending}
+      >
+        {isLoading ? (
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-50" />
+          </div>
+        ) : accountVerificationStatus?.status !==
+          VERIFICATION_STATUS.VERIFIED ? (
+          <Paragraph>
+            Your account is not yet verified. Please verify your account first.
+          </Paragraph>
+        ) : (
+          <Paragraph>
+            Are you sure you want to submit a request to become host?
+          </Paragraph>
+        )}
+      </Modal>
+    </>
+  );
+};
+
+export default Navbar;

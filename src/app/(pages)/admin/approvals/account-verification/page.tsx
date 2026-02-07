@@ -1,4 +1,4 @@
-import AdminSectionCardLayout from "@/components/shared/layouts/AdminSectionCardLayout";
+import AdminSectionCardLayout from "@/components/shared/layouts/admin-section-card-layout";
 import AccountVerificationReviewTable from "@/components/ui/account-verification-review-table";
 import { Metadata } from "next";
 

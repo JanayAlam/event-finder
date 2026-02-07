@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Toaster } from "@/components/shared/shadcn-components/sonner/Sonner";
+import { Toaster } from "@/components/shared/shadcn-components/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
 

@@ -1,4 +1,4 @@
-export * from "./InputField";
-export { default as InputField } from "./InputField";
-export { default as InputFieldSkeleton } from "./InputFieldSkeleton";
-export { default as TextareaField } from "./TextareaField";
+export * from "./input-field";
+export { default as InputField } from "./input-field";
+export { default as InputFieldSkeleton } from "./input-field-skeleton";
+export { default as TextareaField } from "./textarea-field";

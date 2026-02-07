@@ -1,16 +1,15 @@
-import Card from "@/components/shared/molecules/card";
+import TMCard from "@/components/shared/molecules/tm-card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
 
 const VerifiedCard: React.FC = () => {
   return (
-    <Card
+    <TMCard
       rootClassName={cn(
         "border border-success",
         "bg-success/10",
-        "dark:bg-success-foreground/10",
-        "sm:px-4 sm:py-4"
+        "dark:bg-success-foreground/10"
       )}
     >
       <div className="flex flex-col gap-4">
@@ -51,7 +50,7 @@ const VerifiedCard: React.FC = () => {
           </Paragraph>
         </div>
       </div>
-    </Card>
+    </TMCard>
   );
 };
 

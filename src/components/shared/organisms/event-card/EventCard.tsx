@@ -3,17 +3,15 @@ import dayjs from "dayjs";
 import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
 import Link from "next/link";
 import { TEventListItemDto } from "../../../../../common/types";
-import Card from "../../molecules/card";
+import TMCard from "../../molecules/tm-card";
 import { Badge } from "../../shadcn-components/badge";
 import { Button } from "../../shadcn-components/button";
 import { H4, Paragraph } from "../../shadcn-components/typography";
 
 export default function EventCard({ event }: { event: TEventListItemDto }) {
   return (
-    <Card rootClassName="min-h-48" bodyClassName="flex flex-col gap-4">
-      <H4 className="text-lg text-brand-primary-main font-bold">
-        {event.title}
-      </H4>
+    <TMCard rootClassName="min-h-48" bodyClassName="flex flex-col gap-4">
+      <H4 className="text-lg text-primary font-bold">{event.title}</H4>
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-1">
           <MapPin className="size-4" />
@@ -47,10 +45,10 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
       <Link
         href={PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(event._id.toString())}
       >
-        <Button className="w-full bg-brand-primary-main hover:bg-brand-primary-dark-1/90 dark:text-primary">
+        <Button className="w-full bg-primary hover:bg-primary/90 dark:text-primary">
           View details
         </Button>
       </Link>
-    </Card>
+    </TMCard>
   );
 }

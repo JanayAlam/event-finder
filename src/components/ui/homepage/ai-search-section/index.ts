@@ -1,1 +1,1 @@
-export { default } from "./AISearchSection";
+export { default } from "./ai-search-section";

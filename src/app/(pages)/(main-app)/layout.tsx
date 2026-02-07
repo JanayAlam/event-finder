@@ -1,6 +1,6 @@
 import Navbar from "@/components/ui/navbar";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 
 export default function MainAppLayout({
   children

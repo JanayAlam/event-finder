@@ -1,7 +1,7 @@
 "use client";
 import ImageInput from "@/components/shared/atoms/inputs/ImageInput";
-import Card from "@/components/shared/molecules/card";
 import { InputField, TextareaField } from "@/components/shared/molecules/form";
+import TMCard from "@/components/shared/molecules/tm-card";
 import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
@@ -44,7 +44,7 @@ const FormCard: React.FC<
   }>
 > = ({ icon, title, action, subtitle, children }) => {
   return (
-    <Card
+    <TMCard
       title={
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ const FormCard: React.FC<
       description={subtitle}
     >
       {children}
-    </Card>
+    </TMCard>
   );
 };
 
@@ -203,7 +203,7 @@ export default function CreateEventForm() {
 
   return (
     <Form
-      render={(register, { errors, isSubmitting }) => {
+      render={(control, { errors, isSubmitting }) => {
         return (
           <div className="flex flex-col gap-4 w-full">
             <FormCard
@@ -216,29 +216,26 @@ export default function CreateEventForm() {
                   <div className="flex flex-col gap-4">
                     <InputField
                       isRequired
-                      register={register("title")}
+                      control={control}
                       type="text"
                       label="Event Title"
                       name="title"
                       placeholder="e.g., Weekend Mountain Hiking Adventure"
-                      error={errors.title}
                     />
                     <InputField
                       isRequired
-                      register={register("placeName")}
+                      control={control}
                       type="text"
                       label="Place"
                       name="placeName"
                       placeholder="e.g., Saint Martin Island, Bangladesh"
-                      error={errors.placeName}
                     />
                     <TextareaField
                       isRequired
-                      register={register("description")}
+                      control={control}
                       name="description"
                       label="Description"
                       placeholder="Describe your trip event, what to expect, what to bring..."
-                      error={errors.description}
                       className="h-25"
                     />
                   </div>
@@ -278,29 +275,26 @@ export default function CreateEventForm() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <InputField
                       isRequired
-                      register={register("eventDate")}
+                      control={control}
                       type="datetime-local"
                       label="Event Date"
                       name="eventDate"
-                      error={errors.eventDate}
                     />
                     <InputField
                       isRequired
-                      register={register("dayCount")}
+                      control={control}
                       type="number"
                       label="Days"
                       name="dayCount"
                       placeholder="e.g., 2"
-                      error={errors.dayCount}
                     />
                     <InputField
                       isRequired
-                      register={register("nightCount")}
+                      control={control}
                       type="number"
                       label="Nights"
                       name="nightCount"
                       placeholder="e.g., 3"
-                      error={errors.nightCount}
                     />
                   </div>
                   <div className="grid grid-cols-[16px_1fr] gap-2 sm:items-center">
@@ -322,20 +316,18 @@ export default function CreateEventForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <InputField
                   isRequired
-                  register={register("entryFee")}
+                  control={control}
                   type="number"
                   label="Entry Fee"
                   name="entryFee"
                   placeholder="e.g., 7500"
-                  error={errors.entryFee}
                 />
                 <InputField
-                  register={register("memberCapacity")}
+                  control={control}
                   type="number"
                   label="Member Capacity"
                   name="memberCapacity"
                   placeholder="e.g., 30"
-                  error={errors.memberCapacity}
                 />
               </div>
             </FormCard>
@@ -359,7 +351,7 @@ export default function CreateEventForm() {
             >
               <div className="flex flex-col gap-4">
                 {additionalPhotosFields.length === 0 ? (
-                  <Card bodyClassName="flex flex-col gap-2 items-center">
+                  <TMCard bodyClassName="flex flex-col gap-2 items-center">
                     <Camera className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
                     <TypographyMuted className="text-muted-foreground text-center">
                       No additional photos added
@@ -367,7 +359,7 @@ export default function CreateEventForm() {
                     <TypographyMuted className="text-sm text-muted-foreground/60 text-center">
                       Click &quot;Add photo&quot; to add photos
                     </TypographyMuted>
-                  </Card>
+                  </TMCard>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     {additionalPhotosFields.map((field, index) => (
@@ -416,7 +408,7 @@ export default function CreateEventForm() {
             >
               <div className="flex flex-col gap-2">
                 {!itineraryFields.length ? (
-                  <Card bodyClassName="flex flex-col gap-2 items-center">
+                  <TMCard bodyClassName="flex flex-col gap-2 items-center">
                     <ClipboardList className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
                     <TypographyMuted className="text-muted-foreground text-center">
                       No activities added yet
@@ -424,14 +416,17 @@ export default function CreateEventForm() {
                     <TypographyMuted className="text-sm text-muted-foreground/60 text-center">
                       Click &quot;Add activity&quot; to create your itinerary
                     </TypographyMuted>
-                  </Card>
+                  </TMCard>
                 ) : (
                   <div className="flex flex-col gap-3">
                     {itineraryFields.map((field, index) => (
-                      <Card key={field.id} bodyClassName="flex flex-col gap-4">
+                      <TMCard
+                        key={field.id}
+                        bodyClassName="flex flex-col gap-4"
+                      >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-md bg-primary-foreground text-brand-primary-main font-bold flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-md bg-primary-foreground text-primary font-bold flex items-center justify-center">
                               {index + 1}
                             </div>
                             <Paragraph>Activity {index + 1}</Paragraph>
@@ -443,48 +438,43 @@ export default function CreateEventForm() {
                             onClick={() => handleRemoveItinerary(index)}
                             className="h-8 w-8"
                           >
-                            <Trash2 className="h-4 w-4 text-brand-primary-main" />
+                            <Trash2 className="h-4 w-4 text-primary" />
                           </Button>
                         </div>
                         <div className="flex flex-col gap-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <InputField
                               isRequired
-                              register={register(`itinerary.${index}.moment`)}
+                              control={control}
                               type="datetime-local"
                               label="Date & Time"
                               name={`itinerary.${index}.moment`}
-                              error={errors.itinerary?.[index]?.moment}
                             />
                             <InputField
                               isRequired
-                              register={register(`itinerary.${index}.title`)}
+                              control={control}
                               type="text"
                               label="Activity Title"
                               name={`itinerary.${index}.title`}
                               placeholder="e.g., Morning Hike to Summit"
-                              error={errors.itinerary?.[index]?.title}
                             />
                           </div>
                           <TextareaField
-                            register={register(
-                              `itinerary.${index}.description`
-                            )}
+                            control={control}
                             name={`itinerary.${index}.description`}
                             label="Description"
                             placeholder="Describe what will happen during this activity..."
-                            error={errors.itinerary?.[index]?.description}
                             className="h-25"
                           />
                         </div>
-                      </Card>
+                      </TMCard>
                     ))}
                   </div>
                 )}
               </div>
             </FormCard>
 
-            <Card>
+            <TMCard>
               <div className="flex items-center justify-end gap-3">
                 <Button
                   size="lg"
@@ -497,13 +487,13 @@ export default function CreateEventForm() {
                 </Button>
                 <Button
                   size="lg"
-                  className="px-6 max-xs:flex-1 bg-brand-primary-main hover:bg-brand-primary-main/90 dark:text-primary"
+                  className="px-6 max-xs:flex-1 bg-primary hover:bg-primary/90 dark:text-primary"
                   isLoading={isSubmitting || isCreating}
                 >
                   Create
                 </Button>
               </div>
-            </Card>
+            </TMCard>
           </div>
         );
       }}

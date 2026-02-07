@@ -1,4 +1,4 @@
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import React, { PropsWithChildren } from "react";
 
 export interface ITypographyMutedProps extends PropsWithChildren {

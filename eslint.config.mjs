@@ -1,7 +1,6 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
-
 const eslintConfig = [
   ...nextCoreWebVitals,
   ...nextTypescript,
@@ -13,8 +12,8 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
-          "varsIgnorePattern": "^_",
-          "argsIgnorePattern": "^_"
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_"
         }
       ]
     }
@@ -26,11 +25,11 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
-          "vars": "all",
-          "args": "all",
-          "varsIgnorePattern": "^_",
-          "argsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_"
+          vars: "all",
+          args: "all",
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_"
         }
       ]
     }

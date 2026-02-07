@@ -21,7 +21,7 @@ interface VerificationSectionProps {
     label: string;
     placeholder?: string;
     error?: any;
-    register: any;
+    control: any;
   }>;
 }
 
@@ -32,10 +32,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   <div className="flex flex-col gap-4 w-full">
     <H4>{title}</H4>
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {fields.map(({ name, type, label, placeholder, error, register }) => (
+      {fields.map(({ name, type, label, placeholder, error, control }) => (
         <InputField
           key={name}
-          register={register}
+          control={control}
           type={type}
           label={label}
           name={name}
@@ -67,7 +67,7 @@ const AccountVerificationForm: React.FC = () => {
 
   return (
     <Form
-      render={(register, { errors, isSubmitting, dirtyFields }) => {
+      render={(control, { errors, isSubmitting, dirtyFields }) => {
         dirtyFieldsRef.current = dirtyFields;
         const nidFields = [
           {
@@ -75,14 +75,14 @@ const AccountVerificationForm: React.FC = () => {
             type: "file",
             label: "NID Front Image",
             error: errors.nidFrontImage,
-            register: register("nidFrontImage")
+            control: control
           },
           {
             name: "nidBackImage",
             type: "file",
             label: "NID Back Image",
             error: errors.nidBackImage,
-            register: register("nidBackImage")
+            control: control
           },
           {
             name: "nidNumber",
@@ -90,7 +90,7 @@ const AccountVerificationForm: React.FC = () => {
             label: "NID No.",
             placeholder: "e.g. 5110981456895",
             error: errors.nidNumber,
-            register: register("nidNumber")
+            control: control
           }
         ];
 
@@ -100,7 +100,7 @@ const AccountVerificationForm: React.FC = () => {
             type: "file",
             label: "Passport Image",
             error: errors.passportImage,
-            register: register("passportImage")
+            control: control
           },
           {
             name: "passportNumber",
@@ -108,7 +108,7 @@ const AccountVerificationForm: React.FC = () => {
             label: "Passport No.",
             placeholder: "e.g. AC110058145611",
             error: errors.passportNumber,
-            register: register("passportNumber")
+            control: control
           }
         ];
 

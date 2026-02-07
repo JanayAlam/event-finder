@@ -1,4 +1,4 @@
-import { IDataTableColumn } from "@/components/shared/organisms/data-table/DataTable";
+import { IDataTableColumn } from "@/components/shared/organisms/data-table/data-table";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { Ban, CircleCheckBig } from "lucide-react";

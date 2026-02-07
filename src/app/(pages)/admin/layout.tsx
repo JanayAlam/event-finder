@@ -8,10 +8,10 @@ import {
 } from "@/components/shared/shadcn-components/sidebar";
 
 import { Button } from "@/components/shared/shadcn-components/button";
-import AdminSidebar from "@/components/ui/admin-sidebar/AdminSidebar";
+import AdminSidebar from "@/components/ui/admin-sidebar/admin-sidebar";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
-import { cn } from "@/utils/tailwind-utils";
+import { cn } from "@/lib/utils";
 import { Bell } from "lucide-react";
 
 export default function AdminDashboardLayout({

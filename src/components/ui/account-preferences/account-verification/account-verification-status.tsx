@@ -1,13 +1,13 @@
 "use client";
 
-import Card from "@/components/shared/molecules/card";
+import TMCard from "@/components/shared/molecules/tm-card";
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import DeclinedVerificationCard from "@/components/ui/account-preferences/account-verification/declined-verification-card";
 import PendingVerificationCard from "@/components/ui/account-preferences/account-verification/pending-verification-card";
 import VerifiedCard from "@/components/ui/account-preferences/account-verification/verified-card";
+import { cn } from "@/lib/utils";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
-import { cn } from "@/utils/tailwind-utils";
 import { useQuery } from "@tanstack/react-query";
 import { BadgeInfo } from "lucide-react";
 import React from "react";
@@ -43,12 +43,11 @@ const AccountVerificationStatus: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Card
+      <TMCard
         rootClassName={cn(
           "border border-info",
           "bg-info-foreground",
-          "dark:bg-info-light-foreground",
-          "sm:px-4 sm:py-4"
+          "dark:bg-info-light-foreground"
         )}
       >
         <div className="grid grid-cols-[auto_1fr] items-center gap-4">
@@ -58,7 +57,7 @@ const AccountVerificationStatus: React.FC = () => {
             both
           </Paragraph>
         </div>
-      </Card>
+      </TMCard>
 
       <AccountVerificationForm />
     </div>

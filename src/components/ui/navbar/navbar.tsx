@@ -26,6 +26,7 @@ import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
   PRIVATE_PAGE_ROUTE,
   PRIVATE_TRAVELER_ONLY_PAGE_ROUTE,
+  PUBLIC_DYNAMIC_PAGE_ROUTE,
   PUBLIC_PAGE_ROUTE
 } from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
@@ -172,7 +173,17 @@ const Navbar: React.FC = () => {
                   align="start"
                 >
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <Link
+                      href={
+                        user.profile
+                          ? PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(
+                              user.profile._id.toString()
+                            )
+                          : "#"
+                      }
+                    >
+                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                    </Link>
                     <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
                       <DropdownMenuItem>Account preferences</DropdownMenuItem>
                     </Link>
@@ -201,10 +212,10 @@ const Navbar: React.FC = () => {
           ) : (
             <div className="flex items-center gap-4">
               <SearchButton />
+              <ThemeToggleButton />
               <Button variant="outline" onClick={handleLoginAction}>
                 Login/Signup
               </Button>
-              <ThemeToggleButton />
             </div>
           )}
         </div>

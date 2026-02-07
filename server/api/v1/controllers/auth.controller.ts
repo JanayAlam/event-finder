@@ -12,6 +12,7 @@ import {
 } from "../../../libs/external-services/kinde.service";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
 import UserUseCase from "../../../libs/use-cases/user.use-case";
+import { TProfile } from "../../../models/profile.model";
 import { TUser } from "../../../models/user.model";
 import {
   ACCESS_TOKEN_EXPIRY,
@@ -30,7 +31,7 @@ class AuthController {
   private static setAuthCookies(
     res: Response,
     tokens: { accessToken: string; refreshToken: string },
-    user: TUser
+    user: TUser & { profile: TProfile | null }
   ) {
     res.cookie(COOKIE_KEYS.authAccessToken, tokens.accessToken, {
       ...cookieOptions,
@@ -85,19 +86,24 @@ class AuthController {
       }
 
       let user = await UserUseCase.getUser({ kindeId: sub, email });
+      let profile: TProfile | null = null;
 
       if (!user) {
-        const { user: createdUser } = await createUserAndProfile({
-          kindeId: sub,
-          email,
-          firstName,
-          lastName
-        });
+        const { user: createdUser, profile: createdProfile } =
+          await createUserAndProfile({
+            kindeId: sub,
+            email,
+            firstName,
+            lastName
+          });
 
         user = createdUser;
+        profile = createdProfile;
+      } else {
+        profile = await getProfileByUserId(user._id);
       }
 
-      AuthController.setAuthCookies(res, tokens, user);
+      AuthController.setAuthCookies(res, tokens, { ...user, profile });
 
       res.cookie(COOKIE_KEYS.oauthState, "", {
         ...cookieOptions,
@@ -140,7 +146,9 @@ class AuthController {
       throw new ApiError(404, "User not found");
     }
 
-    AuthController.setAuthCookies(res, tokens, user);
+    const profile = await getProfileByUserId(user._id);
+
+    AuthController.setAuthCookies(res, tokens, { ...user, profile });
 
     res.status(200).json({
       user,

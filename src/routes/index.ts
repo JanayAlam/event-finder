@@ -3,7 +3,8 @@ export const PUBLIC_PAGE_ROUTE = {
 };
 
 export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
-  EVENT_DETAILS: (eventId: string) => `/events/view/${eventId}`
+  EVENT_DETAILS: (eventId: string) => `/events/view/${eventId}`,
+  PROFILE: (profileId: string) => `/profiles/${profileId}`
 };
 
 export const PRIVATE_PAGE_ROUTE = {

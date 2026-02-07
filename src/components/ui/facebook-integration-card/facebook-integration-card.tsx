@@ -172,7 +172,7 @@ const FacebookIntegrationCard: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <Settings2 className="size-5 text-primary" />
+            <Settings2 className="size-5" />
             <H4>Active facebook page</H4>
           </div>
 
@@ -191,7 +191,7 @@ const FacebookIntegrationCard: React.FC = () => {
               onValueChange={setSelectedPageId}
               disabled={isPagesLoading || pages.length === 0}
             >
-              <SelectTrigger className="w-full h-12 bg-background border-muted-foreground/20">
+              <SelectTrigger className="w-full h-9 bg-background border-muted-foreground/20">
                 <SelectValue
                   placeholder={
                     isPagesLoading ? "Fetching pages..." : "Choose a Page"

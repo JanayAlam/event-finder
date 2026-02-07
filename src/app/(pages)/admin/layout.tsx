@@ -1,58 +1,32 @@
 import React from "react";
 
-import {
-  Sidebar,
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger
-} from "@/components/shared/shadcn-components/sidebar";
-
-import { Button } from "@/components/shared/shadcn-components/button";
-import AdminSidebar from "@/components/ui/admin-sidebar/admin-sidebar";
-import ThemeToggleButton from "@/components/ui/theme-toggle-button";
+import { TooltipProvider } from "@/components/shared/shadcn-components/tooltip";
+import AdminSidebar from "@/components/ui/admin-dashboard/admin-sidebar";
+import AdminTopBar from "@/components/ui/admin-dashboard/admin-top-bar";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
+import { SidebarStateProvider } from "@/hooks/use-sidebar-state";
 import { cn } from "@/lib/utils";
-import { Bell } from "lucide-react";
 
-export default function AdminDashboardLayout({
+export default function AdminLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon">
-        <AdminSidebar />
-      </Sidebar>
-
-      <SidebarInset>
-        <header className="flex h-14 border-b bg-background/80 px-4 backdrop-blur-sm items-center justify-between">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger />
-            <div className={cn("text-base font-bold")}>
-              <span>TripMate Admin</span>
-            </div>
+    <TooltipProvider>
+      <SidebarStateProvider>
+        <div className="flex h-screen w-full overflow-hidden">
+          <AdminSidebar />
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <AdminTopBar />
+            <main className="flex-1 overflow-y-auto p-6">
+              <div className="w-full flex justify-center">
+                <div className={cn(PAGE_WIDTH_CLASS_NAME)}>{children}</div>
+              </div>
+            </main>
           </div>
-
-          <div className="flex items-center gap-1">
-            <Button variant="ghost">
-              <Bell />
-            </Button>
-            <ThemeToggleButton />
-          </div>
-        </header>
-
-        <main className="w-full flex items-center justify-center">
-          <div
-            className={cn(
-              "py-4 sm:py-6 px-0! sm:px-6! mx-auto",
-              PAGE_WIDTH_CLASS_NAME
-            )}
-          >
-            {children}
-          </div>
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </SidebarStateProvider>
+    </TooltipProvider>
   );
 }

@@ -26,9 +26,10 @@ import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { toast } from "sonner";
 
-const SidebarFooterDropdown: React.FC = () => {
+const UserDropdown: React.FC = () => {
   const router = useRouter();
-  const { isLoggedIn, user, clearAuth } = useAuthStore();
+
+  const { user, clearAuth } = useAuthStore();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["self-profile", user?._id],
@@ -48,22 +49,18 @@ const SidebarFooterDropdown: React.FC = () => {
     }
   };
 
-  if (!isLoggedIn || !user) {
-    return null;
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center justify-between gap-1 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
-          <div className="flex gap-2 items-center py-2">
-            <Avatar>
+        <div className="flex items-center justify-between gap-1 cursor-pointer px-2 py-1.5 hover:bg-input/50 rounded-md">
+          <div className="flex gap-2 items-center">
+            <Avatar className="h-8 w-8">
               <AvatarImage
-                src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2).toUpperCase()}`}
+                src={`https://ui-avatars.com/api/?name=${user?.email.substring(0, 2).toUpperCase()}`}
                 alt="User profile picture"
               />
-              <AvatarFallback>
-                {user.email.substring(0, 2).toUpperCase()}
+              <AvatarFallback className="text-sm">
+                {user?.email.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
@@ -80,7 +77,7 @@ const SidebarFooterDropdown: React.FC = () => {
           <ChevronDownIcon
             height={18}
             width={18}
-            className="text-muted-foreground rotate-180"
+            className="text-muted-foreground"
           />
         </div>
       </DropdownMenuTrigger>
@@ -105,4 +102,4 @@ const SidebarFooterDropdown: React.FC = () => {
   );
 };
 
-export default SidebarFooterDropdown;
+export default UserDropdown;

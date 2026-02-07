@@ -147,15 +147,16 @@ const Navbar: React.FC = () => {
               <Button variant="ghost">
                 <Bell />
               </Button>
+              <ThemeToggleButton />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
-                    <Avatar>
+                    <Avatar className="h-8 w-8">
                       <AvatarImage
                         src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2).toUpperCase()}`}
                         alt="User profile picture"
                       />
-                      <AvatarFallback>
+                      <AvatarFallback className="text-sm">
                         {user.email.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -196,7 +197,6 @@ const Navbar: React.FC = () => {
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <ThemeToggleButton />
             </div>
           ) : (
             <div className="flex items-center gap-4">

@@ -6,4 +6,5 @@ export type TFormField = {
   placeholder?: string;
   isRequired?: boolean;
   type: TInputFieldProps["type"];
+  options?: TInputFieldProps["options"];
 };

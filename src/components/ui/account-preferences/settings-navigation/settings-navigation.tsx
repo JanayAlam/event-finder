@@ -52,7 +52,7 @@ const SettingsNavigation: React.FC = () => {
       }
     ];
 
-    if (user?.role !== USER_ROLE.ADMIN) {
+    if (user && user.role !== USER_ROLE.ADMIN) {
       menuItems.push({
         key: "verification",
         href: PRIVATE_TRAVELER_ONLY_PAGE_ROUTE.SETTINGS_VERIFICATION,

@@ -50,7 +50,9 @@ const PersonalInfoForm: React.FC = () => {
         lastName: profile?.lastName,
         dateOfBirth: profile?.dateOfBirth
           ? dayjs(profile.dateOfBirth).format("YYYY-MM-DD")
-          : undefined
+          : undefined,
+        gender: profile?.gender,
+        bio: profile?.bio
       }}
       fields={[
         [
@@ -75,7 +77,24 @@ const PersonalInfoForm: React.FC = () => {
             name: "dateOfBirth",
             type: "date"
           },
-          null
+          {
+            label: "Gender",
+            name: "gender",
+            type: "select",
+            options: [
+              { label: "Male", value: "male" },
+              { label: "Female", value: "female" },
+              { label: "Other", value: "other" }
+            ]
+          }
+        ],
+        [
+          {
+            label: "Bio",
+            name: "bio",
+            type: "textarea",
+            placeholder: "Tell us about yourself..."
+          }
         ]
       ]}
       validationSchema={PersonalInfoRequestSchema}

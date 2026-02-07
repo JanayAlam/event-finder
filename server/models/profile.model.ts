@@ -1,4 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
+import { genders, TGender } from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 
 interface IProfileBase extends ITimestamps {
@@ -7,6 +8,8 @@ interface IProfileBase extends ITimestamps {
   firstName: string;
   lastName: string;
   dateOfBirth?: Date;
+  gender?: TGender;
+  bio?: string;
 }
 
 export interface IProfileDoc extends IProfileBase, Document {
@@ -25,7 +28,9 @@ const profileSchema = new Schema<IProfileDoc>(
     profileImage: { type: String },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    dateOfBirth: { type: Date }
+    dateOfBirth: { type: Date },
+    gender: { type: String, enum: genders },
+    bio: { type: String, maxlength: 300 }
   },
   { timestamps: true }
 );

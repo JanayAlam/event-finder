@@ -1,7 +1,15 @@
-export default function ProfilePage() {
+import { ProfileHeader } from "@/components/ui/profile-page";
+
+export default async function ProfilePage({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
   return (
     <div>
-      <h1>Profile Page</h1>
+      <ProfileHeader />
     </div>
   );
 }

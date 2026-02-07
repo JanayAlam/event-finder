@@ -1,5 +1,5 @@
 "use client";
-import ImageInput from "@/components/shared/atoms/inputs/ImageInput";
+import ImageInput from "@/components/shared/atoms/inputs/image-input";
 import { InputField, TextareaField } from "@/components/shared/molecules/form";
 import TMCard from "@/components/shared/molecules/tm-card";
 import Form from "@/components/shared/organisms/form";
@@ -426,7 +426,7 @@ export default function CreateEventForm() {
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-md bg-primary-foreground text-primary font-bold flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-md bg-input/25 text-primary font-bold flex items-center justify-center">
                               {index + 1}
                             </div>
                             <Paragraph>Activity {index + 1}</Paragraph>

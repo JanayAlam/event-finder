@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { genders } from "../../server/enums/gender.enum";
 import { dateOptional, stringRequired } from "./utils";
 
 export const PersonalInfoRequestSchema = z.object({
@@ -17,8 +18,14 @@ export const PersonalInfoRequestSchema = z.object({
       eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
       return date <= eighteenYearsAgo;
     },
+
     { message: "You must be at least 18 years old" }
-  )
+  ),
+  gender: z.enum(genders as [string, ...string[]]).optional(),
+  bio: z
+    .string()
+    .max(300, "Bio cannot be longer than 300 characters")
+    .optional()
 });
 
 export type TPersonalInfoRequestDto = z.infer<typeof PersonalInfoRequestSchema>;

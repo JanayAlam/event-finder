@@ -212,10 +212,10 @@ const Navbar: React.FC = () => {
           ) : (
             <div className="flex items-center gap-4">
               <SearchButton />
-              <ThemeToggleButton />
               <Button variant="outline" onClick={handleLoginAction}>
                 Login/Signup
               </Button>
+              <ThemeToggleButton />
             </div>
           )}
         </div>

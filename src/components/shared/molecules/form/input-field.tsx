@@ -9,8 +9,18 @@ import {
 } from "react-hook-form";
 import { ImageInput } from "../../atoms/inputs";
 import { DateInput } from "../../shadcn-components/date-input";
+
 import { Input } from "../../shadcn-components/input";
 import { Label } from "../../shadcn-components/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "../../shadcn-components/select";
+
+import { Textarea } from "../../shadcn-components/textarea";
 
 export type TInputFieldProps = {
   id?: string;
@@ -19,7 +29,10 @@ export type TInputFieldProps = {
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   control?: Control<any>;
   name?: string;
-} & React.ComponentProps<"input">;
+  options?: { label: string; value: string }[];
+} & Omit<React.ComponentProps<"input">, "type"> & {
+    type?: React.HTMLInputTypeAttribute | "select" | "textarea";
+  };
 
 const getErrorMessage = (
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>
@@ -48,6 +61,7 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
     error: propError,
     control,
     name,
+    options,
     ...rest
   } = props;
 
@@ -93,6 +107,36 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
             onChange={field.onChange}
             onBlur={field.onBlur}
             name={field.name}
+          />
+        ) : type === "select" ? (
+          <Select
+            onValueChange={field.onChange}
+            value={field.value}
+            key={field.value}
+          >
+            <SelectTrigger
+              id={id}
+              className={cn(error && "border border-destructive")}
+            >
+              <SelectValue
+                placeholder={rest.placeholder || "Select an option"}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : type === "textarea" ? (
+          <Textarea
+            id={id}
+            className={cn(error && "border border-destructive")}
+            {...(rest as any)}
+            {...field}
+            value={field.value ?? ""}
           />
         ) : (
           <Input

@@ -94,7 +94,7 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
           role="button"
           onClick={handleClick}
           className={cn(
-            "w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-input bg-primary-foreground relative transition-opacity group",
+            "w-full rounded-md overflow-hidden cursor-pointer border border-dashed border-input dark:bg-input/25 relative transition-opacity group",
             inputClassName,
             isLoading && "opacity-60 cursor-not-allowed"
           )}

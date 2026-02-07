@@ -99,6 +99,7 @@ function Form<T extends z.ZodObject<any>>(
                     isLoading ? (
                       <InputFieldSkeleton
                         key={`skeleton-${field.name}${fieldIndex}`}
+                        isTextarea={field.type === "textarea"}
                       />
                     ) : (
                       <InputField
@@ -110,6 +111,7 @@ function Form<T extends z.ZodObject<any>>(
                         name={field.name}
                         placeholder={field.placeholder}
                         isRequired={field.isRequired}
+                        options={field.options}
                       />
                     )
                   ) : field ? (

@@ -95,7 +95,10 @@ class ProfileController {
       );
 
       // Update profile with new image path
-      const profile = await updateProfileImage(new Types.ObjectId(id), uploadedFile.path);
+      const profile = await updateProfileImage(
+        new Types.ObjectId(id),
+        uploadedFile.path
+      );
 
       res.status(200).json(profile);
     } catch (err) {

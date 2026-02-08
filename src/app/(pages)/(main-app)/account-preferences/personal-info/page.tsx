@@ -1,5 +1,8 @@
 import TMCard from "@/components/shared/molecules/tm-card";
-import { PersonalInfoForm, ProfileImageForm } from "../../../../../components/ui/account-preferences/personal-info";
+import {
+  PersonalInfoForm,
+  ProfileImageForm
+} from "../../../../../components/ui/account-preferences/personal-info";
 
 export const metadata = {
   title: "Personal Info",

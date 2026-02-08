@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn, getImageUrl } from "@/lib/utils";
 import AccountVerificationRepository from "@/repositories/account-verification.repository";
 import AuthRepository from "@/repositories/auth.repository";
 import PromotionRequestRepository from "@/repositories/promotion-request.repository";
@@ -154,7 +154,11 @@ const Navbar: React.FC = () => {
                   <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={`https://ui-avatars.com/api/?name=${user.email.substring(0, 2).toUpperCase()}`}
+                        src={
+                          getImageUrl(user.profile?.profileImage, {
+                            name: user.email
+                          }) || undefined
+                        }
                         alt="User profile picture"
                       />
                       <AvatarFallback className="text-sm">

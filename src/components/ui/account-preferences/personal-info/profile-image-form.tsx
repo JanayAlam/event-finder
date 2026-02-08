@@ -33,7 +33,7 @@ type ProfileImageFormData = {
 const ProfileImageForm: React.FC = () => {
   const queryClient = useQueryClient();
 
-  const { user } = useAuthStore();
+  const { user, updateProfileImage } = useAuthStore();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,6 +96,7 @@ const ProfileImageForm: React.FC = () => {
         ...old,
         ...data
       }));
+      updateProfileImage(data.profileImage ?? null);
       setSelectedImage(null);
       setPreviewUrl(null);
       reset({ profileImage: null });
@@ -122,6 +123,7 @@ const ProfileImageForm: React.FC = () => {
         ...data,
         profileImage: null
       }));
+      updateProfileImage(null);
       setSelectedImage(null);
       setPreviewUrl(null);
       reset({ profileImage: null });
@@ -175,19 +177,20 @@ const ProfileImageForm: React.FC = () => {
     }
   };
 
+  const fullName = profile
+    ? `${profile.firstName} ${profile.lastName}`.trim()
+    : "";
+
   const displayImageUrl = selectedImage
     ? previewUrl
-    : profile?.profileImage
-      ? getImageUrl(profile.profileImage)
-      : null;
+    : getImageUrl(profile?.profileImage, {
+        name: fullName || user?.email
+      });
 
   const hasExistingImage = !!profile?.profileImage;
   const hasSelectedImage = !!selectedImage;
   const canRemove = hasSelectedImage || hasExistingImage;
 
-  const fullName = profile
-    ? `${profile.firstName} ${profile.lastName}`.trim()
-    : "";
   const formattedDateOfBirth = profile?.dateOfBirth
     ? dayjs(profile.dateOfBirth).format("MMM DD, YYYY")
     : null;

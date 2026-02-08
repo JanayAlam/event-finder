@@ -24,6 +24,7 @@ type TAuthActions = {
     accessToken: string | null,
     refreshToken: string | null
   ) => void;
+  updateProfileImage: (profileImage: string | null) => void;
 };
 
 export type TAuthStore = TAuthState & TAuthActions;
@@ -57,6 +58,22 @@ export const useAuthStore = create<TAuthStore>()(
           refreshToken,
           isLoggedIn: true
         });
+      },
+
+      updateProfileImage: (profileImage) => {
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                profile: state.user.profile
+                  ? {
+                      ...state.user.profile,
+                      profileImage: profileImage ?? undefined
+                    }
+                  : null
+              }
+            : null
+        }));
       },
 
       clearAuth: () => {

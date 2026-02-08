@@ -130,7 +130,10 @@ class FileUploadService {
 
       // Process image with sharp: resize to square, crop from center
       const metadata = await sharp(file.path).metadata();
-      const minDimension = Math.min(metadata.width || size, metadata.height || size);
+      const minDimension = Math.min(
+        metadata.width || size,
+        metadata.height || size
+      );
 
       await sharp(file.path)
         .resize(minDimension, minDimension, {

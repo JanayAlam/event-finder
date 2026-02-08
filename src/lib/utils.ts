@@ -6,11 +6,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getImageUrl = (imagePath: string) => {
-  if (!imagePath) return null;
-  // If imagePath already starts with http, return as is
-  if (imagePath.startsWith("http")) return imagePath;
-  // Otherwise, construct URL from base server URL
+export const getImageUrl = (
+  imagePath: string | null | undefined,
+  options?: { name?: string }
+) => {
+  if (!imagePath) {
+    if (options?.name) {
+      const initials = options.name.toUpperCase().slice(0, 2);
+      return `https://ui-avatars.com/api?name=${encodeURIComponent(initials)}&size=128`;
+    }
+    return null;
+  }
+
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
   const baseUrl = PUBLIC_SERVER_URL || API_BASE_URL.replace("/api/v1", "");
   return `${baseUrl}/${imagePath}`;
 };

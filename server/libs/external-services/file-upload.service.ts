@@ -157,7 +157,7 @@ class FileUploadService {
         size: (await fs.stat(newPath)).size,
         mimetype: "image/jpeg"
       };
-    } catch (error) {
+    } catch {
       // Clean up temp file if it exists
       if (file.path) {
         try {

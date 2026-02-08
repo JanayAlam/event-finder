@@ -26,7 +26,7 @@ const TMCard: React.FC<TSettingsCardProps> = ({
   bodyClassName
 }) => {
   return (
-    <ShadCNCard className={rootClassName}>
+    <ShadCNCard className={cn("shadow-none", rootClassName)}>
       {title || description ? (
         <CardHeader className={headerClassName}>
           {title ? (

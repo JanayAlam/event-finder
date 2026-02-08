@@ -1,5 +1,6 @@
 "use client";
 
+import TMCard from "@/components/shared/molecules/tm-card";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
   Dialog,
@@ -10,7 +11,8 @@ import {
 } from "@/components/shared/shadcn-components/dialog";
 import {
   Empty,
-  EmptyDescription
+  EmptyDescription,
+  EmptyMedia
 } from "@/components/shared/shadcn-components/empty";
 import { Separator } from "@/components/shared/shadcn-components/separator";
 import {
@@ -18,6 +20,7 @@ import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import { ListX, Star } from "lucide-react";
 import React, { useState } from "react";
 
 interface Review {
@@ -44,21 +47,18 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4">
       {/* Bio Section */}
       {bio && (
-        <>
-          <div>
-            <H4 className="mb-2">Bio</H4>
-            <TypographyMuted>{bio}</TypographyMuted>
-          </div>
-          <Separator />
-        </>
+        <TMCard bodyClassName="flex flex-col gap-3">
+          <H4>Bio</H4>
+          <TypographyMuted className="text-sm">{bio}</TypographyMuted>
+        </TMCard>
       )}
 
       {/* Reviews Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
+      <TMCard bodyClassName="flex flex-col gap-6">
+        <div className="flex items-center justify-between">
           <H4>Reviews</H4>
           {isAuthenticated && !isOwnProfile && (
             <Button
@@ -71,33 +71,39 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
           )}
         </div>
 
-        {reviews.length === 0 ? (
-          <Empty>
+        {!reviews.length ? (
+          <Empty className="flex flex-col gap-2">
+            <EmptyMedia>
+              <ListX className="size-5 text-muted-foreground" />
+            </EmptyMedia>
             <EmptyDescription>No reviews yet</EmptyDescription>
           </Empty>
         ) : (
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div key={review.id} className="space-y-2">
+          <div className="flex flex-col gap-4">
+            {reviews.map((review, idx) => (
+              <div key={review.id} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <TypographyMuted className="font-semibold">
-                    {review.author}
-                  </TypographyMuted>
+                  <div className="flex items-center gap-1">
+                    <TypographyMuted>{review.rating}/5</TypographyMuted>
+                    <Star className="size-4 fill-yellow-500 text-yellow-500" />
+                  </div>
                   <TypographyMuted className="text-xs">
                     {new Date(review.date).toLocaleDateString()}
                   </TypographyMuted>
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-yellow-500">★</span>
-                  <TypographyMuted>{review.rating}/5</TypographyMuted>
+
+                <div>
+                  <Paragraph className="font-semibold">
+                    {review.author}
+                  </Paragraph>
+                  <TypographyMuted>{review.comment}</TypographyMuted>
                 </div>
-                <TypographyMuted>{review.comment}</TypographyMuted>
-                <Separator />
+                {idx < reviews.length - 1 && <Separator className="my-2!" />}
               </div>
             ))}
           </div>
         )}
-      </div>
+      </TMCard>
 
       {/* Review Dialog */}
       <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>

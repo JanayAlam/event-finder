@@ -1,10 +1,10 @@
+import TMCard from "@/components/shared/molecules/tm-card";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage
 } from "@/components/shared/shadcn-components/avatar";
 import { Badge } from "@/components/shared/shadcn-components/badge";
-import { Card } from "@/components/shared/shadcn-components/card";
 import { Separator } from "@/components/shared/shadcn-components/separator";
 import {
   H3,
@@ -54,14 +54,14 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const joinedDate = dayjs(user.createdAt).format("MMM YYYY");
 
   return (
-    <Card className="rounded-xl border-none shadow-none bg-input/20 dark:bg-input/15">
+    <TMCard>
       <div
         className={cn(
-          "py-4 sm:py-10 px-4 sm:px-20 lg:px-40",
-          "flex flex-col sm:flex-row items-center gap-6"
+          "py-4 sm:py-10",
+          "flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
         )}
       >
-        <Avatar className="h-30 w-30">
+        <Avatar className="h-50 w-50">
           <AvatarImage
             src={
               getImageUrl(profile?.profileImage, {
@@ -75,14 +75,14 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </AvatarFallback>
         </Avatar>
 
-        <div className="w-full flex flex-col items-center gap-2 sm:items-start text-center sm:text-left">
+        <div className="w-full flex flex-col gap-2 sm:items-start text-center sm:text-left">
           <div className="flex items-center gap-2">
             <H3 className="font-bold">{fullName}</H3>
-            {user.role === "host" && (
-              <Badge variant="secondary" className="bg-info/50">
-                Host
+            {user.role === "host" || user.role === "admin" ? (
+              <Badge variant="secondary" className="bg-info/50 capitalize">
+                {user.role}
               </Badge>
-            )}
+            ) : null}
           </div>
           <TypographyMuted>{user.email}</TypographyMuted>
 
@@ -109,7 +109,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             </div>
           </div>
 
-          <Separator className="my-2" />
+          <Separator className="my-4!" />
 
           <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-6 mt-2">
             <ProfileStat value={stats.tripsJoined} label="Trips Joined" />
@@ -122,6 +122,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
         </div>
       </div>
-    </Card>
+    </TMCard>
   );
 };

@@ -74,17 +74,19 @@ export default async function ProfilePage({
   ];
 
   return (
-    <div className={cn(PAGE_WIDTH_CLASS_NAME, "py-6 space-y-6")}>
+    <div
+      className={cn(PAGE_WIDTH_CLASS_NAME, "py-6 flex flex-col gap-4 sm:gap-6")}
+    >
       <ProfileHeader user={dummyUser} stats={dummyStats} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* Left Aside - 4 columns on large screens */}
         <div className="lg:col-span-4">
           <ProfileAside
             bio={dummyUser.profile?.bio}
             reviews={dummyReviews}
             isOwnProfile={false}
-            isAuthenticated={true} // Hardcoded for demo
+            isAuthenticated={true}
           />
         </div>
 

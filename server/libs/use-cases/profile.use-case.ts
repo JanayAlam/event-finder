@@ -29,3 +29,28 @@ export const updatePersonalInfo = (
     .select("-__v")
     .lean();
 };
+
+export const updateProfileImage = async (
+  id: Types.ObjectId,
+  profileImagePath: string
+): Promise<TProfile | null> => {
+  return Profile.findOneAndUpdate(
+    { _id: id },
+    { profileImage: profileImagePath },
+    { new: true }
+  )
+    .select("-__v")
+    .lean();
+};
+
+export const removeProfileImage = async (
+  id: Types.ObjectId
+): Promise<TProfile | null> => {
+  return Profile.findOneAndUpdate(
+    { _id: id },
+    { $unset: { profileImage: "" } },
+    { new: true }
+  )
+    .select("-__v")
+    .lean();
+};

@@ -1,14 +1,20 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
+import { assert } from "node:console";
 import { z } from "zod";
 import {
   PersonalInfoRequestSchema,
   TIdParam
 } from "../../../../common/validation-schemas";
+import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
   getSingleProfile,
-  updatePersonalInfo
+  removeProfileImage,
+  updatePersonalInfo,
+  updateProfileImage
 } from "../../../libs/use-cases/profile.use-case";
 import ApiError from "../../../utils/api-error.util";
+import logger from "../../../utils/winston.util";
 
 type TRequestBody = z.infer<typeof PersonalInfoRequestSchema>;
 
@@ -39,6 +45,98 @@ class ProfileController {
         gender,
         bio
       });
+
+      res.status(200).json(profile);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async uploadProfileImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const userId = req.user?._id;
+      assert(userId !== undefined, "'req.user._id' should not be undefined");
+
+      const existingProfile = await getSingleProfile({ _id: id });
+
+      if (!existingProfile) {
+        throw new ApiError(404, "Profile not found");
+      }
+
+      if (!existingProfile.user.equals(userId!)) {
+        throw new ApiError(403, "Cannot update other's profile image");
+      }
+
+      const file = req.file;
+      if (!file) {
+        throw new ApiError(400, "No image file provided");
+      }
+
+      // Remove existing image if it exists
+      if (existingProfile.profileImage) {
+        try {
+          await FileUploadService.remove(existingProfile.profileImage);
+        } catch (error) {
+          logger.error("Error removing existing profile image", error);
+          // Continue with upload even if removal fails
+        }
+      }
+
+      // Upload and crop the new image
+      const uploadedFile = await FileUploadService.uploadAndCropToSquare(
+        file,
+        "profile-photo",
+        512
+      );
+
+      // Update profile with new image path
+      const profile = await updateProfileImage(new Types.ObjectId(id), uploadedFile.path);
+
+      res.status(200).json(profile);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removeProfileImage(
+    req: Request<TIdParam>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const userId = req.user?._id;
+      assert(userId !== undefined, "'req.user._id' should not be undefined");
+
+      const existingProfile = await getSingleProfile({ _id: id });
+
+      if (!existingProfile) {
+        throw new ApiError(404, "Profile not found");
+      }
+
+      if (!existingProfile.user.equals(userId!)) {
+        throw new ApiError(403, "Cannot remove other's profile image");
+      }
+
+      if (!existingProfile.profileImage) {
+        throw new ApiError(400, "No profile image to remove");
+      }
+
+      // Remove the image file
+      try {
+        await FileUploadService.remove(existingProfile.profileImage);
+      } catch (error) {
+        logger.error("Error removing profile image file", error);
+        // Continue with database update even if file removal fails
+      }
+
+      // Update profile to remove image path
+      const profile = await removeProfileImage(id);
 
       res.status(200).json(profile);
     } catch (err) {

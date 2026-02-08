@@ -1,5 +1,5 @@
 import TMCard from "@/components/shared/molecules/tm-card";
-import { PersonalInfoForm } from "../../../../../components/ui/account-preferences/personal-info";
+import { PersonalInfoForm, ProfileImageForm } from "../../../../../components/ui/account-preferences/personal-info";
 
 export const metadata = {
   title: "Personal Info",
@@ -8,9 +8,14 @@ export const metadata = {
 
 const PersonalInfoPage = () => {
   return (
-    <TMCard title="Personal Information">
-      <PersonalInfoForm />
-    </TMCard>
+    <div className="flex flex-col gap-4 sm:gap-6">
+      <TMCard title="Profile Image">
+        <ProfileImageForm />
+      </TMCard>
+      <TMCard title="Personal Information">
+        <PersonalInfoForm />
+      </TMCard>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import {
   PersonalInfoRequestSchema
 } from "../../../../common/validation-schemas";
 import { authenticate } from "../../../middlewares/authenticator.middleware";
+import { imageUpload } from "../../../middlewares/image-upload.middleware";
 import inputValidator from "../../../middlewares/input-validator.middleware";
 import ProfileController from "../controllers/profile.controller";
 
@@ -14,6 +15,20 @@ profileRouter.patch(
   authenticate(),
   inputValidator(PersonalInfoRequestSchema, IdParamsSchema),
   ProfileController.update
+);
+
+profileRouter.post(
+  "/:id/profile-image",
+  authenticate(),
+  imageUpload.single("profileImage"),
+  ProfileController.uploadProfileImage
+);
+
+profileRouter.delete(
+  "/:id/profile-image",
+  authenticate(),
+  inputValidator(null, IdParamsSchema),
+  ProfileController.removeProfileImage
 );
 
 export default profileRouter;

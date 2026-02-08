@@ -21,6 +21,25 @@ class ProfileRepository extends BaseRepository {
     );
     return data;
   }
+
+  static async uploadProfileImage(id: string, imageFile: File) {
+    const url = `${this.apiRoute}/${id}/profile-image`;
+    const formData = BaseRepository.convertToFormData({
+      profileImage: imageFile
+    });
+    const data = await this.request<FormData, TProfile>(url, "post", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    return data;
+  }
+
+  static async removeProfileImage(id: string) {
+    const url = `${this.apiRoute}/${id}/profile-image`;
+    const data = await this.request<undefined, TProfile>(url, "delete");
+    return data;
+  }
 }
 
 export default ProfileRepository;

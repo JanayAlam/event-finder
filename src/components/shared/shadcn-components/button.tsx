@@ -72,7 +72,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {isLoading ? (
           <div className="flex items-center gap-1">
             <span className="flex items-center justify-center">
-              <Spinner />
+              <Spinner
+                className={variant === "destructive" ? "text-white" : ""}
+              />
             </span>
             {children}
           </div>

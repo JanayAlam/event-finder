@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import { assert } from "node:console";
 import path from "node:path";
+import sharp from "sharp";
 import ApiError from "../../utils/api-error.util";
 import logger from "../../utils/winston.util";
 
@@ -102,6 +103,71 @@ class FileUploadService {
       }
 
       throw new ApiError(500, "Failed to remove image");
+    }
+  }
+
+  static async uploadAndCropToSquare(
+    file: Express.Multer.File,
+    category: FileCategory,
+    size: number = 512
+  ): Promise<FileUploadResponse> {
+    assert(!!file, "No file provided");
+    assert(
+      Object.keys(this.CATEGORY_DIRS).includes(category),
+      `Invalid category: ${category}`
+    );
+
+    const categoryDir = this.CATEGORY_DIRS[category];
+
+    try {
+      // create category directory if it doesn't exist
+      const categoryPath = path.join(this.UPLOAD_DIR, categoryDir);
+      await fs.mkdir(categoryPath, { recursive: true });
+
+      // Generate new filename
+      const newFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+      const newPath = path.join(categoryPath, newFilename);
+
+      // Process image with sharp: resize to square, crop from center
+      const metadata = await sharp(file.path).metadata();
+      const minDimension = Math.min(metadata.width || size, metadata.height || size);
+
+      await sharp(file.path)
+        .resize(minDimension, minDimension, {
+          fit: "cover",
+          position: "center"
+        })
+        .resize(size, size)
+        .jpeg({ quality: 90 })
+        .toFile(newPath);
+
+      // Remove original temp file
+      try {
+        await fs.unlink(file.path);
+      } catch (err) {
+        logger.error("Error while removing temp file", err);
+      }
+
+      return {
+        filename: newFilename,
+        path: newPath,
+        size: (await fs.stat(newPath)).size,
+        mimetype: "image/jpeg"
+      };
+    } catch (error) {
+      // Clean up temp file if it exists
+      if (file.path) {
+        try {
+          await fs.unlink(file.path);
+        } catch (err) {
+          logger.error(
+            "Error while removing the file which was failed to upload",
+            err
+          );
+        }
+      }
+
+      throw new ApiError(500, "Failed to upload and process image");
     }
   }
 }

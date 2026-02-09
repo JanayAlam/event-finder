@@ -1,3 +1,4 @@
+import { LinkText } from "@/components/shared/atoms/link/link-text";
 import TMCard from "@/components/shared/molecules/tm-card";
 import EventCard from "@/components/shared/organisms/event-card";
 import {
@@ -5,12 +6,8 @@ import {
   EmptyContent,
   EmptyMedia
 } from "@/components/shared/shadcn-components/empty";
-import {
-  H4,
-  Paragraph
-} from "@/components/shared/shadcn-components/typography";
-import { ChevronRight, FileX } from "lucide-react";
-import Link from "next/link";
+import { H4 } from "@/components/shared/shadcn-components/typography";
+import { FileX } from "lucide-react";
 import React from "react";
 import { TEvent } from "../../../../server/models/event.model";
 
@@ -30,12 +27,7 @@ export const ProfileEventList: React.FC<IProfileEventListProps> = ({
       title={
         <div className="flex gap-1 items-center justify-between">
           <H4>{title}</H4>
-          <Link href={"#"}>
-            <Paragraph className="font-normal text-sm hover:underline flex items-center gap-1">
-              Explore all
-              <ChevronRight className="size-4" />
-            </Paragraph>
-          </Link>
+          <LinkText href={"#"}>Explore all</LinkText>
         </div>
       }
     >
@@ -44,7 +36,7 @@ export const ProfileEventList: React.FC<IProfileEventListProps> = ({
           <EventCard key={event._id.toString()} event={event} />
         ))
       ) : (
-        <Empty>
+        <Empty className="gap-2">
           <EmptyMedia>
             <FileX />
           </EmptyMedia>

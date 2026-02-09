@@ -11,6 +11,7 @@ interface IProfileBase extends ITimestamps {
   dateOfBirth?: Date;
   gender?: TGender;
   bio?: string;
+  reviews: Types.ObjectId[];
 }
 
 export interface IProfileDoc extends IProfileBase, Document {

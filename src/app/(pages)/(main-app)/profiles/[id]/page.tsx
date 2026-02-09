@@ -59,7 +59,6 @@ export default async function ProfilePage({
       <ProfileHeader profile={profile} stats={dummyStats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        {/* Left Aside - 4 columns on large screens */}
         <div className="lg:col-span-4">
           <ProfileAside
             bio={profile?.bio}
@@ -68,8 +67,6 @@ export default async function ProfilePage({
             isAuthenticated={true}
           />
         </div>
-
-        {/* Right Section - 8 columns on large screens */}
         <div className="lg:col-span-8">
           <ProfileSection />
         </div>

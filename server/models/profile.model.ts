@@ -1,6 +1,7 @@
 import { Document, model, Schema, Types } from "mongoose";
 import { genders, TGender } from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
+import { TUser } from "./user.model";
 
 interface IProfileBase extends ITimestamps {
   user: Types.ObjectId;
@@ -38,5 +39,7 @@ const profileSchema = new Schema<IProfileDoc>(
 const Profile = model<IProfileDoc>("profiles", profileSchema);
 
 export type TProfile = ModelWithObjectId<IProfileBase>;
+
+export type TProfileWithUser = TProfile & { user: TUser };
 
 export default Profile;

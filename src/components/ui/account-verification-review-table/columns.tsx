@@ -32,9 +32,9 @@ export const createColumns = (
   handlers: TColumnHandlers
 ): IDataTableColumn<TPendingReviewTableColumn>[] => [
   {
-    header: "Account",
+    header: <span className="px-2">Account</span>,
     cell: (item) => (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-2">
         <Avatar className="size-8">
           <AvatarImage
             src={getUIAvatar(item.name)}

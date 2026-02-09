@@ -1,7 +1,11 @@
 import { FilterQuery, Types } from "mongoose";
 import { z } from "zod";
 import { PersonalInfoRequestSchema } from "../../../common/validation-schemas";
-import Profile, { IProfileDoc, TProfile } from "../../models/profile.model";
+import Profile, {
+  IProfileDoc,
+  TProfile,
+  TProfileWithUser
+} from "../../models/profile.model";
 
 export const getProfileByUserId = async (
   userId: Types.ObjectId | undefined
@@ -18,6 +22,16 @@ export const getSingleProfile = async (
   return Profile.findOne({ ...query })
     .select("-__v")
     .lean<TProfile>()
+    .exec();
+};
+
+export const getProfileWithUser = async (
+  query: FilterQuery<IProfileDoc>
+): Promise<TProfileWithUser | null> => {
+  return Profile.findOne({ ...query })
+    .select("-__v")
+    .populate({ path: "user" })
+    .lean<TProfileWithUser>()
     .exec();
 };
 

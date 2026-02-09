@@ -10,6 +10,12 @@ import ProfileController from "../controllers/profile.controller";
 
 const profileRouter = Router();
 
+profileRouter.get(
+  "/:id",
+  inputValidator(null, IdParamsSchema),
+  ProfileController.getById
+);
+
 profileRouter.patch(
   "/:id/personal-info",
   authenticate(),

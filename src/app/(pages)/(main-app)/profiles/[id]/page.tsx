@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/profile-page";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/lib/utils";
-import { Types } from "mongoose";
+import ProfileRepository from "@/repositories/profile.repository";
 
 export default async function ProfilePage({
   params
@@ -14,28 +14,7 @@ export default async function ProfilePage({
 }) {
   const { id } = await params;
 
-  // Dummy user data
-  const dummyUser = {
-    _id: new Types.ObjectId(id),
-    kindeId: "kinde_123456",
-    email: "janay@example.com",
-    role: "host" as const,
-    isBlocked: false,
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2026-02-08"),
-    profile: {
-      _id: new Types.ObjectId(),
-      user: new Types.ObjectId(id),
-      profileImage: undefined,
-      firstName: "Janay",
-      lastName: "Alam",
-      dateOfBirth: new Date("1995-06-15"),
-      gender: "male" as const,
-      bio: "Passionate traveler and adventure enthusiast. Love exploring new places, meeting new people, and experiencing different cultures. Always up for a spontaneous trip!",
-      createdAt: new Date("2024-01-15"),
-      updatedAt: new Date("2026-02-08")
-    }
-  };
+  const profile = await ProfileRepository.getProfileWithUser(id);
 
   // Dummy stats
   const dummyStats = {
@@ -77,13 +56,13 @@ export default async function ProfilePage({
     <div
       className={cn(PAGE_WIDTH_CLASS_NAME, "py-6 flex flex-col gap-4 sm:gap-6")}
     >
-      <ProfileHeader user={dummyUser} stats={dummyStats} />
+      <ProfileHeader profile={profile} stats={dummyStats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* Left Aside - 4 columns on large screens */}
         <div className="lg:col-span-4">
           <ProfileAside
-            bio={dummyUser.profile?.bio}
+            bio={profile?.bio}
             reviews={dummyReviews}
             isOwnProfile={false}
             isAuthenticated={true}

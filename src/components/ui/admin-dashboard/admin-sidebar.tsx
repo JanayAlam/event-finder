@@ -142,7 +142,7 @@ const SidebarItem = ({ item, collapsed }: SidebarItemProps) => {
           <div className="h-5 w-5 shrink-0 [&>svg]:h-5 [&>svg]:w-5">
             {item.icon}
           </div>
-          <span className="flex-1 truncate text-left text-[14px]">
+          <span className="flex-1 truncate text-left text-[14px] font-medium">
             {item.label}
           </span>
           <ChevronDown
@@ -153,7 +153,7 @@ const SidebarItem = ({ item, collapsed }: SidebarItemProps) => {
           />
         </button>
         {isExpanded && (
-          <div className="ml-6 mt-2! ml-2! border-l border-sidebar-border pl-2 flex flex-col gap-1">
+          <div className="mt-2! ml-2! border-l border-sidebar-border pl-2 flex flex-col gap-1">
             {item.children?.map((child) => (
               <Link
                 key={child.key}

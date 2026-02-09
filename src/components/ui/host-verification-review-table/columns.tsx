@@ -22,9 +22,9 @@ export const createColumns = (
   handlers: TColumnHandlers
 ): IDataTableColumn<TPendingHostRequestTableColumn>[] => [
   {
-    header: "First name",
+    header: <span className="px-2">First name</span>,
     cell: (item) => (
-      <Paragraph className="font-medium">{item.firstName}</Paragraph>
+      <Paragraph className="font-medium px-2">{item.firstName}</Paragraph>
     )
   },
   {

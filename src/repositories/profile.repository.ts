@@ -1,5 +1,5 @@
 import { TPersonalInfoRequestDto } from "../../common/validation-schemas";
-import { TProfile } from "../../server/models/profile.model";
+import { TProfile, TProfileWithUser } from "../../server/models/profile.model";
 import BaseRepository from "./base.repository";
 
 class ProfileRepository extends BaseRepository {
@@ -7,6 +7,12 @@ class ProfileRepository extends BaseRepository {
 
   constructor() {
     super();
+  }
+
+  static async getProfileWithUser(id: string) {
+    const url = `${this.apiRoute}/${id}`;
+    const data = await this.request<undefined, TProfileWithUser>(url, "get");
+    return data;
   }
 
   static async updatePersonalInfo(

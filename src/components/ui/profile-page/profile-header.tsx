@@ -14,12 +14,11 @@ import { cn, getImageUrl } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Calendar, Star, User as UserIcon } from "lucide-react";
 import React from "react";
-import { TProfile } from "../../../../server/models/profile.model";
-import { TUser } from "../../../../server/models/user.model";
+import { TProfileWithUser } from "../../../../server/models/profile.model";
 import { ProfileStat } from "./profile-stat";
 
 interface ProfileHeaderProps {
-  user: TUser & { profile: TProfile | null };
+  profile: TProfileWithUser;
   stats: {
     tripsJoined: number;
     eventsHosted: number;
@@ -29,10 +28,9 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
-  user,
+  profile,
   stats
 }) => {
-  const profile = user.profile;
   const fullName = profile
     ? `${profile.firstName} ${profile.lastName}`.trim()
     : "Unknown User";
@@ -45,13 +43,13 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         : profile.gender === "other"
           ? "Other"
           : "Unspecified"
-    : undefined;
+    : "Unspecified";
 
   const formattedDateOfBirth = profile?.dateOfBirth
     ? dayjs(profile.dateOfBirth).format("MMM DD, YYYY")
     : undefined;
 
-  const joinedDate = dayjs(user.createdAt).format("MMM YYYY");
+  const joinedDate = dayjs(profile.user.createdAt).format("MMM YYYY");
 
   return (
     <TMCard>
@@ -76,29 +74,19 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </Avatar>
 
         <div className="w-full flex flex-col gap-2 sm:items-start text-center sm:text-left">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center sm:justify-start gap-2">
             <H3 className="font-bold">{fullName}</H3>
-            {user.role === "host" || user.role === "admin" ? (
-              <Badge variant="secondary" className="bg-info/50 capitalize">
-                {user.role}
+            {profile.user.role === "host" || profile.user.role === "admin" ? (
+              <Badge variant="outline" className="capitalize">
+                {profile.user.role}
               </Badge>
             ) : null}
           </div>
-          <TypographyMuted>{user.email}</TypographyMuted>
+          <TypographyMuted className="text-sm">
+            {profile.user.email}
+          </TypographyMuted>
 
-          <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-2 text-sm text-muted-foreground">
-            {formattedDateOfBirth && (
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <TypographyMuted>{formattedDateOfBirth}</TypographyMuted>
-              </div>
-            )}
-            {genderLabel && (
-              <div className="flex items-center gap-1">
-                <UserIcon className="h-4 w-4" />
-                <TypographyMuted>{genderLabel}</TypographyMuted>
-              </div>
-            )}
+          <div className="flex flex-wrap justify-center sm:justify-start mt-2 text-sm text-muted-foreground gap-2">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               <TypographyMuted>Joined {joinedDate}</TypographyMuted>
@@ -107,6 +95,20 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               <Star className="h-4 w-4 fill-primary text-primary" />
               <TypographyMuted>{stats.rating} Rating</TypographyMuted>
             </div>
+            {formattedDateOfBirth && (
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <TypographyMuted>
+                  Born on {formattedDateOfBirth}
+                </TypographyMuted>
+              </div>
+            )}
+            {genderLabel && (
+              <div className="flex items-center gap-1">
+                <UserIcon className="h-4 w-4" />
+                <TypographyMuted>{genderLabel}</TypographyMuted>
+              </div>
+            )}
           </div>
 
           <Separator className="my-4!" />

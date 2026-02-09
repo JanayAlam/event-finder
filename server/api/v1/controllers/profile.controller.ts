@@ -8,6 +8,7 @@ import {
 } from "../../../../common/validation-schemas";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
+  getProfileWithUser,
   getSingleProfile,
   removeProfileImage,
   updatePersonalInfo,
@@ -19,6 +20,26 @@ import logger from "../../../utils/winston.util";
 type TRequestBody = z.infer<typeof PersonalInfoRequestSchema>;
 
 class ProfileController {
+  static async getById(
+    req: Request<TIdParam, any, any, any>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+
+      const profile = await getProfileWithUser({ _id: id });
+
+      if (!profile) {
+        throw new ApiError(404, "Profile not found");
+      }
+
+      res.json(profile);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async update(
     req: Request<TIdParam, any, TRequestBody>,
     res: Response,

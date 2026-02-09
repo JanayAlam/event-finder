@@ -9,7 +9,9 @@ import {
 } from "@/components/shared/shadcn-components/dropdown-menu";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { TUserWithProfileAndAccountVerification } from "@/repositories/user.repository";
+import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import { EllipsisVertical } from "lucide-react";
+import Link from "next/link";
 import { VERIFICATION_STATUS } from "../../../../common/types";
 import {
   ACCOUNT_VERIFICATION_STATUS,
@@ -25,11 +27,11 @@ export const createColumns = (
   handlers: TColumnHandlers
 ): IDataTableColumn<TUserWithProfileAndAccountVerification>[] => [
   {
-    header: "Full name",
+    header: <span className="px-2">Full name</span>,
     cell: (user) => {
       const fullName = `${user.profile?.firstName ?? ""} ${user.profile?.lastName ?? ""}`;
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-2">
           <Paragraph className="font-medium">{fullName}</Paragraph>
           {user.isBlocked && (
             <Badge
@@ -118,9 +120,9 @@ export const createColumns = (
     header: "",
     className: "w-[50px] text-right",
     cell: (user) => {
-      if (user.role === USER_ROLE.ADMIN) {
-        return null;
-      }
+      const profileUrl = user.profile?._id
+        ? PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(user.profile._id.toString())
+        : null;
 
       return (
         <div className="flex justify-end">
@@ -131,19 +133,28 @@ export const createColumns = (
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {user.isBlocked ? (
-                <DropdownMenuItem
-                  onClick={() => handlers.onUnblock(user._id.toString())}
-                >
-                  Unblock
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  onClick={() => handlers.onBlock(user._id.toString())}
-                  className="text-destructive focus:text-destructive"
-                >
-                  Block
-                </DropdownMenuItem>
+              {profileUrl && (
+                <Link href={profileUrl}>
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                </Link>
+              )}
+              {user.role === USER_ROLE.ADMIN && (
+                <>
+                  {user.isBlocked ? (
+                    <DropdownMenuItem
+                      onClick={() => handlers.onUnblock(user._id.toString())}
+                    >
+                      Unblock
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      onClick={() => handlers.onBlock(user._id.toString())}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      Block
+                    </DropdownMenuItem>
+                  )}
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

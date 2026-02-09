@@ -1,5 +1,6 @@
 "use client";
 
+import { LinkText } from "@/components/shared/atoms/link/link-text";
 import TMCard from "@/components/shared/molecules/tm-card";
 import EventCard from "@/components/shared/organisms/event-card";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
@@ -10,8 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import EventRepository from "@/repositories/event.repository";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, CalendarX } from "lucide-react";
-import Link from "next/link";
+import { CalendarX } from "lucide-react";
 
 export default function UpcomingTripsSection() {
   const { data: events, isLoading: isEventsLoading } = useQuery({
@@ -24,13 +24,7 @@ export default function UpcomingTripsSection() {
       <div>
         <div className="flex gap-1 items-center justify-between">
           <H3>Upcoming trips</H3>
-          <Link
-            href="#"
-            className="max-sm:hidden hover:underline underline-offset-4 flex items-center gap-1 group hover:text-primary/90 dark:hover:text-primary"
-          >
-            Explore all
-            <ArrowRight className="size-4 transition-transform duration-300 group-hover:-rotate-45" />
-          </Link>
+          <LinkText href="#">Explore all</LinkText>
         </div>
         <TypographyMuted>
           Discover exciting trips organized by fellow travelers. Join a group
@@ -54,7 +48,7 @@ export default function UpcomingTripsSection() {
         ) : !events?.length ? (
           <TMCard
             rootClassName="h-48 col-span-4"
-            bodyClassName="flex flex-col gap-2 items-center justify-center my-auto!"
+            bodyClassName="h-full flex flex-col gap-2 items-center justify-center"
           >
             <CalendarX className="size-12 text-muted-foreground" />
             <TypographyMuted>No trips found</TypographyMuted>

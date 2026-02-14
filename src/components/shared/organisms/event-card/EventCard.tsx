@@ -20,7 +20,7 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
         <div className="flex items-center gap-1">
           <CalendarDays className="size-4" />
           <Paragraph className="text-sm">
-            {dayjs(event.eventDate).format("DD/MM/YYYY hh:mm:ss A")}
+            {dayjs(event.eventDate).format("DD/MM/YY hh:mm A")}
           </Paragraph>
         </div>
         <div className="flex gap-4 items-center">

@@ -7,6 +7,7 @@ import {
 } from "../../../../common/validation-schemas";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
+  getProfileTripStatus,
   getProfileWithUser,
   getSingleProfile,
   removeProfileImage,
@@ -169,6 +170,26 @@ class ProfileController {
       const profile = await removeProfileImage(convertToObjectId(id)!);
 
       res.status(200).json(profile);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getTripStatus(
+    req: Request<TIdParam>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+
+      const profileStatus = await getProfileTripStatus(convertToObjectId(id)!);
+
+      if (!profileStatus) {
+        throw new ApiError(404, "Profile not found");
+      }
+
+      res.status(200).json(profileStatus);
     } catch (err) {
       next(err);
     }

@@ -51,6 +51,20 @@ eventRouter.get(
 // Get all events - public list with basic fields
 eventRouter.get("/", EventController.getAll);
 
+// Get recent hosted events by user ID
+eventRouter.get(
+  "/recent/hosted/:id",
+  inputValidator(null, IdParamsSchema),
+  EventController.getRecentHosted
+);
+
+// Get recent joined events by user ID
+eventRouter.get(
+  "/recent/joined/:id",
+  inputValidator(null, IdParamsSchema),
+  EventController.getRecentJoined
+);
+
 // Publish event to Facebook - only creator (HOST) can publish
 eventRouter.post(
   "/:id/publish/facebook",

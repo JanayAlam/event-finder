@@ -20,10 +20,10 @@ import { ProfileStat } from "./profile-stat";
 interface ProfileHeaderProps {
   profile: TProfileWithUser;
   stats: {
-    tripsJoined: number;
-    eventsHosted: number;
-    rating: number;
-    memberSinceYears: number;
+    eventsJoined: number;
+    eventsHosted: number | null;
+    rating: number | "N/A";
+    memberSince: string;
   };
 }
 
@@ -114,13 +114,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <Separator className="my-4!" />
 
           <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-6 mt-2">
-            <ProfileStat value={stats.tripsJoined} label="Trips Joined" />
-            <ProfileStat value={stats.eventsHosted} label="Events Hosted" />
+            <ProfileStat value={stats.eventsJoined} label="Trips Joined" />
+            {stats.eventsHosted !== null && (
+              <ProfileStat value={stats.eventsHosted} label="Events Hosted" />
+            )}
             <ProfileStat value={stats.rating} label="Rating" />
-            <ProfileStat
-              value={`${stats.memberSinceYears}m.`}
-              label="Member Since"
-            />
+            <ProfileStat value={stats.memberSince} label="Member Since" />
           </div>
         </div>
       </div>

@@ -145,6 +145,7 @@ class EventController {
           nightCount: 1,
           memberCapacity: 1,
           host: 1,
+          coverPhoto: 1,
           createdAt: 1
         } as any
       });
@@ -158,7 +159,94 @@ class EventController {
         dayCount: event.dayCount,
         nightCount: event.nightCount,
         memberCapacity: event.memberCapacity,
-        host: event.host
+        host: event.host,
+        coverPhoto: event.coverPhoto
+      }));
+
+      res.status(200).json(eventList);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getRecentHosted(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const events = await EventUseCase.getAll({
+        filter: { host: convertToObjectId(id)! },
+        projection: {
+          title: 1,
+          placeName: 1,
+          eventDate: 1,
+          entryFee: 1,
+          dayCount: 1,
+          nightCount: 1,
+          memberCapacity: 1,
+          host: 1,
+          coverPhoto: 1,
+          createdAt: 1
+        } as any,
+        options: { sort: { createdAt: -1 }, limit: 3 }
+      });
+
+      const eventList: TEventListItemDto[] = events.map((event) => ({
+        _id: event._id,
+        title: event.title,
+        placeName: event.placeName,
+        eventDate: event.eventDate,
+        entryFee: event.entryFee,
+        dayCount: event.dayCount,
+        nightCount: event.nightCount,
+        memberCapacity: event.memberCapacity,
+        host: event.host,
+        coverPhoto: event.coverPhoto
+      }));
+
+      res.status(200).json(eventList);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getRecentJoined(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const events = await EventUseCase.getAll({
+        filter: { members: convertToObjectId(id)! },
+        projection: {
+          title: 1,
+          placeName: 1,
+          eventDate: 1,
+          entryFee: 1,
+          dayCount: 1,
+          nightCount: 1,
+          memberCapacity: 1,
+          host: 1,
+          coverPhoto: 1,
+          createdAt: 1
+        } as any,
+        options: { sort: { createdAt: -1 }, limit: 3 }
+      });
+
+      const eventList: TEventListItemDto[] = events.map((event) => ({
+        _id: event._id,
+        title: event.title,
+        placeName: event.placeName,
+        eventDate: event.eventDate,
+        entryFee: event.entryFee,
+        dayCount: event.dayCount,
+        nightCount: event.nightCount,
+        memberCapacity: event.memberCapacity,
+        host: event.host,
+        coverPhoto: event.coverPhoto
       }));
 
       res.status(200).json(eventList);

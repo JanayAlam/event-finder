@@ -46,6 +46,20 @@ class ProfileRepository extends BaseRepository {
     const data = await this.request<undefined, TProfile>(url, "delete");
     return data;
   }
+
+  static async getTripStatus(id: string) {
+    const url = `${this.apiRoute}/${id}/trips-status`;
+    const data = await this.request<
+      undefined,
+      {
+        eventsJoined: number;
+        eventsHosted: number | null;
+        rating: number | "N/A";
+        memberSince: string;
+      }
+    >(url, "get");
+    return data;
+  }
 }
 
 export default ProfileRepository;

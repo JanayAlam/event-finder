@@ -9,12 +9,12 @@ import {
 import { H4 } from "@/components/shared/shadcn-components/typography";
 import { FileX } from "lucide-react";
 import React from "react";
-import { TEvent } from "../../../../server/models/event.model";
+import { TEventListItemDto } from "../../../../common/types/event.types";
 
 interface IProfileEventListProps {
   title: string;
   emptyMessage?: string;
-  events: TEvent[];
+  events: TEventListItemDto[];
 }
 
 export const ProfileEventList: React.FC<IProfileEventListProps> = ({
@@ -32,9 +32,11 @@ export const ProfileEventList: React.FC<IProfileEventListProps> = ({
       }
     >
       {events.length ? (
-        events.map((event) => (
-          <EventCard key={event._id.toString()} event={event} />
-        ))
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {events.map((event) => (
+            <EventCard key={event._id.toString()} event={event} />
+          ))}
+        </div>
       ) : (
         <Empty className="gap-2">
           <EmptyMedia>

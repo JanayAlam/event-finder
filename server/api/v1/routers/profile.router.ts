@@ -16,6 +16,12 @@ profileRouter.get(
   ProfileController.getById
 );
 
+profileRouter.get(
+  "/:id/trips-status",
+  inputValidator(null, IdParamsSchema),
+  ProfileController.getTripStatus
+);
+
 profileRouter.patch(
   "/:id/personal-info",
   authenticate(),

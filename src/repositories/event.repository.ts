@@ -93,6 +93,18 @@ class EventRepository extends BaseRepository {
     );
     return data;
   }
+
+  static async getRecentHosted(userId: string) {
+    const url = `${this.apiRoute}/recent/hosted/${userId}`;
+    const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
+    return data;
+  }
+
+  static async getRecentJoined(userId: string) {
+    const url = `${this.apiRoute}/recent/joined/${userId}`;
+    const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
+    return data;
+  }
 }
 
 export default EventRepository;

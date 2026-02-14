@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
-import { Control, FormState, useForm } from "react-hook-form";
+import { Control, FormState, useForm, UseFormReturn } from "react-hook-form";
 import z from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
 import { Button } from "../../shadcn-components/button";
@@ -32,9 +32,10 @@ export type TFormProps<T extends z.ZodObject<any>> = {
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
   isSubmitButtonLoading?: boolean;
   render?: (
-    control: Control<z.core.output<T>>,
-    formState: FormState<z.core.output<T>>
+    control: Control<z.input<T>>,
+    formState: FormState<z.input<T>>
   ) => React.ReactNode;
+  form?: UseFormReturn<z.input<T>>;
 };
 
 function Form<T extends z.ZodObject<any>>(
@@ -52,12 +53,15 @@ function Form<T extends z.ZodObject<any>>(
     onSubmitCallback
   } = props;
 
-  const { control, handleSubmit, reset, formState } = useForm<z.infer<T>>({
+  const internalForm = useForm<z.input<T>>({
     defaultValues: defaultValues as any,
     resolver: validationSchema
       ? (zodResolver(validationSchema) as any)
       : undefined
   });
+
+  const { control, handleSubmit, reset, formState } =
+    props.form || internalForm;
 
   const { isSubmitting } = formState;
 
@@ -75,7 +79,7 @@ function Form<T extends z.ZodObject<any>>(
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmitCallback)}
+      onSubmit={handleSubmit(onSubmitCallback as any)}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">

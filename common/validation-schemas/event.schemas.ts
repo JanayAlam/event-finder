@@ -79,11 +79,16 @@ export const CreateEventSchema = z.object({
     )
     .optional()
     .default([]),
-  coverPhoto: z.any().optional(),
-  additionalPhotos: z.array(z.any()).optional().default([])
+  coverPhoto: z.string().optional(),
+  additionalPhotos: z
+    .array(z.object({ path: z.string() }))
+    .default([])
+    .transform((items) => items.map((i) => i.path))
 });
 
 export const UpdateEventSchema = CreateEventSchema.partial();
 
-export type TCreateEventDto = z.infer<typeof CreateEventSchema>;
-export type TUpdateEventDto = z.infer<typeof UpdateEventSchema>;
+export type TCreateEventDto = z.output<typeof CreateEventSchema>;
+export type TCreateEventForm = z.input<typeof CreateEventSchema>;
+export type TUpdateEventDto = z.output<typeof UpdateEventSchema>;
+export type TUpdateEventForm = z.input<typeof UpdateEventSchema>;

@@ -1,3 +1,4 @@
+import { EventMetaItem } from "@/components/shared/molecules/event-meta-item";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import dayjs from "dayjs";
 import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
@@ -6,35 +7,25 @@ import { TEventListItemDto } from "../../../../../common/types";
 import TMCard from "../../molecules/tm-card";
 import { Badge } from "../../shadcn-components/badge";
 import { Button } from "../../shadcn-components/button";
-import { H4, Paragraph } from "../../shadcn-components/typography";
+import { H4 } from "../../shadcn-components/typography";
 
 export default function EventCard({ event }: { event: TEventListItemDto }) {
   return (
     <TMCard rootClassName="min-h-48" bodyClassName="flex flex-col gap-4">
       <H4 className="text-lg text-primary font-bold">{event.title}</H4>
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-1">
-          <MapPin className="size-4" />
-          <Paragraph className="text-sm">{event.placeName}</Paragraph>
-        </div>
-        <div className="flex items-center gap-1">
-          <CalendarDays className="size-4" />
-          <Paragraph className="text-sm">
-            {dayjs(event.eventDate).format("DD/MM/YY hh:mm A")}
-          </Paragraph>
-        </div>
+        <EventMetaItem icon={MapPin} text={event.placeName} />
+        <EventMetaItem
+          icon={CalendarDays}
+          text={dayjs(event.eventDate).format("DD/MM/YY hh:mm A")}
+        />
         <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-1">
-            <Clock className="size-4" />
-            <Paragraph className="text-sm">
-              {event.dayCount}D{event.nightCount ? `/${event.nightCount}N` : ""}
-            </Paragraph>
-          </div>
+          <EventMetaItem
+            icon={Clock}
+            text={`${event.dayCount}D${event.nightCount ? `/${event.nightCount}N` : ""}`}
+          />
           {event.memberCapacity ? (
-            <div className="flex items-center gap-1">
-              <Users className="size-4" />
-              <Paragraph className="text-sm">{event.memberCapacity}</Paragraph>
-            </div>
+            <EventMetaItem icon={Users} text={event.memberCapacity} />
           ) : null}
         </div>
       </div>

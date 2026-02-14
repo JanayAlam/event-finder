@@ -32,7 +32,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   CreateEventSchema,
-  TCreateEventDto
+  TCreateEventDto,
+  TCreateEventForm
 } from "../../../../../../common/validation-schemas";
 
 const FormCard: React.FC<
@@ -64,7 +65,7 @@ const FormCard: React.FC<
 export default function CreateEventForm() {
   const router = useRouter();
 
-  const form = useForm<TCreateEventDto>({
+  const form = useForm<TCreateEventForm>({
     resolver: zodResolver(CreateEventSchema),
     defaultValues: {
       title: "",
@@ -134,7 +135,7 @@ export default function CreateEventForm() {
     onSuccess: (data) => {
       const index = uploadingAdditionalIndex;
       if (index !== null) {
-        form.setValue(`additionalPhotos.${index}`, data.path);
+        form.setValue(`additionalPhotos.${index}.path`, data.path);
       }
     },
     onError: (err) => {
@@ -185,7 +186,7 @@ export default function CreateEventForm() {
   };
 
   const handleRemoveAdditionalPhoto = async (index: number) => {
-    const path = form.getValues(`additionalPhotos.${index}`);
+    const path = form.getValues(`additionalPhotos.${index}.path`);
     if (path) {
       removePhotoOnServer(path);
     }
@@ -341,7 +342,7 @@ export default function CreateEventForm() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => appendPhoto(null as any)}
+                    onClick={() => appendPhoto({ path: "" })}
                   >
                     <PlusIcon />
                     Add photo
@@ -369,7 +370,7 @@ export default function CreateEventForm() {
                           onRemove={() => handleRemoveAdditionalPhoto(index)}
                           isLoading={uploadingAdditionalIndex === index}
                           // eslint-disable-next-line react-hooks/incompatible-library
-                          value={form.watch(`additionalPhotos.${index}`)}
+                          value={form.watch(`additionalPhotos.${index}.path`)}
                           ratio={1}
                           className="aspect-square"
                         />
@@ -394,7 +395,7 @@ export default function CreateEventForm() {
                   variant="outline"
                   onClick={() =>
                     appendItinerary({
-                      moment: new Date(),
+                      moment: new Date().toISOString(),
                       title: "",
                       description: ""
                     })
@@ -498,24 +499,9 @@ export default function CreateEventForm() {
         );
       }}
       validationSchema={CreateEventSchema}
+      form={form}
       onSubmitCallback={(data) => {
-        // Clean up itinerary - remove any empty or invalid items
-        const cleanedItinerary = (data.itinerary || []).filter(
-          (item) => item && item.title && item.moment
-        );
-
-        // Clean up additional photos - filter out empty slots
-        const cleanedAdditionalPhotos = (data.additionalPhotos || []).filter(
-          (path) => typeof path === "string" && path.length > 0
-        );
-
-        const cleanedData = {
-          ...data,
-          itinerary: cleanedItinerary,
-          additionalPhotos: cleanedAdditionalPhotos
-        };
-
-        createEvent(cleanedData);
+        createEvent(data);
       }}
     />
   );

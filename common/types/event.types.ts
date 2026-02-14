@@ -1,4 +1,6 @@
-import { TEvent } from "../../server/models/event.model";
+import { TEvent, TEventDetail } from "../../server/models/event.model";
+
+export type { TEvent };
 
 export type TEventListItemDto = Pick<
   TEvent,
@@ -14,4 +16,4 @@ export type TEventListItemDto = Pick<
   | "coverPhoto"
 >;
 
-export type TEventDetailDto = TEvent;
+export type TEventDetailDto = TEventDetail;

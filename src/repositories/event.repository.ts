@@ -1,9 +1,12 @@
-import { TEventListItemDto } from "../../common/types/event.types";
+import {
+  TEvent,
+  TEventDetailDto,
+  TEventListItemDto
+} from "../../common/types/event.types";
 import {
   TCreateEventDto,
   TUpdateEventDto
 } from "../../common/validation-schemas";
-import { TEvent } from "../../server/models/event.model";
 import BaseRepository from "./base.repository";
 
 class EventRepository extends BaseRepository {
@@ -40,9 +43,13 @@ class EventRepository extends BaseRepository {
   }
 
   static async getSingle(eventId: string) {
-    const url = `${this.apiRoute}/${eventId}`;
-    const data = await this.request<undefined, TEvent>(url, "get");
-    return data;
+    try {
+      const url = `${this.apiRoute}/${eventId}`;
+      const data = await this.request<undefined, TEventDetailDto>(url, "get");
+      return data;
+    } catch {
+      return null;
+    }
   }
 
   static async delete(eventId: string) {

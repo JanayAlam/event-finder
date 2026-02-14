@@ -5,7 +5,11 @@ import {
   Types,
   UpdateQuery
 } from "mongoose";
-import Event, { IEventDoc, TEvent } from "../../models/event.model";
+import Event, {
+  IEventDoc,
+  TEvent,
+  TEventDetail
+} from "../../models/event.model";
 
 type TGetAllEventParamDto = {
   filter?: FilterQuery<IEventDoc>;
@@ -38,12 +42,24 @@ class EventUseCase {
     return savedEvent.toObject() as TEvent;
   }
 
-  static async getById(id: Types.ObjectId): Promise<TEvent | null> {
-    return Event.findById(id)
-      .populate("host", "firstName lastName email _id")
-      .populate("members", "firstName lastName email _id")
-      .lean<TEvent>()
+  static async getById(id: Types.ObjectId): Promise<TEventDetail | null> {
+    const event = await Event.findById(id)
+      .populate({
+        path: "host",
+        populate: { path: "profile", select: "-__v" }
+      })
+      .populate({
+        path: "members",
+        populate: { path: "profile", select: "-__v" }
+      })
+      .lean<TEventDetail>()
       .exec();
+
+    if (event && !event.coverPhoto) {
+      (event as any).coverPhoto = null;
+    }
+
+    return event;
   }
 
   static async getAll(params: TGetAllEventParamDto): Promise<TEvent[]> {

@@ -18,7 +18,7 @@ const profileReviewSchema = new Schema<IProfileReviewDoc>(
   {
     profile: {
       type: Schema.ObjectId,
-      ref: "profile",
+      ref: "profiles",
       required: true,
       index: true
     },

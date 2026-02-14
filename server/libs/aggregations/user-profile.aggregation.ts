@@ -42,6 +42,10 @@ export const createUserAndProfile = async (
       firstName: profileDoc.firstName,
       lastName: profileDoc.lastName,
       profileImage: profileDoc.profileImage,
+      reviews: profileDoc.reviews,
+      bio: profileDoc.bio,
+      dateOfBirth: profileDoc.dateOfBirth,
+      gender: profileDoc.gender,
       createdAt: profileDoc.createdAt,
       updatedAt: profileDoc.updatedAt
     };

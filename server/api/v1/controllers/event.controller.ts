@@ -9,6 +9,7 @@ import { postEventToFacebookPage } from "../../../libs/external-services/faceboo
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import ApiError from "../../../utils/api-error.util";
+import { convertToObjectId } from "../../../utils/object-id.util";
 
 type TEventCreateRequest = Request<any, any, TCreateEventDto>;
 type TEventUpdateRequest = Request<TIdParam, any, TUpdateEventDto>;
@@ -106,7 +107,7 @@ class EventController {
 
       const { id } = req.params;
 
-      const event = await EventUseCase.getById(id);
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
 
       if (!event) {
         throw new ApiError(404, "Event not found");
@@ -116,7 +117,10 @@ class EventController {
         throw new ApiError(403, "Only event creator can update event");
       }
 
-      const updatedEvent = await EventUseCase.update(id, req.body);
+      const updatedEvent = await EventUseCase.update(
+        convertToObjectId(id)!,
+        req.body
+      );
 
       if (!updatedEvent) {
         throw new ApiError(500, "Failed to update event");
@@ -181,7 +185,7 @@ class EventController {
     try {
       const { id } = req.params;
 
-      const event = await EventUseCase.getById(id);
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
 
       if (!event) {
         throw new ApiError(404, "Event not found");
@@ -201,7 +205,7 @@ class EventController {
 
       const { id } = req.params;
 
-      const event = await EventUseCase.getById(id);
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
 
       if (!event) {
         throw new ApiError(404, "Event not found");
@@ -211,7 +215,7 @@ class EventController {
         throw new ApiError(403, "Only event creator can delete event");
       }
 
-      await EventUseCase.delete(id);
+      await EventUseCase.delete(convertToObjectId(id)!);
 
       res.status(200).json({ message: "Event deleted successfully" });
     } catch (err) {
@@ -227,7 +231,7 @@ class EventController {
     try {
       const { id } = req.params;
 
-      const event = await EventUseCase.getById(id);
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
 
       if (!event) {
         throw new ApiError(404, "Event not found");

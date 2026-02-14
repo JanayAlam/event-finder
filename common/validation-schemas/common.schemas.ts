@@ -1,5 +1,6 @@
-import { isValidObjectId, Types } from "mongoose";
 import { z } from "zod";
+
+const OBJECT_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
 export const PaginationQuerySchema = z.object({
   pageSize: z
@@ -18,8 +19,7 @@ export const IdParamsSchema = z.object({
   id: z
     .string()
     .trim()
-    .refine((val) => isValidObjectId(val), { message: "Not a valid object id" })
-    .transform((val) => new Types.ObjectId(val))
+    .regex(OBJECT_ID_REGEX, { message: "Not a valid object id" })
 });
 
 export type TIdParam = z.infer<typeof IdParamsSchema>;

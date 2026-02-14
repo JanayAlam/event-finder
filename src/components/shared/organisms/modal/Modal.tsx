@@ -30,6 +30,7 @@ export type TModalProps = {
   cancelText?: string;
   okText?: string;
   buttonDisabled?: boolean;
+  showFooter?: boolean;
 };
 
 export default function Modal({
@@ -46,7 +47,8 @@ export default function Modal({
   footerClassName,
   cancelText = "Cancel",
   okText = "Ok",
-  buttonDisabled = false
+  buttonDisabled = false,
+  showFooter = true
 }: React.PropsWithChildren<TModalProps>) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeHandler()}>
@@ -94,28 +96,30 @@ export default function Modal({
         </div>
 
         {/* FOOTER */}
-        <div className="border-t border-t-border/60 px-4 py-2 sm:px-4 sm:py-4">
-          {footer ? (
-            footer
-          ) : (
-            <div className={cn("flex justify-end gap-2", footerClassName)}>
-              <Button
-                variant="outline"
-                onClick={closeHandler}
-                disabled={buttonDisabled}
-              >
-                {cancelText}
-              </Button>
-              <Button
-                onClick={okHandler}
-                isLoading={loading}
-                disabled={buttonDisabled || loading}
-              >
-                {okText}
-              </Button>
-            </div>
-          )}
-        </div>
+        {showFooter && (
+          <div className="border-t border-t-border/60 px-4 py-2 sm:px-4 sm:py-4">
+            {footer ? (
+              footer
+            ) : (
+              <div className={cn("flex justify-end gap-2", footerClassName)}>
+                <Button
+                  variant="outline"
+                  onClick={closeHandler}
+                  disabled={buttonDisabled}
+                >
+                  {cancelText}
+                </Button>
+                <Button
+                  onClick={okHandler}
+                  isLoading={loading}
+                  disabled={buttonDisabled || loading}
+                >
+                  {okText}
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

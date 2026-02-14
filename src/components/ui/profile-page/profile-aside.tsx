@@ -1,14 +1,9 @@
 "use client";
 
+import { SliderField, TextareaField } from "@/components/shared/molecules/form";
 import TMCard from "@/components/shared/molecules/tm-card";
+import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import {
   Empty,
   EmptyDescription,
@@ -20,31 +15,75 @@ import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import ProfileReviewRepository from "@/repositories/profile-review.repository";
+import { useAuthStore } from "@/stores/auth-store";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ListX, Star } from "lucide-react";
-import React, { useState } from "react";
-
-interface Review {
-  id: string;
-  author: string;
-  rating: number;
-  comment: string;
-  date: Date;
-}
+import React, { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import {
+  ProfileReviewSchema,
+  TProfileReviewRequest
+} from "../../../../common/validation-schemas";
+import { TProfileReview } from "../../../../server/models/profile-review.model";
 
 interface ProfileAsideProps {
+  profileId: string;
   bio?: string;
-  reviews: Review[];
-  isOwnProfile: boolean;
-  isAuthenticated: boolean;
 }
 
 export const ProfileAside: React.FC<ProfileAsideProps> = ({
-  bio,
-  reviews,
-  isOwnProfile,
-  isAuthenticated
+  profileId,
+  bio
 }) => {
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [reviews, setReviews] = useState<TProfileReview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user, isLoggedIn } = useAuthStore();
+  const isOwnProfile = user?.profile?._id.toString() === profileId;
+
+  const { control, handleSubmit, reset } = useForm<TProfileReviewRequest>({
+    resolver: zodResolver(ProfileReviewSchema),
+    defaultValues: {
+      profile: profileId as any,
+      rating: 5,
+      message: ""
+    }
+  });
+
+  const fetchReviews = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await ProfileReviewRepository.getReviewsOfProfile(profileId);
+      setReviews(data);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to fetch reviews");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [profileId]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
+
+  const onSubmit = async (data: TProfileReviewRequest) => {
+    try {
+      setIsSubmitting(true);
+      await ProfileReviewRepository.createReview(data);
+      toast.success("Review submitted successfully");
+      setIsReviewDialogOpen(false);
+      reset();
+      fetchReviews();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to submit review");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -60,7 +99,7 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
       <TMCard bodyClassName="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <H4>Reviews</H4>
-          {isAuthenticated && !isOwnProfile && (
+          {isLoggedIn && !isOwnProfile && (
             <Button
               variant="outline"
               size="sm"
@@ -71,7 +110,13 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
           )}
         </div>
 
-        {!reviews.length ? (
+        {isLoading ? (
+          <div className="flex flex-col gap-4 animate-pulse">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-20 bg-muted rounded-md" />
+            ))}
+          </div>
+        ) : !reviews.length ? (
           <Empty className="flex flex-col gap-2">
             <EmptyMedia>
               <ListX className="size-5 text-muted-foreground" />
@@ -81,22 +126,24 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
         ) : (
           <div className="flex flex-col gap-4">
             {reviews.map((review, idx) => (
-              <div key={review.id} className="flex flex-col gap-2">
+              <div key={review._id.toString()} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <TypographyMuted>{review.rating}/5</TypographyMuted>
                     <Star className="size-4 fill-yellow-500 text-yellow-500" />
                   </div>
                   <TypographyMuted className="text-xs">
-                    {new Date(review.date).toLocaleDateString()}
+                    {new Date(review.createdAt).toLocaleDateString()}
                   </TypographyMuted>
                 </div>
 
                 <div>
-                  <Paragraph className="font-semibold">
-                    {review.author}
+                  <Paragraph className="font-semibold text-sm">
+                    {review.reviewerName}
                   </Paragraph>
-                  <TypographyMuted>{review.comment}</TypographyMuted>
+                  <TypographyMuted className="text-sm">
+                    {review.message}
+                  </TypographyMuted>
                 </div>
                 {idx < reviews.length - 1 && <Separator className="my-2!" />}
               </div>
@@ -106,17 +153,52 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
       </TMCard>
 
       {/* Review Dialog */}
-      <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Write a Review</DialogTitle>
-            <DialogDescription>
-              Share your experience with this user
-            </DialogDescription>
-          </DialogHeader>
-          <Paragraph>Review form will be implemented here.</Paragraph>
-        </DialogContent>
-      </Dialog>
+
+      <Modal
+        isOpen={isReviewDialogOpen}
+        closeHandler={() => setIsReviewDialogOpen(false)}
+        title="Write a Review"
+        showFooter={false}
+      >
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <SliderField
+            control={control}
+            name="rating"
+            label="Rating"
+            isRequired
+            min={1}
+            max={5}
+            step={1}
+          />
+
+          <TextareaField
+            control={control}
+            name="message"
+            label="Message"
+            placeholder="Write your review here..."
+            isRequired
+            rows={4}
+          />
+
+          <div className="flex justify-end gap-2 border-t pt-4 mt-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setIsReviewDialogOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+            >
+              Submit Review
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

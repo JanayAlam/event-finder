@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
 import { assert } from "node:console";
 import { z } from "zod";
 import {
@@ -15,6 +14,7 @@ import {
   updateProfileImage
 } from "../../../libs/use-cases/profile.use-case";
 import ApiError from "../../../utils/api-error.util";
+import { convertToObjectId } from "../../../utils/object-id.util";
 import logger from "../../../utils/winston.util";
 
 type TRequestBody = z.infer<typeof PersonalInfoRequestSchema>;
@@ -28,7 +28,7 @@ class ProfileController {
     try {
       const { id } = req.params;
 
-      const profile = await getProfileWithUser({ _id: id });
+      const profile = await getProfileWithUser({ _id: convertToObjectId(id)! });
 
       if (!profile) {
         throw new ApiError(404, "Profile not found");
@@ -49,7 +49,9 @@ class ProfileController {
       const { id } = req.params;
       const { firstName, lastName, dateOfBirth, gender, bio } = req.body;
 
-      const existingProfile = await getSingleProfile({ _id: id });
+      const existingProfile = await getSingleProfile({
+        _id: convertToObjectId(id)!
+      });
 
       if (!existingProfile) {
         throw new ApiError(404, "Profile not found");
@@ -59,7 +61,7 @@ class ProfileController {
         throw new ApiError(403, "Cannot update other's personal info");
       }
 
-      const profile = await updatePersonalInfo(id, {
+      const profile = await updatePersonalInfo(convertToObjectId(id)!, {
         firstName,
         lastName,
         dateOfBirth,
@@ -83,7 +85,9 @@ class ProfileController {
       const userId = req.user?._id;
       assert(userId !== undefined, "'req.user._id' should not be undefined");
 
-      const existingProfile = await getSingleProfile({ _id: id });
+      const existingProfile = await getSingleProfile({
+        _id: convertToObjectId(id)!
+      });
 
       if (!existingProfile) {
         throw new ApiError(404, "Profile not found");
@@ -117,7 +121,7 @@ class ProfileController {
 
       // Update profile with new image path
       const profile = await updateProfileImage(
-        new Types.ObjectId(id),
+        convertToObjectId(id)!,
         uploadedFile.path
       );
 
@@ -137,7 +141,9 @@ class ProfileController {
       const userId = req.user?._id;
       assert(userId !== undefined, "'req.user._id' should not be undefined");
 
-      const existingProfile = await getSingleProfile({ _id: id });
+      const existingProfile = await getSingleProfile({
+        _id: convertToObjectId(id)!
+      });
 
       if (!existingProfile) {
         throw new ApiError(404, "Profile not found");
@@ -160,7 +166,7 @@ class ProfileController {
       }
 
       // Update profile to remove image path
-      const profile = await removeProfileImage(id);
+      const profile = await removeProfileImage(convertToObjectId(id)!);
 
       res.status(200).json(profile);
     } catch (err) {

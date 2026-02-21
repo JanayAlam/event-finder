@@ -3,6 +3,7 @@ import {
   TCreateCommentDto,
   TCreateDiscussionDto
 } from "../../../../common/validation-schemas";
+import FileUploadService from "../../../libs/external-services/file-upload.service";
 import DiscussionUseCase from "../../../libs/use-cases/discussion.use-case";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
@@ -37,6 +38,36 @@ class DiscussionController {
         403,
         "Only host and joined members can access discussions"
       );
+    }
+  }
+
+  static async uploadPhoto(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+      }
+
+      const uploaded = await FileUploadService.upload(
+        req.file,
+        "discussion-photos"
+      );
+      res.status(200).json({ path: uploaded.path });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removePhoto(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { path: filePath } = req.body;
+      if (!filePath) {
+        throw new ApiError(400, "File path is required");
+      }
+
+      await FileUploadService.remove(filePath);
+      res.status(200).json({ message: "Photo removed successfully" });
+    } catch (err) {
+      next(err);
     }
   }
 

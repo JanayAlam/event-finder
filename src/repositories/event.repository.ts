@@ -43,13 +43,9 @@ class EventRepository extends BaseRepository {
   }
 
   static async getSingle(eventId: string) {
-    try {
-      const url = `${this.apiRoute}/${eventId}`;
-      const data = await this.request<undefined, TEventDetailDto>(url, "get");
-      return data;
-    } catch {
-      return null;
-    }
+    const url = `${this.apiRoute}/${eventId}`;
+    const data = await this.request<undefined, TEventDetailDto>(url, "get");
+    return data;
   }
 
   static async delete(eventId: string) {

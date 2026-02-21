@@ -66,7 +66,7 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
       </TabsContent>
       {isLoggedIn && (
         <TabsContent value="discussion" className={tabContentClasses}>
-          <EventDiscussion />
+          <EventDiscussion event={event} />
         </TabsContent>
       )}
       <TabsContent value="members" className={tabContentClasses}>

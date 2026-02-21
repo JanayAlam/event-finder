@@ -9,7 +9,8 @@ export type FileCategory =
   | "profile-photo"
   | "account-verification"
   | "event-cover"
-  | "event-additional-photos";
+  | "event-additional-photos"
+  | "discussion-photos";
 
 interface FileUploadResponse {
   filename: string;
@@ -24,7 +25,8 @@ class FileUploadService {
     "profile-photo": "profile",
     "account-verification": "verification",
     "event-cover": "event/cover",
-    "event-additional-photos": "event/additional-photos"
+    "event-additional-photos": "event/additional-photos",
+    "discussion-photos": "discussion"
   };
 
   static getImagePath(filename: string, category: FileCategory): string {

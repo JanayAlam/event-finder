@@ -26,8 +26,7 @@ import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
   PRIVATE_PAGE_ROUTE,
   PRIVATE_TRAVELER_ONLY_PAGE_ROUTE,
-  PUBLIC_DYNAMIC_PAGE_ROUTE,
-  PUBLIC_PAGE_ROUTE
+  PUBLIC_DYNAMIC_PAGE_ROUTE
 } from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -69,7 +68,6 @@ const Navbar: React.FC = () => {
       const data = await AuthRepository.logout();
       clearAuth();
       toast.success(data.message, { id: toastId });
-      router.push(PUBLIC_PAGE_ROUTE.HOME);
     } catch (error: any) {
       toast.error(error?.message || "Logout failed", { id: toastId });
     }

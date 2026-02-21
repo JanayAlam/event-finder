@@ -6,12 +6,19 @@ import {
   TabsList,
   TabsTrigger
 } from "@/components/shared/shadcn-components/tabs";
+import { useAuthStore } from "@/stores/auth-store";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
+import { useEffect } from "react";
 import { TEventDetail } from "../../../../server/models/event.model";
 import { EventAbout } from "./event-about";
 import { EventDiscussion } from "./event-discussion";
 import { EventMembers } from "./event-members";
+
+const tabTriggerClasses =
+  "rounded-none shadow-none! border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent shadow-none px-0 py-2 transition-none";
+
+const tabContentClasses = "focus-visible:ring-0 py-4";
 
 interface EventDetailsTabsProps {
   event: TEventDetail;
@@ -22,7 +29,16 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const { isLoggedIn, isInitialLoading } = useAuthStore();
   const activeTab = searchParams.get("tab") || "about";
+
+  useEffect(() => {
+    if (!isInitialLoading && activeTab === "discussion" && !isLoggedIn) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", "about");
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [activeTab, isLoggedIn, isInitialLoading, pathname, router, searchParams]);
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -33,32 +49,27 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto p-0 gap-6">
-        <TabsTrigger
-          value="about"
-          className="rounded-none shadow-none! border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent shadow-none px-0 py-2 transition-none"
-        >
+        <TabsTrigger value="about" className={tabTriggerClasses}>
           About
         </TabsTrigger>
-        <TabsTrigger
-          value="discussion"
-          className="rounded-none shadow-none! border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent shadow-none px-0 py-2 transition-none"
-        >
-          Discussion
-        </TabsTrigger>
-        <TabsTrigger
-          value="members"
-          className="rounded-none shadow-none! border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent shadow-none px-0 py-2 transition-none"
-        >
+        {isLoggedIn && (
+          <TabsTrigger value="discussion" className={tabTriggerClasses}>
+            Discussions
+          </TabsTrigger>
+        )}
+        <TabsTrigger value="members" className={tabTriggerClasses}>
           Members
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="about" className="focus-visible:ring-0 py-4">
+      <TabsContent value="about" className={tabContentClasses}>
         <EventAbout event={event} />
       </TabsContent>
-      <TabsContent value="discussion" className="focus-visible:ring-0 py-4">
-        <EventDiscussion />
-      </TabsContent>
-      <TabsContent value="members" className="focus-visible:ring-0 py-4">
+      {isLoggedIn && (
+        <TabsContent value="discussion" className={tabContentClasses}>
+          <EventDiscussion />
+        </TabsContent>
+      )}
+      <TabsContent value="members" className={tabContentClasses}>
         <EventMembers event={event} />
       </TabsContent>
     </Tabs>

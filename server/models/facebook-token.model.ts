@@ -1,5 +1,5 @@
 import { Document, model, Schema } from "mongoose";
-import { ITimestamps } from "../types/common";
+import { ITimestamps, ModelWithObjectId } from "../types/common";
 
 interface IFacebookToken extends ITimestamps {
   accessToken: string; // This will be the Page Access Token
@@ -24,5 +24,7 @@ const FacebookToken = model<IFacebookTokenDoc>(
   "facebook_tokens",
   facebookTokenSchema
 );
+
+export type TFacebookToken = ModelWithObjectId<IFacebookToken>;
 
 export default FacebookToken;

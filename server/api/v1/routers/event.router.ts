@@ -9,8 +9,12 @@ import { authenticate } from "../../../middlewares/authenticator.middleware";
 import { imageUpload } from "../../../middlewares/image-upload.middleware";
 import inputValidator from "../../../middlewares/input-validator.middleware";
 import EventController from "../controllers/event.controller";
+import discussionRouter from "./discussion.router";
 
 const eventRouter = Router({ mergeParams: true });
+
+// Discussions sub-router
+eventRouter.use("/:id/discussions", discussionRouter);
 
 // Create event - only HOST can create
 eventRouter.post(

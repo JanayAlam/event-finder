@@ -110,6 +110,7 @@ class DiscussionController {
       const discussions = await DiscussionUseCase.getByEventId(
         convertToObjectId(eventId)!
       );
+
       res.status(200).json(discussions);
     } catch (err) {
       next(err);

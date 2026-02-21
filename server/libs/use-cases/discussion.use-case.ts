@@ -1,5 +1,8 @@
 import { Types } from "mongoose";
-import Discussion, { TDiscussion } from "../../models/discussion.model";
+import Discussion, {
+  TDiscussion,
+  TDiscussionWithProfile
+} from "../../models/discussion.model";
 import ApiError from "../../utils/api-error.util";
 
 class DiscussionUseCase {
@@ -14,12 +17,14 @@ class DiscussionUseCase {
     return saved.toObject() as TDiscussion;
   }
 
-  static async getByEventId(eventId: Types.ObjectId): Promise<TDiscussion[]> {
+  static async getByEventId(
+    eventId: Types.ObjectId
+  ): Promise<TDiscussionWithProfile[]> {
     return Discussion.find({ event: eventId })
-      .populate("creatorProfile", "firstName lastName profileImage")
-      .populate("comments.creatorProfile", "firstName lastName profileImage")
+      .populate("creatorProfile")
+      .populate("comments.creatorProfile")
       .sort({ createdAt: -1 })
-      .lean<TDiscussion[]>()
+      .lean<TDiscussionWithProfile[]>()
       .exec();
   }
 

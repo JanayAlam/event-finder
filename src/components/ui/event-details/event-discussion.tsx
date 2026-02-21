@@ -1,8 +1,11 @@
+import { Spinner } from "@/components/shared/shadcn-components/spinner";
+import { TypographyMuted } from "@/components/shared/shadcn-components/typography";
+import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { TEventDetail } from "../../../../server/models/event.model";
 import { CreatePostCard } from "./discussion/create-post-card";
-import { DUMMY_POSTS } from "./discussion/dummy-data";
 import { PostCard } from "./discussion/post-card";
 
 interface IEventDiscussionProps {
@@ -19,18 +22,43 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
 
   const canPost = isHost || isMember;
 
+  const { data: discussions = [], isLoading } = useQuery({
+    queryKey: ["discussions", event._id],
+    queryFn: () => DiscussionRepository.getByEvent(event._id.toString())
+  });
+
   return (
     <div className="w-full flex flex-col gap-6 max-w-3xl mx-auto!">
-      {canPost && (
-        <div className="flex justify-end">
-          <CreatePostCard eventId={event._id.toString()} />
+      {isLoading ? (
+        <div className="flex justify-center py-10">
+          <Spinner className="size-10" />
         </div>
+      ) : (
+        <>
+          {canPost && (
+            <div className="flex justify-end">
+              <CreatePostCard eventId={event._id.toString()} />
+            </div>
+          )}
+          <div className="flex flex-col gap-6">
+            {discussions.map((post) => (
+              <PostCard
+                key={post._id.toString()}
+                post={post}
+                eventId={event._id.toString()}
+              />
+            ))}
+
+            {!discussions.length ? (
+              <div className="text-center py-10 bg-secondary/20 rounded-xl border-2 border-dashed">
+                <TypographyMuted>
+                  No discussions yet. Be the first to start the conversation!
+                </TypographyMuted>
+              </div>
+            ) : null}
+          </div>
+        </>
       )}
-      <div className="flex flex-col gap-6">
-        {DUMMY_POSTS.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </div>
     </div>
   );
 };

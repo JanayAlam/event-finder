@@ -1,9 +1,19 @@
 import { TCreateDiscussionDto } from "../../common/validation-schemas/discussion.schemas";
+import { TDiscussionWithProfile } from "../../server/models/discussion.model";
 import BaseRepository from "./base.repository";
 
 class DiscussionRepository extends BaseRepository {
   static apiRoute(eventId: string) {
     return `/events/${eventId}/discussions`;
+  }
+
+  static async getByEvent(eventId: string) {
+    const url = `${this.apiRoute(eventId)}`;
+    const data = await this.request<undefined, TDiscussionWithProfile[]>(
+      url,
+      "get"
+    );
+    return data;
   }
 
   static async create(eventId: string, body: TCreateDiscussionDto) {
@@ -34,6 +44,15 @@ class DiscussionRepository extends BaseRepository {
       url,
       "post",
       { path }
+    );
+    return data;
+  }
+
+  static async delete(eventId: string, discussionId: string) {
+    const url = `${this.apiRoute(eventId)}/${discussionId}`;
+    const data = await this.request<undefined, { message: string }>(
+      url,
+      "delete"
     );
     return data;
   }

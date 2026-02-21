@@ -1,7 +1,7 @@
 import { Document, model, Schema, Types } from "mongoose";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 import Event from "./event.model";
-import Profile from "./profile.model";
+import Profile, { TProfile } from "./profile.model";
 
 interface IDiscussionComment extends ITimestamps {
   creatorProfile: Types.ObjectId;
@@ -75,5 +75,9 @@ discussionSchema.virtual("totalVotes").get(function (this: IDiscussionDoc) {
 const Discussion = model<IDiscussionDoc>("discussions", discussionSchema);
 
 export type TDiscussion = ModelWithObjectId<IDiscussion>;
+
+export type TDiscussionWithProfile = Omit<TDiscussion, "creatorProfile"> & {
+  creatorProfile: TProfile;
+};
 
 export default Discussion;

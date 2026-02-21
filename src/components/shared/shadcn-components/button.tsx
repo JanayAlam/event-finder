@@ -15,7 +15,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input/30 dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
@@ -51,7 +51,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
-      variant,
+      variant = "default",
       size,
       asChild = false,
       isLoading = false,
@@ -74,7 +74,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <span className="flex items-center justify-center">
               <Spinner
                 className={
-                  !variant || variant === "destructive" ? "text-white" : ""
+                  variant === "destructive" || variant === "outline"
+                    ? "text-white"
+                    : variant === "default"
+                      ? "dark:text-primary"
+                      : ""
                 }
               />
             </span>

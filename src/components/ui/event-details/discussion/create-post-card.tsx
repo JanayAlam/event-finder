@@ -137,10 +137,10 @@ export const CreatePostCard: React.FC<ICreatePostCardProps> = ({ eventId }) => {
               </Button>
               <Button
                 onClick={handlePost}
-                disabled={isPosting}
+                isLoading={isPosting}
                 className="hover:bg-secondary/80 bg-secondary/50 min-w-[80px]"
               >
-                {isPosting ? "Posting..." : "Post"}
+                Post
               </Button>
             </div>
           </div>

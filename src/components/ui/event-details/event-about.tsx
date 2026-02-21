@@ -22,8 +22,8 @@ interface EventAboutProps {
 
 export const EventAbout = ({ event }: EventAboutProps) => {
   const allPhotos = [
-    ...(event.coverPhoto ? [event.coverPhoto] : []),
-    ...(event.additionalPhotos || [])
+    ...(event.additionalPhotos || []),
+    ...(event.coverPhoto ? [event.coverPhoto] : [])
   ];
 
   return (

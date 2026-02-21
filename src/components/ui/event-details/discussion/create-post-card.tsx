@@ -38,15 +38,28 @@ export const CreatePostCard: React.FC = () => {
 
   const handleRemoveImage = (index: number) => {
     const newImages = attachedImages.filter((_, i) => i !== index);
+
+    if (
+      newImages.length > 0 &&
+      !newImages.includes("") &&
+      newImages.length < 4
+    ) {
+      newImages.push("");
+    }
+
     setAttachedImages(newImages);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setContent("");
+    setAttachedImages([]);
   };
 
   const handlePost = () => {
     if (!content.trim()) return;
-    toast.success("Post created successfully!");
-    setContent("");
-    setAttachedImages([]);
-    setIsOpen(false);
+    toast.success("Post created successfully");
+    handleCloseModal();
   };
 
   return (
@@ -61,7 +74,7 @@ export const CreatePostCard: React.FC = () => {
 
       <Modal
         isOpen={isOpen}
-        closeHandler={() => setIsOpen(false)}
+        closeHandler={handleCloseModal}
         title="Create Post"
         footer={
           <div className="flex items-center justify-between w-full">
@@ -78,7 +91,7 @@ export const CreatePostCard: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => setIsOpen(false)}
+                onClick={handleCloseModal}
                 variant="outline"
                 className="hover:bg-secondary/80 bg-secondary/50"
               >
@@ -116,7 +129,12 @@ export const CreatePostCard: React.FC = () => {
                   key={idx}
                   value={img}
                   onChange={(e) => handleImageChange(idx, e)}
-                  onRemove={() => handleRemoveImage(idx)}
+                  onRemove={
+                    img !== "" ||
+                    attachedImages.filter((image) => image === "").length > 1
+                      ? () => handleRemoveImage(idx)
+                      : undefined
+                  }
                   ratio={1}
                   className="aspect-square"
                 />

@@ -1,4 +1,3 @@
-import { EventMetaItem } from "@/components/shared/molecules/event-meta-item";
 import {
   Avatar,
   AvatarFallback,
@@ -11,10 +10,9 @@ import {
   EmptyTitle
 } from "@/components/shared/shadcn-components/empty";
 import { H1 } from "@/components/shared/shadcn-components/typography";
+import { EventDetailsTabs, EventMetaList } from "@/components/ui/event-details";
 import { getImageUrl } from "@/lib/utils";
 import EventRepository from "@/repositories/event.repository";
-import dayjs from "dayjs";
-import { Banknote, CalendarDays, Clock, MapPin, Users } from "lucide-react";
 import { Metadata } from "next";
 
 const fetchEvent = async (eventId: string) => {
@@ -62,38 +60,23 @@ export default async function EventDetailsPage({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <Avatar className="h-50 sm:h-60 lg:h-80 w-full rounded-md sm:rounded-xl">
-        <AvatarImage
-          src={getImageUrl(event.coverPhoto) || ""}
-          alt={event.title}
-          className="object-cover"
-        />
-        <AvatarFallback className="rounded-none bg-gradient-to-r from-violet-600 to-indigo-600" />
-      </Avatar>
-      <div className="flex flex-col gap-3">
-        <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>
-
-        <div className="flex flex-wrap gap-y-3 gap-x-6 items-center">
-          <EventMetaItem icon={MapPin} text={event.placeName} />
-          <EventMetaItem
-            icon={CalendarDays}
-            text={dayjs(event.eventDate).format("DD MMM, YYYY")}
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
+        <Avatar className="h-50 sm:h-60 lg:h-80 w-full rounded-md sm:rounded-xl">
+          <AvatarImage
+            src={getImageUrl(event.coverPhoto) || ""}
+            alt={event.title}
+            className="object-cover"
           />
-          <EventMetaItem
-            icon={Clock}
-            text={`${event.dayCount} Days, ${event.nightCount} Nights`}
-          />
-          <EventMetaItem
-            icon={Users}
-            text={`${event.members.length} / ${event.memberCapacity || "∞"} Members`}
-          />
-          <EventMetaItem
-            icon={Banknote}
-            text={event.entryFee > 0 ? `${event.entryFee} BDT` : "Free"}
-          />
+          <AvatarFallback className="rounded-none bg-gradient-to-r from-violet-600 to-indigo-600" />
+        </Avatar>
+        <div className="flex flex-col gap-3">
+          <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>
+          <EventMetaList event={event} />
         </div>
       </div>
+
+      <EventDetailsTabs event={event} />
     </div>
   );
 }

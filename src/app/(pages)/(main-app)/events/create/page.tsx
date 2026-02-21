@@ -6,7 +6,7 @@ import {
 import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import CreateEventForm from "./CreateEventForm";
+import CreateEventForm from "./create-event-form";
 
 export default function CreateEventPage() {
   return (

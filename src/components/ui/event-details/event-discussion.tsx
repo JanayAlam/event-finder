@@ -5,8 +5,10 @@ import { PostCard } from "./discussion/post-card";
 
 export const EventDiscussion: React.FC = () => {
   return (
-    <div className="flex flex-col gap-6 max-w-3xl mx-auto py-2">
-      <CreatePostCard />
+    <div className="w-full flex flex-col gap-6 max-w-3xl mx-auto!">
+      <div className="flex justify-end">
+        <CreatePostCard />
+      </div>
       <div className="flex flex-col gap-6">
         {DUMMY_POSTS.map((post) => (
           <PostCard key={post.id} post={post} />

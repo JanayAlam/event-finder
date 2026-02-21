@@ -1,5 +1,6 @@
 "use client";
 
+import Modal from "@/components/shared/organisms/modal/Modal";
 import {
   Avatar,
   AvatarFallback,
@@ -12,12 +13,6 @@ import {
   CardFooter,
   CardHeader
 } from "@/components/shared/shadcn-components/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import { Input } from "@/components/shared/shadcn-components/input";
 import { Separator } from "@/components/shared/shadcn-components/separator";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
@@ -82,108 +77,99 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
         />
       </CardFooter>
 
-      {/* Comment Dialog */}
-      <Dialog open={isCommentDialogOpen} onOpenChange={setIsCommentDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0">
-          <DialogHeader className="p-4 border-b">
-            <DialogTitle className="text-center">
-              Post by {post.user.name}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-            {/* Original Post */}
-            <div className="flex gap-3">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={post.user.avatar} alt={post.user.name} />
-                <AvatarFallback>{post.user.initials}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-2">
-                <div className="bg-secondary/30 rounded-2xl p-3">
-                  <span className="font-bold text-sm block mb-1">
-                    {post.user.name}
-                  </span>
-                  <Paragraph className="text-sm">{post.content}</Paragraph>
-                </div>
-                <span className="text-[10px] text-muted-foreground px-1">
-                  {post.createdAt}
-                </span>
-              </div>
+      {/* Comment Modal */}
+      <Modal
+        isOpen={isCommentDialogOpen}
+        closeHandler={() => setIsCommentDialogOpen(false)}
+        title={`Post by ${post.user.name}`}
+        footer={
+          <div className="flex gap-2">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src="https://i.pravatar.cc/150?u=me" alt="Me" />
+              <AvatarFallback>ME</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 relative">
+              <Input
+                placeholder="Write a comment..."
+                className="pr-10 rounded-full"
+              />
+              <Button
+                size="icon"
+                variant="ghost"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-primary"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
             </div>
+          </div>
+        }
+      >
+        <div className="space-y-6">
+          {/* Original Post */}
+          <div className="flex gap-3">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={post.user.avatar} alt={post.user.name} />
+              <AvatarFallback>{post.user.initials}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col gap-2">
+              <div className="bg-secondary/30 rounded-2xl p-3">
+                <span className="font-bold text-sm block mb-1">
+                  {post.user.name}
+                </span>
+                <Paragraph className="text-sm">{post.content}</Paragraph>
+              </div>
+              <span className="text-[10px] text-muted-foreground px-1">
+                {post.createdAt}
+              </span>
+            </div>
+          </div>
 
-            <Separator />
+          <Separator />
 
-            {/* Comments List */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold px-1">Comments</h4>
-              {post.comments.length > 0 ? (
-                post.comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        src={comment.user.avatar}
-                        alt={comment.user.name}
-                      />
-                      <AvatarFallback>{comment.user.initials}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col gap-1">
-                      <div className="bg-secondary/50 rounded-2xl p-3">
-                        <span className="font-bold text-sm block mb-1">
-                          {comment.user.name}
-                        </span>
-                        <Paragraph className="text-sm">
-                          {comment.content}
-                        </Paragraph>
-                      </div>
-                      <div className="flex items-center gap-3 px-1">
-                        <span className="text-[10px] text-muted-foreground">
-                          {comment.createdAt}
-                        </span>
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-[10px]"
-                        >
-                          Like
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-[10px]"
-                        >
-                          Reply
-                        </Button>
-                      </div>
+          {/* Comments List */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold px-1">Comments</h4>
+            {post.comments.length > 0 ? (
+              post.comments.map((comment) => (
+                <div key={comment.id} className="flex gap-3">
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage
+                      src={comment.user.avatar}
+                      alt={comment.user.name}
+                    />
+                    <AvatarFallback>{comment.user.initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col gap-1">
+                    <div className="bg-secondary/50 rounded-2xl p-3">
+                      <span className="font-bold text-sm block mb-1">
+                        {comment.user.name}
+                      </span>
+                      <Paragraph className="text-sm">
+                        {comment.content}
+                      </Paragraph>
+                    </div>
+                    <div className="flex items-center gap-3 px-1">
+                      <span className="text-[10px] text-muted-foreground">
+                        {comment.createdAt}
+                      </span>
+                      <Button variant="link" className="h-auto p-0 text-[10px]">
+                        Like
+                      </Button>
+                      <Button variant="link" className="h-auto p-0 text-[10px]">
+                        Reply
+                      </Button>
                     </div>
                   </div>
-                ))
-              ) : (
-                <p className="text-sm text-center text-muted-foreground py-4">
-                  No comments yet. Be the first to comment!
-                </p>
-              )}
-            </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-center text-muted-foreground py-4">
+                No comments yet. Be the first to comment!
+              </p>
+            )}
           </div>
-          <div className="p-4 border-t bg-background">
-            <div className="flex gap-2">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src="https://i.pravatar.cc/150?u=me" alt="Me" />
-                <AvatarFallback>ME</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 relative">
-                <Input
-                  placeholder="Write a comment..."
-                  className="pr-10 rounded-full"
-                />
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-primary"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </Modal>
     </Card>
   );
 };

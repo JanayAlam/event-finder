@@ -75,9 +75,13 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
 
     const paddingTop = `${ratio * 100}%`;
 
-    // Priority: internal preview (selected file) > value prop (server path)
     const effectivePreview =
-      preview || (value ? `${API_BASE_URL}/${value}` : null);
+      preview ||
+      (value
+        ? value.startsWith("http")
+          ? value
+          : `${API_BASE_URL}/${value}`
+        : null);
 
     return (
       <div>
@@ -111,29 +115,35 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
                   alt="Selected"
                   className="w-full h-full object-cover"
                 />
-                {onRemove && (
-                  <Button
-                    type="button"
-                    size="icon"
-                    className="absolute top-2 right-2 size-7 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (internalRef.current) {
-                        internalRef.current.value = "";
-                      }
-                      setPreview(null);
-                      onRemove();
-                    }}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
-                )}
               </>
             ) : (
               <div className="w-full h-full flex items-center justify-center gap-1 text-sm text-muted-foreground">
                 <ImagePlus className="size-4" />
-                <span>Click to select image</span>
+                <span>Select image</span>
               </div>
+            )}
+            {onRemove && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "absolute top-2 right-2 size-7 rounded-sm transition-opacity z-10",
+                  effectivePreview
+                    ? "opacity-0 group-hover:opacity-100"
+                    : "opacity-100"
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (internalRef.current) {
+                    internalRef.current.value = "";
+                  }
+                  setPreview(null);
+                  onRemove();
+                }}
+              >
+                <Trash2 className="size-4 text-destructive" />
+              </Button>
             )}
           </div>
         </div>

@@ -6,14 +6,12 @@ import {
   AvatarFallback,
   AvatarImage
 } from "@/components/shared/shadcn-components/avatar";
-import { Button } from "@/components/shared/shadcn-components/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader
 } from "@/components/shared/shadcn-components/card";
-import { Input } from "@/components/shared/shadcn-components/input";
 import { Separator } from "@/components/shared/shadcn-components/separator";
 import {
   Paragraph,
@@ -22,14 +20,14 @@ import {
 import { getImageUrl } from "@/lib/utils";
 import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Send } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { TDiscussionWithProfile } from "../../../../../server/models/discussion.model";
 import { PostActions } from "./post-actions";
+import { PostComments } from "./post-comments";
 
 dayjs.extend(relativeTime);
 
@@ -52,9 +50,100 @@ export const PostCard: React.FC<IPostCardProps> = ({ eventId, post }) => {
   const isCreator =
     post.creatorProfile._id.toString() === currentUser?.profile?._id.toString();
 
-  const handleDelete = () => {
-    setIsDeleteDialogOpen(true);
-  };
+  const hasUpvoted = post.upVoters?.some(
+    (id) => id.toString() === currentUser?.profile?._id.toString()
+  );
+  const hasDownvoted = post.downVoters?.some(
+    (id) => id.toString() === currentUser?.profile?._id.toString()
+  );
+
+  const totalVotes =
+    (post.upVoters?.length || 0) - (post.downVoters?.length || 0);
+
+  const voteMutation = useMutation({
+    mutationFn: ({ type }: { type: "upvote" | "downvote" }) => {
+      return type === "upvote"
+        ? DiscussionRepository.toggleUpvote(eventId, post._id.toString())
+        : DiscussionRepository.toggleDownvote(eventId, post._id.toString());
+    },
+    onMutate: async ({ type }) => {
+      await queryClient.cancelQueries({ queryKey: ["discussions", eventId] });
+      const previousDiscussions = queryClient.getQueryData<
+        TDiscussionWithProfile[]
+      >(["discussions", eventId]);
+
+      if (previousDiscussions) {
+        queryClient.setQueryData<TDiscussionWithProfile[]>(
+          ["discussions", eventId],
+          (old) => {
+            if (!old) return [];
+            return old.map((d) => {
+              if (d._id.toString() !== post._id.toString()) return d;
+
+              let upVoters = [...(d.upVoters || [])];
+              let downVoters = [...(d.downVoters || [])];
+              const userId = currentUser?.profile?._id as any;
+
+              if (!userId) return d;
+
+              const isUpvoted = upVoters.some(
+                (id) => id.toString() === userId.toString()
+              );
+              const isDownvoted = downVoters.some(
+                (id) => id.toString() === userId.toString()
+              );
+
+              if (type === "upvote") {
+                if (isUpvoted) {
+                  upVoters = upVoters.filter(
+                    (id) => id.toString() !== userId.toString()
+                  );
+                } else {
+                  upVoters.push(userId);
+                  downVoters = downVoters.filter(
+                    (id) => id.toString() !== userId.toString()
+                  );
+                }
+              } else {
+                if (isDownvoted) {
+                  downVoters = downVoters.filter(
+                    (id) => id.toString() !== userId.toString()
+                  );
+                } else {
+                  downVoters.push(userId);
+                  upVoters = upVoters.filter(
+                    (id) => id.toString() !== userId.toString()
+                  );
+                }
+              }
+
+              return { ...d, upVoters, downVoters };
+            });
+          }
+        );
+      }
+
+      return { previousDiscussions };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousDiscussions) {
+        queryClient.setQueryData(
+          ["discussions", eventId],
+          context.previousDiscussions
+        );
+      }
+      toast.error("Failed to update vote");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["discussions", eventId] });
+    }
+  });
+
+  const handleUpvote = () => voteMutation.mutate({ type: "upvote" });
+  const handleDownvote = () => voteMutation.mutate({ type: "downvote" });
+
+  const toggleComments = () => setIsCommentDialogOpen((prev) => !prev);
+  const toggleDelete = () => setIsDeleteDialogOpen((prev) => !prev);
 
   const onConfirmDelete = async () => {
     try {
@@ -119,132 +208,27 @@ export const PostCard: React.FC<IPostCardProps> = ({ eventId, post }) => {
       <Separator className="mx-4 w-auto" />
       <CardFooter className="p-2 px-4">
         <PostActions
-          upvotes={post.upVoters?.length || 0}
-          _downvotes={post.downVoters?.length || 0}
+          totalVotes={totalVotes}
           commentsCount={post.comments?.length || 0}
-          onCommentClick={() => setIsCommentDialogOpen(true)}
-          onDelete={isCreator ? handleDelete : undefined}
+          hasUpvoted={!!hasUpvoted}
+          hasDownvoted={!!hasDownvoted}
+          onUpvote={handleUpvote}
+          onDownvote={handleDownvote}
+          onCommentClick={toggleComments}
+          onDelete={isCreator ? toggleDelete : undefined}
         />
       </CardFooter>
 
-      {/* Comment Modal */}
-      <Modal
+      <PostComments
         isOpen={isCommentDialogOpen}
-        closeHandler={() => setIsCommentDialogOpen(false)}
-        title={`Post by ${creatorName}`}
-        footer={
-          <div className="flex gap-2">
-            <Avatar className="w-8 h-8">
-              <AvatarImage
-                src={getImageUrl(currentUser?.profile?.profileImage)}
-                alt="Me"
-              />
-              <AvatarFallback>
-                {currentUser?.profile?.firstName?.[0]}
-                {currentUser?.profile?.lastName?.[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 relative">
-              <Input
-                placeholder="Write a comment..."
-                className="pr-10 rounded-full"
-              />
-              <Button
-                size="icon"
-                variant="ghost"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-primary"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        }
-      >
-        <div className="space-y-6">
-          {/* Original Post */}
-          <div className="flex gap-3">
-            <Avatar className="w-8 h-8">
-              <AvatarImage
-                src={getImageUrl(post.creatorProfile.profileImage)}
-                alt={creatorName}
-              />
-              <AvatarFallback>{creatorInitials}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-2">
-              <div className="bg-secondary/30 rounded-2xl p-3">
-                <span className="font-bold text-sm block mb-1">
-                  {creatorName}
-                </span>
-                <Paragraph className="text-sm">{post.content}</Paragraph>
-              </div>
-              <span className="text-[10px] text-muted-foreground px-1">
-                {dayjs(post.createdAt).fromNow()}
-              </span>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Comments List */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-semibold px-1">Comments</h4>
-            {post.comments?.length > 0 ? (
-              post.comments.map((comment: any) => {
-                const commentCreatorName = `${comment.creatorProfile.firstName} ${comment.creatorProfile.lastName}`;
-                const commentCreatorInitials = `${comment.creatorProfile.firstName[0]}${comment.creatorProfile.lastName[0]}`;
-
-                return (
-                  <div key={comment._id} className="flex gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        src={getImageUrl(comment.creatorProfile.profileImage)}
-                        alt={commentCreatorName}
-                      />
-                      <AvatarFallback>{commentCreatorInitials}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col gap-1">
-                      <div className="bg-secondary/50 rounded-2xl p-3">
-                        <span className="font-bold text-sm block mb-1">
-                          {commentCreatorName}
-                        </span>
-                        <Paragraph className="text-sm">
-                          {comment.content}
-                        </Paragraph>
-                      </div>
-                      <div className="flex items-center gap-3 px-1">
-                        <span className="text-[10px] text-muted-foreground">
-                          {dayjs(comment.createdAt).fromNow()}
-                        </span>
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-[10px]"
-                        >
-                          Like
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-[10px]"
-                        >
-                          Reply
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-sm text-center text-muted-foreground py-4">
-                No comments yet. Be the first to comment!
-              </p>
-            )}
-          </div>
-        </div>
-      </Modal>
+        onClose={toggleComments}
+        post={post}
+      />
 
       {/* Delete Confirmation Modal */}
       <Modal
         isOpen={isDeleteDialogOpen}
-        closeHandler={() => setIsDeleteDialogOpen(false)}
+        closeHandler={toggleDelete}
         title="Delete Post"
         okText="Delete"
         okHandler={onConfirmDelete}

@@ -74,10 +74,17 @@ discussionSchema.virtual("totalVotes").get(function (this: IDiscussionDoc) {
 
 const Discussion = model<IDiscussionDoc>("discussions", discussionSchema);
 
+export type TDiscussionComment = ModelWithObjectId<IDiscussionComment>;
 export type TDiscussion = ModelWithObjectId<IDiscussion>;
 
-export type TDiscussionWithProfile = Omit<TDiscussion, "creatorProfile"> & {
+export type TDiscussionWithProfile = Omit<
+  TDiscussion,
+  "creatorProfile" | "comments"
+> & {
   creatorProfile: TProfile;
+  comments: (Omit<TDiscussionComment, "creatorProfile"> & {
+    creatorProfile: TProfile;
+  })[];
 };
 
 export default Discussion;

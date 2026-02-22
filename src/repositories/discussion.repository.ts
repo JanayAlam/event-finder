@@ -56,6 +56,24 @@ class DiscussionRepository extends BaseRepository {
     );
     return data;
   }
+
+  static async toggleUpvote(eventId: string, discussionId: string) {
+    const url = `${this.apiRoute(eventId)}/${discussionId}/upvote`;
+    const data = await this.request<undefined, { message: string }>(
+      url,
+      "patch"
+    );
+    return data;
+  }
+
+  static async toggleDownvote(eventId: string, discussionId: string) {
+    const url = `${this.apiRoute(eventId)}/${discussionId}/downvote`;
+    const data = await this.request<undefined, { message: string }>(
+      url,
+      "patch"
+    );
+    return data;
+  }
 }
 
 export default DiscussionRepository;

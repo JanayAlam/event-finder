@@ -5,7 +5,10 @@ import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import EventRepository from "@/repositories/event.repository";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
+import { toast } from "sonner";
 import { TEventDetail } from "../../../../server/models/event.model";
 
 interface IJoinEventModalProps {
@@ -19,12 +22,31 @@ export const JoinEventModal: React.FC<IJoinEventModalProps> = ({
   isOpen,
   onClose
 }) => {
+  const { mutate: joinEvent, isPending } = useMutation({
+    mutationFn: async () => {
+      return await EventRepository.join(event._id.toString());
+    },
+    onSuccess: (data) => {
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.success(data.message || "Joined event successfully");
+        onClose();
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to join event");
+    }
+  });
+
   return (
     <Modal
       isOpen={isOpen}
       closeHandler={onClose}
+      okHandler={() => joinEvent()}
+      loading={isPending}
       title={`Join ${event.title}`}
-      okText="Proceed Payment"
+      okText={event.entryFee > 0 ? "Proceed Payment" : "Join Now"}
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-6">

@@ -108,6 +108,15 @@ class EventRepository extends BaseRepository {
     const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
     return data;
   }
+
+  static async join(eventId: string) {
+    const url = `${this.apiRoute}/${eventId}/join`;
+    const data = await this.request<
+      undefined,
+      { url?: string; message?: string }
+    >(url, "post");
+    return data;
+  }
 }
 
 export default EventRepository;

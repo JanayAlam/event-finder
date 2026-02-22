@@ -77,7 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                   variant === "destructive" || variant === "outline"
                     ? "text-white"
                     : variant === "default"
-                      ? "dark:text-primary"
+                      ? "text-white dark:text-primary"
                       : ""
                 }
               />

@@ -7,7 +7,13 @@ import {
 } from "../../../../common/validation-schemas";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
+import {
+  initiatePayment,
+  validatePayment
+} from "../../../libs/external-services/sslcommerz.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
+import Payment from "../../../models/payment.model";
+import { PUBLIC_SERVER_URL } from "../../../settings/config";
 import ApiError from "../../../utils/api-error.util";
 import { convertToObjectId } from "../../../utils/object-id.util";
 
@@ -342,6 +348,183 @@ class EventController {
         message: "Event posted to Facebook successfully",
         facebookPostId: facebookPost.id
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async join(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (
+        event.members
+          .map((member) => member._id.toString())
+          .includes(req.user!._id.toString())
+      ) {
+        throw new ApiError(400, "You have already joined this event");
+      }
+
+      if (event.members.length >= (event.memberCapacity || 0)) {
+        throw new ApiError(400, "Event is full");
+      }
+
+      // If entry fee is 0, join directly
+      if (event.entryFee === 0) {
+        await EventUseCase.update(convertToObjectId(id)!, {
+          $addToSet: { members: req.user!._id }
+        });
+        res.status(200).json({ message: "Joined event successfully" });
+        return;
+      }
+
+      // Initiate payment
+      const tranId = `TRAN-${Date.now()}-${req.user!._id.toString().slice(-4)}`;
+
+      const paymentData = {
+        total_amount: event.entryFee,
+        tran_id: tranId,
+        success_url: `${PUBLIC_SERVER_URL}/api/v1/events/${id}/payment/success?tran_id=${tranId}`,
+        fail_url: `${PUBLIC_SERVER_URL}/api/v1/events/${id}/payment/fail?tran_id=${tranId}`,
+        cancel_url: `${PUBLIC_SERVER_URL}/api/v1/events/${id}/payment/cancel?tran_id=${tranId}`,
+        cus_name: req.user!.email,
+        cus_email: req.user!.email,
+        cus_phone: "01700000000",
+        product_name: event.title,
+        product_category: "Event"
+      };
+
+      const sslResponse = await initiatePayment(paymentData);
+
+      if (sslResponse.status !== "SUCCESS") {
+        throw new ApiError(500, "Failed to initiate payment");
+      }
+
+      // Create payment record
+      await Payment.create({
+        user: req.user!._id,
+        event: event._id,
+        amount: event.entryFee,
+        tranId: tranId,
+        status: "pending"
+      });
+
+      res.status(200).json({ url: sslResponse.GatewayPageURL });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async paymentSuccess(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      // SSL Commerz sends tran_id in query string (from our success_url) and val_id in POST body
+      const tran_id = (req.query.tran_id || req.body.tran_id) as string;
+      const val_id = (req.body.val_id || req.query.val_id) as string;
+
+      const validation = await validatePayment(val_id);
+
+      if (
+        validation.status !== "VALID" &&
+        validation.status !== "AUTHENTICATED"
+      ) {
+        throw new ApiError(400, "Invalid payment validation");
+      }
+
+      const payment = await Payment.findOne({ tranId: tran_id });
+
+      if (!payment) {
+        throw new ApiError(404, "Payment record not found");
+      }
+
+      if (payment.status === "success") {
+        res.redirect(`${PUBLIC_SERVER_URL}/events/view/${id}`);
+        return;
+      }
+
+      // Update payment status
+      payment.status = "success";
+      payment.valId = val_id;
+      payment.gatewayResponse = validation;
+
+      await payment.save();
+
+      // Add user to event members
+      await EventUseCase.update(payment.event, {
+        $addToSet: { members: payment.user }
+      });
+
+      res.redirect(`${PUBLIC_SERVER_URL}/events/view/${id}`);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async paymentFail(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const tran_id = (req.query.tran_id || req.body.tran_id) as string;
+
+      const payment = await Payment.findOne({ tranId: tran_id });
+
+      if (payment) {
+        payment.status = "failed";
+        payment.gatewayResponse = req.body;
+
+        await payment.save();
+      }
+
+      const redirectUrl = payment
+        ? `${PUBLIC_SERVER_URL}/events/view/${id}?payment=failed`
+        : `${PUBLIC_SERVER_URL}/events/view/${id}`;
+
+      res.redirect(redirectUrl);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async paymentCancel(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const tran_id = (req.query.tran_id || req.body.tran_id) as string;
+
+      const payment = await Payment.findOne({ tranId: tran_id });
+
+      if (payment) {
+        payment.status = "cancelled";
+        payment.gatewayResponse = req.body;
+
+        await payment.save();
+      }
+
+      const redirectUrl = payment
+        ? `${PUBLIC_SERVER_URL}/events/view/${id}?payment=cancelled`
+        : `${PUBLIC_SERVER_URL}/events/view/${id}`;
+
+      res.redirect(redirectUrl);
     } catch (err) {
       next(err);
     }

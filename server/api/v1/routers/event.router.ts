@@ -100,4 +100,28 @@ eventRouter.delete(
   EventController.delete
 );
 
+// Join event
+eventRouter.post(
+  "/:id/join",
+  authenticate(),
+  inputValidator(null, IdParamsSchema),
+  EventController.join
+);
+
+// Payment callbacks - SSL Commerz POSTs to these, but browser may GET after redirect
+eventRouter
+  .route("/:id/payment/success")
+  .get(inputValidator(null, IdParamsSchema), EventController.paymentSuccess)
+  .post(inputValidator(null, IdParamsSchema), EventController.paymentSuccess);
+
+eventRouter
+  .route("/:id/payment/fail")
+  .get(inputValidator(null, IdParamsSchema), EventController.paymentFail)
+  .post(inputValidator(null, IdParamsSchema), EventController.paymentFail);
+
+eventRouter
+  .route("/:id/payment/cancel")
+  .get(inputValidator(null, IdParamsSchema), EventController.paymentCancel)
+  .post(inputValidator(null, IdParamsSchema), EventController.paymentCancel);
+
 export default eventRouter;

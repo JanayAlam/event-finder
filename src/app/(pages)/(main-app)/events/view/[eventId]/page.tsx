@@ -1,17 +1,16 @@
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from "@/components/shared/shadcn-components/avatar";
-import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle
 } from "@/components/shared/shadcn-components/empty";
 import { H1 } from "@/components/shared/shadcn-components/typography";
-import { EventDetailsTabs, EventMetaList } from "@/components/ui/event-details";
-import { getImageUrl } from "@/lib/utils";
+import {
+  EventActions,
+  EventCoverPhoto,
+  EventDetailsTabs,
+  EventMetaList
+} from "@/components/ui/event-details";
 import EventRepository from "@/repositories/event.repository";
 import { Metadata } from "next";
 
@@ -68,21 +67,11 @@ export default async function EventDetailsPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        {event.coverPhoto ? (
-          <Avatar className="h-50 sm:h-60 lg:h-80 w-full rounded-md sm:rounded-xl">
-            <AvatarImage
-              src={getImageUrl(event.coverPhoto)}
-              alt={event.title}
-              className="object-cover"
-            />
-            <AvatarFallback className="rounded-none bg-gradient-to-r from-violet-600 to-indigo-600" />
-          </Avatar>
-        ) : (
-          <div className="h-50 sm:h-60 lg:h-80 w-full rounded-md sm:rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600"></div>
-        )}
+        <EventCoverPhoto event={event} />
         <div className="flex flex-col gap-3">
           <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>
           <EventMetaList event={event} />
+          <EventActions event={event} />
         </div>
       </div>
 

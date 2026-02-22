@@ -8,32 +8,64 @@ import {
 } from "@/components/shared/shadcn-components/avatar";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Input } from "@/components/shared/shadcn-components/input";
+import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
 import { getImageUrl } from "@/lib/utils";
+import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { Send } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 import { TDiscussionWithProfile } from "../../../../../server/models/discussion.model";
 
 interface PostCommentsProps {
   post: TDiscussionWithProfile;
+  eventId: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const PostComments: React.FC<PostCommentsProps> = ({
   post,
+  eventId,
   isOpen,
   onClose
 }) => {
   const { user: currentUser } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  const [content, setContent] = useState("");
+
   const currentUserName =
     `${currentUser?.profile?.firstName || ""} ${currentUser?.profile?.lastName || ""}`.trim();
 
   const creatorName = `${post.creatorProfile.firstName} ${post.creatorProfile.lastName}`;
+
+  const commentMutation = useMutation({
+    mutationFn: (commentContent: string) =>
+      DiscussionRepository.addComment(eventId, post._id.toString(), {
+        content: commentContent
+      }),
+    onSuccess: () => {
+      setContent("");
+      queryClient.invalidateQueries({ queryKey: ["discussions", eventId] });
+      toast.success("Comment added");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to add comment");
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim() || commentMutation.isPending) return;
+    commentMutation.mutate(content);
+  };
 
   return (
     <Modal
@@ -41,7 +73,7 @@ export const PostComments: React.FC<PostCommentsProps> = ({
       closeHandler={onClose}
       title={`Comments on ${creatorName}'s post`}
       footer={
-        <div className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2 w-full">
           <Avatar className="w-8 h-8">
             <AvatarImage
               src={getImageUrl(currentUser?.profile?.profileImage, {
@@ -58,16 +90,25 @@ export const PostComments: React.FC<PostCommentsProps> = ({
             <Input
               placeholder="Write a comment..."
               className="pr-10 rounded-full"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              disabled={commentMutation.isPending}
             />
             <Button
               size="icon"
               variant="ghost"
+              type="submit"
               className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full"
+              disabled={!content.trim() || commentMutation.isPending}
             >
-              <Send className="size-4" />
+              {commentMutation.isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <Send className="size-4" />
+              )}
             </Button>
           </div>
-        </div>
+        </form>
       }
     >
       <div className="flex flex-col gap-4">
@@ -92,6 +133,9 @@ export const PostComments: React.FC<PostCommentsProps> = ({
                     </Paragraph>
                     <Paragraph className="text-sm">{comment.content}</Paragraph>
                   </div>
+                  <TypographyMuted className="text-[10px] px-2">
+                    {dayjs(comment.createdAt).fromNow()}
+                  </TypographyMuted>
                 </div>
               </div>
             );

@@ -223,6 +223,7 @@ export const PostCard: React.FC<IPostCardProps> = ({ eventId, post }) => {
         isOpen={isCommentDialogOpen}
         onClose={toggleComments}
         post={post}
+        eventId={eventId}
       />
 
       {/* Delete Confirmation Modal */}

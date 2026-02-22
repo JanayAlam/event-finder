@@ -1,4 +1,7 @@
-import { TCreateDiscussionDto } from "../../common/validation-schemas/discussion.schemas";
+import {
+  TCreateCommentDto,
+  TCreateDiscussionDto
+} from "../../common/validation-schemas/discussion.schemas";
 import { TDiscussionWithProfile } from "../../server/models/discussion.model";
 import BaseRepository from "./base.repository";
 
@@ -72,6 +75,16 @@ class DiscussionRepository extends BaseRepository {
       url,
       "patch"
     );
+    return data;
+  }
+
+  static async addComment(
+    eventId: string,
+    discussionId: string,
+    body: TCreateCommentDto
+  ) {
+    const url = `${this.apiRoute(eventId)}/${discussionId}/comments`;
+    const data = await this.request<TCreateCommentDto, any>(url, "post", body);
     return data;
   }
 }

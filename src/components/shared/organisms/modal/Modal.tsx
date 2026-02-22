@@ -80,7 +80,7 @@ export default function Modal({
             {isCrossButtonVisible && (
               <DialogClose asChild>
                 <button
-                  onClick={closeHandler}
+                  type="button"
                   className="rounded-md p-1 hover:bg-accent"
                 >
                   <X className="h-4 w-4" />

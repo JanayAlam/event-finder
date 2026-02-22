@@ -10,12 +10,16 @@ import {
   TUserWithProfile
 } from "../../../../server/models/event.model";
 
+import { JoinEventModal } from "./join-event-modal";
+
 interface IEventActionsProps {
   event: TEventDetail;
 }
 
 export const EventActions: React.FC<IEventActionsProps> = ({ event }) => {
-  const { user } = useAuthStore();
+  const { isLoggedIn, user } = useAuthStore();
+
+  const [isJoinModalOpen, setIsJoinModalOpen] = React.useState(false);
 
   const isHost = event.host._id.toString() === user?._id.toString();
   const isAdmin = user?.role === "admin";
@@ -30,7 +34,7 @@ export const EventActions: React.FC<IEventActionsProps> = ({ event }) => {
       toast.error("Please login to join the event");
       return;
     }
-    toast.info("Join functionality coming soon!");
+    setIsJoinModalOpen(true);
   };
 
   const handleShare = () => {
@@ -53,42 +57,57 @@ export const EventActions: React.FC<IEventActionsProps> = ({ event }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {showFacebookButton && (
+    <>
+      <div className="flex items-center gap-2 flex-wrap">
+        {showFacebookButton && (
+          <Button
+            size="lg"
+            variant="outline"
+            className="gap-2"
+            onClick={handleFacebookPost}
+          >
+            <Facebook className="size-4" />
+            <span className="hidden sm:inline">Post on Facebook</span>
+          </Button>
+        )}
+
         <Button
           size="lg"
-          variant="outline"
+          variant="default"
           className="gap-2"
-          onClick={handleFacebookPost}
+          onClick={handleJoin}
+          disabled={!isLoggedIn || isJoined}
+          title={
+            !isLoggedIn
+              ? "Please login to join the event"
+              : isJoined
+                ? "You have already joined the event"
+                : "Click to join the event"
+          }
         >
-          <Facebook className="size-4" />
-          <span className="hidden sm:inline">Post on Facebook</span>
+          {isJoined ? (
+            <>
+              <UserCheck className="size-4" />
+              <span>Joined</span>
+            </>
+          ) : (
+            <>
+              <UserPlus className="size-4" />
+              <span>Join Event</span>
+            </>
+          )}
         </Button>
-      )}
 
-      <Button
-        size="lg"
-        variant="default"
-        className="gap-2"
-        onClick={handleJoin}
-        disabled={isJoined}
-      >
-        {isJoined ? (
-          <>
-            <UserCheck className="size-4" />
-            <span>Joined</span>
-          </>
-        ) : (
-          <>
-            <UserPlus className="size-4" />
-            <span>Join Event</span>
-          </>
-        )}
-      </Button>
+        <Button size="icon-lg" variant="ghost" onClick={handleShare}>
+          <Share2 className="size-5" />
+        </Button>
+      </div>
 
-      <Button size="icon-lg" variant="ghost" onClick={handleShare}>
-        <Share2 className="size-5" />
-      </Button>
-    </div>
+      <JoinEventModal
+        event={event}
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
+    </>
   );
 };

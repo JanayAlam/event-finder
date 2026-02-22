@@ -5,3 +5,4 @@ export * from "./event-discussion";
 export * from "./event-members";
 export * from "./event-meta-list";
 export * from "./event-tabs";
+export * from "./join-event-modal";

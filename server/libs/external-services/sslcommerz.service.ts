@@ -7,7 +7,7 @@ import {
 const BASE_URL = "https://sandbox.sslcommerz.com";
 
 const INITIATE_URL = `${BASE_URL}/gwprocess/v4/api.php`;
-const VALIDATE_URL = `${BASE_URL}/validator/api/validationserverphp.php`;
+const VALIDATE_URL = `${BASE_URL}/validator/api/validationserverAPI.php`;
 
 export type TSSLCommerzInitiateData = {
   total_amount: number;

@@ -1,4 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
+import { PAYMENT_STATUS } from "../../common/types";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 import Event from "./event.model";
 import User from "./user.model";
@@ -25,8 +26,8 @@ const paymentSchema = new Schema<IPaymentDoc>(
     tranId: { type: String, required: true, unique: true },
     status: {
       type: String,
-      enum: ["pending", "success", "failed", "cancelled"],
-      default: "pending"
+      enum: PAYMENT_STATUS,
+      default: PAYMENT_STATUS.PENDING
     },
     valId: { type: String },
     gatewayResponse: { type: Schema.Types.Mixed }

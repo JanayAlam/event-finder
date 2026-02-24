@@ -9,7 +9,8 @@ import {
   EventActions,
   EventCoverPhoto,
   EventDetailsTabs,
-  EventMetaList
+  EventMetaList,
+  PaymentFailedAlert
 } from "@/components/ui/event-details";
 import EventRepository from "@/repositories/event.repository";
 import { Metadata } from "next";
@@ -67,6 +68,7 @@ export default async function EventDetailsPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
+        <PaymentFailedAlert />
         <EventCoverPhoto event={event} />
         <div className="flex flex-col gap-3">
           <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>

@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { TPendingHostVerificationItem } from "../../../../common/types/host-verification.types";
+import { TPendingHostVerificationItem } from "../../../../common/types";
 import { createColumns, TPendingHostRequestTableColumn } from "./columns";
 
 type TViewModal = {

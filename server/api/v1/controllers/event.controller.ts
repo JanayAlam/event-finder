@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { PAYMENT_STATUS } from "../../../../common/types";
 import { TEventListItemDto } from "../../../../common/types/event.types";
 import {
   TCreateEventDto,
@@ -12,7 +13,7 @@ import {
   validatePayment
 } from "../../../libs/external-services/sslcommerz.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
-import Payment from "../../../models/payment.model";
+import PaymentUseCase from "../../../libs/use-cases/payment.use-case";
 import { PUBLIC_SERVER_URL } from "../../../settings/config";
 import ApiError from "../../../utils/api-error.util";
 import { convertToObjectId } from "../../../utils/object-id.util";
@@ -388,8 +389,16 @@ class EventController {
         return;
       }
 
-      // Initiate payment
-      const tranId = `TRAN-${Date.now()}-${req.user!._id.toString().slice(-4)}`;
+      // Check for an existing pending payment to avoid duplicates
+      const existingPendingPayment =
+        await PaymentUseCase.findPendingByUserAndEvent(
+          req.user!._id,
+          event._id
+        );
+
+      const tranId =
+        existingPendingPayment?.tranId ??
+        `TRAN-${Date.now()}-${req.user!._id.toString().slice(-4)}`;
 
       const paymentData = {
         total_amount: event.entryFee,
@@ -410,14 +419,15 @@ class EventController {
         throw new ApiError(500, "Failed to initiate payment");
       }
 
-      // Create payment record
-      await Payment.create({
-        user: req.user!._id,
-        event: event._id,
-        amount: event.entryFee,
-        tranId: tranId,
-        status: "pending"
-      });
+      // Only create a new payment record if no pending one exists
+      if (!existingPendingPayment) {
+        await PaymentUseCase.create({
+          user: req.user!._id,
+          event: event._id,
+          amount: event.entryFee,
+          tranId: tranId
+        });
+      }
 
       res.status(200).json({ url: sslResponse.GatewayPageURL });
     } catch (err) {
@@ -432,9 +442,13 @@ class EventController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      // SSL Commerz sends tran_id in query string (from our success_url) and val_id in POST body
+
       const tran_id = (req.query.tran_id || req.body.tran_id) as string;
       const val_id = (req.body.val_id || req.query.val_id) as string;
+
+      if (!tran_id || !val_id) {
+        throw new ApiError(400, "Missing payment callback data");
+      }
 
       const validation = await validatePayment(val_id);
 
@@ -445,27 +459,31 @@ class EventController {
         throw new ApiError(400, "Invalid payment validation");
       }
 
-      const payment = await Payment.findOne({ tranId: tran_id });
+      const existingPayment = await PaymentUseCase.findByTranId(tran_id);
 
-      if (!payment) {
+      if (!existingPayment) {
         throw new ApiError(404, "Payment record not found");
       }
 
-      if (payment.status === "success") {
+      if (existingPayment.status === PAYMENT_STATUS.SUCCESS) {
         res.redirect(`${PUBLIC_SERVER_URL}/events/view/${id}`);
         return;
       }
 
-      // Update payment status
-      payment.status = "success";
-      payment.valId = val_id;
-      payment.gatewayResponse = validation;
+      // Atomically update payment status and get updated doc
+      const updatedPayment = await PaymentUseCase.markSuccess(
+        tran_id,
+        val_id,
+        validation
+      );
 
-      await payment.save();
+      if (!updatedPayment) {
+        throw new ApiError(500, "Failed to update payment record");
+      }
 
       // Add user to event members
-      await EventUseCase.update(payment.event, {
-        $addToSet: { members: payment.user }
+      await EventUseCase.update(existingPayment.event, {
+        $addToSet: { members: existingPayment.user }
       });
 
       res.redirect(`${PUBLIC_SERVER_URL}/events/view/${id}`);
@@ -481,18 +499,16 @@ class EventController {
   ): Promise<void> {
     try {
       const { id } = req.params;
+
       const tran_id = (req.query.tran_id || req.body.tran_id) as string;
 
-      const payment = await Payment.findOne({ tranId: tran_id });
-
-      if (payment) {
-        payment.status = "failed";
-        payment.gatewayResponse = req.body;
-
-        await payment.save();
+      if (!tran_id) {
+        throw new ApiError(400, "Missing transaction id");
       }
 
-      const redirectUrl = payment
+      const updatedPayment = await PaymentUseCase.markFailed(tran_id, req.body);
+
+      const redirectUrl = updatedPayment
         ? `${PUBLIC_SERVER_URL}/events/view/${id}?payment=failed`
         : `${PUBLIC_SERVER_URL}/events/view/${id}`;
 
@@ -511,16 +527,12 @@ class EventController {
       const { id } = req.params;
       const tran_id = (req.query.tran_id || req.body.tran_id) as string;
 
-      const payment = await Payment.findOne({ tranId: tran_id });
+      const updatedPayment = await PaymentUseCase.markCancelled(
+        tran_id,
+        req.body
+      );
 
-      if (payment) {
-        payment.status = "cancelled";
-        payment.gatewayResponse = req.body;
-
-        await payment.save();
-      }
-
-      const redirectUrl = payment
+      const redirectUrl = updatedPayment
         ? `${PUBLIC_SERVER_URL}/events/view/${id}?payment=cancelled`
         : `${PUBLIC_SERVER_URL}/events/view/${id}`;
 

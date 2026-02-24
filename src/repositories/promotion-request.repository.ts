@@ -1,4 +1,4 @@
-import { TAllPendingHostVerificationResponse } from "../../common/types/host-verification.types";
+import { TAllPendingHostVerificationResponse } from "../../common/types";
 import { TPromotionRequest } from "../../server/models/promotion-request.model";
 import BaseRepository from "./base.repository";
 

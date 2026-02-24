@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { TAllPendingHostVerificationResponse } from "../../../common/types/host-verification.types";
+import { TAllPendingHostVerificationResponse } from "../../../common/types";
 import PromotionRequest, {
   TPromotionRequest
 } from "../../models/promotion-request.model";

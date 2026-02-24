@@ -10,7 +10,10 @@ import { useAuthStore } from "@/stores/auth-store";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useEffect } from "react";
-import { TEventDetail } from "../../../../server/models/event.model";
+import {
+  TEventDetail,
+  TUserWithProfile
+} from "../../../../server/models/event.model";
 import { EventAbout } from "./event-about";
 import { EventDiscussion } from "./event-discussion";
 import { EventMembers } from "./event-members";
@@ -29,7 +32,7 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { isLoggedIn, isInitialLoading } = useAuthStore();
+  const { user, isLoggedIn, isInitialLoading } = useAuthStore();
   const activeTab = searchParams.get("tab") || "about";
 
   useEffect(() => {
@@ -46,13 +49,17 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  const isJoined = event.members.some(
+    (m: TUserWithProfile) => m._id.toString() === user?._id.toString()
+  );
+
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto p-0 gap-6">
         <TabsTrigger value="about" className={tabTriggerClasses}>
           About
         </TabsTrigger>
-        {isLoggedIn && (
+        {isLoggedIn && isJoined && (
           <TabsTrigger value="discussion" className={tabTriggerClasses}>
             Discussions
           </TabsTrigger>
@@ -64,7 +71,7 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
       <TabsContent value="about" className={tabContentClasses}>
         <EventAbout event={event} />
       </TabsContent>
-      {isLoggedIn && (
+      {isLoggedIn && isJoined && (
         <TabsContent value="discussion" className={tabContentClasses}>
           <EventDiscussion event={event} />
         </TabsContent>

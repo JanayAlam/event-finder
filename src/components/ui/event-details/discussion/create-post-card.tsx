@@ -80,11 +80,12 @@ export const CreatePostCard: React.FC<ICreatePostCardProps> = ({ eventId }) => {
   };
 
   const handlePost = async () => {
-    if (!content.trim()) return;
+    const images = attachedImages.filter((img) => img !== "");
+
+    if (!content.trim() && !images.length) return;
 
     try {
       setIsPosting(true);
-      const images = attachedImages.filter((img) => img !== "");
 
       await DiscussionRepository.create(eventId, {
         content: content.trim(),

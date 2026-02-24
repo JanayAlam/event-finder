@@ -25,7 +25,7 @@ const discussionCommentSchema = new Schema<IDiscussionCommentDoc>(
 interface IDiscussion extends ITimestamps {
   creatorProfile: Types.ObjectId;
   event: Types.ObjectId;
-  content: string;
+  content?: string;
   images: string[];
   upVoters: Types.ObjectId[];
   downVoters: Types.ObjectId[];
@@ -47,7 +47,7 @@ const discussionSchema = new Schema<IDiscussionDoc>(
       ref: Event.collection.name,
       required: true
     },
-    content: { type: String, required: true },
+    content: { type: String, default: "" },
     images: { type: [String], default: [] },
     upVoters: {
       type: [Schema.Types.ObjectId],

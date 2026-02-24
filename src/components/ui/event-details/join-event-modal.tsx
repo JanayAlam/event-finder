@@ -45,7 +45,7 @@ export const JoinEventModal: React.FC<IJoinEventModalProps> = ({
       closeHandler={onClose}
       okHandler={() => joinEvent()}
       loading={isPending}
-      title={`Join ${event.title}`}
+      title="Join Event"
       okText={event.entryFee > 0 ? "Proceed Payment" : "Join Now"}
     >
       <div className="flex flex-col gap-6">
@@ -59,7 +59,7 @@ export const JoinEventModal: React.FC<IJoinEventModalProps> = ({
             </Paragraph>
           </div>
 
-          <div className="flex flex-row items-center justify-between gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <TypographyMuted className="text-xs font-semibold tracking-wider">
                 Location

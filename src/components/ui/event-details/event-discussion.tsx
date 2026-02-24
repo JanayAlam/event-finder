@@ -4,7 +4,10 @@ import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { TEventDetail } from "../../../../server/models/event.model";
+import {
+  TEventDetail,
+  TUserWithProfile
+} from "../../../../server/models/event.model";
 import { CreatePostCard } from "./discussion/create-post-card";
 import { PostCard } from "./discussion/post-card";
 
@@ -16,11 +19,11 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
   const { user } = useAuthStore();
 
   const isHost = event.host._id.toString() === user?._id.toString();
-  const isMember = event.members.some(
-    (m) => m._id.toString() === user?._id.toString()
+  const isJoined = event.members.some(
+    (m: TUserWithProfile) => m._id.toString() === user?._id.toString()
   );
 
-  const canPost = isHost || isMember;
+  const canPost = isHost || isJoined;
 
   const { data: discussions = [], isLoading } = useQuery({
     queryKey: ["discussions", event._id],

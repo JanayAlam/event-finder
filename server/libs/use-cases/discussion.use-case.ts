@@ -9,12 +9,11 @@ class DiscussionUseCase {
   static async create(data: {
     creatorProfile: Types.ObjectId;
     event: Types.ObjectId;
-    content: string;
+    content?: string;
     images?: string[];
   }): Promise<TDiscussion> {
-    const discussion = new Discussion(data);
-    const saved = await discussion.save();
-    return saved.toObject() as TDiscussion;
+    const discussion = await Discussion.create(data);
+    return discussion.toObject() as TDiscussion;
   }
 
   static async getByEventId(

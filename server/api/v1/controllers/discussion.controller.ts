@@ -78,6 +78,8 @@ class DiscussionController {
   ) {
     try {
       const { id: eventId } = req.params;
+      const { content, images } = req.body;
+
       const userId = req.user?._id;
 
       await DiscussionController.checkParticipation(eventId, userId);
@@ -85,7 +87,8 @@ class DiscussionController {
       const profile = await DiscussionController.getProfileOrThrow(userId);
 
       const discussion = await DiscussionUseCase.create({
-        ...req.body,
+        content: content?.trim() || "",
+        images,
         event: convertToObjectId(eventId)!,
         creatorProfile: profile._id
       });

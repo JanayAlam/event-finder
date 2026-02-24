@@ -9,6 +9,7 @@ import {
 } from "react-hook-form";
 import { ImageInput } from "../../atoms/inputs";
 import { DateInput } from "../../shadcn-components/date-input";
+import { DateTimePicker } from "../../shadcn-components/datetime-picker";
 
 import { Input } from "../../shadcn-components/input";
 import { Label } from "../../shadcn-components/label";
@@ -31,8 +32,39 @@ export type TInputFieldProps = {
   name?: string;
   options?: { label: string; value: string }[];
 } & Omit<React.ComponentProps<"input">, "type"> & {
-    type?: React.HTMLInputTypeAttribute | "select" | "textarea";
+    type?:
+      | React.HTMLInputTypeAttribute
+      | "select"
+      | "textarea"
+      | "datetime-local";
   };
+
+const parseDateTimeValue = (value: unknown): Date | undefined => {
+  if (!value) return undefined;
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? undefined : value;
+  }
+
+  if (typeof value === "string") {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? undefined : date;
+  }
+
+  return undefined;
+};
+
+const formatLocalDateTime = (value?: Date): string => {
+  if (!value) return "";
+
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  const hour = String(value.getHours()).padStart(2, "0");
+  const minute = String(value.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+};
 
 const getErrorMessage = (
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>
@@ -107,6 +139,14 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
             onChange={field.onChange}
             onBlur={field.onBlur}
             name={field.name}
+          />
+        ) : type === "datetime-local" ? (
+          <DateTimePicker
+            id={id}
+            className={cn(error && "border-destructive")}
+            value={parseDateTimeValue(field.value)}
+            onChange={(value) => field.onChange(formatLocalDateTime(value))}
+            onBlur={field.onBlur}
           />
         ) : type === "select" ? (
           <Select

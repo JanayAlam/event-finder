@@ -250,7 +250,11 @@ export default function CreateEventForm() {
                       key={coverResetKey}
                       name="coverPhoto"
                       onChange={handleCoverChange}
-                      onRemove={handleRemoveCoverPhoto}
+                      onRemove={
+                        form.watch("coverPhoto")
+                          ? handleRemoveCoverPhoto
+                          : undefined
+                      }
                       isLoading={isUploadingCover}
                       value={form.watch("coverPhoto")}
                       ratio={0.5}

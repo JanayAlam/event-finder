@@ -128,7 +128,7 @@ const ImageInput = React.forwardRef<HTMLInputElement, TImageInputProps>(
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "absolute top-2 right-2 size-7 rounded-sm transition-opacity z-10",
+                  "absolute top-2 right-2 size-7 rounded-sm transition-opacity z-10 hover:bg-destructive/15!",
                   effectivePreview
                     ? "opacity-0 group-hover:opacity-100"
                     : "opacity-100"

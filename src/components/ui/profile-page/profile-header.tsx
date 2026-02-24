@@ -113,7 +113,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
           <Separator className="my-4!" />
 
-          <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-6 mt-2">
+          <div
+            className={cn(
+              "w-full grid grid-cols-2 gap-6 mt-2",
+              stats.eventsHosted ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3"
+            )}
+          >
             <ProfileStat value={stats.eventsJoined} label="Trips Joined" />
             {stats.eventsHosted !== null && (
               <ProfileStat value={stats.eventsHosted} label="Events Hosted" />

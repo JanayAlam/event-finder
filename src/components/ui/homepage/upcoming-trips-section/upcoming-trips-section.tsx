@@ -16,7 +16,7 @@ import { CalendarX } from "lucide-react";
 export default function UpcomingTripsSection() {
   const { data: events, isLoading: isEventsLoading } = useQuery({
     queryKey: ["upcoming-trips"],
-    queryFn: async () => await EventRepository.getAll()
+    queryFn: async () => await EventRepository.getUpcomingEvents()
   });
 
   return (

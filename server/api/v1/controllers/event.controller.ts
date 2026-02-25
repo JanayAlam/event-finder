@@ -140,6 +140,53 @@ class EventController {
     }
   }
 
+  static async getUpcoming(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const events = await EventUseCase.getAll({
+        filter: {
+          eventDate: { $gte: new Date() },
+          $or: [
+            { status: EVENT_STATUS.OPEN },
+            { status: { $exists: false } },
+            { status: null }
+          ]
+        },
+        projection: {
+          title: 1,
+          placeName: 1,
+          eventDate: 1,
+          entryFee: 1,
+          dayCount: 1,
+          nightCount: 1,
+          memberCapacity: 1,
+          host: 1,
+          coverPhoto: 1,
+          status: 1,
+          createdAt: 1
+        } as any,
+        options: { sort: { eventDate: 1 }, limit: 4 }
+      });
+
+      const eventList: TEventListItemDto[] = events.map((event) => ({
+        _id: event._id,
+        title: event.title,
+        placeName: event.placeName,
+        eventDate: event.eventDate,
+        entryFee: event.entryFee,
+        dayCount: event.dayCount,
+        nightCount: event.nightCount,
+        memberCapacity: event.memberCapacity,
+        host: event.host,
+        coverPhoto: event.coverPhoto,
+        status: event.status
+      }));
+
+      res.status(200).json(eventList);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const events = await EventUseCase.getAll({

@@ -52,6 +52,9 @@ eventRouter.get(
   EventController.getAllAdmin
 );
 
+// Get upcoming events
+eventRouter.get("/upcoming", EventController.getUpcoming);
+
 // Get all events - public list with basic fields
 eventRouter.get("/", EventController.getAll);
 

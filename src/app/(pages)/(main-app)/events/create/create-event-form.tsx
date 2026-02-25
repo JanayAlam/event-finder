@@ -1,4 +1,5 @@
 "use client";
+
 import ImageInput from "@/components/shared/atoms/inputs/image-input";
 import { InputField, TextareaField } from "@/components/shared/molecules/form";
 import TMCard from "@/components/shared/molecules/tm-card";
@@ -10,7 +11,9 @@ import {
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
 import EventRepository from "@/repositories/event.repository";
+import LocationRepository from "@/repositories/location.repository";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE, PUBLIC_PAGE_ROUTE } from "@/routes";
+import { TPlaceOption } from "@/types/location/location.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
@@ -27,7 +30,7 @@ import {
   Trash2
 } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -64,6 +67,11 @@ const FormCard: React.FC<
 
 export default function CreateEventForm() {
   const router = useRouter();
+
+  const [placeOptions, setPlaceOptions] = useState<TPlaceOption[]>(
+    LocationRepository.getCuratedPlaceOptions()
+  );
+  const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
 
   const form = useForm<TCreateEventForm>({
     resolver: zodResolver(CreateEventSchema),
@@ -156,6 +164,33 @@ export default function CreateEventForm() {
     onError: () => toast.error("Failed to remove photo from server")
   });
 
+  useEffect(() => {
+    let active = true;
+
+    const fetchCountriesAndCities = async () => {
+      try {
+        setIsLoadingPlaces(true);
+        const normalizedOptions = await LocationRepository.getPlaceOptions();
+        if (!active) return;
+        setPlaceOptions(normalizedOptions);
+      } catch {
+        if (active) {
+          setPlaceOptions(LocationRepository.getCuratedPlaceOptions());
+        }
+      } finally {
+        if (active) {
+          setIsLoadingPlaces(false);
+        }
+      }
+    };
+
+    fetchCountriesAndCities();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const handleGoToHomepageAction = () => {
     router.push(PUBLIC_PAGE_ROUTE.HOME);
   };
@@ -226,10 +261,15 @@ export default function CreateEventForm() {
                     <InputField
                       isRequired
                       control={control}
-                      type="text"
+                      type="editable-select"
                       label="Place"
                       name="placeName"
-                      placeholder="e.g., Saint Martin Island, Bangladesh"
+                      placeholder={
+                        isLoadingPlaces
+                          ? "Loading city, country options..."
+                          : "e.g., Saint Martin Island, Bangladesh"
+                      }
+                      options={placeOptions}
                     />
                     <TextareaField
                       isRequired
@@ -373,7 +413,6 @@ export default function CreateEventForm() {
                           onChange={(e) => handleAdditionalChange(index, e)}
                           onRemove={() => handleRemoveAdditionalPhoto(index)}
                           isLoading={uploadingAdditionalIndex === index}
-                          // eslint-disable-next-line react-hooks/incompatible-library
                           value={form.watch(`additionalPhotos.${index}.path`)}
                           ratio={1}
                           className="aspect-square"

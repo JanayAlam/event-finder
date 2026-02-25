@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Control,
   FieldError,
@@ -35,6 +35,7 @@ export type TInputFieldProps = {
     type?:
       | React.HTMLInputTypeAttribute
       | "select"
+      | "editable-select"
       | "textarea"
       | "datetime-local";
   };
@@ -106,6 +107,22 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
   });
 
   const error = propError || controllerError;
+  const [isEditableSelectOpen, setIsEditableSelectOpen] = useState(false);
+
+  const inputValue =
+    typeof field.value === "string"
+      ? field.value
+      : field.value?.toString?.() || "";
+
+  const filteredOptions = useMemo(() => {
+    if (!options?.length) return [];
+    const query = inputValue.trim().toLowerCase();
+    if (!query) return options.slice(0, 100);
+
+    return options
+      .filter((option) => option.label.toLowerCase().includes(query))
+      .slice(0, 100);
+  }, [inputValue, options]);
 
   const renderLabel = useCallback((): React.ReactNode => {
     return (
@@ -170,6 +187,40 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
               ))}
             </SelectContent>
           </Select>
+        ) : type === "editable-select" ? (
+          <div className="relative">
+            <Input
+              id={id}
+              className={cn(error && "border border-destructive")}
+              {...rest}
+              {...field}
+              value={inputValue}
+              autoComplete="off"
+              onFocus={() => setIsEditableSelectOpen(true)}
+              onBlur={() => {
+                field.onBlur();
+                setTimeout(() => setIsEditableSelectOpen(false), 120);
+              }}
+            />
+            {isEditableSelectOpen && filteredOptions.length ? (
+              <div className="absolute top-full left-0 z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+                {filteredOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      field.onChange(option.value);
+                      setIsEditableSelectOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
         ) : type === "textarea" ? (
           <Textarea
             id={id}

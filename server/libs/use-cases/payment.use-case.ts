@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { PAYMENT_STATUS } from "../../../common/types";
+import { PAYMENT_STATUS } from "../../enums";
 import Payment, { TPayment } from "../../models/payment.model";
 
 class PaymentUseCase {

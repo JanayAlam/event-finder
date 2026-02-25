@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { PAYMENT_STATUS } from "../../common/types";
+import { PAYMENT_STATUS } from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
 import Event from "./event.model";
 import User from "./user.model";
@@ -9,7 +9,7 @@ interface PaymentBase extends ITimestamps {
   event: Types.ObjectId;
   amount: number;
   tranId: string;
-  status: "pending" | "success" | "failed" | "cancelled";
+  status: PAYMENT_STATUS;
   valId?: string;
   gatewayResponse?: any;
 }

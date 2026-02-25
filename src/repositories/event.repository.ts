@@ -117,6 +117,13 @@ class EventRepository extends BaseRepository {
     >(url, "post");
     return data;
   }
+
+  static async publishToFacebook(
+    eventId: string
+  ): Promise<{ message: string; facebookPostId: string; postUrl?: string }> {
+    const url = `${this.apiRoute}/${eventId}/publish/facebook`;
+    return this.request(url, "post");
+  }
 }
 
 export default EventRepository;

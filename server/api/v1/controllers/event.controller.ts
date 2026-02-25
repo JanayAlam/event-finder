@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { PAYMENT_STATUS } from "../../../../common/types";
 import { TEventListItemDto } from "../../../../common/types/event.types";
 import {
   TCreateEventDto,
   TIdParam,
   TUpdateEventDto
 } from "../../../../common/validation-schemas";
+import { PAYMENT_STATUS } from "../../../enums";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
@@ -13,6 +13,7 @@ import {
   validatePayment
 } from "../../../libs/external-services/sslcommerz.service";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
+import FacebookUseCase from "../../../libs/use-cases/facebook.use-case";
 import PaymentUseCase from "../../../libs/use-cases/payment.use-case";
 import { PUBLIC_SERVER_URL } from "../../../settings/config";
 import ApiError from "../../../utils/api-error.util";
@@ -326,12 +327,20 @@ class EventController {
     try {
       const { id } = req.params;
 
+      // 1. Check that a Facebook page is connected
+      const isConnected = await FacebookUseCase.isPageConnected();
+      if (!isConnected) {
+        throw new ApiError(400, "Facebook posting coming soon");
+      }
+
+      // 2. Fetch the event
       const event = await EventUseCase.getById(convertToObjectId(id)!);
 
       if (!event) {
         throw new ApiError(404, "Event not found");
       }
 
+      // 3. Ensure the requester is the host
       if (!event.host._id.equals(req.user!._id)) {
         throw new ApiError(
           403,
@@ -339,15 +348,24 @@ class EventController {
         );
       }
 
+      // 4. Guard against duplicate posts
       if (event.isPostedToFacebook) {
         throw new ApiError(400, "Event has already been posted to Facebook");
       }
 
+      // 5. Post to Facebook (service handles token refresh internally)
       const facebookPost = await postEventToFacebookPage(id.toString());
+
+      // 6. Persist the result via use-case
+      await FacebookUseCase.markEventPosted(
+        convertToObjectId(id)!,
+        facebookPost.id
+      );
 
       res.status(200).json({
         message: "Event posted to Facebook successfully",
-        facebookPostId: facebookPost.id
+        facebookPostId: facebookPost.id,
+        postUrl: facebookPost.postUrl
       });
     } catch (err) {
       next(err);

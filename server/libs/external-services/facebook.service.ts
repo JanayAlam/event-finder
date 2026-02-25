@@ -1,5 +1,4 @@
 import axios, { isAxiosError } from "axios";
-import { Types } from "mongoose";
 import Event, { TEvent } from "../../models/event.model";
 import FacebookToken from "../../models/facebook-token.model";
 import {
@@ -7,11 +6,11 @@ import {
   FACEBOOK_APP_SECRET,
   PUBLIC_SERVER_URL
 } from "../../settings/config";
-import EventUseCase from "../use-cases/event.use-case";
 
 export interface IFacebookPostResponse {
   id: string;
   postId?: string;
+  postUrl: string;
 }
 
 export const getFacebookAuthUrl = (): string => {
@@ -212,22 +211,23 @@ export const postEventToFacebookPage = async (
       `https://graph.facebook.com/v24.0/${pageId}/feed`,
       {
         message: postMessage,
-        access_token: accessToken
+        access_token: accessToken,
+        published: true
       },
       { headers: { "Content-Type": "application/json" } }
     );
 
     const postId = response.data.id;
-
-    // Update event in DB
-    await EventUseCase.update(new Types.ObjectId(eventId), {
-      isPostedToFacebook: true,
-      facebookPostId: postId
-    });
+    // ID format is "{pageId}_{postSegment}" — build a direct URL from it
+    const postSegment = postId.split("_")[1];
+    const postUrl = postSegment
+      ? `https://www.facebook.com/${pageId}/posts/${postSegment}`
+      : `https://www.facebook.com/${pageId}`;
 
     return {
       id: postId,
-      postId: postId
+      postId: postId,
+      postUrl
     };
   } catch (error: any) {
     if (isAxiosError(error)) {

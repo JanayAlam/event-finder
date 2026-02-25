@@ -10,6 +10,7 @@ import {
   EventCoverPhoto,
   EventDetailsTabs,
   EventMetaList,
+  EventStatusAlert,
   PaymentFailedAlert
 } from "@/components/ui/event-details";
 import EventRepository from "@/repositories/event.repository";
@@ -69,6 +70,7 @@ export default async function EventDetailsPage({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <PaymentFailedAlert />
+        <EventStatusAlert event={event} />
         <EventCoverPhoto event={event} />
         <div className="flex flex-col gap-3">
           <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>

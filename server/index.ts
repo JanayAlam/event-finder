@@ -1,5 +1,6 @@
 import http from "node:http";
 import app from "./app";
+import { startEventCronJobs } from "./cron/event.cron";
 import { connectMongoDB } from "./db";
 import { PORT } from "./settings/config";
 import logger from "./utils/winston.util";
@@ -11,6 +12,8 @@ const main = async () => {
     // connect mongodb
     await connectMongoDB();
     logger.info("MongoDB connected");
+
+    startEventCronJobs();
 
     // listening to the server
     await server.listen(PORT);

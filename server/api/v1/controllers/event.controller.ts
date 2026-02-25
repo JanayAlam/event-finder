@@ -5,7 +5,7 @@ import {
   TIdParam,
   TUpdateEventDto
 } from "../../../../common/validation-schemas";
-import { PAYMENT_STATUS } from "../../../enums";
+import { EVENT_STATUS, PAYMENT_STATUS } from "../../../enums";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
@@ -154,6 +154,7 @@ class EventController {
           memberCapacity: 1,
           host: 1,
           coverPhoto: 1,
+          status: 1,
           createdAt: 1
         } as any
       });
@@ -168,7 +169,8 @@ class EventController {
         nightCount: event.nightCount,
         memberCapacity: event.memberCapacity,
         host: event.host,
-        coverPhoto: event.coverPhoto
+        coverPhoto: event.coverPhoto,
+        status: event.status
       }));
 
       res.status(200).json(eventList);
@@ -196,6 +198,7 @@ class EventController {
           memberCapacity: 1,
           host: 1,
           coverPhoto: 1,
+          status: 1,
           createdAt: 1
         } as any,
         options: { sort: { createdAt: -1 }, limit: 3 }
@@ -211,7 +214,8 @@ class EventController {
         nightCount: event.nightCount,
         memberCapacity: event.memberCapacity,
         host: event.host,
-        coverPhoto: event.coverPhoto
+        coverPhoto: event.coverPhoto,
+        status: event.status
       }));
 
       res.status(200).json(eventList);
@@ -239,6 +243,7 @@ class EventController {
           memberCapacity: 1,
           host: 1,
           coverPhoto: 1,
+          status: 1,
           createdAt: 1
         } as any,
         options: { sort: { createdAt: -1 }, limit: 3 }
@@ -254,7 +259,8 @@ class EventController {
         nightCount: event.nightCount,
         memberCapacity: event.memberCapacity,
         host: event.host,
-        coverPhoto: event.coverPhoto
+        coverPhoto: event.coverPhoto,
+        status: event.status
       }));
 
       res.status(200).json(eventList);
@@ -384,6 +390,17 @@ class EventController {
 
       if (!event) {
         throw new ApiError(404, "Event not found");
+      }
+
+      if (event.status !== EVENT_STATUS.OPEN) {
+        throw new ApiError(
+          400,
+          `Event is ${event.status}, joining is not allowed.`
+        );
+      }
+
+      if (new Date(event.eventDate).getTime() < Date.now()) {
+        throw new ApiError(400, "Event date has passed");
       }
 
       if (
@@ -555,6 +572,69 @@ class EventController {
         : `${PUBLIC_SERVER_URL}/events/view/${id}`;
 
       res.redirect(redirectUrl);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async toggleStatus(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) throw new ApiError(401, "Unauthenticated");
+
+      const { id } = req.params;
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (!event.host._id.equals(req.user._id)) {
+        throw new ApiError(403, "Only event creator can restrict joining");
+      }
+
+      const newStatus =
+        event.status === EVENT_STATUS.OPEN
+          ? EVENT_STATUS.CLOSED
+          : EVENT_STATUS.OPEN;
+      await EventUseCase.update(convertToObjectId(id)!, {
+        status: newStatus
+      });
+
+      res.status(200).json({
+        message: `Event status changed to ${newStatus}`,
+        status: newStatus
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async toggleBlock(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) throw new ApiError(404, "Event not found");
+
+      const newStatus =
+        event.status === EVENT_STATUS.BLOCKED
+          ? EVENT_STATUS.OPEN
+          : EVENT_STATUS.BLOCKED;
+      await EventUseCase.update(convertToObjectId(id)!, {
+        status: newStatus
+      });
+
+      res
+        .status(200)
+        .json({ message: `Event is now ${newStatus}`, status: newStatus });
     } catch (err) {
       next(err);
     }

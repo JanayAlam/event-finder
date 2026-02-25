@@ -100,6 +100,22 @@ eventRouter.delete(
   EventController.delete
 );
 
+// Toggle event status - only creator (HOST) can toggle
+eventRouter.patch(
+  "/:id/status",
+  authenticate([USER_ROLE.HOST]),
+  inputValidator(null, IdParamsSchema),
+  EventController.toggleStatus
+);
+
+// Toggle block event - only ADMIN can block
+eventRouter.patch(
+  "/:id/block",
+  authenticate([USER_ROLE.ADMIN]),
+  inputValidator(null, IdParamsSchema),
+  EventController.toggleBlock
+);
+
 // Join event
 eventRouter.post(
   "/:id/join",

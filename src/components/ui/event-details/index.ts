@@ -4,6 +4,6 @@ export * from "./event-cover-photo";
 export * from "./event-discussion";
 export * from "./event-members";
 export * from "./event-meta-list";
+export * from "./event-status-alert";
 export * from "./event-tabs";
-export * from "./join-event-modal";
 export * from "./payment-failed-alert";

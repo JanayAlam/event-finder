@@ -124,6 +124,20 @@ class EventRepository extends BaseRepository {
     const url = `${this.apiRoute}/${eventId}/publish/facebook`;
     return this.request(url, "post");
   }
+
+  static async toggleStatus(
+    eventId: string
+  ): Promise<{ message: string; status: string }> {
+    const url = `${this.apiRoute}/${eventId}/status`;
+    return this.request(url, "patch");
+  }
+
+  static async toggleBlock(
+    eventId: string
+  ): Promise<{ message: string; status: string }> {
+    const url = `${this.apiRoute}/${eventId}/block`;
+    return this.request(url, "patch");
+  }
 }
 
 export default EventRepository;

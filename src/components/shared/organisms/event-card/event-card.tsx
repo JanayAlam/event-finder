@@ -11,6 +11,7 @@ import { Clock3, MapPin, MoveDown, Users } from "lucide-react";
 import Link from "next/link";
 import { TEventListItemDto } from "../../../../../common/types";
 import TMCard from "../../molecules/tm-card";
+import { Badge } from "../../shadcn-components/badge";
 import { Button } from "../../shadcn-components/button";
 import { H4, Paragraph } from "../../shadcn-components/typography";
 
@@ -22,6 +23,20 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
     (event.nightCount || 0) + 1
   );
   const endDate = startDate.add(durationDays - 1, "day");
+
+  const isPassed = startDate.isBefore(dayjs());
+
+  let badgeProps: {
+    label: string;
+    variant: "destructive" | "secondary" | "default";
+  } | null = null;
+  if (event.status === "blocked") {
+    badgeProps = { label: "Blocked", variant: "destructive" };
+  } else if (event.status === "closed") {
+    badgeProps = { label: "Closed", variant: "secondary" };
+  } else if (isPassed) {
+    badgeProps = { label: "Passed", variant: "secondary" };
+  }
 
   return (
     <TMCard
@@ -76,13 +91,26 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
           <p className="text-base font-semibold">Tk. {event.entryFee}</p>
         </div>
 
-        <Link
-          href={PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(event._id.toString())}
-        >
-          <Button className="w-full bg-primary hover:bg-primary/90 dark:text-primary">
-            View details
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2 mt-2 w-full">
+          {badgeProps && (
+            <div className="flex-1">
+              <Badge
+                variant={badgeProps.variant}
+                className="w-full justify-center py-2 h-9 shadow-none rounded-md"
+              >
+                {badgeProps.label}
+              </Badge>
+            </div>
+          )}
+          <Link
+            href={PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(event._id.toString())}
+            className={badgeProps ? "flex-1" : "w-full"}
+          >
+            <Button className="w-full bg-primary hover:bg-primary/90 dark:text-primary">
+              View details
+            </Button>
+          </Link>
+        </div>
       </div>
     </TMCard>
   );

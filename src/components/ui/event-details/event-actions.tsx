@@ -5,7 +5,16 @@ import EventRepository from "@/repositories/event.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { Facebook, Share2, UserCheck, UserPlus } from "lucide-react";
+import {
+  Facebook,
+  Lock,
+  Share2,
+  ShieldBan,
+  ShieldCheck,
+  Unlock,
+  UserCheck,
+  UserPlus
+} from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 import {
@@ -41,6 +50,56 @@ export const EventActions: React.FC<IEventActionsProps> = ({
   );
 
   const showFacebookButton = isHost || isAdmin;
+
+  const [eventStatus, setEventStatus] = React.useState(event.status);
+
+  const [now] = React.useState(() => Date.now());
+  const isPassed = new Date(event.eventDate).getTime() < now;
+  const isClosed = eventStatus === "closed";
+  const isBlocked = eventStatus === "blocked";
+  const isJoinable = !isPassed && !isClosed && !isBlocked;
+
+  const getJoinButtonLabel = () => {
+    if (isBlocked) return "Event Blocked";
+    if (isClosed) return "Event Closed";
+    if (isPassed) return "Event Passed";
+    if (isJoined) return "Joined";
+    return "Join Event";
+  };
+
+  const { mutate: toggleStatus, isPending: isTogglingStatus } = useMutation({
+    mutationFn: (eventId: string) => EventRepository.toggleStatus(eventId),
+    onSuccess: (data) => {
+      setEventStatus(data.status as any);
+      toast.success(data.message);
+    },
+    onError: (err: unknown) => {
+      let message = "Failed to toggle event status.";
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.message ?? message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
+    }
+  });
+
+  const { mutate: toggleBlock, isPending: isTogglingBlock } = useMutation({
+    mutationFn: (eventId: string) => EventRepository.toggleBlock(eventId),
+    onSuccess: (data) => {
+      setEventStatus(data.status as any);
+      toast.success(data.message);
+    },
+    onError: (err: unknown) => {
+      let message = "Failed to toggle block status.";
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.message ?? message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
+    }
+  });
 
   const { mutate: publishToFacebook, isPending: isPosting } = useMutation({
     mutationFn: (eventId: string) => EventRepository.publishToFacebook(eventId),
@@ -137,30 +196,71 @@ export const EventActions: React.FC<IEventActionsProps> = ({
         <Button
           id="join-event-btn"
           size="lg"
-          variant="default"
+          variant={!isJoinable || isJoined ? "secondary" : "default"}
           className="gap-2"
           onClick={handleJoin}
-          disabled={!isLoggedIn || isJoined}
+          disabled={!isLoggedIn || isJoined || !isJoinable}
           title={
             !isLoggedIn
               ? "Please login to join the event"
               : isJoined
                 ? "You have already joined the event"
-                : "Click to join the event"
+                : !isJoinable
+                  ? getJoinButtonLabel()
+                  : "Click to join the event"
           }
         >
           {isJoined ? (
-            <>
-              <UserCheck className="size-4" />
-              <span>Joined</span>
-            </>
+            <UserCheck className="size-4" />
+          ) : !isJoinable ? (
+            <Lock className="size-4" />
           ) : (
-            <>
-              <UserPlus className="size-4" />
-              <span>Join Event</span>
-            </>
+            <UserPlus className="size-4" />
           )}
+          <span>{getJoinButtonLabel()}</span>
         </Button>
+
+        {isHost && (
+          <Button
+            size="lg"
+            variant="outline"
+            className="gap-2"
+            onClick={() => toggleStatus(event._id.toString())}
+            disabled={isTogglingStatus || isBlocked}
+          >
+            {isTogglingStatus ? (
+              <Spinner className="size-4" />
+            ) : isClosed ? (
+              <Unlock className="size-4" />
+            ) : (
+              <Lock className="size-4" />
+            )}
+            <span className="hidden sm:inline">
+              {isClosed ? "Open Event" : "Close Event"}
+            </span>
+          </Button>
+        )}
+
+        {isAdmin && (
+          <Button
+            size="lg"
+            variant={isBlocked ? "outline" : "destructive"}
+            className="gap-2"
+            onClick={() => toggleBlock(event._id.toString())}
+            disabled={isTogglingBlock}
+          >
+            {isTogglingBlock ? (
+              <Spinner className="size-4" />
+            ) : isBlocked ? (
+              <ShieldCheck className="size-4" />
+            ) : (
+              <ShieldBan className="size-4" />
+            )}
+            <span className="hidden sm:inline">
+              {isBlocked ? "Unblock Event" : "Block Event"}
+            </span>
+          </Button>
+        )}
 
         <Button
           id="share-event-btn"

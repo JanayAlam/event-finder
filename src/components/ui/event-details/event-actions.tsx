@@ -175,11 +175,13 @@ export const EventActions: React.FC<IEventActionsProps> = ({
             variant="outline"
             className="gap-2"
             onClick={handleFacebookPost}
-            disabled={isPosting || postedToFacebook}
+            disabled={isPosting || postedToFacebook || !isJoinable}
             title={
-              postedToFacebook
-                ? "Already posted to Facebook"
-                : "Post this event to your connected Facebook page"
+              !isJoinable
+                ? "Cannot post when event is passed, closed, or blocked"
+                : postedToFacebook
+                  ? "Already posted to Facebook"
+                  : "Post this event to your connected Facebook page"
             }
           >
             {isPosting ? (
@@ -229,7 +231,7 @@ export const EventActions: React.FC<IEventActionsProps> = ({
             disabled={isTogglingStatus || isBlocked}
           >
             {isTogglingStatus ? (
-              <Spinner className="size-4" />
+              <Spinner className="size-4" color="text-secondary-foreground!" />
             ) : isClosed ? (
               <Unlock className="size-4" />
             ) : (

@@ -392,7 +392,7 @@ class EventController {
         throw new ApiError(404, "Event not found");
       }
 
-      if (event.status !== EVENT_STATUS.OPEN) {
+      if (event.status && event.status !== EVENT_STATUS.OPEN) {
         throw new ApiError(
           400,
           `Event is ${event.status}, joining is not allowed.`
@@ -597,9 +597,9 @@ class EventController {
       }
 
       const newStatus =
-        event.status === EVENT_STATUS.OPEN
-          ? EVENT_STATUS.CLOSED
-          : EVENT_STATUS.OPEN;
+        event.status === EVENT_STATUS.CLOSED
+          ? EVENT_STATUS.OPEN
+          : EVENT_STATUS.CLOSED;
       await EventUseCase.update(convertToObjectId(id)!, {
         status: newStatus
       });

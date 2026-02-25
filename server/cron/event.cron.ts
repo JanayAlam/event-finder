@@ -10,7 +10,11 @@ export const startEventCronJobs = () => {
       const result = await Event.updateMany(
         {
           eventDate: { $lt: new Date() },
-          status: EVENT_STATUS.OPEN
+          $or: [
+            { status: EVENT_STATUS.OPEN },
+            { status: { $exists: false } },
+            { status: null }
+          ]
         },
         { $set: { status: EVENT_STATUS.CLOSED } }
       );

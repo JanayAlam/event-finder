@@ -64,7 +64,9 @@ export default async function EventDetailsPage({
     throw error;
   }
 
-  if (!event) return null;
+  if (!event) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-6">

@@ -1,7 +1,11 @@
 "use client";
 
 import ImageInput from "@/components/shared/atoms/inputs/image-input";
-import { InputField, TextareaField } from "@/components/shared/molecules/form";
+import {
+  InputField,
+  ItineraryFormFields,
+  TextareaField
+} from "@/components/shared/molecules/form";
 import TMCard from "@/components/shared/molecules/tm-card";
 import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
@@ -20,14 +24,12 @@ import { isAxiosError } from "axios";
 import {
   CalendarClockIcon,
   Camera,
-  ClipboardList,
   Images,
   Info,
   Map,
   NotebookText,
   PiggyBank,
-  PlusIcon,
-  Trash2
+  PlusIcon
 } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import React, { PropsWithChildren, useEffect, useState } from "react";
@@ -88,15 +90,6 @@ export default function CreateEventForm() {
       coverPhoto: undefined,
       additionalPhotos: []
     }
-  });
-
-  const {
-    fields: itineraryFields,
-    append: appendItinerary,
-    remove: removeItinerary
-  } = useFieldArray({
-    control: form.control,
-    name: "itinerary"
   });
 
   const {
@@ -193,13 +186,6 @@ export default function CreateEventForm() {
 
   const handleGoToHomepageAction = () => {
     router.push(PUBLIC_PAGE_ROUTE.HOME);
-  };
-
-  const handleRemoveItinerary = (index: number) => {
-    removeItinerary(index);
-    setTimeout(() => {
-      form.clearErrors("itinerary");
-    }, 0);
   };
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -432,90 +418,9 @@ export default function CreateEventForm() {
             <FormCard
               icon={<NotebookText />}
               title="Itinerary"
-              action={
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    appendItinerary({
-                      moment: new Date().toISOString(),
-                      title: "",
-                      description: ""
-                    })
-                  }
-                >
-                  <PlusIcon />
-                  Add activity
-                </Button>
-              }
               subtitle="Add activities and schedule for your trip (optional)"
             >
-              <div className="flex flex-col gap-2">
-                {!itineraryFields.length ? (
-                  <TMCard bodyClassName="flex flex-col gap-2 items-center">
-                    <ClipboardList className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-                    <TypographyMuted className="text-muted-foreground text-center">
-                      No activities added yet
-                    </TypographyMuted>
-                    <TypographyMuted className="text-sm text-muted-foreground/60 text-center">
-                      Click &quot;Add activity&quot; to create your itinerary
-                    </TypographyMuted>
-                  </TMCard>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    {itineraryFields.map((field, index) => (
-                      <TMCard
-                        key={field.id}
-                        bodyClassName="flex flex-col gap-4"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-md bg-input/25 text-primary font-bold flex items-center justify-center">
-                              {index + 1}
-                            </div>
-                            <Paragraph>Activity {index + 1}</Paragraph>
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleRemoveItinerary(index)}
-                            className="h-8 w-8"
-                          >
-                            <Trash2 className="h-4 w-4 text-primary" />
-                          </Button>
-                        </div>
-                        <div className="flex flex-col gap-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <InputField
-                              isRequired
-                              control={control}
-                              type="datetime-local"
-                              label="Date & Time"
-                              name={`itinerary.${index}.moment`}
-                            />
-                            <InputField
-                              isRequired
-                              control={control}
-                              type="text"
-                              label="Activity Title"
-                              name={`itinerary.${index}.title`}
-                              placeholder="e.g., Morning Hike to Summit"
-                            />
-                          </div>
-                          <TextareaField
-                            control={control}
-                            name={`itinerary.${index}.description`}
-                            label="Description"
-                            placeholder="Describe what will happen during this activity..."
-                            className="h-25"
-                          />
-                        </div>
-                      </TMCard>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ItineraryFormFields control={control} />
             </FormCard>
 
             <TMCard>

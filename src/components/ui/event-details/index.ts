@@ -1,3 +1,4 @@
+export * from "./edit-itinerary-dialog";
 export * from "./event-about";
 export * from "./event-actions";
 export * from "./event-cover-photo";

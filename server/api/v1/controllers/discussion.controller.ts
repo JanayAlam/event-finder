@@ -7,6 +7,7 @@ import FileUploadService from "../../../libs/external-services/file-upload.servi
 import DiscussionUseCase from "../../../libs/use-cases/discussion.use-case";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
+import { getIO } from "../../../socket";
 import ApiError from "../../../utils/api-error.util";
 import { convertToObjectId } from "../../../utils/object-id.util";
 
@@ -93,6 +94,8 @@ class DiscussionController {
         creatorProfile: profile._id
       });
 
+      getIO().to(`event-${eventId}`).emit("new-discussion", discussion);
+
       res.status(201).json(discussion);
     } catch (err) {
       next(err);
@@ -141,6 +144,10 @@ class DiscussionController {
         }
       );
 
+      getIO()
+        .to(`event-${eventId}`)
+        .emit("update-discussion", updatedDiscussion);
+
       res.status(200).json(updatedDiscussion);
     } catch (err) {
       next(err);
@@ -164,6 +171,10 @@ class DiscussionController {
         convertToObjectId(discussionId)!,
         profile._id
       );
+
+      getIO()
+        .to(`event-${eventId}`)
+        .emit("update-discussion", updatedDiscussion);
 
       res.status(200).json(updatedDiscussion);
     } catch (err) {
@@ -189,6 +200,10 @@ class DiscussionController {
         profile._id
       );
 
+      getIO()
+        .to(`event-${eventId}`)
+        .emit("update-discussion", updatedDiscussion);
+
       res.status(200).json(updatedDiscussion);
     } catch (err) {
       next(err);
@@ -212,6 +227,8 @@ class DiscussionController {
         convertToObjectId(discussionId)!,
         profile._id
       );
+
+      getIO().to(`event-${eventId}`).emit("delete-discussion", discussionId);
 
       res.status(204).send();
     } catch (err) {

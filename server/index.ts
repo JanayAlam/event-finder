@@ -3,6 +3,7 @@ import app from "./app";
 import { startEventCronJobs } from "./cron/event.cron";
 import { connectMongoDB } from "./db";
 import { PORT } from "./settings/config";
+import { initSocket } from "./socket";
 import logger from "./utils/winston.util";
 
 const server = http.createServer(app);
@@ -14,6 +15,8 @@ const main = async () => {
     logger.info("MongoDB connected");
 
     startEventCronJobs();
+
+    initSocket(server);
 
     // listening to the server
     await server.listen(PORT);

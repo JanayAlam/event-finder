@@ -1,6 +1,5 @@
 import { Types } from "mongoose";
 import Discussion, {
-  TDiscussion,
   TDiscussionWithProfile
 } from "../../models/discussion.model";
 import ApiError from "../../utils/api-error.util";
@@ -11,9 +10,13 @@ class DiscussionUseCase {
     event: Types.ObjectId;
     content?: string;
     images?: string[];
-  }): Promise<TDiscussion> {
+  }): Promise<TDiscussionWithProfile> {
     const discussion = await Discussion.create(data);
-    return discussion.toObject() as TDiscussion;
+    return Discussion.findById(discussion._id)
+      .populate("creatorProfile")
+      .populate("comments.creatorProfile")
+      .lean<TDiscussionWithProfile>()
+      .exec() as Promise<TDiscussionWithProfile>;
   }
 
   static async getByEventId(
@@ -33,7 +36,7 @@ class DiscussionUseCase {
       creatorProfile: Types.ObjectId;
       content: string;
     }
-  ): Promise<TDiscussion | null> {
+  ): Promise<TDiscussionWithProfile | null> {
     return Discussion.findByIdAndUpdate(
       discussionId,
       { $push: { comments: data } },
@@ -41,14 +44,14 @@ class DiscussionUseCase {
     )
       .populate("creatorProfile", "firstName lastName profileImage")
       .populate("comments.creatorProfile", "firstName lastName profileImage")
-      .lean<TDiscussion>()
+      .lean<TDiscussionWithProfile>()
       .exec();
   }
 
   static async toggleUpvote(
     discussionId: Types.ObjectId,
     profileId: Types.ObjectId
-  ): Promise<TDiscussion | null> {
+  ): Promise<TDiscussionWithProfile | null> {
     const discussion = await Discussion.findById(discussionId);
     if (!discussion) throw new ApiError(404, "Discussion not found");
 
@@ -61,7 +64,9 @@ class DiscussionUseCase {
         { $pull: { upVoters: profileId } },
         { new: true }
       )
-        .lean<TDiscussion>()
+        .populate("creatorProfile")
+        .populate("comments.creatorProfile")
+        .lean<TDiscussionWithProfile>()
         .exec();
     } else {
       // Add upvote and remove downvote if exists
@@ -73,7 +78,9 @@ class DiscussionUseCase {
         },
         { new: true }
       )
-        .lean<TDiscussion>()
+        .populate("creatorProfile")
+        .populate("comments.creatorProfile")
+        .lean<TDiscussionWithProfile>()
         .exec();
     }
   }
@@ -81,7 +88,7 @@ class DiscussionUseCase {
   static async toggleDownvote(
     discussionId: Types.ObjectId,
     profileId: Types.ObjectId
-  ): Promise<TDiscussion | null> {
+  ): Promise<TDiscussionWithProfile | null> {
     const discussion = await Discussion.findById(discussionId);
     if (!discussion) throw new ApiError(404, "Discussion not found");
 
@@ -94,7 +101,9 @@ class DiscussionUseCase {
         { $pull: { downVoters: profileId } },
         { new: true }
       )
-        .lean<TDiscussion>()
+        .populate("creatorProfile")
+        .populate("comments.creatorProfile")
+        .lean<TDiscussionWithProfile>()
         .exec();
     } else {
       // Add downvote and remove upvote if exists
@@ -106,7 +115,9 @@ class DiscussionUseCase {
         },
         { new: true }
       )
-        .lean<TDiscussion>()
+        .populate("creatorProfile")
+        .populate("comments.creatorProfile")
+        .lean<TDiscussionWithProfile>()
         .exec();
     }
   }

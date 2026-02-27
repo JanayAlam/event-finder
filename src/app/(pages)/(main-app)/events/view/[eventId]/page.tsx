@@ -6,11 +6,10 @@ import {
 } from "@/components/shared/shadcn-components/empty";
 import { H1 } from "@/components/shared/shadcn-components/typography";
 import {
-  EventActions,
   EventCoverPhoto,
   EventDetailsTabs,
-  EventMetaList,
   EventStatusAlert,
+  EventTitleSection,
   PaymentFailedAlert
 } from "@/components/ui/event-details";
 import EventRepository from "@/repositories/event.repository";
@@ -74,11 +73,7 @@ export default async function EventDetailsPage({
         <PaymentFailedAlert />
         <EventStatusAlert event={event} />
         <EventCoverPhoto event={event} />
-        <div className="flex flex-col gap-3">
-          <H1 className="font-semibold text-xl sm:text-3xl">{event.title}</H1>
-          <EventMetaList event={event} />
-          <EventActions event={event} />
-        </div>
+        <EventTitleSection event={event} />
       </div>
 
       <EventDetailsTabs event={event} />

@@ -6,4 +6,5 @@ export * from "./event-members";
 export * from "./event-meta-list";
 export * from "./event-status-alert";
 export * from "./event-tabs";
+export * from "./event-title-section";
 export * from "./payment-failed-alert";

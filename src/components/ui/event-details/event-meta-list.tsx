@@ -12,7 +12,7 @@ export const EventMetaList = ({ event }: EventMetaListProps) => {
     { icon: MapPin, text: event.placeName },
     {
       icon: CalendarDays,
-      text: dayjs(event.eventDate).format("DD MMM, YYYY")
+      text: dayjs(event.eventDate).format("hh:mm A, DD MMM, YYYY")
     },
     {
       icon: Clock,

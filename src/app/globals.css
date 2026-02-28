@@ -148,3 +148,42 @@
     cursor: pointer;
   }
 }
+
+@layer utilities {
+  .magic-glow {
+    position: relative;
+    border-radius: 9999px;
+  }
+
+  .magic-glow::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+      45deg,
+      var(--primary),
+      #ff00ea,
+      var(--primary),
+      #00d4ff,
+      var(--primary)
+    );
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(8px);
+    border-radius: inherit;
+    animation: magic-glow-anim 8s linear infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes magic-glow-anim {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}

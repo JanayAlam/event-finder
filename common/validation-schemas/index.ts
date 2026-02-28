@@ -1,4 +1,5 @@
 export * from "./account-verification.schemas";
+export * from "./ai.schemas";
 export * from "./auth.schemas";
 export * from "./common.schemas";
 export * from "./discussion.schemas";

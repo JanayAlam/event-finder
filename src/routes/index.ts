@@ -1,6 +1,7 @@
 export const PUBLIC_PAGE_ROUTE = {
   HOME: "/",
-  EXPLORE: "/explore"
+  EXPLORE: "/explore",
+  AI_SEARCH: "/ai-search"
 };
 
 export const PUBLIC_DYNAMIC_PAGE_ROUTE = {

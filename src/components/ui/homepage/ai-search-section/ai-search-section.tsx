@@ -7,6 +7,7 @@ import {
   H2,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import {
   MapPin,
   Mountain,
@@ -15,7 +16,9 @@ import {
   TreePine,
   Waves
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const suggestedPrompts = [
   { icon: Mountain, text: "Mountain hiking adventure" },
@@ -25,7 +28,22 @@ const suggestedPrompts = [
 ];
 
 export default function AISearchSection() {
+  const router = useRouter();
+
   const [prompt, setPrompt] = useState("");
+
+  const handleSearch = (p?: string) => {
+    const finalPrompt = p || prompt;
+
+    if (!finalPrompt.trim()) {
+      toast.info("Please enter a prompt");
+      return;
+    }
+
+    router.push(
+      `${PUBLIC_PAGE_ROUTE.AI_SEARCH}?prompt=${encodeURIComponent(finalPrompt)}`
+    );
+  };
 
   return (
     <TMCard rootClassName="bg-primary/3 rounded-xl border-0">
@@ -54,6 +72,7 @@ export default function AISearchSection() {
           />
           <Button
             size="icon"
+            onClick={() => handleSearch()}
             className="absolute bottom-4 right-4 h-10 w-10 rounded-lg bg-primary hover:bg-primary/90 dark:text-primary"
           >
             <Send className="h-4 w-4" />
@@ -69,7 +88,7 @@ export default function AISearchSection() {
             {suggestedPrompts.map((suggestion, index) => (
               <Button
                 key={index}
-                onClick={() => setPrompt(suggestion.text)}
+                onClick={() => handleSearch(suggestion.text)}
                 className="group-hover inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent hover:bg-primary/15 text-primary hover:text-primary font-body text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <suggestion.icon className="h-4 w-4 hover:text-primary" />

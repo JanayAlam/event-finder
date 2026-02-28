@@ -28,7 +28,7 @@ export type TInputFieldProps = {
   isRequired?: boolean;
   label?: string;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
-  control?: Control<any>;
+  control: Control<any>;
   name?: string;
   options?: { label: string; value: string }[];
 } & Omit<React.ComponentProps<"input">, "type"> & {

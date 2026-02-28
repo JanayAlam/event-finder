@@ -3,6 +3,8 @@ import {
   TEvent,
   TEventDetailDto,
   TEventListItemDto,
+  TSearchEventResultResponse,
+  TSearchRequestDto,
   TUpdateEventDto
 } from "../../common/types";
 import BaseRepository from "./base.repository";
@@ -144,6 +146,15 @@ class EventRepository extends BaseRepository {
   ): Promise<{ message: string; status: string }> {
     const url = `${this.apiRoute}/${eventId}/block`;
     return this.request(url, "patch");
+  }
+
+  static async search(search: string) {
+    const url = `${this.apiRoute}/search`;
+    return this.request<TSearchRequestDto, TSearchEventResultResponse[]>(
+      url,
+      "post",
+      { search }
+    );
   }
 }
 

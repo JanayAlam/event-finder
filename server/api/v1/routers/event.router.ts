@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   CreateEventSchema,
   IdParamsSchema,
+  SearchSchema,
   UpdateEventSchema
 } from "../../../../common/validation-schemas";
 import { USER_ROLE } from "../../../enums";
@@ -57,6 +58,13 @@ eventRouter.get("/upcoming", EventController.getUpcoming);
 
 // Get all events - public list with basic fields
 eventRouter.get("/", EventController.getAll);
+
+// Search events
+eventRouter.post(
+  "/search",
+  inputValidator(SearchSchema),
+  EventController.search
+);
 
 // Get recent hosted events by user ID
 eventRouter.get(

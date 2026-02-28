@@ -662,6 +662,16 @@ class EventController {
       next(err);
     }
   }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search } = req.body;
+      const results = await EventUseCase.search(search);
+      res.status(200).json(results);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default EventController;

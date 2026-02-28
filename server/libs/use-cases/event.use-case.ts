@@ -5,6 +5,7 @@ import {
   Types,
   UpdateQuery
 } from "mongoose";
+import { TSearchEventResultResponse } from "../../../common/types";
 import Event, {
   IEventDoc,
   TEvent,
@@ -116,6 +117,27 @@ class EventUseCase {
   ): Promise<boolean> {
     const event = await Event.findById(eventId).select("host").lean().exec();
     return event?.host.equals(userId) ?? false;
+  }
+
+  static async search(query: string): Promise<TSearchEventResultResponse[]> {
+    const cleanQuery = query.replace(/[^a-zA-Z0-9]/g, "");
+    if (!cleanQuery) {
+      return [];
+    }
+
+    const regexSource = cleanQuery
+      .split("")
+      .map((c) => `${c}[^a-zA-Z0-9]*`)
+      .join("");
+    const regex = new RegExp(regexSource, "i");
+
+    return Event.find({
+      $or: [{ title: { $regex: regex } }, { placeName: { $regex: regex } }]
+    })
+      .select("title placeName eventDate _id")
+      .limit(10)
+      .lean<TSearchEventResultResponse[]>()
+      .exec();
   }
 }
 

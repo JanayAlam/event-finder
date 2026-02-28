@@ -19,10 +19,8 @@ import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  TUpdateEventForm,
-  UpdateEventSchema
-} from "../../../../common/validation-schemas";
+import { TUpdateEventForm } from "../../../../common/types";
+import { UpdateEventSchema } from "../../../../common/validation-schemas";
 import { TEventDetail } from "../../../../server/models/event.model";
 import { EventActions } from "./event-actions";
 import { EventMetaList } from "./event-meta-list";

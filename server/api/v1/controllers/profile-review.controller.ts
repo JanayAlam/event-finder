@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { TIdParam } from "../../../../common/validation-schemas";
+import { TIdParam } from "../../../../common/types";
 import ProfileReviewUseCase from "../../../libs/use-cases/profile-review.use-case";
 import { convertToObjectId } from "../../../utils/object-id.util";
 

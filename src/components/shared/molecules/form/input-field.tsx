@@ -26,7 +26,7 @@ import { Textarea } from "../../shadcn-components/textarea";
 export type TInputFieldProps = {
   id?: string;
   isRequired?: boolean;
-  label: string;
+  label?: string;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   control?: Control<any>;
   name?: string;
@@ -125,6 +125,8 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
   }, [inputValue, options]);
 
   const renderLabel = useCallback((): React.ReactNode => {
+    if (!label) return null;
+
     return (
       <Label htmlFor={id}>
         <div className="flex items-center gap-0.5">

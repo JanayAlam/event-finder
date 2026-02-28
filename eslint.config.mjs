@@ -8,6 +8,7 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/incompatible-library": "off",
       "no-console": "error",
       "@typescript-eslint/no-unused-vars": [
         "warn",

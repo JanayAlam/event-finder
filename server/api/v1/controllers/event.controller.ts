@@ -3,7 +3,7 @@ import {
   TCreateEventDto,
   TIdParam,
   TUpdateEventDto
-} from "../../../../common/validation-schemas";
+} from "../../../../common/types";
 import { EVENT_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../../enums";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";

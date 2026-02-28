@@ -36,10 +36,10 @@ import React, { PropsWithChildren, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
-  CreateEventSchema,
   TCreateEventDto,
   TCreateEventForm
-} from "../../../../../../common/validation-schemas";
+} from "../../../../../../common/types";
+import { CreateEventSchema } from "../../../../../../common/validation-schemas";
 
 const FormCard: React.FC<
   PropsWithChildren<{

@@ -21,5 +21,3 @@ export const IdParamsSchema = z.object({
     .trim()
     .regex(OBJECT_ID_REGEX, { message: "Not a valid object id" })
 });
-
-export type TIdParam = z.infer<typeof IdParamsSchema>;

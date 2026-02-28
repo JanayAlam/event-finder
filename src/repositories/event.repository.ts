@@ -1,12 +1,10 @@
 import {
+  TCreateEventDto,
   TEvent,
   TEventDetailDto,
-  TEventListItemDto
-} from "../../common/types/event.types";
-import {
-  TCreateEventDto,
+  TEventListItemDto,
   TUpdateEventDto
-} from "../../common/validation-schemas";
+} from "../../common/types";
 import BaseRepository from "./base.repository";
 
 class EventRepository extends BaseRepository {

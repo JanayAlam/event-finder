@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { assert } from "node:console";
 import { z } from "zod";
-import {
-  PersonalInfoRequestSchema,
-  TIdParam
-} from "../../../../common/validation-schemas";
+import { TIdParam } from "../../../../common/types";
+import { PersonalInfoRequestSchema } from "../../../../common/validation-schemas";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
   getProfileTripStatus,

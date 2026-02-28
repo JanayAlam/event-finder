@@ -36,20 +36,17 @@ class EventRepository extends BaseRepository {
     return data;
   }
 
-  static async getAll() {
-    const url = `${this.apiRoute}`;
-    const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
+  static async getAll(page: number = 1, limit: number = 12) {
+    const url = `${this.apiRoute}?page=${page}&limit=${limit}`;
+    const data = await this.request<
+      undefined,
+      { data: TEventListItemDto[]; total: number; page: number; limit: number }
+    >(url, "get");
     return data;
   }
 
   static async getUpcomingEvents() {
     const url = `${this.apiRoute}/upcoming`;
-    const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
-    return data;
-  }
-
-  static async getExploreEvents() {
-    const url = `${this.apiRoute}/explore`;
     const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
     return data;
   }

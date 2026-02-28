@@ -15,6 +15,7 @@ export type TEventListItemDto = Pick<
   | "host"
   | "coverPhoto"
   | "status"
+  | "createdAt"
 >;
 
 export type TEventDetailDto = TEventDetail;

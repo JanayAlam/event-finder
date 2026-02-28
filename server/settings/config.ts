@@ -33,3 +33,5 @@ export const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 
 export const SSL_COMMERZ_STORE_ID = process.env.SSL_COMMERZ_STORE_ID;
 export const SSL_COMMERZ_PASSWORD = process.env.SSL_COMMERZ_PASSWORD;
+
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;

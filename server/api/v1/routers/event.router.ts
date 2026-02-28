@@ -55,9 +55,6 @@ eventRouter.get(
 // Get upcoming events
 eventRouter.get("/upcoming", EventController.getUpcoming);
 
-// Get explore events (all upcoming in-order)
-eventRouter.get("/explore", EventController.getExplore);
-
 // Get all events - public list with basic fields
 eventRouter.get("/", EventController.getAll);
 

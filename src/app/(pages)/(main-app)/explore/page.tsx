@@ -2,20 +2,52 @@
 
 import TMCard from "@/components/shared/molecules/tm-card";
 import EventCard from "@/components/shared/organisms/event-card";
+import { Button } from "@/components/shared/shadcn-components/button";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
+import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import {
   H2,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
 import EventRepository from "@/repositories/event.repository";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { CalendarX, Search } from "lucide-react";
+import { useMemo } from "react";
 
 export default function ExplorePage() {
-  const { data: events, isLoading: isEventsLoading } = useQuery({
+  const limit = 12;
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isFetching
+  } = useInfiniteQuery({
     queryKey: ["explore-events"],
-    queryFn: async () => await EventRepository.getExploreEvents()
+    queryFn: ({ pageParam }) => EventRepository.getAll(pageParam, limit),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const totalPages = Math.ceil(lastPage.total / limit);
+      return lastPage.page < totalPages ? lastPage.page + 1 : undefined;
+    },
+    placeholderData: (previousData) => previousData
   });
+
+  const allEvents = useMemo(() => {
+    if (!data) return [];
+    const flattened = data.pages.flatMap((page) => page.data);
+    // Deduplicate by _id to maintain previous behavior (if necessary)
+    return flattened.filter(
+      (event, index, self) =>
+        index === self.findIndex((e) => e._id === event._id)
+    );
+  }, [data]);
+
+  const handleLoadMore = () => {
+    fetchNextPage();
+  };
 
   return (
     <div className="flex flex-col gap-6 py-4">
@@ -31,7 +63,7 @@ export default function ExplorePage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {isEventsLoading ? (
+        {isLoading ? (
           Array.from({ length: 8 }).map((_, idx) => (
             <TMCard
               key={idx}
@@ -63,7 +95,7 @@ export default function ExplorePage() {
               </div>
             </TMCard>
           ))
-        ) : !events?.length ? (
+        ) : allEvents.length === 0 && !isLoading ? (
           <TMCard
             rootClassName="h-64 col-span-full"
             bodyClassName="h-full flex flex-col gap-3 items-center justify-center p-8 text-center"
@@ -80,11 +112,58 @@ export default function ExplorePage() {
             </div>
           </TMCard>
         ) : (
-          events.map((event) => (
-            <EventCard key={event._id.toString()} event={event} />
-          ))
+          <>
+            {allEvents.map((event) => (
+              <EventCard key={event._id.toString()} event={event} />
+            ))}
+            {isFetchingNextPage &&
+              Array.from({ length: 4 }).map((_, idx) => (
+                <TMCard
+                  key={`loading-${idx}`}
+                  rootClassName="overflow-hidden"
+                  bodyClassName="!p-0 flex flex-col opacity-50"
+                >
+                  <Skeleton className="h-44 w-full rounded-none" />
+                  <div className="flex flex-col gap-4 p-4">
+                    <Skeleton className="h-6 w-3/4" />
+                    <div className="rounded-lg border p-3">
+                      <div className="flex flex-col items-center gap-2">
+                        <Skeleton className="h-4 w-40" />
+                        <div className="flex items-center gap-2">
+                          <Skeleton className="size-4 rounded-full" />
+                          <Skeleton className="h-3 w-14" />
+                          <Skeleton className="size-4 rounded-full" />
+                        </div>
+                        <Skeleton className="h-3 w-10" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-4 w-2/3" />
+                    <div className="rounded-md bg-muted/40 px-3 py-2">
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-14" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  </div>
+                </TMCard>
+              ))}
+          </>
         )}
       </div>
+
+      {hasNextPage && (
+        <div className="flex justify-center mt-6">
+          <Button
+            onClick={handleLoadMore}
+            disabled={isFetching}
+            variant="outline"
+            className="min-w-32"
+          >
+            {isFetchingNextPage ? <Spinner className="mr-2" /> : "Load More"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

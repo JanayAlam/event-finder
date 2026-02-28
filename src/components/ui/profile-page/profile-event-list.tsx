@@ -1,4 +1,3 @@
-import { LinkText } from "@/components/shared/atoms/link/link-text";
 import TMCard from "@/components/shared/molecules/tm-card";
 import EventCard from "@/components/shared/organisms/event-card";
 import {
@@ -23,16 +22,9 @@ export const ProfileEventList: React.FC<IProfileEventListProps> = ({
   events
 }) => {
   return (
-    <TMCard
-      title={
-        <div className="flex gap-1 items-center justify-between">
-          <H4>{title}</H4>
-          <LinkText href={"#"}>Explore all</LinkText>
-        </div>
-      }
-    >
+    <TMCard title={<H4>{title}</H4>}>
       {events.length ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {events.map((event) => (
             <EventCard key={event._id.toString()} event={event} />
           ))}

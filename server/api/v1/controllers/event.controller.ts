@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { TEventListItemDto } from "../../../../common/types/event.types";
 import {
   TCreateEventDto,
   TIdParam,
@@ -142,7 +141,7 @@ class EventController {
 
   static async getUpcoming(_req: Request, res: Response, next: NextFunction) {
     try {
-      const events = await EventUseCase.getAll({
+      const response = await EventUseCase.getAll({
         filter: {
           eventDate: { $gte: new Date() },
           $or: [
@@ -167,76 +166,23 @@ class EventController {
         options: { sort: { eventDate: 1 }, limit: 4 }
       });
 
-      const eventList: TEventListItemDto[] = events.map((event) => ({
-        _id: event._id,
-        title: event.title,
-        placeName: event.placeName,
-        eventDate: event.eventDate,
-        entryFee: event.entryFee,
-        dayCount: event.dayCount,
-        nightCount: event.nightCount,
-        memberCapacity: event.memberCapacity,
-        host: event.host,
-        coverPhoto: event.coverPhoto,
-        status: event.status
-      }));
-
-      res.status(200).json(eventList);
+      res.status(200).json(response.data);
     } catch (err) {
       next(err);
     }
   }
 
-  static async getExplore(_req: Request, res: Response, next: NextFunction) {
+  static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const events = await EventUseCase.getAll({
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 12;
+      const skip = (page - 1) * limit;
+
+      const response = await EventUseCase.getAll({
         filter: {
           eventDate: { $gte: new Date() },
-          $or: [
-            { status: EVENT_STATUS.OPEN },
-            { status: { $exists: false } },
-            { status: null }
-          ]
+          status: { $ne: EVENT_STATUS.BLOCKED }
         },
-        projection: {
-          title: 1,
-          placeName: 1,
-          eventDate: 1,
-          entryFee: 1,
-          dayCount: 1,
-          nightCount: 1,
-          memberCapacity: 1,
-          host: 1,
-          coverPhoto: 1,
-          status: 1,
-          createdAt: 1
-        } as any,
-        options: { sort: { eventDate: 1 } }
-      });
-
-      const eventList: TEventListItemDto[] = events.map((event) => ({
-        _id: event._id,
-        title: event.title,
-        placeName: event.placeName,
-        eventDate: event.eventDate,
-        entryFee: event.entryFee,
-        dayCount: event.dayCount,
-        nightCount: event.nightCount,
-        memberCapacity: event.memberCapacity,
-        host: event.host,
-        coverPhoto: event.coverPhoto,
-        status: event.status
-      }));
-
-      res.status(200).json(eventList);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  static async getAll(_req: Request, res: Response, next: NextFunction) {
-    try {
-      const events = await EventUseCase.getAll({
         projection: {
           title: 1,
           description: 1,
@@ -250,24 +196,21 @@ class EventController {
           coverPhoto: 1,
           status: 1,
           createdAt: 1
-        } as any
+        } as any,
+        options: {
+          sort: { eventDate: 1 },
+          skip,
+          limit
+        }
       });
 
-      const eventList: TEventListItemDto[] = events.map((event) => ({
-        _id: event._id,
-        title: event.title,
-        placeName: event.placeName,
-        eventDate: event.eventDate,
-        entryFee: event.entryFee,
-        dayCount: event.dayCount,
-        nightCount: event.nightCount,
-        memberCapacity: event.memberCapacity,
-        host: event.host,
-        coverPhoto: event.coverPhoto,
-        status: event.status
-      }));
-
-      res.status(200).json(eventList);
+      res.status(200).json({
+        data: response.data,
+        total: response.total,
+        totalCount: response.total,
+        page,
+        limit
+      });
     } catch (err) {
       next(err);
     }
@@ -280,7 +223,7 @@ class EventController {
   ) {
     try {
       const { id } = req.params;
-      const events = await EventUseCase.getAll({
+      const response = await EventUseCase.getAll({
         filter: { host: convertToObjectId(id)! },
         projection: {
           title: 1,
@@ -295,24 +238,10 @@ class EventController {
           status: 1,
           createdAt: 1
         } as any,
-        options: { sort: { createdAt: -1 }, limit: 3 }
+        options: { sort: { createdAt: -1 }, limit: 2 }
       });
 
-      const eventList: TEventListItemDto[] = events.map((event) => ({
-        _id: event._id,
-        title: event.title,
-        placeName: event.placeName,
-        eventDate: event.eventDate,
-        entryFee: event.entryFee,
-        dayCount: event.dayCount,
-        nightCount: event.nightCount,
-        memberCapacity: event.memberCapacity,
-        host: event.host,
-        coverPhoto: event.coverPhoto,
-        status: event.status
-      }));
-
-      res.status(200).json(eventList);
+      res.status(200).json(response.data);
     } catch (err) {
       next(err);
     }
@@ -325,7 +254,7 @@ class EventController {
   ) {
     try {
       const { id } = req.params;
-      const events = await EventUseCase.getAll({
+      const response = await EventUseCase.getAll({
         filter: { members: convertToObjectId(id)! },
         projection: {
           title: 1,
@@ -340,34 +269,31 @@ class EventController {
           status: 1,
           createdAt: 1
         } as any,
-        options: { sort: { createdAt: -1 }, limit: 3 }
+        options: { sort: { createdAt: -1 }, limit: 2 }
       });
 
-      const eventList: TEventListItemDto[] = events.map((event) => ({
-        _id: event._id,
-        title: event.title,
-        placeName: event.placeName,
-        eventDate: event.eventDate,
-        entryFee: event.entryFee,
-        dayCount: event.dayCount,
-        nightCount: event.nightCount,
-        memberCapacity: event.memberCapacity,
-        host: event.host,
-        coverPhoto: event.coverPhoto,
-        status: event.status
-      }));
-
-      res.status(200).json(eventList);
+      res.status(200).json(response.data);
     } catch (err) {
       next(err);
     }
   }
 
-  static async getAllAdmin(_req: Request, res: Response, next: NextFunction) {
+  static async getAllAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      const events = await EventUseCase.getAll({});
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+      const skip = (page - 1) * limit;
 
-      res.status(200).json(events);
+      const response = await EventUseCase.getAll({
+        options: { skip, limit, sort: { createdAt: -1 } }
+      });
+
+      res.status(200).json({
+        data: response.data,
+        total: response.total,
+        page,
+        limit
+      });
     } catch (err) {
       next(err);
     }

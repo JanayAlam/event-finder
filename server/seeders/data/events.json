@@ -303,6 +303,7 @@
     "dayCount": 1,
     "nightCount": 1,
     "memberCapacity": 100,
+    "status": "finished",
     "itinerary": [
       {
         "moment": "2025-12-31T22:00:00Z",

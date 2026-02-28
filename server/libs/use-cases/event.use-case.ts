@@ -62,11 +62,30 @@ class EventUseCase {
     return event;
   }
 
-  static async getAll(params: TGetAllEventParamDto): Promise<TEvent[]> {
-    return Event.find({ ...params.filter }, params.projection, params.options)
+  static async getAll(params: TGetAllEventParamDto): Promise<{
+    data: TEvent[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const total = await Event.countDocuments(params.filter || {});
+    const data = await Event.find(
+      { ...params.filter },
+      params.projection,
+      params.options
+    )
       .populate("host", "firstName lastName email _id")
       .lean<TEvent[]>()
       .exec();
+
+    return {
+      data,
+      total,
+      page: params.options?.skip
+        ? Math.floor(params.options.skip / (params.options.limit || 10)) + 1
+        : 1,
+      limit: params.options?.limit || 10
+    };
   }
 
   static async update(

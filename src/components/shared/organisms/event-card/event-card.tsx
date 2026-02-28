@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { Clock3, MapPin, MoveDown, Users } from "lucide-react";
 import Link from "next/link";
 import { TEventListItemDto } from "../../../../../common/types";
+import { EVENT_STATUS } from "../../../../../server/enums";
 import TMCard from "../../molecules/tm-card";
 import { Badge } from "../../shadcn-components/badge";
 import { Button } from "../../shadcn-components/button";
@@ -30,11 +31,11 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
     label: string;
     variant: "destructive" | "secondary" | "default";
   } | null = null;
-  if (event.status === "blocked") {
+  if (event.status === EVENT_STATUS.BLOCKED) {
     badgeProps = { label: "Blocked", variant: "destructive" };
-  } else if (event.status === "closed") {
+  } else if (event.status === EVENT_STATUS.CLOSED) {
     badgeProps = { label: "Closed", variant: "secondary" };
-  } else if (isPassed) {
+  } else if (isPassed || event.status === EVENT_STATUS.FINISHED) {
     badgeProps = { label: "Passed", variant: "secondary" };
   }
 

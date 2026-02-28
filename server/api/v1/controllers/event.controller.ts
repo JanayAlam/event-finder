@@ -5,7 +5,7 @@ import {
   TIdParam,
   TUpdateEventDto
 } from "../../../../common/validation-schemas";
-import { EVENT_STATUS, PAYMENT_STATUS } from "../../../enums";
+import { EVENT_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../../enums";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
@@ -441,10 +441,13 @@ class EventController {
       }
 
       // 3. Ensure the requester is the host
-      if (!event.host._id.equals(req.user!._id)) {
+      if (
+        !event.host._id.equals(req.user?._id) &&
+        req.user?.role !== USER_ROLE.ADMIN
+      ) {
         throw new ApiError(
           403,
-          "Only event creator can publish event to Facebook"
+          "Only event creator or admin can publish event to Facebook"
         );
       }
 

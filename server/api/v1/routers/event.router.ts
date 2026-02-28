@@ -78,7 +78,7 @@ eventRouter.get(
 // Publish event to Facebook - only creator (HOST) can publish
 eventRouter.post(
   "/:id/publish/facebook",
-  authenticate([USER_ROLE.HOST]),
+  authenticate([USER_ROLE.ADMIN, USER_ROLE.HOST]),
   inputValidator(null, IdParamsSchema),
   EventController.publishToFacebook
 );

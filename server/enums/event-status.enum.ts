@@ -1,5 +1,6 @@
 export enum EVENT_STATUS {
   OPEN = "open",
   CLOSED = "closed",
-  BLOCKED = "blocked"
+  BLOCKED = "blocked",
+  FINISHED = "finished"
 }

@@ -15,7 +15,7 @@ import {
   UserCheck,
   UserPlus
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import {
   TEventDetail,
@@ -23,11 +23,11 @@ import {
 } from "../../../../server/models/event.model";
 
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
+import { EVENT_STATUS } from "../../../../server/enums";
 import { JoinEventModal } from "./join-event-modal";
 
 interface IEventActionsProps {
   event: TEventDetail;
-  /** Called after a successful Facebook post so the parent can refresh event data */
   onFacebookPosted?: (facebookPostId: string) => void;
 }
 
@@ -37,11 +37,12 @@ export const EventActions: React.FC<IEventActionsProps> = ({
 }) => {
   const { isLoggedIn, user } = useAuthStore();
 
-  const [isJoinModalOpen, setIsJoinModalOpen] = React.useState(false);
-  // Optimistically track posted state within this session
-  const [postedToFacebook, setPostedToFacebook] = React.useState(
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [postedToFacebook, setPostedToFacebook] = useState(
     event.isPostedToFacebook
   );
+  const [eventStatus, setEventStatus] = useState(event.status);
+  const [now] = useState(() => Date.now());
 
   const isHost = event.host._id.toString() === user?._id.toString();
   const isAdmin = user?.role === "admin";
@@ -51,12 +52,12 @@ export const EventActions: React.FC<IEventActionsProps> = ({
 
   const showFacebookButton = isHost || isAdmin;
 
-  const [eventStatus, setEventStatus] = React.useState(event.status);
+  const isPassed =
+    new Date(event.eventDate).getTime() < now ||
+    eventStatus === EVENT_STATUS.FINISHED;
+  const isClosed = eventStatus === EVENT_STATUS.CLOSED;
+  const isBlocked = eventStatus === EVENT_STATUS.BLOCKED;
 
-  const [now] = React.useState(() => Date.now());
-  const isPassed = new Date(event.eventDate).getTime() < now;
-  const isClosed = eventStatus === "closed";
-  const isBlocked = eventStatus === "blocked";
   const isJoinable = !isPassed && !isClosed && !isBlocked;
 
   const getJoinButtonLabel = () => {

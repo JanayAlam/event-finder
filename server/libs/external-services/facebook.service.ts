@@ -1,4 +1,5 @@
 import axios, { isAxiosError } from "axios";
+import dayjs from "dayjs";
 import Event, { TEvent } from "../../models/event.model";
 import FacebookToken from "../../models/facebook-token.model";
 import {
@@ -108,7 +109,7 @@ const generateFacebookPost = (event: TEvent): string => {
 ${event.title}
 
 📍 Location: ${event.placeName}
-📅 Date & Time: ${new Date(event.eventDate).toLocaleString()}
+📅 Date & Time: ${dayjs(event.eventDate).format("DD MMM YYYY, hh:mm A")}
 💰 Entry Fee: Tk. ${event.entryFee.toFixed(2)}
 🛏️ Duration: ${event.dayCount} day(s)${event.nightCount ? ` & ${event.nightCount} night(s)` : ""}
 
@@ -118,7 +119,7 @@ ${description}
 👤 Host Profile: ${hostProfile}
 `;
 
-  if (event.itinerary && event.itinerary.length > 0) {
+  if (event.itinerary?.length) {
     postMessage += `\n📝 Itinerary:\n`;
     event.itinerary.forEach((item, index) => {
       let itemDesc = item.description || "";
@@ -132,9 +133,6 @@ ${description}
   return postMessage;
 };
 
-/**
- * Exchanges a long-lived user token for a long-lived page token
- */
 export const refreshFacebookPageToken = async (
   userAccessToken: string,
   pageId: string
@@ -204,7 +202,7 @@ export const postEventToFacebookPage = async (
     );
   }
 
-  const postMessage = generateFacebookPost(event as any);
+  const postMessage = generateFacebookPost(event);
 
   try {
     const response = await axios.post<{ id: string }>(

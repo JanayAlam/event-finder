@@ -2,12 +2,13 @@
 
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import { TypographyMuted } from "@/components/shared/shadcn-components/typography";
-import { API_BASE_URL } from "@/config";
+import { PUBLIC_SERVER_URL } from "@/config";
 import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
+import { TDiscussionWithProfile } from "../../../../server/models/discussion.model";
 import {
   TEventDetail,
   TUserWithProfile
@@ -37,38 +38,59 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
   });
 
   useEffect(() => {
-    // Determine the socket server URL (strip /api/v1 if present)
-    const socketUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
-    const socket = io(socketUrl, { withCredentials: true });
+    const socket = io(PUBLIC_SERVER_URL, { withCredentials: true });
 
     socket.on("connect", () => {
       socket.emit("join-event", event._id.toString());
     });
 
-    socket.on("new-discussion", (newPost) => {
-      queryClient.setQueryData(["discussions", event._id], (old: any) => {
-        if (!old) return [newPost];
-        // Ensure we don't duplicate if the creator's mutation already added it via onMutate
-        if (old.some((p: any) => p._id.toString() === newPost._id.toString()))
-          return old;
-        return [newPost, ...old];
-      });
+    socket.on("new-discussion", (newPost: TDiscussionWithProfile) => {
+      queryClient.setQueryData(
+        ["discussions", event._id],
+        (old: TDiscussionWithProfile[]) => {
+          if (!old) {
+            return [newPost];
+          }
+
+          // Ensure we don't duplicate if the creator's mutation already added it via onMutate
+          if (old.some((p) => p._id.toString() === newPost._id.toString())) {
+            return old;
+          }
+
+          return [newPost, ...old];
+        }
+      );
     });
 
-    socket.on("update-discussion", (updatedPost) => {
-      queryClient.setQueryData(["discussions", event._id], (old: any) => {
-        if (!old) return [updatedPost];
-        return old.map((p: any) =>
-          p._id.toString() === updatedPost._id.toString() ? updatedPost : p
+    socket.on(
+      "update-discussion",
+      (updatedPost: TDiscussionWithProfile | null) => {
+        queryClient.setQueryData(
+          ["discussions", event._id],
+          (old: TDiscussionWithProfile[]) => {
+            if (!old) {
+              return [updatedPost];
+            }
+
+            return old.map((p) =>
+              p._id.toString() === updatedPost?._id.toString() ? updatedPost : p
+            );
+          }
         );
-      });
-    });
+      }
+    );
 
-    socket.on("delete-discussion", (postId) => {
-      queryClient.setQueryData(["discussions", event._id], (old: any) => {
-        if (!old) return [];
-        return old.filter((p: any) => p._id.toString() !== postId.toString());
-      });
+    socket.on("delete-discussion", (postId: string) => {
+      queryClient.setQueryData(
+        ["discussions", event._id],
+        (old: TDiscussionWithProfile[]) => {
+          if (!old) {
+            return [];
+          }
+
+          return old.filter((p) => p._id.toString() !== postId.toString());
+        }
+      );
     });
 
     return () => {

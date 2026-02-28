@@ -1106,6 +1106,46 @@
   resolved "https://registry.npmjs.org/@open-draft/until/-/until-2.1.0.tgz#0acf32f470af2ceaf47f095cdecd40d68666efda"
   integrity sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==
 
+"@openai/agents-core@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.npmjs.org/@openai/agents-core/-/agents-core-0.5.2.tgz#ca585f8413efd849ac115c213e23e5bc5e2cfd37"
+  integrity sha512-9B6Ndo8/jyD32ZRfFc9j7JGdGRyh89gSMV281LHewoJ8Py4zopQBjiYDn3kBmREvHoO/kaPXgf8yHPtwT3OoDw==
+  dependencies:
+    debug "^4.4.0"
+    openai "^6.20.0"
+  optionalDependencies:
+    "@modelcontextprotocol/sdk" "^1.26.0"
+
+"@openai/agents-openai@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.npmjs.org/@openai/agents-openai/-/agents-openai-0.5.2.tgz#f02b92f47ff9444ebce292684f42813d5bb225f5"
+  integrity sha512-o5RG2WzBVSYqrMpBhYfR8YVxfui8nv4zZghl63cXL9wqoRisYe15zXl8dFFRKcYHRwpUBsOqa0DzOGh5sAjQeA==
+  dependencies:
+    "@openai/agents-core" "0.5.2"
+    debug "^4.4.0"
+    openai "^6.20.0"
+
+"@openai/agents-realtime@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.npmjs.org/@openai/agents-realtime/-/agents-realtime-0.5.2.tgz#27fba9424ea185f7b25a32638f77d15addf7d832"
+  integrity sha512-eN0JfffIGQGG9YqEc8jz7xDXh/ulDmjMq3Iaa81cPET9w2VS5mUScRkhHXu1Ts7MJpacYyiuWuA/PEAkRAJyJg==
+  dependencies:
+    "@openai/agents-core" "0.5.2"
+    "@types/ws" "^8.18.1"
+    debug "^4.4.0"
+    ws "^8.18.1"
+
+"@openai/agents@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.npmjs.org/@openai/agents/-/agents-0.5.2.tgz#68e06b61e0116393d8699111009268102f6e1e50"
+  integrity sha512-TMIz2W9NSXDFHXmVuZiwYB5JTBMSwCgqwB5B5Np5ZuJjOIKxinGGcMhTntm3gtdmDgJR5ghbb+IEEC2BSzbEFw==
+  dependencies:
+    "@openai/agents-core" "0.5.2"
+    "@openai/agents-openai" "0.5.2"
+    "@openai/agents-realtime" "0.5.2"
+    debug "^4.4.0"
+    openai "^6.20.0"
+
 "@radix-ui/number@1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@radix-ui/number/-/number-1.1.1.tgz#7b2c9225fbf1b126539551f5985769d0048d9090"
@@ -2005,6 +2045,13 @@
     "@types/node" "*"
     winston "^3.0.0"
     winston-transport "^4.3.0"
+
+"@types/ws@^8.18.1":
+  version "8.18.1"
+  resolved "https://registry.npmjs.org/@types/ws/-/ws-8.18.1.tgz#48464e4bf2ddfd17db13d845467f6070ffea4aa9"
+  integrity sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==
+  dependencies:
+    "@types/node" "*"
 
 "@typescript-eslint/eslint-plugin@8.46.2":
   version "8.46.2"
@@ -5602,6 +5649,11 @@ open@^11.0.0:
     powershell-utils "^0.1.0"
     wsl-utils "^0.3.0"
 
+openai@^6.20.0:
+  version "6.25.0"
+  resolved "https://registry.npmjs.org/openai/-/openai-6.25.0.tgz#a874e43c0f514464ea83d62c7b746ff4d39a031a"
+  integrity sha512-mEh6VZ2ds2AGGokWARo18aPISI1OhlgdEIC1ewhkZr8pSIT31dec0ecr9Nhxx0JlybyOgoAT1sWeKtwPZzJyww==
+
 optionator@^0.9.3:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/optionator/-/optionator-0.9.4.tgz#7ea1c1a5d91d764fb282139c88fe11e182a3a734"
@@ -7290,6 +7342,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
+
+ws@^8.18.1:
+  version "8.19.0"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.19.0.tgz#ddc2bdfa5b9ad860204f5a72a4863a8895fd8c8b"
+  integrity sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==
 
 ws@~8.18.3:
   version "8.18.3"

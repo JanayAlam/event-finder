@@ -1,6 +1,7 @@
 import { Router } from "express";
 import accountVerificationRouter from "./account-verification.router";
 import adminRouter from "./admin.router";
+import aiRouter from "./ai.router";
 import authRouter from "./auth.router";
 import eventRouter from "./event.router";
 import profileReviewRouter from "./profile-review.router";
@@ -20,5 +21,6 @@ router.use("/account-verifications", accountVerificationRouter);
 router.use("/admins", adminRouter);
 router.use("/promotion-requests", promotionRequestRouter);
 router.use("/events", eventRouter);
+router.use("/ai", aiRouter);
 
 export default router;

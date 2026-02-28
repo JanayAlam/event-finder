@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import z from "zod";
+import { z } from "zod";
 import logger from "../utils/winston.util";
 
 const inputValidator = (

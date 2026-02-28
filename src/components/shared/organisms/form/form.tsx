@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Control, FormState, useForm, UseFormReturn } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
 import { InputField, InputFieldSkeleton } from "../../molecules/form";
 import { Button } from "../../shadcn-components/button";
 import { Skeleton } from "../../shadcn-components/skeleton";

@@ -15,6 +15,8 @@ type TSettingsCardProps = PropsWithChildren & {
   rootClassName?: string;
   headerClassName?: string;
   bodyClassName?: string;
+  titleClassName?: string;
+  descriptionClassName?: string;
 };
 
 const TMCard: React.FC<TSettingsCardProps> = ({
@@ -23,19 +25,23 @@ const TMCard: React.FC<TSettingsCardProps> = ({
   children,
   rootClassName,
   headerClassName,
-  bodyClassName
+  bodyClassName,
+  titleClassName,
+  descriptionClassName
 }) => {
   return (
     <ShadCNCard className={cn("shadow-none", rootClassName)}>
       {title || description ? (
         <CardHeader className={headerClassName}>
           {title ? (
-            <CardTitle>
+            <CardTitle className={titleClassName}>
               {typeof title === "string" ? <H3>{title}</H3> : title}
             </CardTitle>
           ) : null}
           {description ? (
-            <CardDescription>{description}</CardDescription>
+            <CardDescription className={descriptionClassName}>
+              {description}
+            </CardDescription>
           ) : null}
         </CardHeader>
       ) : null}

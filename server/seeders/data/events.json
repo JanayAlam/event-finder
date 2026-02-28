@@ -1,0 +1,331 @@
+[
+  {
+    "title": "Mountain Hiking Adventure",
+    "description": "A thrilling 3-day hike through the Himalayan foothills.",
+    "placeName": "Kathmandu, Nepal",
+    "eventDate": "2026-03-01T08:00:00Z",
+    "entryFee": 150,
+    "dayCount": 3,
+    "nightCount": 2,
+    "memberCapacity": 20,
+    "itinerary": [
+      {
+        "moment": "2026-03-01T08:00:00Z",
+        "title": "Base Camp Meetup",
+        "description": "Meet at the base camp and start the trek."
+      },
+      {
+        "moment": "2026-03-02T08:00:00Z",
+        "title": "Summit Attempt",
+        "description": "Reach the peak and enjoy the view."
+      },
+      {
+        "moment": "2026-03-03T08:00:00Z",
+        "title": "Descent",
+        "description": "Return to the base camp."
+      }
+    ]
+  },
+  {
+    "title": "Beach Party Weekend",
+    "description": "Enjoy the sun, sand, and surf at our annual beach bash.",
+    "placeName": "Cox's Bazar, Bangladesh",
+    "eventDate": "2026-04-10T14:00:00Z",
+    "entryFee": 50,
+    "dayCount": 2,
+    "nightCount": 1,
+    "memberCapacity": 50,
+    "itinerary": [
+      {
+        "moment": "2026-04-10T14:00:00Z",
+        "title": "Arrival & Check-in",
+        "description": "Welcome drinks and room allotment."
+      },
+      {
+        "moment": "2026-04-10T19:00:00Z",
+        "title": "Beach Bonfire",
+        "description": "Live music and BBQ by the shore."
+      }
+    ]
+  },
+  {
+    "title": "Historical City Tour",
+    "description": "Explore the ancient ruins and cultural heritage of Old Dhaka.",
+    "placeName": "Dhaka, Bangladesh",
+    "eventDate": "2026-05-05T09:00:00Z",
+    "entryFee": 20,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 30,
+    "itinerary": [
+      {
+        "moment": "2026-05-05T09:00:00Z",
+        "title": "Lalbagh Fort Visit",
+        "description": "Rich history of Mughal architecture."
+      },
+      {
+        "moment": "2026-05-05T13:00:00Z",
+        "title": "Traditional Lunch",
+        "description": "Famous biryani in Old Dhaka."
+      }
+    ]
+  },
+  {
+    "title": "Wildlife Safari",
+    "description": "Witness the majestic Royal Bengal Tigers in the Sundarbans.",
+    "placeName": "Sundarbans, Bangladesh",
+    "eventDate": "2026-02-15T06:00:00Z",
+    "entryFee": 300,
+    "dayCount": 4,
+    "nightCount": 3,
+    "memberCapacity": 12,
+    "itinerary": [
+      {
+        "moment": "2026-02-15T06:00:00Z",
+        "title": "Boat Journey Starts",
+        "description": "Set sail into the mangrove forest."
+      },
+      {
+        "moment": "2026-02-17T05:00:00Z",
+        "title": "Deep Forest Trek",
+        "description": "Quiet walk through the jungle."
+      }
+    ]
+  },
+  {
+    "title": "Serene Tea Garden Retreat",
+    "description": "Relax and rejuvenate amidst the rolling hills of tea gardens.",
+    "placeName": "Srimangal, Bangladesh",
+    "eventDate": "2026-06-12T10:00:00Z",
+    "entryFee": 100,
+    "dayCount": 2,
+    "nightCount": 1,
+    "memberCapacity": 15,
+    "itinerary": [
+      {
+        "moment": "2026-06-12T10:00:00Z",
+        "title": "Tea Tasting Session",
+        "description": "Sample various blends of local tea."
+      },
+      {
+        "moment": "2026-06-13T09:00:00Z",
+        "title": "Nature Walk",
+        "description": "Explore the Lawachara National Park."
+      }
+    ]
+  },
+  {
+    "title": "Monsoon Rain Festival",
+    "description": "Celebrate the beauty of rain with music and traditional food.",
+    "placeName": "Sylhet, Bangladesh",
+    "eventDate": "2026-07-20T11:00:00Z",
+    "entryFee": 40,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 100,
+    "itinerary": [
+      {
+        "moment": "2026-07-20T11:00:00Z",
+        "title": "Opening Ceremony",
+        "description": "Songs and dances dedicated to the monsoon."
+      }
+    ]
+  },
+  {
+    "title": "Winter Trekking",
+    "description": "Experience the cold winter in the mountains.",
+    "placeName": "Chawkbazar, Bangladesh",
+    "eventDate": "2025-12-15T10:00:00Z",
+    "entryFee": 30,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 30,
+    "itinerary": [
+      {
+        "moment": "2025-12-15T10:00:00Z",
+        "title": "Trek Commencement",
+        "description": "Walking through the fog."
+      }
+    ]
+  },
+  {
+    "title": "Island Hopping Cruise",
+    "description": "Discover hidden beaches and crystal-clear waters.",
+    "placeName": "Saint Martin's Island, Bangladesh",
+    "eventDate": "2026-11-01T07:00:00Z",
+    "entryFee": 250,
+    "dayCount": 3,
+    "nightCount": 2,
+    "memberCapacity": 25,
+    "itinerary": [
+      {
+        "moment": "2026-11-01T07:00:00Z",
+        "title": "Ferry Departure",
+        "description": "Journey across the Bay of Bengal."
+      },
+      {
+        "moment": "2026-11-02T10:00:00Z",
+        "title": "Snorkeling @ Chera Dwip",
+        "description": "Explore coral reefs."
+      }
+    ]
+  },
+  {
+    "title": "Cycling Expedition",
+    "description": "A 50km bike ride through scenic countryside routes.",
+    "placeName": "Gazipur, Bangladesh",
+    "eventDate": "2026-01-25T06:30:00Z",
+    "entryFee": 15,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 40,
+    "itinerary": [
+      {
+        "moment": "2026-01-25T06:30:00Z",
+        "title": "Trek Start",
+        "description": "Cycling marathon begins."
+      }
+    ]
+  },
+  {
+    "title": "Photography Workshop",
+    "description": "Learn the art of landscape photography from professionals.",
+    "placeName": "Rangamati, Bangladesh",
+    "eventDate": "2026-08-15T15:00:00Z",
+    "entryFee": 120,
+    "dayCount": 2,
+    "nightCount": 1,
+    "memberCapacity": 10,
+    "itinerary": [
+      {
+        "moment": "2026-08-15T15:00:00Z",
+        "title": "Golden Hour Session",
+        "description": "Capturing sunset at Kaptai Lake."
+      }
+    ]
+  },
+  {
+    "title": "Cultural Exchange Fair",
+    "description": "Experience different cultures through food, music, and art.",
+    "placeName": "Chittagong, Bangladesh",
+    "eventDate": "2026-09-01T10:00:00Z",
+    "entryFee": 10,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 200,
+    "itinerary": [
+      {
+        "moment": "2026-09-01T10:00:00Z",
+        "title": "Exhibition Opens",
+        "description": "Global stalls are ready for visitors."
+      }
+    ]
+  },
+  {
+    "title": "Winter Camping Night",
+    "description": "Cozy up by the fire and sleep under the stars.",
+    "placeName": "Bandarban, Bangladesh",
+    "eventDate": "2026-12-20T16:00:00Z",
+    "entryFee": 80,
+    "dayCount": 2,
+    "nightCount": 1,
+    "memberCapacity": 20,
+    "itinerary": [
+      {
+        "moment": "2026-12-20T16:00:00Z",
+        "title": "Tents Setup",
+        "description": "Preparing the camp site."
+      },
+      {
+        "moment": "2026-12-20T20:00:00Z",
+        "title": "Dinner & Storytelling",
+        "description": "Traditional meals and local myths."
+      }
+    ]
+  },
+  {
+    "title": "River Cruise Dinner",
+    "description": "A romantic evening on the Shitalakshya river.",
+    "placeName": "Narayanganj, Bangladesh",
+    "eventDate": "2026-10-05T18:00:00Z",
+    "entryFee": 60,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 30,
+    "itinerary": [
+      {
+        "moment": "2026-10-05T18:00:00Z",
+        "title": "Boarding",
+        "description": "Welcome on board."
+      }
+    ]
+  },
+  {
+    "title": "Yoga and Wellness Camp",
+    "description": "Unlock your inner peace in a tranquil environment.",
+    "placeName": "Panchagarh, Bangladesh",
+    "eventDate": "2026-04-20T06:00:00Z",
+    "entryFee": 200,
+    "dayCount": 3,
+    "nightCount": 2,
+    "memberCapacity": 15,
+    "itinerary": [
+      {
+        "moment": "2026-04-20T06:00:00Z",
+        "title": "Morning Meditation",
+        "description": "Starting the day with mindfulness."
+      }
+    ]
+  },
+  {
+    "title": "Street Food Crawl",
+    "description": "Taste the various flavors of city life.",
+    "placeName": "Rajshahi, Bangladesh",
+    "eventDate": "2026-03-20T17:00:00Z",
+    "entryFee": 25,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 25,
+    "itinerary": [
+      {
+        "moment": "2026-03-20T17:00:00Z",
+        "title": "Food Tour Starts",
+        "description": "Visiting the best local stalls."
+      }
+    ]
+  },
+  {
+    "title": "New Year Celebration",
+    "description": "Welcome 2026 with a blast.",
+    "placeName": "Cox's Bazar, Bangladesh",
+    "eventDate": "2025-12-31T22:00:00Z",
+    "entryFee": 100,
+    "dayCount": 1,
+    "nightCount": 1,
+    "memberCapacity": 100,
+    "itinerary": [
+      {
+        "moment": "2025-12-31T22:00:00Z",
+        "title": "Countdown Begins",
+        "description": "Be ready for the fireworks."
+      }
+    ]
+  },
+  {
+    "title": "Archeological Exploration",
+    "description": "Visit the world heritage site of Paharpur.",
+    "placeName": "Naogaon, Bangladesh",
+    "eventDate": "2026-05-30T09:00:00Z",
+    "entryFee": 35,
+    "dayCount": 1,
+    "nightCount": 0,
+    "memberCapacity": 20,
+    "itinerary": [
+      {
+        "moment": "2026-05-30T09:00:00Z",
+        "title": "Guided Tour",
+        "description": "Learning about Buddhist Vihara."
+      }
+    ]
+  }
+]

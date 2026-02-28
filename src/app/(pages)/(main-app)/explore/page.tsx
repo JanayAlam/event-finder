@@ -1,49 +1,41 @@
 "use client";
 
-import { LinkText } from "@/components/shared/atoms/link/link-text";
 import TMCard from "@/components/shared/molecules/tm-card";
 import EventCard from "@/components/shared/organisms/event-card";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
 import {
-  H3,
+  H2,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
-import { cn } from "@/lib/utils";
 import EventRepository from "@/repositories/event.repository";
-import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarX } from "lucide-react";
+import { CalendarX, Search } from "lucide-react";
 
-export default function UpcomingTripsSection() {
+export default function ExplorePage() {
   const { data: events, isLoading: isEventsLoading } = useQuery({
-    queryKey: ["upcoming-trips"],
-    queryFn: async () => await EventRepository.getUpcomingEvents()
+    queryKey: ["explore-events"],
+    queryFn: async () => await EventRepository.getExploreEvents()
   });
 
   return (
-    <div className="flex flex-col gap-4 sm:py-4">
-      <div>
-        <div className="flex gap-1 items-center justify-between">
-          <H3>Upcoming trips</H3>
-          <LinkText href={PUBLIC_PAGE_ROUTE.EXPLORE}>Explore all</LinkText>
+    <div className="flex flex-col gap-6 py-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Search className="size-6 text-primary" />
+          <H2>Explore Adventures</H2>
         </div>
-        <TypographyMuted>
-          Discover exciting trips organized by fellow travelers. Join a group
-          and explore together!
+        <TypographyMuted className="text-lg">
+          Discover your next journey. Browse upcoming trips organized by our
+          community members and find your perfect match.
         </TypographyMuted>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {isEventsLoading ? (
-          Array.from({ length: 4 }).map((_, idx) => (
+          Array.from({ length: 8 }).map((_, idx) => (
             <TMCard
               key={idx}
-              rootClassName={cn(
-                "overflow-hidden",
-                idx >= 1 && "max-sm:hidden",
-                idx >= 2 && "max-md:hidden",
-                idx >= 3 && "max-lg:hidden"
-              )}
+              rootClassName="overflow-hidden"
               bodyClassName="!p-0 flex flex-col"
             >
               <Skeleton className="h-44 w-full rounded-none" />
@@ -73,11 +65,19 @@ export default function UpcomingTripsSection() {
           ))
         ) : !events?.length ? (
           <TMCard
-            rootClassName="h-48 col-span-4"
-            bodyClassName="h-full flex flex-col gap-2 items-center justify-center"
+            rootClassName="h-64 col-span-full"
+            bodyClassName="h-full flex flex-col gap-3 items-center justify-center p-8 text-center"
           >
-            <CalendarX className="size-12 text-muted-foreground" />
-            <TypographyMuted>No trips found</TypographyMuted>
+            <div className="bg-muted p-4 rounded-full">
+              <CalendarX className="size-12 text-muted-foreground" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="text-xl font-semibold">No upcoming trips found</p>
+              <TypographyMuted>
+                Try checking back later or be the first to organize a new
+                adventure!
+              </TypographyMuted>
+            </div>
           </TMCard>
         ) : (
           events.map((event) => (

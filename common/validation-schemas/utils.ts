@@ -41,9 +41,8 @@ export const imageOptional = () =>
     .superRefine((files, ctx) => {
       if (typeof files === "string" || !files) return;
 
-      const isFileList =
-        typeof FileList !== "undefined" && files instanceof FileList;
-      const file = isFileList ? (files as FileList)[0] : files;
+      const isFileList = files?.constructor?.name === "FileList";
+      const file = isFileList ? (files as any)[0] : files;
 
       if (!file || typeof file !== "object" || !("size" in file)) return;
 
@@ -54,8 +53,8 @@ export const imageOptional = () =>
         });
       }
 
-      const fileType = file.type;
-      const fileName = file.name?.toLowerCase() || "";
+      const fileType = (file as any).type;
+      const fileName = (file as any).name?.toLowerCase() || "";
       const hasValidType = ACCEPTED_IMAGE_TYPES.includes(fileType);
       const hasValidExt = ACCEPTED_EXTENSIONS.some((ext) =>
         fileName.endsWith(ext)
@@ -70,8 +69,8 @@ export const imageOptional = () =>
     })
     .transform((files) => {
       if (typeof files === "string") return files;
-      if (typeof FileList !== "undefined" && files instanceof FileList) {
-        return files[0];
+      if (files?.constructor?.name === "FileList") {
+        return (files as any)[0];
       }
       return files;
     });

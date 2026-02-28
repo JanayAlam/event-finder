@@ -11,7 +11,8 @@
     "build:staging": "yarn clean && yarn run build:next:staging && yarn run build:server",
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint . --ext ts --ext tsx --ext js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "seed:events": "ts-node -P tsconfig.server.json server/seeders/event-seeder.ts"
   },
   "engines": {
     "node": ">= 22.x",

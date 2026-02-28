@@ -48,6 +48,12 @@ class EventRepository extends BaseRepository {
     return data;
   }
 
+  static async getExploreEvents() {
+    const url = `${this.apiRoute}/explore`;
+    const data = await this.request<undefined, TEventListItemDto[]>(url, "get");
+    return data;
+  }
+
   static async getSingle(eventId: string) {
     const url = `${this.apiRoute}/${eventId}`;
     const data = await this.request<undefined, TEventDetailDto>(url, "get");

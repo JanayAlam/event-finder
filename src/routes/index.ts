@@ -1,5 +1,6 @@
 export const PUBLIC_PAGE_ROUTE = {
-  HOME: "/"
+  HOME: "/",
+  EXPLORE: "/explore"
 };
 
 export const PUBLIC_DYNAMIC_PAGE_ROUTE = {

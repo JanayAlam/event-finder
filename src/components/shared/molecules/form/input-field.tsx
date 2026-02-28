@@ -145,6 +145,9 @@ const InputField: React.FC<TInputFieldProps> = (props) => {
             id={id}
             className={cn(error && "border border-destructive")}
             {...field}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              field.onChange(e.target.files);
+            }}
             {...(rest as Omit<typeof rest, "value">)}
             value={typeof field.value === "string" ? field.value : undefined}
           />

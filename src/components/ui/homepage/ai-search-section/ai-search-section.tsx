@@ -41,7 +41,7 @@ export default function AISearchSection() {
     }
 
     router.push(
-      `${PUBLIC_PAGE_ROUTE.AI_SEARCH}?prompt=${encodeURIComponent(finalPrompt)}`
+      `${PUBLIC_PAGE_ROUTE.AI}?prompt=${encodeURIComponent(finalPrompt)}`
     );
   };
 

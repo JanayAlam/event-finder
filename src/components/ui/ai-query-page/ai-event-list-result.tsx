@@ -20,8 +20,8 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
   events
 }) => {
   return (
-    <div className="flex flex-col gap-4">
-      <Paragraph className="font-semibold text-lg">{message}</Paragraph>
+    <div className="flex flex-col gap-2">
+      <Paragraph className="px-1.5">{message}</Paragraph>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {events.map((event) => (
           <Link
@@ -29,7 +29,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
             href={PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(event._id)}
           >
             <TMCard
-              rootClassName="group h-full scale-98 hover:scale-100 transition-all hover:bg-primary/10"
+              rootClassName="group h-full scale-97 hover:scale-100 transition-all hover:bg-primary/10"
               title={
                 <div className="flex flex-col gap-4">
                   <TypographyMuted className="flex items-center gap-2 group-hover:text-primary/80">
@@ -47,7 +47,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
                 <div className="flex flex-col gap-1">
                   <TypographyMuted className="flex items-center gap-2">
                     <Calendar className="size-4" />
-                    {dayjs(event.eventDate).format("DD MMM YYYY")}
+                    {dayjs(event.eventDate).format("dddd, DD MMM YYYY")}
                   </TypographyMuted>
                   <TypographyMuted className="flex items-center gap-2">
                     <Signpost className="size-4" />
@@ -57,7 +57,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
                   </TypographyMuted>
                 </div>
                 <Paragraph className="font-semibold text-lg lg:text-xl group-hover:text-primary">
-                  {event.entryFee} Tk
+                  BDT {event.entryFee}
                 </Paragraph>
               </div>
             </TMCard>

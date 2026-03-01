@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@/components/shared/shadcn-components/spinner";
+import { PageLoader } from "@/components/shared/molecules/page-loader";
 import { TypographyMuted } from "@/components/shared/shadcn-components/typography";
 import { PUBLIC_SERVER_URL } from "@/config";
 import DiscussionRepository from "@/repositories/discussion.repository";
@@ -102,9 +102,7 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
   return (
     <div className="w-full flex flex-col gap-6 max-w-3xl mx-auto!">
       {isLoading ? (
-        <div className="flex justify-center py-10">
-          <Spinner className="size-10" />
-        </div>
+        <PageLoader />
       ) : (
         <>
           {canPost && (

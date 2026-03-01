@@ -13,3 +13,10 @@ export type TEventSearchToolDto = z.infer<typeof EventSearchToolSchema>;
 export type TAISearchEvent = z.infer<typeof SearchAgentEventSchema>;
 
 export type TAIPromtResponse = z.infer<typeof SearchAgentOutputSchema>;
+
+export interface IAIQueryItem {
+  key: string;
+  prompt: string;
+  result?: TAIPromtResponse;
+  isLoading: boolean;
+}

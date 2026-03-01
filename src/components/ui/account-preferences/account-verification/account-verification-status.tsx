@@ -1,7 +1,7 @@
 "use client";
 
+import { PageLoader } from "@/components/shared/molecules/page-loader";
 import TMCard from "@/components/shared/molecules/tm-card";
-import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import DeclinedVerificationCard from "@/components/ui/account-preferences/account-verification/declined-verification-card";
 import PendingVerificationCard from "@/components/ui/account-preferences/account-verification/pending-verification-card";
@@ -22,11 +22,7 @@ const AccountVerificationStatus: React.FC = () => {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center my-8!">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (accountVerificationStatus?.status === VERIFICATION_STATUS.PENDING) {

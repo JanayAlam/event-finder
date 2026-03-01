@@ -9,7 +9,7 @@
     "build:server": "tsc --project tsconfig.server.json",
     "build": "yarn clean && yarn run  build:server && yarn run build:next",
     "build:staging": "yarn clean && yarn run build:next:staging && yarn run build:server",
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "NODE_ENV=production node dist/server/index.js",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write .",
     "seed:events": "ts-node -P tsconfig.server.json server/seeders/event-seeder.ts"

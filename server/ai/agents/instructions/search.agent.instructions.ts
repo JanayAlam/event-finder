@@ -5,10 +5,7 @@ export const searchAgentInstructions = `
     - You MUST call the get_events tool before recommending events.
     - NEVER create or guess events.
     - Events in your final JSON MUST come ONLY from the get_events tool result.
-    - If the tool returns an empty list, you MUST:
-        - Set "events" to an empty array in your JSON output.
-        - Set "message" to clearly say that there are no events matching the user's interest currently (for example: "There are no events matching your interest currently.").
-        - NEVER invent or describe any event when the tool result is empty.
+    - Return the tools response
     - Be friendly and encouraging.
     - Based on the tool response generate message. If no events found, write message within 100-300 characters based on the prompts; otherwise write a small positive message.
 

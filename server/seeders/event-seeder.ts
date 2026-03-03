@@ -21,9 +21,7 @@ const seedEvents = async () => {
     // Fetch all users and profiles
     logger.info("Fetching users and profiles...");
 
-    const users = await User.find({
-      $or: [{ role: USER_ROLE.HOST }, { role: USER_ROLE.ADMIN }]
-    }).populate("profile");
+    const users = await User.find({ role: USER_ROLE.HOST }).populate("profile");
 
     logger.info(`Fetched ${users.length} users successfully.`);
 
@@ -37,23 +35,18 @@ const seedEvents = async () => {
 
     logger.info(`Found ${potentialHosts.length} potential hosts.`);
 
-    // Clear existing events (optional, but usually helpful for repeat seeding)
-    // console.log("Clearing existing events...");
-    // await Event.deleteMany({});
-
     logger.info(`Seeding ${eventsData.length} events...`);
 
     const createdEvents = [];
 
     for (const eventInfo of eventsData) {
-      // Randomly select a host
       const randomHost =
         potentialHosts[Math.floor(Math.random() * potentialHosts.length)];
 
       const event = new Event({
         ...eventInfo,
         host: randomHost._id,
-        members: [], // No members initially
+        members: [],
         isPostedToFacebook: false
       });
 

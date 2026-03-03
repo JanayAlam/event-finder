@@ -55,7 +55,7 @@ class PromotionRequestUseCase extends UserCase {
   static async acceptPromotionRequest(
     id: Types.ObjectId
   ): Promise<TPromotionRequest | null> {
-    return PromotionRequest.findOneAndUpdate(
+    const result = await PromotionRequest.findOneAndUpdate(
       { _id: id },
       { isApproved: true, approvedAt: new Date() },
       { new: true }
@@ -63,15 +63,22 @@ class PromotionRequestUseCase extends UserCase {
       .select(this.defaultSelect)
       .lean<TPromotionRequest>()
       .exec();
+
+    return result;
   }
 
   static async removePromotionRequest(
     id: Types.ObjectId
   ): Promise<TPromotionRequest | null> {
-    return PromotionRequest.findOneAndDelete({ _id: id }, { new: true })
+    const result = await PromotionRequest.findOneAndDelete(
+      { _id: id },
+      { new: true }
+    )
       .select(this.defaultSelect)
       .lean<TPromotionRequest>()
       .exec();
+
+    return result;
   }
 }
 

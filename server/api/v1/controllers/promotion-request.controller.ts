@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { USER_ROLE } from "../../../enums";
+import notificationEventEmitter from "../../../events/emitters/notification.event-emitter";
 import AccountVerificationUseCase from "../../../libs/use-cases/account-verification.use-case";
 import { getProfileByUserId } from "../../../libs/use-cases/profile.use-case";
 import PromotionRequestUseCase from "../../../libs/use-cases/promotion-request.use-case";
@@ -37,6 +38,17 @@ class PromotionRequestController {
       const promotionRequest = await PromotionRequestUseCase.create(
         req.user._id
       );
+
+      // Emit notification
+      const user = await UserUseCase.getByIdWithProfile(req.user._id);
+      if (user) {
+        notificationEventEmitter.emitHostRequest({
+          userId: req.user._id.toString(),
+          name:
+            `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() ||
+            user.email
+        });
+      }
 
       res.status(201).json(promotionRequest);
     } catch (err) {
@@ -96,6 +108,11 @@ class PromotionRequestController {
           throw new ApiError(404, "Promotion request not found");
         }
 
+        notificationEventEmitter.emitHostRequestResult({
+          userId: promotionRequest.user.toString(),
+          isApproved: true
+        });
+
         res.status(200).json(promotionRequest);
       } catch (err) {
         await UserUseCase.update(user._id, { role: USER_ROLE.TRAVELER });
@@ -121,6 +138,14 @@ class PromotionRequestController {
         await PromotionRequestUseCase.removePromotionRequest(
           convertToObjectId(promotionRequestId)!
         );
+
+      if (pendingRequests) {
+        notificationEventEmitter.emitHostRequestResult({
+          userId: pendingRequests.user.toString(),
+          isApproved: false
+        });
+      }
+
       res.status(200).json(pendingRequests);
     } catch (err) {
       next(err);

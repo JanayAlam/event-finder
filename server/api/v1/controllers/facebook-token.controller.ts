@@ -4,14 +4,14 @@ import {
   getFacebookAuthUrl,
   getManagedPages
 } from "../../../libs/external-services/facebook.service";
-import FacebookToken from "../../../models/facebook-token.model";
+import FacebookUseCase from "../../../libs/use-cases/facebook.use-case";
 import { PUBLIC_SERVER_URL } from "../../../settings/config";
 import ApiError from "../../../utils/api-error.util";
 
 class FacebookTokenController {
   static async disconnect(_req: Request, res: Response, next: NextFunction) {
     try {
-      await FacebookToken.deleteMany({});
+      await FacebookUseCase.disconnect();
       res
         .status(200)
         .json({ message: "Facebook connection removed successfully" });
@@ -22,7 +22,7 @@ class FacebookTokenController {
 
   static async getToken(_req: Request, res: Response, next: NextFunction) {
     try {
-      const token = await FacebookToken.findOne().sort({ createdAt: -1 });
+      const token = await FacebookUseCase.getActiveToken();
       if (!token) {
         throw new ApiError(404, "No Facebook token found.");
       }
@@ -34,34 +34,13 @@ class FacebookTokenController {
 
   static async updateToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accessToken, expiresAt } = req.body;
-      let { userAccessToken, pageId } = req.body;
+      const { accessToken, expiresAt, userAccessToken, pageId } = req.body;
 
       if (!accessToken) {
         throw new ApiError(400, "accessToken is required");
       }
 
-      // Fetch the latest token to merge missing fields
-      const lastToken = await FacebookToken.findOne().sort({ createdAt: -1 });
-
-      // Persist pageId if not provided
-      if (!pageId) {
-        pageId = lastToken?.pageId;
-      }
-
-      // Persist userAccessToken if not provided (important for refresh logic)
-      if (!userAccessToken) {
-        userAccessToken = lastToken?.userAccessToken;
-      }
-
-      if (!pageId) {
-        throw new ApiError(
-          400,
-          "pageId is required (not found in request, DB, or config)"
-        );
-      }
-
-      const newToken = await FacebookToken.create({
+      const newToken = await FacebookUseCase.updateStoreToken({
         accessToken,
         userAccessToken,
         pageId,
@@ -116,7 +95,7 @@ class FacebookTokenController {
       // Automatically store the first page for now
       const targetPage = pages[0];
 
-      await FacebookToken.create({
+      await FacebookUseCase.saveToken({
         accessToken: targetPage.access_token,
         userAccessToken: userAccessToken,
         pageId: targetPage.id
@@ -134,7 +113,7 @@ class FacebookTokenController {
     next: NextFunction
   ) {
     try {
-      const tokenDoc = await FacebookToken.findOne().sort({ createdAt: -1 });
+      const tokenDoc = await FacebookUseCase.getActiveToken();
       if (!tokenDoc || !tokenDoc.userAccessToken) {
         throw new ApiError(
           400,

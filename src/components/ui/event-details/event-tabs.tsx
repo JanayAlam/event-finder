@@ -10,10 +10,8 @@ import { useAuthStore } from "@/stores/auth-store";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useEffect } from "react";
-import {
-  TEventDetail,
-  TUserWithProfile
-} from "../../../../server/models/event.model";
+import { TEventDetail } from "../../../../server/models/event.model";
+import { TUserWithProfile } from "../../../../server/models/user.model";
 import { EventAbout } from "./event-about";
 import { EventDiscussion } from "./event-discussion";
 import { EventMembers } from "./event-members";
@@ -49,9 +47,10 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const isJoined = event.members.some(
-    (m: TUserWithProfile) => m._id.toString() === user?._id.toString()
-  );
+  const isJoined =
+    event.members.some(
+      (m: TUserWithProfile) => m._id.toString() === user?._id.toString()
+    ) || event.host._id.toString() === user?._id.toString();
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">

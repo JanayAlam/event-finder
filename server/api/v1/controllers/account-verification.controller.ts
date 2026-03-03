@@ -9,8 +9,12 @@ import {
   ACCOUNT_VERIFICATION_STATUS,
   TAccountVerificationStatus
 } from "../../../enums";
+import notificationEventEmitter from "../../../events/emitters/notification.event-emitter";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
-import AccountVerificationUseCase from "../../../libs/use-cases/account-verification.use-case";
+import AccountVerificationUseCase, {
+  IUpdateAccountVerificationDto
+} from "../../../libs/use-cases/account-verification.use-case";
+import UserUseCase from "../../../libs/use-cases/user.use-case";
 import ApiError from "../../../utils/api-error.util";
 import { convertToObjectId } from "../../../utils/object-id.util";
 import logger from "../../../utils/winston.util";
@@ -146,6 +150,18 @@ class AccountVerificationController {
             });
 
           res.status(201).json(newAccountVerification);
+
+          // Emit notification
+          const user = await UserUseCase.getByIdWithProfile(userId!);
+          if (user) {
+            notificationEventEmitter.emitAccountVerificationReview({
+              userId: user._id.toString(),
+              name:
+                `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() ||
+                user.email,
+              verificationId: newAccountVerification._id.toString()
+            });
+          }
         } catch (uploadError) {
           // cleanup uploaded files on error
           for (const filePath of uploadedFiles) {
@@ -182,7 +198,7 @@ class AccountVerificationController {
         const uploadedFiles: string[] = [];
 
         try {
-          const updateData: any = {};
+          const updateData: IUpdateAccountVerificationDto = {};
 
           // update text fields if provided
           if (nidNumber !== undefined) {
@@ -234,6 +250,18 @@ class AccountVerificationController {
           }
 
           res.status(200).json(updatedAccountVerification);
+
+          // Emit notification
+          const user = await UserUseCase.getByIdWithProfile(userId!);
+          if (user && updatedAccountVerification) {
+            notificationEventEmitter.emitAccountVerificationReview({
+              userId: user._id.toString(),
+              name:
+                `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() ||
+                user.email,
+              verificationId: updatedAccountVerification._id.toString()
+            });
+          }
         } catch (uploadError) {
           // cleanup newly uploaded files on error
           for (const filePath of uploadedFiles) {
@@ -290,6 +318,11 @@ class AccountVerificationController {
         throw new ApiError(404, "Account verification not found");
       }
 
+      notificationEventEmitter.emitAccountVerificationResult({
+        userId: accountVerification.user.toString(),
+        status: statuses[0] || "REVIEWED"
+      });
+
       res.status(200).json(accountVerification);
     } catch (err) {
       next(err);
@@ -309,6 +342,11 @@ class AccountVerificationController {
       if (!accountVerification) {
         throw new ApiError(404, "Account verification not found");
       }
+
+      notificationEventEmitter.emitAccountVerificationResult({
+        userId: accountVerification.user.toString(),
+        status: ACCOUNT_VERIFICATION_STATUS.DECLINED
+      });
 
       res.status(200).json(accountVerification);
     } catch (err) {

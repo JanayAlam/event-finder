@@ -3,6 +3,7 @@ import {
   TCreateCommentDto,
   TCreateDiscussionDto
 } from "../../../../common/validation-schemas";
+import notificationEventEmitter from "../../../events/emitters/notification.event-emitter";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import DiscussionUseCase from "../../../libs/use-cases/discussion.use-case";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
@@ -31,7 +32,7 @@ class DiscussionController {
 
     const isHost = event.host._id.toString() === userId.toString();
     const isMember = event.members.some(
-      (m: any) => m._id.toString() === userId.toString()
+      (m) => m._id.toString() === userId.toString()
     );
 
     if (!isHost && !isMember) {
@@ -94,6 +95,18 @@ class DiscussionController {
         creatorProfile: profile._id
       });
 
+      const event = await EventUseCase.getById(convertToObjectId(eventId)!);
+      if (event) {
+        notificationEventEmitter.emitPostCreated({
+          eventId: event._id.toString(),
+          eventTitle: event.title,
+          hostId: event.host._id.toString(),
+          creatorName:
+            `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
+            "Someone"
+        });
+      }
+
       getIO().to(`event-${eventId}`).emit("new-discussion", discussion);
 
       res.status(201).json(discussion);
@@ -143,6 +156,26 @@ class DiscussionController {
           content: req.body.content
         }
       );
+
+      if (updatedDiscussion) {
+        const event = await EventUseCase.getById(convertToObjectId(eventId)!);
+        const commenterProfile =
+          updatedDiscussion.comments[updatedDiscussion.comments.length - 1]
+            ?.creatorProfile;
+
+        notificationEventEmitter.emitPostCommented({
+          discussionId: updatedDiscussion._id.toString(),
+          eventId: eventId,
+          eventTitle: event?.title || "Event",
+          postCreatorId: updatedDiscussion.creatorProfile._id.toString(),
+          commenterName:
+            `${commenterProfile?.firstName || ""} ${commenterProfile?.lastName || ""}`.trim() ||
+            "Someone",
+          commentersIds: updatedDiscussion.comments
+            .map((c) => c.creatorProfile._id.toString())
+            .filter((id) => id !== commenterProfile?._id.toString())
+        });
+      }
 
       getIO()
         .to(`event-${eventId}`)

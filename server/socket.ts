@@ -21,6 +21,14 @@ export const initSocket = (server: http.Server) => {
     socket.on("leave-event", (eventId: string) => {
       socket.leave(`event-${eventId}`);
     });
+
+    socket.on("join-user", (userId: string) => {
+      socket.join(`user-${userId}`);
+    });
+
+    socket.on("leave-user", (userId: string) => {
+      socket.leave(`user-${userId}`);
+    });
   });
 
   return io;

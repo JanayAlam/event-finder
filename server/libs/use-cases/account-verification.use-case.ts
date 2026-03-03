@@ -8,7 +8,7 @@ import AccountVerification, {
 import { TUser } from "../../models/user.model";
 import UserCase from "./base.use-case";
 
-interface ICreateAccountVerificationDto {
+export interface ICreateAccountVerificationDto {
   user: Types.ObjectId;
   nidNumber?: string;
   nidFrontImage?: string;
@@ -17,7 +17,7 @@ interface ICreateAccountVerificationDto {
   passportImage?: string;
 }
 
-interface IUpdateAccountVerificationDto {
+export interface IUpdateAccountVerificationDto {
   nidNumber?: string;
   nidFrontImage?: string;
   nidBackImage?: string;
@@ -58,7 +58,8 @@ class AccountVerificationUseCase extends UserCase {
       isReviewed: false
     });
 
-    return accountVerification.save();
+    const saved = await accountVerification.save();
+    return saved;
   }
 
   static async update(
@@ -100,7 +101,7 @@ class AccountVerificationUseCase extends UserCase {
     admin: TUser,
     reviewStatuses: TAccountVerificationStatus[]
   ) {
-    return AccountVerification.findOneAndUpdate(
+    const result = await AccountVerification.findOneAndUpdate(
       { _id: accountVerificationId },
       {
         reviews: reviewStatuses.map((status) => ({
@@ -112,6 +113,8 @@ class AccountVerificationUseCase extends UserCase {
       },
       { new: true }
     );
+
+    return result;
   }
 }
 

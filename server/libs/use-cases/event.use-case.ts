@@ -40,6 +40,7 @@ class EventUseCase {
   }): Promise<TEvent | null> {
     const event = new Event(data);
     const savedEvent = await event.save();
+
     return savedEvent.toObject() as TEvent;
   }
 

@@ -9,10 +9,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
 import { TDiscussionWithProfile } from "../../../../server/models/discussion.model";
-import {
-  TEventDetail,
-  TUserWithProfile
-} from "../../../../server/models/event.model";
+import { TEventDetail } from "../../../../server/models/event.model";
+import { TUserWithProfile } from "../../../../server/models/user.model";
 import { CreatePostCard } from "./discussion/create-post-card";
 import { PostCard } from "./discussion/post-card";
 

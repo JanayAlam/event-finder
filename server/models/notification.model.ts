@@ -5,6 +5,7 @@ import User from "./user.model";
 interface NotificationBase extends ITimestamps {
   user: Types.ObjectId;
   message: string;
+  type?: string;
   link?: string;
   isRead: boolean;
 }
@@ -18,11 +19,11 @@ const notificationSchema = new Schema<INotificationDoc>(
     user: {
       type: Schema.ObjectId,
       ref: User,
-      unique: true,
       required: true,
       index: true
     },
     message: { type: String, required: true },
+    type: { type: String },
     link: { type: String },
     isRead: { type: Boolean, default: false, required: true }
   },

@@ -1,7 +1,12 @@
 import { FilterQuery, QueryOptions, Types } from "mongoose";
 import { USER_ROLE } from "../../enums";
 import Profile from "../../models/profile.model";
-import User, { IUserDoc, TUser } from "../../models/user.model";
+import User, {
+  IUserDoc,
+  TUser,
+  TUserWithProfile,
+  TUserWithProfileAndVerification
+} from "../../models/user.model";
 import ApiError from "../../utils/api-error.util";
 import UserCase from "./base.use-case";
 
@@ -12,6 +17,15 @@ class UserUseCase extends UserCase {
 
   static async getUser(query: QueryOptions<IUserDoc>) {
     return User.findOne(query).lean<TUser>().exec();
+  }
+
+  static async getByIdWithProfile(
+    id: Types.ObjectId | string
+  ): Promise<TUserWithProfile | null> {
+    return User.findById(id)
+      .populate("profile")
+      .lean<TUserWithProfile>()
+      .exec();
   }
 
   static async getAllUsers(param: {
@@ -59,7 +73,7 @@ class UserUseCase extends UserCase {
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
-        .lean<IUserDoc[]>()
+        .lean<TUserWithProfileAndVerification[]>()
         .exec(),
       User.countDocuments(query)
     ]);

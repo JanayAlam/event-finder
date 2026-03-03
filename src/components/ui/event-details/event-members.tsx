@@ -13,10 +13,8 @@ import { getImageUrl } from "@/lib/utils";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import Link from "next/link";
 import React from "react";
-import {
-  TEventDetail,
-  TUserWithProfile
-} from "../../../../server/models/event.model";
+import { TEventDetail } from "../../../../server/models/event.model";
+import { TUserWithProfile } from "../../../../server/models/user.model";
 
 interface IMemberCardProps {
   member: TUserWithProfile;

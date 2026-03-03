@@ -17,13 +17,11 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import {
-  TEventDetail,
-  TUserWithProfile
-} from "../../../../server/models/event.model";
+import { TEventDetail } from "../../../../server/models/event.model";
 
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import { EVENT_STATUS } from "../../../../server/enums";
+import { TUserWithProfile } from "../../../../server/models/user.model";
 import { JoinEventModal } from "./join-event-modal";
 
 interface IEventActionsProps {
@@ -64,7 +62,7 @@ export const EventActions: React.FC<IEventActionsProps> = ({
     if (isBlocked) return "Event Blocked";
     if (isClosed) return "Event Closed";
     if (isPassed) return "Event Passed";
-    if (isJoined) return "Joined";
+    if (isJoined || isHost) return "Joined";
     return "Join Event";
   };
 
@@ -199,21 +197,23 @@ export const EventActions: React.FC<IEventActionsProps> = ({
         <Button
           id="join-event-btn"
           size="lg"
-          variant={!isJoinable || isJoined ? "secondary" : "default"}
+          variant={!isJoinable || isJoined || isHost ? "secondary" : "default"}
           className="gap-2"
           onClick={handleJoin}
-          disabled={!isLoggedIn || isJoined || !isJoinable}
+          disabled={!isLoggedIn || isJoined || isHost || !isJoinable}
           title={
             !isLoggedIn
               ? "Please login to join the event"
-              : isJoined
-                ? "You have already joined the event"
-                : !isJoinable
-                  ? getJoinButtonLabel()
-                  : "Click to join the event"
+              : isHost
+                ? "You are the host of this event"
+                : isJoined
+                  ? "You have already joined the event"
+                  : !isJoinable
+                    ? getJoinButtonLabel()
+                    : "Click to join the event"
           }
         >
-          {isJoined ? (
+          {isJoined || isHost ? (
             <UserCheck className="size-4" />
           ) : !isJoinable ? (
             <Lock className="size-4" />

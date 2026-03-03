@@ -5,6 +5,7 @@ import {
   TUpdateEventDto
 } from "../../../../common/types";
 import { EVENT_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../../enums";
+import notificationEventEmitter from "../../../events/emitters/notification.event-emitter";
 import { postEventToFacebookPage } from "../../../libs/external-services/facebook.service";
 import FileUploadService from "../../../libs/external-services/file-upload.service";
 import {
@@ -14,6 +15,7 @@ import {
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import FacebookUseCase from "../../../libs/use-cases/facebook.use-case";
 import PaymentUseCase from "../../../libs/use-cases/payment.use-case";
+import UserUseCase from "../../../libs/use-cases/user.use-case";
 import { PUBLIC_SERVER_URL } from "../../../settings/config";
 import ApiError from "../../../utils/api-error.util";
 import { convertToObjectId } from "../../../utils/object-id.util";
@@ -44,6 +46,17 @@ class EventController {
       if (!event) {
         throw new ApiError(500, "Failed to create event");
       }
+
+      // Emit notification
+      const user = await UserUseCase.getByIdWithProfile(req.user._id);
+      notificationEventEmitter.emitEventCreated({
+        eventId: event._id.toString(),
+        title: event.title,
+        hostName:
+          `${user?.profile?.firstName || ""} ${user?.profile?.lastName || ""}`.trim() ||
+          user?.email ||
+          "Someone"
+      });
 
       res.status(201).json(event);
     } catch (err) {
@@ -391,6 +404,11 @@ class EventController {
         facebookPost.id
       );
 
+      notificationEventEmitter.emitFacebookPosted({
+        eventId: event._id.toString(),
+        eventTitle: event.title
+      });
+
       res.status(200).json({
         message: "Event posted to Facebook successfully",
         facebookPostId: facebookPost.id,
@@ -443,6 +461,19 @@ class EventController {
         await EventUseCase.update(convertToObjectId(id)!, {
           $addToSet: { members: req.user!._id }
         });
+
+        const joiningUser = await UserUseCase.getByIdWithProfile(req.user!._id);
+
+        notificationEventEmitter.emitMemberJoined({
+          eventId: event._id.toString(),
+          eventTitle: event.title,
+          hostId: event.host._id.toString(),
+          memberName: joiningUser
+            ? `${joiningUser.profile?.firstName || ""} ${joiningUser.profile?.lastName || ""}`.trim() ||
+              joiningUser.email
+            : "Someone"
+        });
+
         res.status(200).json({ message: "Joined event successfully" });
         return;
       }
@@ -543,6 +574,20 @@ class EventController {
       await EventUseCase.update(existingPayment.event, {
         $addToSet: { members: existingPayment.user }
       });
+
+      // Notify host
+      const event = await EventUseCase.getById(existingPayment.event);
+      const user = await UserUseCase.getByIdWithProfile(existingPayment.user);
+      if (event && user) {
+        notificationEventEmitter.emitMemberJoined({
+          eventId: event._id.toString(),
+          eventTitle: event.title,
+          hostId: event.host._id.toString(),
+          memberName:
+            `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() ||
+            user.email
+        });
+      }
 
       res.redirect(`${PUBLIC_SERVER_URL}/events/view/${id}`);
     } catch (err) {

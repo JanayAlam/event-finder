@@ -31,7 +31,7 @@ import {
 import { useAuthStore } from "@/stores/auth-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { Bell, ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
@@ -41,6 +41,7 @@ import { VERIFICATION_STATUS } from "../../../../common/types";
 import { USER_ROLE } from "../../../../server/enums";
 import { Button } from "../../shared/shadcn-components/button";
 import ThemeToggleButton from "../theme-toggle-button";
+import { NotificationPopover } from "./notification-popover";
 import SearchButton from "./search-button";
 
 const leagueSpartan = League_Spartan({
@@ -143,9 +144,7 @@ const Navbar: React.FC = () => {
           {isLoggedIn && user ? (
             <div className="flex items-center gap-2">
               <SearchButton />
-              <Button variant="ghost">
-                <Bell />
-              </Button>
+              <NotificationPopover />
               <ThemeToggleButton />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

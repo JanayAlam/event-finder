@@ -6,11 +6,12 @@ import "express-async-errors";
 import next from "next";
 import path from "node:path";
 import router from "./api/v1/routers";
-import "./events/register-event-listeners";
 import errorHandler from "./middlewares/error-handler.middleware";
 import configMorgan from "./middlewares/morgan.middleware";
 import { NODE_ENV, PUBLIC_SERVER_URL } from "./settings/config";
 import logger from "./utils/winston.util";
+
+import "./events/listeners";
 
 const app = express();
 const nextApp = next({ dev: NODE_ENV === "development" });

@@ -29,6 +29,43 @@ class FacebookUseCase {
       .lean<TEvent>()
       .exec();
   }
+
+  static async disconnect(): Promise<void> {
+    await FacebookToken.deleteMany({});
+  }
+
+  static async saveToken(data: {
+    accessToken: string;
+    userAccessToken: string;
+    pageId: string;
+  }): Promise<TFacebookToken> {
+    const token = await FacebookToken.create(data);
+    return token.toObject() as TFacebookToken;
+  }
+
+  static async updateStoreToken(data: {
+    accessToken: string;
+    userAccessToken?: string;
+    pageId?: string;
+    expiresAt?: Date;
+  }): Promise<TFacebookToken> {
+    const lastToken = await this.getActiveToken();
+
+    const pageId = data.pageId || lastToken?.pageId;
+    const userAccessToken = data.userAccessToken || lastToken?.userAccessToken;
+
+    if (!pageId) {
+      throw new Error("pageId is required");
+    }
+
+    const token = await FacebookToken.create({
+      accessToken: data.accessToken,
+      userAccessToken,
+      pageId,
+      expiresAt: data.expiresAt
+    });
+    return token.toObject() as TFacebookToken;
+  }
 }
 
 export default FacebookUseCase;

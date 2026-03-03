@@ -4,11 +4,13 @@ import adminRouter from "./admin.router";
 import aiRouter from "./ai.router";
 import authRouter from "./auth.router";
 import eventRouter from "./event.router";
+import notificationRouter from "./notification.router";
+import statusRouter from "./status.router";
+import userRouter from "./user.router";
+
 import profileReviewRouter from "./profile-review.router";
 import profileRouter from "./profile.router";
 import promotionRequestRouter from "./promotion-request.router";
-import statusRouter from "./status.router";
-import userRouter from "./user.router";
 
 const router = Router({ mergeParams: true });
 
@@ -22,5 +24,6 @@ router.use("/admins", adminRouter);
 router.use("/promotion-requests", promotionRequestRouter);
 router.use("/events", eventRouter);
 router.use("/ai", aiRouter);
+router.use("/notifications", notificationRouter);
 
 export default router;

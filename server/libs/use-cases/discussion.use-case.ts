@@ -12,11 +12,13 @@ class DiscussionUseCase {
     images?: string[];
   }): Promise<TDiscussionWithProfile> {
     const discussion = await Discussion.create(data);
-    return Discussion.findById(discussion._id)
+    const result = (await Discussion.findById(discussion._id)
       .populate("creatorProfile")
       .populate("comments.creatorProfile")
       .lean<TDiscussionWithProfile>()
-      .exec() as Promise<TDiscussionWithProfile>;
+      .exec()) as TDiscussionWithProfile;
+
+    return result;
   }
 
   static async getByEventId(
@@ -37,7 +39,7 @@ class DiscussionUseCase {
       content: string;
     }
   ): Promise<TDiscussionWithProfile | null> {
-    return Discussion.findByIdAndUpdate(
+    const updatedDiscussion = await Discussion.findByIdAndUpdate(
       discussionId,
       { $push: { comments: data } },
       { new: true }
@@ -46,6 +48,8 @@ class DiscussionUseCase {
       .populate("comments.creatorProfile", "firstName lastName profileImage")
       .lean<TDiscussionWithProfile>()
       .exec();
+
+    return updatedDiscussion;
   }
 
   static async toggleUpvote(

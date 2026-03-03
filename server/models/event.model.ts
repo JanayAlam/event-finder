@@ -1,8 +1,7 @@
 import { Document, model, Schema, Types } from "mongoose";
 import { EVENT_STATUS } from "../enums";
 import { ITimestamps, ModelWithObjectId } from "../types/common";
-import { TProfile } from "./profile.model";
-import User, { TUser } from "./user.model";
+import User, { TUserWithProfile } from "./user.model";
 
 export type TEventItinerary = {
   moment: Date;
@@ -76,8 +75,6 @@ const eventSchema = new Schema<IEventDoc>(
 const Event = model<IEventDoc>("events", eventSchema);
 
 export type TEvent = ModelWithObjectId<EventBase>;
-
-export type TUserWithProfile = TUser & { profile: TProfile | null };
 
 export type TEventDetail = Omit<TEvent, "host" | "members"> & {
   host: TUserWithProfile;

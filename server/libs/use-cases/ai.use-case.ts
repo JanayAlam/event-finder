@@ -24,11 +24,19 @@ class AIUseCase {
       status: EVENT_STATUS.OPEN
     };
 
-    if (locations && locations.length > 0) {
-      filter.$or = locations.flatMap((loc) => [
-        { placeName: { $regex: loc, $options: "i" } },
-        { title: { $regex: loc, $options: "i" } }
-      ]);
+    if (locations?.length) {
+      filter.$or = locations.flatMap((loc) => {
+        const regex = loc
+          .replace(/[^a-zA-Z0-9]/g, "")
+          .split("")
+          .map((c) => `${c}[^a-zA-Z0-9]*`)
+          .join("");
+
+        return [
+          { placeName: { $regex: regex, $options: "i" } },
+          { title: { $regex: regex, $options: "i" } }
+        ];
+      });
     }
 
     if (number_of_members) {

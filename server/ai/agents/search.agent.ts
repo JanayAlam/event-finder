@@ -4,7 +4,7 @@ import { getEventsTool } from "../tools/search.tools";
 import { searchAgentInstructions } from "./instructions/search.agent.instructions";
 
 export const searchAgent = new Agent({
-  name: "search_agent",
+  name: "tripmate_event_search_agent",
   instructions: searchAgentInstructions,
   outputType: SearchAgentOutputSchema,
   tools: [getEventsTool]

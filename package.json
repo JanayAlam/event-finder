@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development nodemon",
+    "dev": "nodemon",
     "clean": "rm -rf .next && rm -rf ./dist && rm -f ./tsconfig.tsbuildinfo",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "yarn clean && yarn run  build:server && yarn run build:next",
     "build:staging": "yarn clean && yarn run build:next:staging && yarn run build:server",
-    "start": "NODE_ENV=production node dist/server/index.js",
+    "start": "node dist/server/index.js",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write .",
     "seed:events": "ts-node -P tsconfig.server.json server/seeders/event-seeder.ts"

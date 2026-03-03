@@ -116,43 +116,44 @@ export default function ExplorePage() {
             {allEvents.map((event) => (
               <EventCard key={event._id.toString()} event={event} />
             ))}
-            {isFetchingNextPage &&
-              Array.from({ length: 4 }).map((_, idx) => (
-                <TMCard
-                  key={`loading-${idx}`}
-                  rootClassName="overflow-hidden"
-                  bodyClassName="!p-0 flex flex-col opacity-50"
-                >
-                  <Skeleton className="h-44 w-full rounded-none" />
-                  <div className="flex flex-col gap-4 p-4">
-                    <Skeleton className="h-6 w-3/4" />
-                    <div className="rounded-lg border p-3">
-                      <div className="flex flex-col items-center gap-2">
-                        <Skeleton className="h-4 w-40" />
-                        <div className="flex items-center gap-2">
-                          <Skeleton className="size-4 rounded-full" />
-                          <Skeleton className="h-3 w-14" />
-                          <Skeleton className="size-4 rounded-full" />
+            {isFetchingNextPage
+              ? Array.from({ length: 4 }).map((_, idx) => (
+                  <TMCard
+                    key={`loading-${idx}`}
+                    rootClassName="overflow-hidden"
+                    bodyClassName="p-0! flex flex-col opacity-50"
+                  >
+                    <Skeleton className="h-44 w-full rounded-none" />
+                    <div className="flex flex-col gap-4 p-4">
+                      <Skeleton className="h-6 w-3/4" />
+                      <div className="rounded-lg border p-3">
+                        <div className="flex flex-col items-center gap-2">
+                          <Skeleton className="h-4 w-40" />
+                          <div className="flex items-center gap-2">
+                            <Skeleton className="size-4 rounded-full" />
+                            <Skeleton className="h-3 w-14" />
+                            <Skeleton className="size-4 rounded-full" />
+                          </div>
+                          <Skeleton className="h-3 w-10" />
                         </div>
-                        <Skeleton className="h-3 w-10" />
                       </div>
-                    </div>
-                    <Skeleton className="h-4 w-2/3" />
-                    <div className="rounded-md bg-muted/40 px-3 py-2">
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-14" />
+                      <Skeleton className="h-4 w-2/3" />
+                      <div className="rounded-md bg-muted/40 px-3 py-2">
+                        <div className="flex items-center justify-between">
+                          <Skeleton className="h-4 w-16" />
+                          <Skeleton className="h-4 w-14" />
+                        </div>
                       </div>
+                      <Skeleton className="h-10 w-full rounded-md" />
                     </div>
-                    <Skeleton className="h-10 w-full rounded-md" />
-                  </div>
-                </TMCard>
-              ))}
+                  </TMCard>
+                ))
+              : null}
           </>
         )}
       </div>
 
-      {hasNextPage && (
+      {hasNextPage ? (
         <div className="flex justify-center mt-6">
           <Button
             onClick={handleLoadMore}
@@ -163,7 +164,7 @@ export default function ExplorePage() {
             {isFetchingNextPage ? <Spinner className="mr-2" /> : "Load More"}
           </Button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

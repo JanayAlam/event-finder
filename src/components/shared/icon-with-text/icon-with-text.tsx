@@ -3,14 +3,14 @@ import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import React from "react";
 
-interface EventMetaItemProps {
+interface IIconWithTextProps {
   icon: LucideIcon;
   text: string | React.ReactNode;
   className?: string;
   iconClassName?: string;
 }
 
-export const EventMetaItem: React.FC<EventMetaItemProps> = ({
+export const IconWithText: React.FC<IIconWithTextProps> = ({
   icon: Icon,
   text,
   className,

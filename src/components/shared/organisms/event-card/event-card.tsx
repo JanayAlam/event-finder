@@ -1,4 +1,4 @@
-import { EventMetaItem } from "@/components/shared/molecules/event-meta-item";
+import { IconWithText } from "@/components/shared/icon-with-text";
 import {
   Avatar,
   AvatarFallback,
@@ -50,7 +50,7 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
           alt={event.title}
           className="object-cover"
         />
-        <AvatarFallback className="rounded-none bg-gradient-to-r from-violet-600 to-indigo-600" />
+        <AvatarFallback className="rounded-none bg-linear-to-r from-violet-600 to-indigo-600" />
       </Avatar>
 
       <div className="flex flex-col gap-4 p-4">
@@ -80,8 +80,8 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <EventMetaItem icon={MapPin} text={event.placeName} />
-          <EventMetaItem
+          <IconWithText icon={MapPin} text={event.placeName} />
+          <IconWithText
             icon={Users}
             text={event.memberCapacity || "Unlimited"}
           />

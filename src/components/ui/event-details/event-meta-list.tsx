@@ -1,4 +1,4 @@
-import { EventMetaItem } from "@/components/shared/molecules/event-meta-item";
+import { IconWithText } from "@/components/shared/icon-with-text";
 import dayjs from "dayjs";
 import { Banknote, CalendarDays, Clock, MapPin, Users } from "lucide-react";
 import { TEventDetail } from "../../../../server/models/event.model";
@@ -31,7 +31,7 @@ export const EventMetaList = ({ event }: EventMetaListProps) => {
   return (
     <div className="flex flex-wrap gap-y-3 gap-x-6 items-center">
       {metaItems.map((item, index) => (
-        <EventMetaItem key={index} icon={item.icon} text={item.text} />
+        <IconWithText key={index} icon={item.icon} text={item.text} />
       ))}
     </div>
   );

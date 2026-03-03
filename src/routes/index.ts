@@ -22,7 +22,8 @@ export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {
 } as const;
 
 export const PRIVATE_HOST_ONLY_PAGE_ROUTE: Record<string, string> = {
-  CREATE_EVENT: "/events/create"
+  CREATE_EVENT: "/events/create",
+  CREATE_EVENT_WITH_AI: "/events/create/ai"
 } as const;
 
 export const PRIVATE_TRAVELER_ONLY_PAGE_ROUTE: Record<string, string> = {

@@ -249,11 +249,13 @@ export const EventActions: React.FC<IEventActionsProps> = ({
             size="lg"
             variant={isBlocked ? "outline" : "destructive"}
             className="gap-2"
-            onClick={() => toggleBlock(event._id.toString())}
+            onClick={() => {
+              toggleBlock(event._id.toString());
+            }}
             disabled={isTogglingBlock}
           >
             {isTogglingBlock ? (
-              <Spinner className="size-4" />
+              <Spinner className="size-4 text-primary-foreground" />
             ) : isBlocked ? (
               <ShieldCheck className="size-4" />
             ) : (

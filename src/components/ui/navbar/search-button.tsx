@@ -25,9 +25,9 @@ import EventRepository from "@/repositories/event.repository";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, FileX2, MapPin, Search, SearchIcon } from "lucide-react";
+import { ChevronRight, ListX, MapPin, Search, SearchIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDebounce } from "use-debounce";
 import { SearchSchema } from "../../../../common/validation-schemas";
@@ -40,6 +40,18 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
     },
     resolver: zodResolver(SearchSchema)
   });
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const search = form.watch("search");
 
@@ -80,11 +92,14 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
           control={form.control}
           placeholder="Enter title or location"
         />
-        <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+        <div className="flex flex-col gap-2 min-h-[25vh] max-h-[60vh] overflow-y-auto">
           {isFetching ? (
             <Empty className="gap-1">
               <EmptyMedia>
-                <Spinner className="size-6" />
+                <Spinner
+                  className="size-6"
+                  color="dark:text-primary-foreground!"
+                />
               </EmptyMedia>
               <EmptyContent>
                 <Paragraph>Searching for events...</Paragraph>
@@ -120,7 +135,7 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
             <Empty className="gap-1">
               <EmptyMedia>
                 {debouncedSearch ? (
-                  <FileX2 className="size-6" />
+                  <ListX className="size-6" />
                 ) : (
                   <Search className="size-6" />
                 )}

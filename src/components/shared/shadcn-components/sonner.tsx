@@ -20,7 +20,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         info: <BadgeInfo className="size-5 text-info" />,
         warning: <BadgeAlert className="size-5 text-warning" />,
         error: <BadgeX className="size-5 text-destructive" />,
-        loading: <Loader className="size-5 animate-spin text-primary" />
+        loading: <Loader className="size-5! animate-spin text-primary" />
       }}
       style={
         {

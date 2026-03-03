@@ -15,9 +15,14 @@ import {
 } from "@/components/shared/shadcn-components/menu";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
+import { getImageUrl } from "@/lib/utils";
 import AuthRepository from "@/repositories/auth.repository";
 import UserRepository from "@/repositories/user.repository";
-import { PRIVATE_PAGE_ROUTE, PUBLIC_PAGE_ROUTE } from "@/routes";
+import {
+  PRIVATE_PAGE_ROUTE,
+  PUBLIC_DYNAMIC_PAGE_ROUTE,
+  PUBLIC_PAGE_ROUTE
+} from "@/routes";
 import { useAuthStore } from "@/stores/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
@@ -49,6 +54,8 @@ const UserDropdown: React.FC = () => {
     }
   };
 
+  const fullName = profile?.firstName + " " + profile?.lastName;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -56,7 +63,9 @@ const UserDropdown: React.FC = () => {
           <div className="flex gap-2 items-center">
             <Avatar className="h-8 w-8">
               <AvatarImage
-                src={`https://ui-avatars.com/api/?name=${user?.email.substring(0, 2).toUpperCase()}`}
+                src={getImageUrl(profile?.profileImage, {
+                  name: fullName
+                })}
                 alt="User profile picture"
               />
               <AvatarFallback className="text-sm">
@@ -68,9 +77,7 @@ const UserDropdown: React.FC = () => {
               {isLoading ? (
                 <Skeleton className="h-4 w-24" />
               ) : (
-                <Paragraph>
-                  {profile?.firstName + " " + profile?.lastName}
-                </Paragraph>
+                <Paragraph>{fullName}</Paragraph>
               )}
             </div>
           </div>
@@ -86,7 +93,13 @@ const UserDropdown: React.FC = () => {
           <Link href={PUBLIC_PAGE_ROUTE.HOME}>
             <DropdownMenuItem>Home</DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          {profile ? (
+            <Link
+              href={PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(profile?._id.toString())}
+            >
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
+          ) : null}
           <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
             <DropdownMenuItem>Account preferences</DropdownMenuItem>
           </Link>

@@ -52,6 +52,7 @@ const leagueSpartan = League_Spartan({
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const [becomeHostModalOpen, setBecomeHostModalOpen] = useState(false);

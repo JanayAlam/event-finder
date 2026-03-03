@@ -82,7 +82,7 @@ export const NotificationPopover = () => {
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full border-2 border-background"
+              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full border-2 border-background bg-destructive/25 text-destructive dark:text-destructive-foreground shadow-none"
             >
               {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>

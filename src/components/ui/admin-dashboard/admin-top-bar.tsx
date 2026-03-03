@@ -3,10 +3,12 @@
 import { Button } from "@/components/shared/shadcn-components/button";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { cn } from "@/lib/utils";
-import { Bell, Menu } from "lucide-react";
+import { PUBLIC_PAGE_ROUTE } from "@/routes";
+import { Menu } from "lucide-react";
 import { League_Spartan } from "next/font/google";
 import Link from "next/link";
 import React from "react";
+import { NotificationPopover } from "../navbar/notification-popover";
 import ThemeToggleButton from "../theme-toggle-button";
 import UserDropdown from "./user-dropdown";
 
@@ -32,7 +34,7 @@ const AdminTopBar: React.FC = () => {
         </Button>
         <div className={cn(leagueSpartan.className, "flex items-center gap-1")}>
           <Link
-            href={"/"}
+            href={PUBLIC_PAGE_ROUTE.HOME}
             className="text-3xl font-extrabold text-primary select-none"
           >
             <span className="hidden sm:block">tripmate.</span>
@@ -42,15 +44,7 @@ const AdminTopBar: React.FC = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative text-topbar-foreground hover:bg-muted"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
-        </Button>
-
+        <NotificationPopover />
         <ThemeToggleButton />
 
         <div className="h-8 w-px bg-border" />

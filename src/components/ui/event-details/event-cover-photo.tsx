@@ -11,7 +11,7 @@ import { getImageUrl } from "@/lib/utils";
 import EventRepository from "@/repositories/event.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { useMutation } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
+import { ImageIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -84,7 +84,7 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
   };
 
   return (
-    <div className="relative group w-full h-50 sm:h-60 lg:h-80 rounded-md sm:rounded-xl overflow-hidden bg-gradient-to-r from-violet-600 to-indigo-600">
+    <div className="relative group w-full h-50 sm:h-60 lg:h-80 rounded-md sm:rounded-xl overflow-hidden bg-linear-to-r from-violet-600 to-indigo-600">
       {event.coverPhoto && (
         <Avatar className="h-full w-full rounded-none">
           <AvatarImage
@@ -92,7 +92,7 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
             alt={event.title}
             className="object-cover"
           />
-          <AvatarFallback className="rounded-none bg-gradient-to-r from-violet-600 to-indigo-600" />
+          <AvatarFallback className="rounded-none bg-linear-to-r from-violet-600 to-indigo-600" />
         </Avatar>
       )}
 
@@ -114,11 +114,12 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
             </Button>
           )}
           <Button
-            variant="default"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUpdating || isUploading}
             isLoading={isUploading}
+            className="bg-primary/60"
           >
+            <ImageIcon className="size-4" />
             Change
           </Button>
           <input

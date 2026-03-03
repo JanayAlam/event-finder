@@ -89,7 +89,7 @@ export default function AISearchSection() {
               <Button
                 key={index}
                 onClick={() => handleSearch(suggestion.text)}
-                className="group-hover inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent hover:bg-primary/15 text-primary hover:text-primary font-body text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="group-hover inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15! text-primary! hover:text-primary-foreground! font-body text-sm transition-all duration-300 scale-98 hover:scale-100"
               >
                 <suggestion.icon className="h-4 w-4 hover:text-primary" />
                 {suggestion.text}

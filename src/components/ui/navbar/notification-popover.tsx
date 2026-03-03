@@ -1,5 +1,6 @@
 "use client";
 
+import { EmptyList } from "@/components/shared/molecules/empty";
 import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
@@ -28,8 +29,10 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 export const NotificationPopover = () => {
-  const { user } = useAuthStore();
   const queryClient = useQueryClient();
+
+  const { user } = useAuthStore();
+
   const [open, setOpen] = useState(false);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -79,14 +82,14 @@ export const NotificationPopover = () => {
       <PopoverTrigger asChild>
         <Button variant="ghost" className="relative p-2">
           <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
+          {unreadCount > 0 ? (
             <Badge
               variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full border-2 border-background bg-destructive/25 text-destructive dark:text-destructive-foreground shadow-none"
             >
               {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>
-          )}
+          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
@@ -106,35 +109,35 @@ export const NotificationPopover = () => {
         </div>
         <div className="max-h-[400px] overflow-y-auto">
           {isLoading ? (
-            <div className="p-4 space-y-3">
+            <div className="p-4 flex flex-col gap-4">
               <Skeleton className="h-12 w-full" />
               <Skeleton className="h-12 w-full" />
               <Skeleton className="h-12 w-full" />
             </div>
-          ) : notifications.length > 0 ? (
+          ) : notifications.length ? (
             <div className="flex flex-col">
-              {notifications.map((notif) => (
+              {notifications.map((notification) => (
                 <div
-                  key={notif._id.toString()}
+                  key={notification._id.toString()}
                   className={cn(
                     "p-4 border-b last:border-0 hover:bg-secondary/20 transition-colors cursor-pointer relative",
-                    !notif.isRead && "bg-primary/5"
+                    !notification.isRead && "bg-primary/5"
                   )}
                   onClick={() => {
-                    if (!notif.isRead)
-                      markAsReadMutation.mutate(notif._id.toString());
-                    if (notif.link) {
+                    if (!notification.isRead)
+                      markAsReadMutation.mutate(notification._id.toString());
+                    if (notification.link) {
                       setOpen(false);
                     }
                   }}
                 >
-                  {notif.link ? (
-                    <Link href={notif.link} className="block">
+                  {notification.link ? (
+                    <Link href={notification.link} className="block">
                       <Paragraph className="text-sm leading-tight mb-1">
-                        {notif.message}
+                        {notification.message}
                       </Paragraph>
                       <TypographyMuted className="text-[10px]">
-                        {formatDistanceToNow(new Date(notif.createdAt), {
+                        {formatDistanceToNow(new Date(notification.createdAt), {
                           addSuffix: true
                         })}
                       </TypographyMuted>
@@ -142,16 +145,16 @@ export const NotificationPopover = () => {
                   ) : (
                     <>
                       <Paragraph className="text-sm leading-tight mb-1">
-                        {notif.message}
+                        {notification.message}
                       </Paragraph>
                       <TypographyMuted className="text-[10px]">
-                        {formatDistanceToNow(new Date(notif.createdAt), {
+                        {formatDistanceToNow(new Date(notification.createdAt), {
                           addSuffix: true
                         })}
                       </TypographyMuted>
                     </>
                   )}
-                  {!notif.isRead && (
+                  {!notification.isRead && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-primary" />
                   )}
                 </div>
@@ -170,9 +173,7 @@ export const NotificationPopover = () => {
               )}
             </div>
           ) : (
-            <div className="p-8 text-center">
-              <TypographyMuted>No notifications yet</TypographyMuted>
-            </div>
+            <EmptyList message="No notifications yet" />
           )}
         </div>
       </PopoverContent>

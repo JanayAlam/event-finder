@@ -14,7 +14,10 @@ import {
   DropdownMenuTrigger
 } from "@/components/shared/shadcn-components/menu";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
-import { Paragraph } from "@/components/shared/shadcn-components/typography";
+import {
+  Paragraph,
+  TypographyMuted
+} from "@/components/shared/shadcn-components/typography";
 import { getImageUrl } from "@/lib/utils";
 import AuthRepository from "@/repositories/auth.repository";
 import UserRepository from "@/repositories/user.repository";
@@ -90,24 +93,29 @@ const UserDropdown: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50 flex flex-col gap-1" align="start">
         <DropdownMenuGroup>
+          {user && profile ? (
+            <Link
+              href={PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(profile._id.toString())}
+            >
+              <DropdownMenuItem className="flex flex-col justify-start items-start gap-0">
+                View Profile
+                <TypographyMuted className="text-xs line-clamp-1">
+                  {user.email}
+                </TypographyMuted>
+              </DropdownMenuItem>
+            </Link>
+          ) : null}
           <Link href={PUBLIC_PAGE_ROUTE.HOME}>
             <DropdownMenuItem>Home</DropdownMenuItem>
           </Link>
-          {profile ? (
-            <Link
-              href={PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(profile?._id.toString())}
-            >
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-            </Link>
-          ) : null}
           <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
-            <DropdownMenuItem>Account preferences</DropdownMenuItem>
+            <DropdownMenuItem>Account Preferences</DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={handleLogoutAction}>
-            Log out
+            Logout
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

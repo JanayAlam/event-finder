@@ -171,7 +171,7 @@ class DiscussionController {
           commenterName:
             `${commenterProfile?.firstName || ""} ${commenterProfile?.lastName || ""}`.trim() ||
             "Someone",
-          commentersIds: updatedDiscussion.comments
+          commenterIds: updatedDiscussion.comments
             .map((c) => c.creatorProfile._id.toString())
             .filter((id) => id !== commenterProfile?._id.toString())
         });

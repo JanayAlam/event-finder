@@ -406,7 +406,8 @@ class EventController {
 
       notificationEventEmitter.emitFacebookPosted({
         eventId: event._id.toString(),
-        eventTitle: event.title
+        eventTitle: event.title,
+        postUrl: facebookPost.postUrl
       });
 
       res.status(200).json({

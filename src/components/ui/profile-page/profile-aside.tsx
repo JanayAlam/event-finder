@@ -1,14 +1,10 @@
 "use client";
 
+import { EmptyList } from "@/components/shared/molecules/empty";
 import { SliderField, TextareaField } from "@/components/shared/molecules/form";
 import TMCard from "@/components/shared/molecules/tm-card";
 import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyMedia
-} from "@/components/shared/shadcn-components/empty";
 import { Separator } from "@/components/shared/shadcn-components/separator";
 import {
   H4,
@@ -18,7 +14,8 @@ import {
 import ProfileReviewRepository from "@/repositories/profile-review.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ListX, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { useRouter } from "nextjs-toploader/app";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -37,18 +34,21 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
   profileId,
   bio
 }) => {
+  const router = useRouter();
+
+  const { user, isLoggedIn } = useAuthStore();
+
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [reviews, setReviews] = useState<TProfileReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, isLoggedIn } = useAuthStore();
   const isOwnProfile = user?.profile?._id.toString() === profileId;
 
   const { control, handleSubmit, reset } = useForm<TProfileReviewRequest>({
     resolver: zodResolver(ProfileReviewSchema),
     defaultValues: {
-      profile: profileId as any,
+      profile: profileId,
       rating: 5,
       message: ""
     }
@@ -78,6 +78,7 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
       setIsReviewDialogOpen(false);
       reset();
       fetchReviews();
+      router.refresh();
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to submit review");
     } finally {
@@ -117,12 +118,7 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
             ))}
           </div>
         ) : !reviews.length ? (
-          <Empty className="flex flex-col gap-2">
-            <EmptyMedia>
-              <ListX className="size-5 text-muted-foreground" />
-            </EmptyMedia>
-            <EmptyDescription>No reviews yet</EmptyDescription>
-          </Empty>
+          <EmptyList message="No reviews yet" />
         ) : (
           <div className="flex flex-col gap-4">
             {reviews.map((review, idx) => (

@@ -1,7 +1,8 @@
 "use client";
 
+import { EmptyList } from "@/components/shared/molecules/empty";
 import { PageLoader } from "@/components/shared/molecules/page-loader";
-import { TypographyMuted } from "@/components/shared/shadcn-components/typography";
+import { EmptyContent } from "@/components/shared/shadcn-components/empty";
 import { PUBLIC_SERVER_URL } from "@/config";
 import DiscussionRepository from "@/repositories/discussion.repository";
 import { useAuthStore } from "@/stores/auth-store";
@@ -103,11 +104,12 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
         <PageLoader />
       ) : (
         <>
-          {canPost && (
+          {canPost && discussions.length ? (
             <div className="flex justify-end">
               <CreatePostCard eventId={event._id.toString()} />
             </div>
-          )}
+          ) : null}
+
           <div className="flex flex-col gap-6">
             {discussions.map((post) => (
               <PostCard
@@ -118,11 +120,14 @@ export const EventDiscussion: React.FC<IEventDiscussionProps> = ({ event }) => {
             ))}
 
             {!discussions.length ? (
-              <div className="text-center py-10 bg-secondary/20 rounded-xl border-2 border-dashed">
-                <TypographyMuted>
-                  No discussions yet. Be the first to start the conversation!
-                </TypographyMuted>
-              </div>
+              <EmptyList
+                message="No discussions yet. Be the first to start the conversation!"
+                content={
+                  <EmptyContent>
+                    <CreatePostCard eventId={event._id.toString()} />
+                  </EmptyContent>
+                }
+              />
             ) : null}
           </div>
         </>

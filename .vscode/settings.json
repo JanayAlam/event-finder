@@ -10,5 +10,12 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "cSpell.words": ["kinde", "LOGGLY", "shadcn", "tripmate"]
+  "cSpell.words": [
+    "kinde",
+    "LOGGLY",
+    "shadcn",
+    "topbar",
+    "toploader",
+    "tripmate"
+  ]
 }

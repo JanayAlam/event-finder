@@ -44,7 +44,7 @@ notificationEventEmitter.on(EVENT_KEYS.NOTIFY_ADMINS, async (param: any) => {
 notificationEventEmitter.on(EVENT_KEYS.HOST_REQUEST, (data: any) => {
   notificationEventEmitter.notifyAdmins(
     `${data.name} has requested to become a host.`,
-    `/admin/host-requests`
+    `/admin/approvals/host`
   );
 });
 
@@ -54,7 +54,7 @@ notificationEventEmitter.on(
   (data: any) => {
     notificationEventEmitter.notifyAdmins(
       `${data.name} has submitted account verification documents.`,
-      `/admin/verifications`
+      `/admin/approvals/account-verification`
     );
   }
 );
@@ -84,8 +84,7 @@ notificationEventEmitter.on(
     createNotification({
       userId: new Types.ObjectId(data.userId),
       message: `Your account verification request has been ${data.status.toLowerCase()}. ${data.message || ""}`,
-      type: EVENT_KEYS.ACCOUNT_VERIFICATION_RESULT,
-      link: `/profile`
+      type: EVENT_KEYS.ACCOUNT_VERIFICATION_RESULT
     });
   }
 );
@@ -95,8 +94,7 @@ notificationEventEmitter.on(EVENT_KEYS.HOST_REQUEST_RESULT, (data: any) => {
   createNotification({
     userId: new Types.ObjectId(data.userId),
     message: `Your host request has been ${data.isApproved ? "accepted" : "rejected"}.`,
-    type: EVENT_KEYS.HOST_REQUEST_RESULT,
-    link: `/profile`
+    type: EVENT_KEYS.HOST_REQUEST_RESULT
   });
 });
 
@@ -104,7 +102,7 @@ notificationEventEmitter.on(EVENT_KEYS.HOST_REQUEST_RESULT, (data: any) => {
 notificationEventEmitter.on(EVENT_KEYS.FACEBOOK_POSTED, (data: any) => {
   notificationEventEmitter.notifyAdmins(
     `Event "${data.eventTitle}" has been posted to Facebook.`,
-    `/events/view/${data.eventId}`
+    `/events/view/${data.postUrl}`
   );
 });
 
@@ -118,20 +116,20 @@ notificationEventEmitter.on(EVENT_KEYS.POST_CREATED, (data: any) => {
   });
 });
 
-// Post Comments (to post creator & all commenters)
+// Post Comments (to post creator & all commentators)
 notificationEventEmitter.on(EVENT_KEYS.POST_COMMENTED, (data: any) => {
   const recipients = new Set<string>();
   recipients.add(data.postCreatorId);
-  data.commentersIds.forEach((id: string) => recipients.add(id));
+  data.commenterIds.forEach((id: string) => recipients.add(id));
 
   // Remove the person who just commented (if we had their ID, but for now let's assume emitter handles that or we just notify everyone else)
-  // The data should ideally exclude the current commenter's ID from commentersIds.
+  // The data should ideally exclude the current commenter's ID from commenterIds.
 
   const items = Array.from(recipients).map((userId) => ({
     userId: new Types.ObjectId(userId),
     message: `${data.commenterName} commented on a post in "${data.eventTitle}".`,
     type: EVENT_KEYS.POST_COMMENTED,
-    link: `/events/view/${data.eventId}`
+    link: `/events/view/${data.eventId}#${data.discussionId}`
   }));
 
   if (items.length) {

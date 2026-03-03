@@ -53,7 +53,6 @@ const ProfileImageForm: React.FC = () => {
     }
   });
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const profileImageFile = watch("profileImage");
 
   // Handle file selection
@@ -325,6 +324,11 @@ const ProfileImageForm: React.FC = () => {
                 <span className="text-muted-foreground">{genderLabel}</span>
               </div>
             )}
+            {!formattedDateOfBirth && !genderLabel ? (
+              <TypographyMuted className="italic text-xs">
+                No data available
+              </TypographyMuted>
+            ) : null}
           </div>
         </div>
       </div>

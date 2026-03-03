@@ -137,14 +137,19 @@ class FileUploadService {
         metadata.height || size
       );
 
-      await sharp(file.path)
+      let pipeline = sharp(file.path)
         .resize(minDimension, minDimension, {
           fit: "cover",
           position: "center"
         })
-        .resize(size, size)
-        .jpeg({ quality: 90 })
-        .toFile(newPath);
+        .resize(size, size);
+
+      // Rotate only if EXIF orientation indicates it needs rotation (orientation 6)
+      if (metadata.orientation === 6) {
+        pipeline = pipeline.rotate(90);
+      }
+
+      await pipeline.jpeg({ quality: 90 }).toFile(newPath);
 
       // Remove original temp file
       try {

@@ -15,7 +15,10 @@ import {
   DropdownMenuTrigger
 } from "@/components/shared/shadcn-components/menu";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
-import { Paragraph } from "@/components/shared/shadcn-components/typography";
+import {
+  Paragraph,
+  TypographyMuted
+} from "@/components/shared/shadcn-components/typography";
 import { API_BASE_URL } from "@/config";
 import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn, getImageUrl } from "@/lib/utils";
@@ -152,11 +155,9 @@ const Navbar: React.FC = () => {
                   <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={
-                          getImageUrl(user.profile?.profileImage, {
-                            name: user.email
-                          }) || undefined
-                        }
+                        src={getImageUrl(user.profile?.profileImage, {
+                          name: user.email
+                        })}
                         alt="User profile picture"
                       />
                       <AvatarFallback className="text-sm">
@@ -175,19 +176,23 @@ const Navbar: React.FC = () => {
                   align="start"
                 >
                   <DropdownMenuGroup>
-                    <Link
-                      href={
-                        user.profile
-                          ? PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(
-                              user.profile._id.toString()
-                            )
-                          : "#"
-                      }
-                    >
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                    </Link>
+                    {user.profile ? (
+                      <Link
+                        href={PUBLIC_DYNAMIC_PAGE_ROUTE.PROFILE(
+                          user.profile._id.toString()
+                        )}
+                      >
+                        <DropdownMenuItem className="flex flex-col justify-start items-start gap-0">
+                          View Profile
+                          <TypographyMuted className="text-xs line-clamp-1">
+                            {user.email}
+                          </TypographyMuted>
+                        </DropdownMenuItem>
+                      </Link>
+                    ) : null}
+
                     <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
-                      <DropdownMenuItem>Account preferences</DropdownMenuItem>
+                      <DropdownMenuItem>Account Preferences</DropdownMenuItem>
                     </Link>
                     {user.role === USER_ROLE.TRAVELER ? (
                       <DropdownMenuItem onClick={handleBecomeHostAction}>
@@ -205,7 +210,7 @@ const Navbar: React.FC = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={handleLogoutAction}>
-                      Log out
+                      Logout
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>

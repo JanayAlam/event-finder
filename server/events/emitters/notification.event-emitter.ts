@@ -60,7 +60,11 @@ class NotificationEventEmitter extends EventEmitter {
     this.emit(EVENT_KEYS.HOST_REQUEST_RESULT, data);
   }
 
-  emitFacebookPosted(data: { eventId: string; eventTitle: string }) {
+  emitFacebookPosted(data: {
+    eventId: string;
+    eventTitle: string;
+    postUrl: string;
+  }) {
     this.emit(EVENT_KEYS.FACEBOOK_POSTED, data);
   }
 
@@ -79,7 +83,7 @@ class NotificationEventEmitter extends EventEmitter {
     eventTitle: string;
     postCreatorId: string;
     commenterName: string;
-    commentersIds: string[];
+    commenterIds: string[];
   }) {
     this.emit(EVENT_KEYS.POST_COMMENTED, data);
   }

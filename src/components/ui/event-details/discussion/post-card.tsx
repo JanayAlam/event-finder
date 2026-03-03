@@ -162,7 +162,10 @@ export const PostCard: React.FC<IPostCardProps> = ({ eventId, post }) => {
   };
 
   return (
-    <Card className="border-none shadow-sm bg-card overflow-hidden">
+    <Card
+      className="border-none shadow-sm bg-card overflow-hidden"
+      id={post._id.toString()}
+    >
       <CardHeader className="flex flex-row items-center gap-3 p-4 pb-2">
         <Avatar>
           <AvatarImage

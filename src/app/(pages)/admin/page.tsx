@@ -8,6 +8,7 @@ import {
   CardTitle
 } from "@/components/shared/shadcn-components/card";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
+import { cn } from "@/lib/utils";
 import AdminRepository from "@/repositories/admin.repository";
 import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE } from "@/routes";
 import { useQuery } from "@tanstack/react-query";
@@ -54,6 +55,7 @@ export default function AdminDashboardPage() {
       icon: Users,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
+      bgFullOpacity: "bg-blue-500",
       link: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.USER_MANAGEMENT
     },
     {
@@ -63,6 +65,7 @@ export default function AdminDashboardPage() {
       icon: UserPlus,
       color: "text-emerald-500",
       bg: "bg-emerald-500/10",
+      bgFullOpacity: "bg-emerald-500",
       link: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.USER_MANAGEMENT
     },
     {
@@ -72,6 +75,7 @@ export default function AdminDashboardPage() {
       icon: ShieldCheck,
       color: "text-indigo-500",
       bg: "bg-indigo-500/10",
+      bgFullOpacity: "bg-indigo-500",
       link: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.USER_MANAGEMENT // Could be filtered
     },
     {
@@ -80,7 +84,8 @@ export default function AdminDashboardPage() {
       description: "Trips and gatherings",
       icon: Calendar,
       color: "text-orange-500",
-      bg: "bg-orange-500/10"
+      bg: "bg-orange-500/10",
+      bgFullOpacity: "bg-orange-500"
     },
     {
       title: "Recent Events",
@@ -88,7 +93,8 @@ export default function AdminDashboardPage() {
       description: "Scheduled this month",
       icon: TrendingUp,
       color: "text-rose-500",
-      bg: "bg-rose-500/10"
+      bg: "bg-rose-500/10",
+      bgFullOpacity: "bg-rose-500"
     },
     {
       title: "Discussions",
@@ -96,7 +102,8 @@ export default function AdminDashboardPage() {
       description: "Community interactions",
       icon: MessageSquare,
       color: "text-sky-500",
-      bg: "bg-sky-500/10"
+      bg: "bg-sky-500/10",
+      bgFullOpacity: "bg-sky-500"
     },
     {
       title: "Pending Verifications",
@@ -105,6 +112,7 @@ export default function AdminDashboardPage() {
       icon: ClipboardList,
       color: "text-amber-500",
       bg: "bg-amber-500/10",
+      bgFullOpacity: "bg-amber-500",
       link: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.APPROVAL_ACCOUNT_VERIFICATION
     },
     {
@@ -114,6 +122,7 @@ export default function AdminDashboardPage() {
       icon: MapPin,
       color: "text-fuchsia-500",
       bg: "bg-fuchsia-500/10",
+      bgFullOpacity: "bg-fuchsia-500",
       link: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.APPROVAL_HOST_VERIFICATION
     }
   ];
@@ -127,7 +136,10 @@ export default function AdminDashboardPage() {
             className="group relative overflow-hidden border-none shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-card/40 backdrop-blur-md border border-white/10"
           >
             <div
-              className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full blur-2xl opacity-20 transition-opacity group-hover:opacity-40 ${stat.bg.replace("/10", "")}`}
+              className={cn(
+                "absolute top-0 right-0 w-32 h-32 -mr-12 -mt-12 rounded-full blur-3xl opacity-20 transition-all duration-700 group-hover:opacity-40 group-hover:scale-110",
+                stat.bgFullOpacity
+              )}
             />
 
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
@@ -135,9 +147,12 @@ export default function AdminDashboardPage() {
                 {stat.title}
               </CardTitle>
               <div
-                className={`p-3 rounded-xl shadow-inner transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 ${stat.bg}`}
+                className={cn(
+                  "p-3 rounded-xl shadow-inner transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3",
+                  stat.bg
+                )}
               >
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                <stat.icon className={cn("h-5 w-5", stat.color)} />
               </div>
             </CardHeader>
 
@@ -152,7 +167,10 @@ export default function AdminDashboardPage() {
               {stat.link && (
                 <Link
                   href={stat.link}
-                  className="mt-4 flex items-center text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-[-10px] group-hover:translate-x-0"
+                  className={cn(
+                    "mt-4 flex items-center text-xs font-bold text-primary opacity-0 transform translate-x-[-10px] transition-all duration-300",
+                    "group-hover:opacity-100 group-hover:translate-x-0"
+                  )}
                 >
                   View Details <ArrowRight className="ml-1 h-3 w-3" />
                 </Link>
@@ -211,7 +229,9 @@ export default function AdminDashboardPage() {
                   >
                     <div className="w-full flex items-end justify-center gap-1 h-full">
                       <div
-                        className="w-1/3 bg-primary/40 hover:bg-primary transition-all duration-500 rounded-t-sm relative group/bar"
+                        className={cn(
+                          "w-1/3 bg-primary/40 hover:bg-primary transition-all duration-500 rounded-t-sm relative group/bar"
+                        )}
                         style={{ height: `${Math.max(userHeight, 2)}%` }}
                       >
                         <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-[10px] font-bold opacity-0 group-hover/bar:opacity-100 transition-opacity shadow-xl border border-border z-20 whitespace-nowrap">
@@ -219,7 +239,9 @@ export default function AdminDashboardPage() {
                         </div>
                       </div>
                       <div
-                        className="w-1/3 bg-orange-500/40 hover:bg-orange-500 transition-all duration-500 rounded-t-sm relative group/bar"
+                        className={cn(
+                          "w-1/3 bg-orange-500/40 hover:bg-orange-500 transition-all duration-500 rounded-t-sm relative group/bar"
+                        )}
                         style={{ height: `${Math.max(eventHeight, 2)}%` }}
                       >
                         <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-[10px] font-bold opacity-0 group-hover/bar:opacity-100 transition-opacity shadow-xl border border-border z-20 whitespace-nowrap">

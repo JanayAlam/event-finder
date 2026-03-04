@@ -57,7 +57,11 @@ const UserDropdown: React.FC = () => {
     }
   };
 
-  const fullName = profile?.firstName + " " + profile?.lastName;
+  const fullName = (
+    (profile?.firstName || "") +
+    " " +
+    (profile?.lastName || "")
+  ).trim();
 
   return (
     <DropdownMenu>
@@ -65,14 +69,16 @@ const UserDropdown: React.FC = () => {
         <div className="flex items-center justify-between gap-1 cursor-pointer px-2 py-1.5 hover:bg-input/50 rounded-md">
           <div className="flex gap-2 items-center">
             <Avatar className="h-8 w-8">
-              <AvatarImage
-                src={getImageUrl(profile?.profileImage, {
-                  name: fullName
-                })}
-                alt="User profile picture"
-              />
+              {profile?.profileImage ? (
+                <AvatarImage
+                  src={getImageUrl(profile.profileImage, {
+                    name: fullName
+                  })}
+                  alt="User profile picture"
+                />
+              ) : null}
               <AvatarFallback className="text-sm">
-                {user?.email.substring(0, 2).toUpperCase()}
+                <Skeleton className="h-8 w-8" />
               </AvatarFallback>
             </Avatar>
 

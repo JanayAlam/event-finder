@@ -24,11 +24,11 @@ export const GrowthChart: React.FC<IGrowthChartProps> = ({ growth }) => {
         <CardTitle>Platform Growth</CardTitle>
         <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 rounded-full bg-sky-400" />
             Users
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-orange-500" />
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
             Events
           </div>
         </div>
@@ -36,17 +36,18 @@ export const GrowthChart: React.FC<IGrowthChartProps> = ({ growth }) => {
       <CardContent className="h-[300px] flex flex-col justify-end gap-2 border-t border-border/50 pt-8 mt-2">
         <div className="flex items-end justify-between h-full px-4 gap-4">
           {growth?.users.map((item, i) => {
+            const CHART_HEIGHT = 200; // Leaves room for month label and gaps
             const userMax = Math.max(...growth.users.map((u) => u.count), 1);
             const eventMax = Math.max(...growth.events.map((e) => e.count), 1);
             const max = Math.max(userMax, eventMax);
 
-            const userHeight = (item.count / max) * 100;
+            const userHeight = (item.count / max) * CHART_HEIGHT;
             const eventCount =
               growth.events.find(
                 (e) =>
                   e._id.month === item._id.month && e._id.year === item._id.year
               )?.count || 0;
-            const eventHeight = (eventCount / max) * 100;
+            const eventHeight = (eventCount / max) * CHART_HEIGHT;
 
             const monthName = new Date(2000, item._id.month - 1).toLocaleString(
               "default",
@@ -61,9 +62,9 @@ export const GrowthChart: React.FC<IGrowthChartProps> = ({ growth }) => {
                 <div className="w-full flex items-end justify-center gap-1 h-full">
                   <div
                     className={cn(
-                      "w-1/3 bg-primary/40 hover:bg-primary transition-all duration-500 rounded-t-sm relative group/bar"
+                      "w-1/3 bg-sky-400/40 hover:bg-sky-400 transition-all duration-500 rounded-t-sm relative group/bar"
                     )}
-                    style={{ height: `${Math.max(userHeight, 2)}%` }}
+                    style={{ height: `${Math.max(userHeight, 2)}px` }}
                   >
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-[10px] font-bold opacity-0 group-hover/bar:opacity-100 transition-opacity shadow-xl border border-border z-20 whitespace-nowrap">
                       {item.count} Users
@@ -71,9 +72,9 @@ export const GrowthChart: React.FC<IGrowthChartProps> = ({ growth }) => {
                   </div>
                   <div
                     className={cn(
-                      "w-1/3 bg-orange-500/40 hover:bg-orange-500 transition-all duration-500 rounded-t-sm relative group/bar"
+                      "w-1/3 bg-emerald-500/40 hover:bg-emerald-500 transition-all duration-500 rounded-t-sm relative group/bar"
                     )}
-                    style={{ height: `${Math.max(eventHeight, 2)}%` }}
+                    style={{ height: `${Math.max(eventHeight, 2)}px` }}
                   >
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-[10px] font-bold opacity-0 group-hover/bar:opacity-100 transition-opacity shadow-xl border border-border z-20 whitespace-nowrap">
                       {eventCount} Events

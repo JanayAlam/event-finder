@@ -78,7 +78,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
             : setStage(PAGE_STAGE.AI_INPUT)
         }
       >
-        <Paragraph className="text-sm flex gap-2 items-center">
+        <Paragraph className="text-sm flex gap-2 items-center p-0!">
           <ArrowLeft className="size-4" />
           Back
         </Paragraph>

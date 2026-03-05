@@ -1,21 +1,16 @@
 "use client";
 
-import { InputField } from "@/components/shared/molecules/form";
-import { Spinner } from "@/components/shared/shadcn-components/spinner";
+import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form/ai-prompt-form";
 import AIRepository from "@/repositories/ai.repository";
 import { PUBLIC_PAGE_ROUTE } from "@/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
-import { Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import {
   IAIQueryItem,
   TPromtRequestDto
 } from "../../../../../common/types/ai.types";
-import { PromtScheam } from "../../../../../common/validation-schemas";
 import { AIQuerySection } from "./ai-query-section";
 
 const generateKey = () => dayjs().valueOf().toString();
@@ -29,13 +24,6 @@ export const AISearchResultContent = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [queries, setQueries] = useState<IAIQueryItem[]>([]);
-
-  const form = useForm({
-    defaultValues: {
-      prompt: ""
-    },
-    resolver: zodResolver(PromtScheam)
-  });
 
   const executeSearch = useCallback(async (prompt: string, key: string) => {
     try {
@@ -62,14 +50,10 @@ export const AISearchResultContent = () => {
     }
   }, [initialPrompt, executeSearch, queries.length]);
 
-  const onSubmit = (values: TPromtRequestDto) => {
+  const onSubmit = ({ prompt }: TPromtRequestDto) => {
     const key = generateKey();
-    setQueries((prev) => [
-      ...prev,
-      { prompt: values.prompt, key, isLoading: true }
-    ]);
-    executeSearch(values.prompt, key);
-    form.reset({ prompt: "" });
+    setQueries((prev) => [...prev, { prompt, key, isLoading: true }]);
+    executeSearch(prompt, key);
   };
   useEffect(() => {
     if (scrollRef.current) {
@@ -100,28 +84,7 @@ export const AISearchResultContent = () => {
         </div>
       </div>
 
-      <div className="magic-glow group shrink-0">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
-          <InputField
-            name="prompt"
-            control={form.control}
-            disabled={isGlobalLoading}
-            placeholder="Where do you want to go next? Ask AI..."
-            className="h-16 rounded-full px-8 bg-background/60 backdrop-blur-2xl border-primary/20 focus:border-primary transition-all text-xl shadow-2xl w-full pr-20"
-          />
-          <button
-            type="submit"
-            className="absolute right-3 top-2 bottom-2 aspect-square bg-primary disabled:bg-primary/60 text-primary-foreground rounded-full flex items-center justify-center not-disabled:hover:scale-105 transition-transform shadow-lg shadow-primary/20 disabled:cursor-not-allowed cursor-pointer"
-            disabled={isGlobalLoading}
-          >
-            {isGlobalLoading ? (
-              <Spinner className="size-6" color="text-white!" />
-            ) : (
-              <Sparkles className="size-6 fill-current" />
-            )}
-          </button>
-        </form>
-      </div>
+      <AIPromptForm onSubmit={onSubmit} isGlobalLoading={isGlobalLoading} />
     </div>
   );
 };

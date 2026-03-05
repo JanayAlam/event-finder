@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  AiEventCreationSchema,
+  AIEventCreationSchema,
   EventCreatorAgentOutputSchema,
   EventSearchToolSchema,
   PromtScheam,
@@ -23,7 +23,7 @@ export interface IAIQueryItem {
   isLoading: boolean;
 }
 
-export type TAiEventCreationSchemaDto = z.infer<typeof AiEventCreationSchema>;
+export type TAIEventCreationSchemaDto = z.infer<typeof AIEventCreationSchema>;
 
 export type TGenerateEventPlanResponse = z.infer<
   typeof EventCreatorAgentOutputSchema

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  TAiEventCreationSchemaDto,
+  TAIEventCreationSchemaDto,
   TPromtRequestDto
 } from "../../../../common/types/ai.types";
 import runEventSearchAgent, { runEventCreatorAgent } from "../../../ai/run";
@@ -9,7 +9,7 @@ type TExecutePromtRequest = Request<unknown, unknown, TPromtRequestDto>;
 type TGenerateEventPlanRequest = Request<
   unknown,
   unknown,
-  TAiEventCreationSchemaDto
+  TAIEventCreationSchemaDto
 >;
 
 class AIController {
@@ -34,16 +34,7 @@ class AIController {
     next: NextFunction
   ) {
     try {
-      const { place, when, back } = req.body;
-
-      const prompt = `Generate an event plan:
-        ${JSON.stringify({
-          location: place,
-          start_date: when,
-          end_date: back
-        })}
-      `;
-
+      const { prompt } = req.body;
       const result = await runEventCreatorAgent(prompt);
       res.json({ result: result.finalOutput });
     } catch (err) {

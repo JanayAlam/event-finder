@@ -43,16 +43,9 @@ export const SearchAgentOutputSchema = z.object({
   events: z.array(SearchAgentEventSchema).default([])
 });
 
-export const AiEventCreationSchema = z
-  .object({
-    place: z.string().min(1, "Place is required"),
-    when: z.string().min(1, "Departure time is required"),
-    back: z.string().min(1, "Return time is required")
-  })
-  .refine((data) => new Date(data.back) > new Date(data.when), {
-    message: "Return time must be after departure time",
-    path: ["back"]
-  });
+export const AIEventCreationSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required")
+});
 
 export const GenerateEventToolSchema = z.object({
   start_date: z

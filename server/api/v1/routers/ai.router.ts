@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  AiEventCreationSchema,
+  AIEventCreationSchema,
   PromtScheam
 } from "../../../../common/validation-schemas";
 import inputValidator from "../../../middlewares/input-validator.middleware";
@@ -12,7 +12,7 @@ aiRouter.post("/", inputValidator(PromtScheam), AIController.executePromt);
 
 aiRouter.post(
   "/generate-event",
-  inputValidator(AiEventCreationSchema),
+  inputValidator(AIEventCreationSchema),
   AIController.generateEventPlan
 );
 

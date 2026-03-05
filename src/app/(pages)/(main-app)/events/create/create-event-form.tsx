@@ -105,7 +105,7 @@ export default function CreateEventForm({
     name: "additionalPhotos"
   });
 
-  const { mutate: createEvent, isPending: isCreating } = useMutation({
+  const { mutateAsync: createEvent, isPending: isCreating } = useMutation({
     mutationFn: async (data: TCreateEventDto) => {
       const result = await EventRepository.create(data);
       return result;
@@ -454,8 +454,12 @@ export default function CreateEventForm({
       }}
       validationSchema={CreateEventSchema}
       form={form}
-      onSubmitCallback={(data) => {
-        createEvent(data);
+      onSubmitCallback={async (data) => {
+        await createEvent(data);
+      }}
+      onInvalidCallback={(errors) => {
+        const firstError = Object.values(errors)[0] as { message?: string };
+        toast.error(firstError?.message || "Please fix form errors first");
       }}
     />
   );

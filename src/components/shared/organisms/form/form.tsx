@@ -30,6 +30,7 @@ export type TFormProps<T extends z.ZodObject<any>> = {
   submitButtonLabel?: string;
   submitButtonClassName?: string;
   onSubmitCallback: (data: z.infer<T>) => void | Promise<void>;
+  onInvalidCallback?: (errors: FormState<z.input<T>>["errors"]) => void;
   isSubmitButtonLoading?: boolean;
   render?: (
     control: Control<z.input<T>>,
@@ -50,7 +51,8 @@ function Form<T extends z.ZodObject<any>>(
     submitButtonClassName,
     isSubmitButtonLoading,
     render,
-    onSubmitCallback
+    onSubmitCallback,
+    onInvalidCallback
   } = props;
 
   const internalForm = useForm<z.input<T>>({
@@ -79,7 +81,10 @@ function Form<T extends z.ZodObject<any>>(
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmitCallback as any)}
+      onSubmit={handleSubmit(
+        onSubmitCallback as any,
+        onInvalidCallback as any
+      )}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">

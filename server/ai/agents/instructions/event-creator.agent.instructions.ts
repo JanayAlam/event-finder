@@ -26,7 +26,7 @@ export const eventCreatorAgentInstructions = `
     - placeName: normalized destination with country name at the end (e.g. Cox's Bazar, Bangladesh).
       - If no exact place is provided, choose a realistic destination that matches the user's intent.
     - description: vivid but practical summary for travelers, and it MUST explicitly mention the trip end date.
-    - eventDate: ISO datetime string from tool output.
+    - eventDate: ISO datetime string from tool output, and it MUST be in the future relative to current date ${new Date().toISOString()}.
     - dayCount/nightCount: values from tool output only.
     - entryFee: realistic BDT estimate for Bangladesh trips (default 5000 only if uncertain).
     - memberCapacity: realistic group size between 10 and 30; follow user hints if provided.

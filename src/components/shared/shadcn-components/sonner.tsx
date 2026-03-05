@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  BadgeAlert,
-  BadgeCheck,
-  BadgeInfo,
-  BadgeX,
-  Loader
-} from "lucide-react";
+import { BadgeAlert, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { Spinner } from "./spinner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
@@ -20,7 +15,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         info: <BadgeInfo className="size-5 text-info" />,
         warning: <BadgeAlert className="size-5 text-warning" />,
         error: <BadgeX className="size-5 text-destructive" />,
-        loading: <Loader className="size-5! animate-spin text-primary" />
+        loading: <Spinner className="size-5!" />
       }}
       style={
         {

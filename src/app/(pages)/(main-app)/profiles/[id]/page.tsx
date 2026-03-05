@@ -1,3 +1,4 @@
+import { EmptyData } from "@/components/shared/molecules/empty";
 import {
   ProfileAside,
   ProfileHeader,
@@ -15,11 +16,13 @@ export default async function ProfilePage({
 }) {
   const { id } = await params;
 
-  const profile = await ProfileRepository.getProfileWithUser(id);
-  const stats = await ProfileRepository.getTripStatus(id);
+  const [profile, stats] = await Promise.all([
+    ProfileRepository.getProfileWithUser(id),
+    ProfileRepository.getTripStatus(id)
+  ]);
 
   if (!profile || !stats) {
-    return <div>Profile not found</div>;
+    return <EmptyData message="Profile not found" />;
   }
 
   const userId = profile.user._id.toString();

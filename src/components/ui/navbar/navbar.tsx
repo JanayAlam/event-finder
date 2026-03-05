@@ -206,6 +206,9 @@ const Navbar: React.FC = () => {
                         <DropdownMenuItem>Admin portal</DropdownMenuItem>
                       </Link>
                     ) : null}
+                    <Link href={PRIVATE_PAGE_ROUTE.PAYMENTS}>
+                      <DropdownMenuItem>Payments</DropdownMenuItem>
+                    </Link>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>

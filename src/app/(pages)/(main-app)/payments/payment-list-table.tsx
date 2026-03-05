@@ -7,18 +7,14 @@ import {
   H4,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
-import EventRepository from "@/repositories/event.repository";
+import PaymentRepository from "@/repositories/payment.repository";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
-interface EventPaymentsProps {
-  eventId: string;
-}
-
-export const EventPayments = ({ eventId }: EventPaymentsProps) => {
+export const PaymentListTable = () => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["event-payments", eventId],
-    queryFn: () => EventRepository.getPayments(eventId)
+    queryKey: ["my-payments"],
+    queryFn: () => PaymentRepository.getMyPayments()
   });
 
   if (isLoading) {
@@ -38,16 +34,16 @@ export const EventPayments = ({ eventId }: EventPaymentsProps) => {
   }
 
   if (!data?.length) {
-    return <EmptyList message="No payments yet" />;
+    return <EmptyList message="No payment records yet" />;
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <H4>Payment Records</H4>
+        <H4>My Payments</H4>
         <TypographyMuted>{data.length} transaction(s)</TypographyMuted>
       </div>
-      <PaymentsTable data={data} />
+      <PaymentsTable data={data} showPayer={false} showEvent />
     </div>
   );
 };

@@ -10,7 +10,8 @@ export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
 };
 
 export const PRIVATE_PAGE_ROUTE = {
-  SETTINGS_PERSONAL_INFO: "/account-preferences/personal-info"
+  SETTINGS_PERSONAL_INFO: "/account-preferences/personal-info",
+  PAYMENTS: "/payments"
 };
 
 export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {

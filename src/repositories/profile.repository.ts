@@ -1,5 +1,6 @@
 import { TPersonalInfoRequestDto } from "../../common/validation-schemas";
 import { TProfile, TProfileWithUser } from "../../server/models/profile.model";
+import { isAxiosError } from "axios";
 import BaseRepository from "./base.repository";
 
 class ProfileRepository extends BaseRepository {
@@ -10,9 +11,17 @@ class ProfileRepository extends BaseRepository {
   }
 
   static async getProfileWithUser(id: string) {
-    const url = `${this.apiRoute}/${id}`;
-    const data = await this.request<undefined, TProfileWithUser>(url, "get");
-    return data;
+    try {
+      const url = `${this.apiRoute}/${id}`;
+      const data = await this.request<undefined, TProfileWithUser>(url, "get");
+      return data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+
+      throw error;
+    }
   }
 
   static async updatePersonalInfo(
@@ -48,17 +57,25 @@ class ProfileRepository extends BaseRepository {
   }
 
   static async getTripStatus(id: string) {
-    const url = `${this.apiRoute}/${id}/trips-status`;
-    const data = await this.request<
-      undefined,
-      {
-        eventsJoined: number;
-        eventsHosted: number | null;
-        rating: number | "N/A";
-        memberSince: string;
+    try {
+      const url = `${this.apiRoute}/${id}/trips-status`;
+      const data = await this.request<
+        undefined,
+        {
+          eventsJoined: number;
+          eventsHosted: number | null;
+          rating: number | "N/A";
+          memberSince: string;
+        }
+      >(url, "get");
+      return data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        return null;
       }
-    >(url, "get");
-    return data;
+
+      throw error;
+    }
   }
 }
 

@@ -11,7 +11,7 @@ import {
 } from "@/components/shared/shadcn-components/typography";
 import EventRepository from "@/repositories/event.repository";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { CalendarX, Search } from "lucide-react";
+import { CalendarX } from "lucide-react";
 import { useMemo } from "react";
 
 export default function ExplorePage() {
@@ -52,11 +52,8 @@ export default function ExplorePage() {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Search className="size-6 text-primary" />
-          <H2>Explore Adventures</H2>
-        </div>
-        <TypographyMuted className="text-lg">
+        <H2>Explore Adventures</H2>
+        <TypographyMuted>
           Discover your next journey. Browse upcoming trips organized by our
           community members and find your perfect match.
         </TypographyMuted>

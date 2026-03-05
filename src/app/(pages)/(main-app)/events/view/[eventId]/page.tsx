@@ -1,10 +1,4 @@
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle
-} from "@/components/shared/shadcn-components/empty";
-import { H1 } from "@/components/shared/shadcn-components/typography";
+import { EmptyData } from "@/components/shared/molecules/empty";
 import {
   EventCoverPhoto,
   EventDetailsTabs,
@@ -47,18 +41,7 @@ export default async function EventDetailsPage({
 
   if (error) {
     if (error.response?.status === 404) {
-      return (
-        <Empty>
-          <EmptyHeader>
-            <EmptyTitle>
-              <H1>Event Not Found</H1>
-            </EmptyTitle>
-            <EmptyDescription>
-              The event you&apos;re looking for doesn&apos;t exist.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      );
+      return <EmptyData message="Event not found" />;
     }
     throw error;
   }

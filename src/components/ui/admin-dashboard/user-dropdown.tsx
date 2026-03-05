@@ -117,6 +117,9 @@ const UserDropdown: React.FC = () => {
           <Link href={PRIVATE_PAGE_ROUTE.SETTINGS_PERSONAL_INFO}>
             <DropdownMenuItem>Account Preferences</DropdownMenuItem>
           </Link>
+          <Link href={PRIVATE_PAGE_ROUTE.PAYMENTS}>
+            <DropdownMenuItem>Payments</DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

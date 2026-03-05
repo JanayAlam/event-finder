@@ -5,6 +5,7 @@ import aiRouter from "./ai.router";
 import authRouter from "./auth.router";
 import eventRouter from "./event.router";
 import notificationRouter from "./notification.router";
+import paymentRouter from "./payment.router";
 import statusRouter from "./status.router";
 import userRouter from "./user.router";
 
@@ -23,6 +24,7 @@ router.use("/account-verifications", accountVerificationRouter);
 router.use("/admins", adminRouter);
 router.use("/promotion-requests", promotionRequestRouter);
 router.use("/events", eventRouter);
+router.use("/payments", paymentRouter);
 router.use("/ai", aiRouter);
 router.use("/notifications", notificationRouter);
 

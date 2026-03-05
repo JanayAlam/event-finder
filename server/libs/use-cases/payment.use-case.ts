@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { TEventPaymentResponseDto } from "../../../common/types";
+import { TPaymentResponseDto } from "../../../common/types";
 import { PAYMENT_STATUS } from "../../enums";
 import Payment, { TPayment } from "../../models/payment.model";
 
@@ -76,11 +76,37 @@ class PaymentUseCase {
 
   static async findByEvent(
     eventId: Types.ObjectId
-  ): Promise<TEventPaymentResponseDto[]> {
+  ): Promise<TPaymentResponseDto[]> {
     return Payment.find({ event: eventId })
-      .populate({ path: "user", select: "_id email" })
+      .populate({
+        path: "user",
+        select: "_id email profile",
+        populate: {
+          path: "profile",
+          select: "_id firstName lastName"
+        }
+      })
+      .populate({ path: "event", select: "_id title" })
       .sort({ createdAt: -1 })
-      .lean<TEventPaymentResponseDto[]>()
+      .lean<TPaymentResponseDto[]>()
+      .exec();
+  }
+
+  static async findByUser(
+    userId: Types.ObjectId
+  ): Promise<TPaymentResponseDto[]> {
+    return Payment.find({ user: userId })
+      .populate({
+        path: "user",
+        select: "_id email profile",
+        populate: {
+          path: "profile",
+          select: "_id firstName lastName"
+        }
+      })
+      .populate({ path: "event", select: "_id title" })
+      .sort({ createdAt: -1 })
+      .lean<TPaymentResponseDto[]>()
       .exec();
   }
 }

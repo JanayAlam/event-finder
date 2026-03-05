@@ -209,7 +209,9 @@ class EventController {
           eventDate: { $gte: new Date() },
           status: { $ne: EVENT_STATUS.BLOCKED },
           ...(hostObjectId ? { host: hostObjectId } : {}),
-          ...(memberObjectId ? { members: memberObjectId } : {})
+          ...(memberObjectId
+            ? { $or: [{ host: memberObjectId }, { members: memberObjectId }] }
+            : {})
         },
         projection: {
           title: 1,

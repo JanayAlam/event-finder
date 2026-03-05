@@ -37,8 +37,17 @@ class EventRepository extends BaseRepository {
     return data;
   }
 
-  static async getAll(page: number = 1, limit: number = 12) {
-    const url = `${this.apiRoute}?page=${page}&limit=${limit}`;
+  static async getAll(page: number = 1, limit: number = 12, hostId?: string) {
+    const params = new URLSearchParams({
+      page: `${page}`,
+      limit: `${limit}`
+    });
+
+    if (hostId) {
+      params.set("hostId", hostId);
+    }
+
+    const url = `${this.apiRoute}?${params.toString()}`;
     const data = await this.request<
       undefined,
       { data: TEventListItemDto[]; total: number; page: number; limit: number }

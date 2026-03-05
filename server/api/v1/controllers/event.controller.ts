@@ -189,12 +189,20 @@ class EventController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 12;
+      const hostId = req.query.hostId as string | undefined;
       const skip = (page - 1) * limit;
+
+      const hostObjectId = hostId ? convertToObjectId(hostId) : null;
+
+      if (hostId && !hostObjectId) {
+        throw new ApiError(400, "Invalid host ID");
+      }
 
       const response = await EventUseCase.getAll({
         filter: {
           eventDate: { $gte: new Date() },
-          status: { $ne: EVENT_STATUS.BLOCKED }
+          status: { $ne: EVENT_STATUS.BLOCKED },
+          ...(hostObjectId ? { host: hostObjectId } : {})
         },
         projection: {
           title: 1,

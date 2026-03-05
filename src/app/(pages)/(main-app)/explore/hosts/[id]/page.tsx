@@ -3,9 +3,15 @@
 import { EventList } from "@/components/shared/organisms/event-list";
 import EventRepository from "@/repositories/event.repository";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 
-export default function ExplorePage() {
+export default function ExploreHostEventsPage({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+
   const limit = 12;
 
   const {
@@ -16,8 +22,8 @@ export default function ExplorePage() {
     isLoading,
     isFetching
   } = useInfiniteQuery({
-    queryKey: ["explore-events"],
-    queryFn: ({ pageParam }) => EventRepository.getAll(pageParam, limit),
+    queryKey: ["explore-host-events", id],
+    queryFn: ({ pageParam }) => EventRepository.getAll(pageParam, limit, id),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const totalPages = Math.ceil(lastPage.total / limit);
@@ -26,28 +32,25 @@ export default function ExplorePage() {
     placeholderData: (previousData) => previousData
   });
 
-  const allEvents = useMemo(() => {
+  const hostEvents = useMemo(() => {
     if (!data) return [];
     const flattened = data.pages.flatMap((page) => page.data);
-    // Deduplicate by _id to maintain previous behavior (if necessary)
     return flattened.filter(
       (event, index, self) =>
         index === self.findIndex((e) => e._id === event._id)
     );
   }, [data]);
 
-  const handleLoadMore = () => {
-    fetchNextPage();
-  };
-
   return (
     <EventList
-      events={allEvents}
+      events={hostEvents}
       isLoading={isLoading}
       isFetching={isFetching}
       isFetchingNextPage={isFetchingNextPage}
       hasNextPage={hasNextPage}
-      onLoadMore={handleLoadMore}
+      onLoadMore={fetchNextPage}
+      emptyTitle="No trips found for this host"
+      emptyDescription="This host has not published any upcoming trips yet."
     />
   );
 }

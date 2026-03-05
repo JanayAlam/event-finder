@@ -8,6 +8,7 @@ import { PAGE_WIDTH_CLASS_NAME } from "@/constants";
 import { cn } from "@/lib/utils";
 import EventRepository from "@/repositories/event.repository";
 import ProfileRepository from "@/repositories/profile.repository";
+import { USER_ROLE } from "../../../../../../server/enums";
 
 export default async function ProfilePage({
   params
@@ -36,7 +37,11 @@ export default async function ProfilePage({
     <div
       className={cn(PAGE_WIDTH_CLASS_NAME, "py-6 flex flex-col gap-4 sm:gap-6")}
     >
-      <ProfileHeader profile={profile} stats={stats} />
+      <ProfileHeader
+        isHost={profile.user.role === USER_ROLE.HOST}
+        profile={profile}
+        stats={stats}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         <div className="lg:col-span-4">
@@ -44,6 +49,7 @@ export default async function ProfilePage({
         </div>
         <div className="lg:col-span-8">
           <ProfileSection
+            userId={userId}
             showHosted={stats.eventsHosted !== null}
             recentHostedEvents={recentHostedEvents}
             recentJoinedEvents={recentJoinedEvents}

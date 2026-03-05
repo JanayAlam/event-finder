@@ -34,6 +34,7 @@ export const eventCreatorAgentInstructions = `
       - accurate ISO "moment" values within the trip window,
       - concise activity title,
       - clear activity description.
+      - If departure place not mentioned, assume Dhaka, Bangladesh.
 
   Hard constraints:
     - Keep all fields valid for direct form submission.

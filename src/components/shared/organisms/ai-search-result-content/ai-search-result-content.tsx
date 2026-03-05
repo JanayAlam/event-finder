@@ -1,6 +1,7 @@
 "use client";
 
 import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form/ai-prompt-form";
+import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -35,7 +36,7 @@ export function AISearchResultContent<TResult>({
   onMissingInitialPrompt,
   onResult,
   onError,
-  className = "h-[calc(100vh-120px)] flex flex-col gap-6"
+  className
 }: IAISearchResultContentProps<TResult>) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [queries, setQueries] = useState<IAIResultQueryItem<TResult>[]>([]);
@@ -94,7 +95,12 @@ export function AISearchResultContent<TResult>({
   const isGlobalLoading = queries.some((q) => q.isLoading);
 
   return (
-    <div className={className}>
+    <div
+      className={cn(
+        "h-[calc(100vh-120px)] flex flex-col gap-6 pt-6",
+        className
+      )}
+    >
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-4"

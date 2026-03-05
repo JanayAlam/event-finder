@@ -68,7 +68,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
 
         {stage === PAGE_STAGE.AI_INPUT && (
           <Card className="overflow-hidden border-none shadow-xl bg-gradient-to-br from-background to-muted/30">
-            <CardContent className="h-[50vh]">
+            <CardContent className="h-[70vh]">
               <AISearchResultContent<TGenerateEventPlanResponse>
                 className="h-full"
                 executeSearch={executeSearch}

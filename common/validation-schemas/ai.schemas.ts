@@ -53,3 +53,44 @@ export const AiEventCreationSchema = z
     message: "Return time must be after departure time",
     path: ["back"]
   });
+
+export const GenerateEventToolSchema = z.object({
+  start_date: z
+    .string()
+    .describe("Departure time provided by user in any readable format"),
+  end_date: z
+    .string()
+    .describe("Return time provided by user in any readable format")
+});
+
+export const EventCreatorAgentOutputSchema = z.object({
+  title: z.string().describe("Catchy title for the trip"),
+  placeName: z.string().describe("Destination place name"),
+  description: z
+    .string()
+    .describe("Vivid description of the trip highlighting what to expect"),
+  eventDate: z.string().describe("Departure time of the trip in ISO format"),
+  dayCount: z.number().describe("Total number of days the trip lasts"),
+  nightCount: z.number().describe("Total number of nights the trip lasts"),
+  entryFee: z
+    .number()
+    .describe(
+      "Estimated budget/entry fee in BDT. Make a realistic guess based on the place and duration. Default roughly 5000."
+    ),
+  memberCapacity: z
+    .number()
+    .describe("Suggested member capacity for this event, e.g. 10 to 30"),
+  itinerary: z
+    .array(
+      z.object({
+        moment: z
+          .string()
+          .describe("Date/time for this itinerary step in ISO format"),
+        title: z.string().describe("Short title of the activity or day"),
+        description: z
+          .string()
+          .describe("Detailed description of activities during this phase")
+      })
+    )
+    .describe("Detailed day-by-day or event-by-event itinerary of the trip")
+});

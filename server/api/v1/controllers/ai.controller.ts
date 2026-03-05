@@ -34,8 +34,14 @@ class AIController {
     next: NextFunction
   ) {
     try {
-      const { place, when, back } = req.body;
-      const prompt = `Generate an event plan for a trip to ${place} from ${when} to ${back}.`;
+      const { when, back } = req.body;
+
+      const prompt = `Generate an event plan:
+        ${JSON.stringify({
+          start_date: when,
+          end_date: back
+        })}
+      `;
 
       const result = await runEventCreatorAgent(prompt);
       res.json({ result: result.finalOutput });

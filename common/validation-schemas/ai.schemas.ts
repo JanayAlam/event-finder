@@ -60,7 +60,7 @@ export const GenerateEventToolSchema = z.object({
     .describe("Departure time provided by user in any readable format"),
   end_date: z
     .string()
-    .describe("Return time provided by user in any readable format")
+    .describe("Return/end time provided by user in any readable format")
 });
 
 export const EventCreatorAgentOutputSchema = z.object({
@@ -68,7 +68,9 @@ export const EventCreatorAgentOutputSchema = z.object({
   placeName: z.string().describe("Destination place name"),
   description: z
     .string()
-    .describe("Vivid description of the trip highlighting what to expect"),
+    .describe(
+      "Vivid description of the trip highlighting what to expect, and explicitly mention the trip end date"
+    ),
   eventDate: z.string().describe("Departure time of the trip in ISO format"),
   dayCount: z.number().describe("Total number of days the trip lasts"),
   nightCount: z.number().describe("Total number of nights the trip lasts"),

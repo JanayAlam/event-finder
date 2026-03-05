@@ -1,4 +1,6 @@
 import {
+  TAiEventCreationSchemaDto,
+  TGenerateEventPlanResponse,
   TAIPromtResponse,
   TPromtRequestDto
 } from "../../common/types/ai.types";
@@ -13,6 +15,13 @@ class AIRepository extends BaseRepository {
       "post",
       body
     );
+  }
+
+  static generateEventPlan(body: TAiEventCreationSchemaDto) {
+    return this.request<
+      TAiEventCreationSchemaDto,
+      { result: TGenerateEventPlanResponse }
+    >(`${this.apiRouter}/generate-event`, "post", body);
   }
 }
 

@@ -11,11 +11,14 @@ import {
   TPageStage
 } from "@/components/ui/create-event-page/multi-stage-form-header";
 import { cn } from "@/lib/utils";
+import AIRepository from "@/repositories/ai.repository";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 import { TCreateEventForm } from "../../../../../../../common/types";
 import { AiEventCreationSchema } from "../../../../../../../common/validation-schemas";
@@ -39,40 +42,28 @@ export const CreateEventMultiStageForm: React.FC = () => {
     }
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["ai-generate-event-plan"],
+    mutationFn: (requestBody: TStageData) =>
+      AIRepository.generateEventPlan(requestBody)
+  });
+
   const { isSubmitting } = form.formState;
 
+  const isGenerating = isSubmitting || isPending;
+
   const onSubmit = async (data: TStageData) => {
-    // Mock API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    const startDate = new Date(data.when);
-    const endDate = new Date(data.back);
-    const diffInMs = endDate.getTime() - startDate.getTime();
-    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-
-    const dayCount = Math.max(1, diffInDays);
-    const nightCount = Math.max(0, diffInDays - 1);
-
-    const mockData: Partial<TCreateEventForm> = {
-      title: `Adventure in ${data.place}`,
-      placeName: data.place,
-      description: `A wonderful trip to ${data.place} from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}. This AI-generated event aims to provide a memorable experience for all participants.`,
-      eventDate: data.when as any,
-      dayCount: dayCount,
-      nightCount: nightCount,
-      entryFee: 5000,
-      memberCapacity: 20,
-      itinerary: Array.from({ length: dayCount }).map((_, i) => ({
-        moment: new Date(
-          startDate.getTime() + i * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        title: `Day ${i + 1} Exploration`,
-        description: `Exciting activities planned for day ${i + 1} in ${data.place}.`
-      }))
-    };
-
-    setAiGeneratedData(mockData);
-    setStage(PAGE_STAGE.USER_INPUT);
+    try {
+      const { result } = await mutateAsync(data);
+      setAiGeneratedData(result);
+      setStage(PAGE_STAGE.USER_INPUT);
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to generate event plan"
+      );
+    }
   };
 
   return (
@@ -80,7 +71,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
       <Button
         variant="link"
         className="text-primary-foreground hover:no-underline! p-0"
-        disabled={form.formState.isSubmitting}
+        disabled={isGenerating}
         onClick={() =>
           stage === PAGE_STAGE.AI_INPUT
             ? router.back()
@@ -118,7 +109,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
                         name="place"
                         placeholder="e.g. Cox's Bazar, Sundarbans, etc."
                         control={control}
-                        disabled={isSubmitting}
+                        disabled={isGenerating}
                       />
                     </div>
                     <InputField
@@ -126,7 +117,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
                       name="when"
                       type="datetime-local"
                       control={control}
-                      disabled={isSubmitting}
+                      disabled={isGenerating}
                     />
                     <InputField
                       label="When do you want to come back?"
@@ -134,18 +125,18 @@ export const CreateEventMultiStageForm: React.FC = () => {
                       type="datetime-local"
                       control={control}
                       placeholder="Return date and time"
-                      disabled={isSubmitting}
+                      disabled={isGenerating}
                     />
                   </div>
 
                   <Button
                     type="submit"
-                    isLoading={isSubmitting}
-                    disabled={isSubmitting}
+                    isLoading={isGenerating}
+                    disabled={isGenerating}
                     className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground transition-all hover:scale-[1.01] active:scale-[1] group shadow-lg shadow-primary/20"
                   >
                     Generate Event Plan
-                    {!isSubmitting && (
+                    {!isGenerating && (
                       <Sparkles className="ml-2 size-5 group-hover:rotate-180 transition-transform duration-400" />
                     )}
                   </Button>

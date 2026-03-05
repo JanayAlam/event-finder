@@ -135,6 +135,14 @@ eventRouter.post(
   EventController.join
 );
 
+// Get event payment list - only host
+eventRouter.get(
+  "/:id/payments",
+  authenticate([USER_ROLE.HOST]),
+  inputValidator(null, IdParamsSchema),
+  EventController.getPayments
+);
+
 // Payment callbacks - SSL Commerz POSTs to these, but browser may GET after redirect
 eventRouter
   .route("/:id/payment/success")

@@ -15,6 +15,7 @@ import { TUserWithProfile } from "../../../../server/models/user.model";
 import { EventAbout } from "./event-about";
 import { EventDiscussion } from "./event-discussion";
 import { EventMembers } from "./event-members";
+import { EventPayments } from "./event-payments";
 
 const tabTriggerClasses =
   "rounded-none shadow-none! border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent shadow-none px-0 py-2 transition-none";
@@ -32,6 +33,7 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
 
   const { user, isLoggedIn, isInitialLoading } = useAuthStore();
   const activeTab = searchParams.get("tab") || "about";
+  const isHost = event.host._id.toString() === user?._id?.toString();
 
   useEffect(() => {
     if (!isInitialLoading && activeTab === "discussion" && !isLoggedIn) {
@@ -39,7 +41,20 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
       params.set("tab", "about");
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }
-  }, [activeTab, isLoggedIn, isInitialLoading, pathname, router, searchParams]);
+    if (!isInitialLoading && activeTab === "payments" && !isHost) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", "about");
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [
+    activeTab,
+    isLoggedIn,
+    isInitialLoading,
+    isHost,
+    pathname,
+    router,
+    searchParams
+  ]);
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -66,6 +81,11 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
         <TabsTrigger value="members" className={tabTriggerClasses}>
           Members
         </TabsTrigger>
+        {isHost && (
+          <TabsTrigger value="payments" className={tabTriggerClasses}>
+            Payments
+          </TabsTrigger>
+        )}
       </TabsList>
       <TabsContent value="about" className={tabContentClasses}>
         <EventAbout event={event} />
@@ -78,6 +98,11 @@ export const EventDetailsTabs = ({ event }: EventDetailsTabsProps) => {
       <TabsContent value="members" className={tabContentClasses}>
         <EventMembers event={event} />
       </TabsContent>
+      {isHost && (
+        <TabsContent value="payments" className={tabContentClasses}>
+          <EventPayments eventId={event._id.toString()} />
+        </TabsContent>
+      )}
     </Tabs>
   );
 };

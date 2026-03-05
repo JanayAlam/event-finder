@@ -718,6 +718,35 @@ class EventController {
       next(err);
     }
   }
+
+  static async getPayments(
+    req: TEventIdRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthenticated");
+      }
+
+      const { id } = req.params;
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (!event.host._id.equals(req.user._id)) {
+        throw new ApiError(403, "Only event host can view payment records");
+      }
+
+      const payments = await PaymentUseCase.findByEvent(event._id);
+
+      res.status(200).json(payments);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default EventController;

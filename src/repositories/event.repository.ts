@@ -3,6 +3,7 @@ import {
   TEvent,
   TEventDetailDto,
   TEventListItemDto,
+  TEventPaymentResponseDto,
   TSearchEventResultResponse,
   TSearchRequestDto,
   TUpdateEventDto
@@ -125,6 +126,11 @@ class EventRepository extends BaseRepository {
       { url?: string; message?: string }
     >(url, "post");
     return data;
+  }
+
+  static async getPayments(eventId: string) {
+    const url = `${this.apiRoute}/${eventId}/payments`;
+    return this.request<undefined, TEventPaymentResponseDto[]>(url, "get");
   }
 
   static async publishToFacebook(

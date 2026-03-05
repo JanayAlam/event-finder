@@ -5,6 +5,7 @@ export * from "./event-cover-photo";
 export * from "./event-discussion";
 export * from "./event-members";
 export * from "./event-meta-list";
+export * from "./event-payments";
 export * from "./event-status-alert";
 export * from "./event-tabs";
 export * from "./event-title-section";

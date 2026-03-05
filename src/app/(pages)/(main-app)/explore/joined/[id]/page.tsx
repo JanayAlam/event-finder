@@ -5,7 +5,7 @@ import EventRepository from "@/repositories/event.repository";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { use, useMemo } from "react";
 
-export default function ExploreHostEventsPage({
+export default function ExploreJoinedEventsPage({
   params
 }: {
   params: Promise<{ id: string }>;
@@ -22,9 +22,9 @@ export default function ExploreHostEventsPage({
     isLoading,
     isFetching
   } = useInfiniteQuery({
-    queryKey: ["explore-host-events", id],
+    queryKey: ["explore-joined-events", id],
     queryFn: ({ pageParam }) =>
-      EventRepository.getAll(pageParam, limit, { hostId: id }),
+      EventRepository.getAll(pageParam, limit, { memberId: id }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const totalPages = Math.ceil(lastPage.total / limit);
@@ -33,7 +33,7 @@ export default function ExploreHostEventsPage({
     placeholderData: (previousData) => previousData
   });
 
-  const hostEvents = useMemo(() => {
+  const joinedEvents = useMemo(() => {
     if (!data) return [];
     const flattened = data.pages.flatMap((page) => page.data);
     return flattened.filter(
@@ -44,14 +44,14 @@ export default function ExploreHostEventsPage({
 
   return (
     <EventList
-      events={hostEvents}
+      events={joinedEvents}
       isLoading={isLoading}
       isFetching={isFetching}
       isFetchingNextPage={isFetchingNextPage}
       hasNextPage={hasNextPage}
       onLoadMore={fetchNextPage}
-      emptyTitle="No trips found for this host"
-      emptyDescription="This host has not published any upcoming trips yet."
+      emptyTitle="No joined trips found"
+      emptyDescription="This traveler has not joined any upcoming trips yet."
     />
   );
 }

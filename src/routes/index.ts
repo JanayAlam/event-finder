@@ -7,7 +7,8 @@ export const PUBLIC_PAGE_ROUTE = {
 export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
   EVENT_DETAILS: (eventId: string) => `/events/view/${eventId}`,
   PROFILE: (profileId: string) => `/profiles/${profileId}`,
-  EXPLORE_EVENTS_BY_HOST: (hostId: string) => `/explore/hosts/${hostId}`
+  EXPLORE_EVENTS_BY_HOST: (hostId: string) => `/explore/hosts/${hostId}`,
+  EXPLORE_JOINED_EVENTS: (memberId: string) => `/explore/joined/${memberId}`
 };
 
 export const PRIVATE_PAGE_ROUTE = {

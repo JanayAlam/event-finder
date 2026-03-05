@@ -37,7 +37,14 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
         />
       )}
       <ProfileEventList
-        title="Recently joined events"
+        title={
+          <div className="flex gap-1 items-center justify-between">
+            <H4>Recently joined events</H4>
+            <LinkText href={PUBLIC_DYNAMIC_PAGE_ROUTE.EXPLORE_JOINED_EVENTS(userId)}>
+              Explore all
+            </LinkText>
+          </div>
+        }
         events={recentJoinedEvents}
         emptyMessage="No events joined yet"
       />

@@ -37,14 +37,22 @@ class EventRepository extends BaseRepository {
     return data;
   }
 
-  static async getAll(page: number = 1, limit: number = 12, hostId?: string) {
+  static async getAll(
+    page: number = 1,
+    limit: number = 12,
+    filters?: { hostId?: string; memberId?: string }
+  ) {
     const params = new URLSearchParams({
       page: `${page}`,
       limit: `${limit}`
     });
 
-    if (hostId) {
-      params.set("hostId", hostId);
+    if (filters?.hostId) {
+      params.set("hostId", filters.hostId);
+    }
+
+    if (filters?.memberId) {
+      params.set("memberId", filters.memberId);
     }
 
     const url = `${this.apiRoute}?${params.toString()}`;

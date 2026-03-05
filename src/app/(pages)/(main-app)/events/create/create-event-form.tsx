@@ -67,7 +67,11 @@ const FormCard: React.FC<
   );
 };
 
-export default function CreateEventForm() {
+export default function CreateEventForm({
+  initialData
+}: {
+  initialData?: Partial<TCreateEventForm>;
+}) {
   const router = useRouter();
 
   const [placeOptions, setPlaceOptions] = useState<TPlaceOption[]>(
@@ -78,17 +82,17 @@ export default function CreateEventForm() {
   const form = useForm<TCreateEventForm>({
     resolver: zodResolver(CreateEventSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      placeName: "",
-      eventDate: undefined,
-      entryFee: undefined,
-      memberCapacity: undefined,
-      dayCount: undefined,
-      nightCount: undefined,
-      itinerary: [],
-      coverPhoto: undefined,
-      additionalPhotos: []
+      title: initialData?.title || "",
+      description: initialData?.description || "",
+      placeName: initialData?.placeName || "",
+      eventDate: initialData?.eventDate || undefined,
+      entryFee: initialData?.entryFee || undefined,
+      memberCapacity: initialData?.memberCapacity || undefined,
+      dayCount: initialData?.dayCount || undefined,
+      nightCount: initialData?.nightCount || undefined,
+      itinerary: initialData?.itinerary || [],
+      coverPhoto: initialData?.coverPhoto || undefined,
+      additionalPhotos: initialData?.additionalPhotos || []
     }
   });
 

@@ -43,7 +43,6 @@ export const ItineraryFormFields: React.FC<ItineraryFormFieldsProps> = ({
         <Button
           type="button"
           variant="outline"
-          size="sm"
           onClick={() =>
             append({
               moment: "",

@@ -34,10 +34,11 @@ class AIController {
     next: NextFunction
   ) {
     try {
-      const { when, back } = req.body;
+      const { place, when, back } = req.body;
 
       const prompt = `Generate an event plan:
         ${JSON.stringify({
+          location: place,
           start_date: when,
           end_date: back
         })}

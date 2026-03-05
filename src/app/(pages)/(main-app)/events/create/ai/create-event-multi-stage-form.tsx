@@ -80,7 +80,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
       >
         <Paragraph className="text-sm flex gap-2 items-center">
           <ArrowLeft className="size-4" />
-          Back to home
+          Back
         </Paragraph>
       </Button>
       <div

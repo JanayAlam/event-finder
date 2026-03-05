@@ -430,6 +430,7 @@ export default function CreateEventForm({
             <TMCard>
               <div className="flex items-center justify-end gap-3">
                 <Button
+                  type="button"
                   size="lg"
                   variant="outline"
                   className="px-6 max-xs:flex-1"
@@ -439,6 +440,7 @@ export default function CreateEventForm({
                   Cancel
                 </Button>
                 <Button
+                  type="submit"
                   size="lg"
                   className="px-6 max-xs:flex-1 bg-primary hover:bg-primary/90 dark:text-primary"
                   isLoading={isSubmitting || isCreating}

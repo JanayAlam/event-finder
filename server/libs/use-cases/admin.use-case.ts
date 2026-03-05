@@ -33,7 +33,7 @@ class AdminUseCase {
       User.countDocuments({ createdAt: { $gte: startOfMonth } }),
       User.countDocuments({ role: USER_ROLE.HOST }),
       Event.countDocuments(),
-      Event.countDocuments({ createdAt: { $gte: startOfMonth } }),
+      Event.countDocuments({ eventDate: { $gte: startOfMonth } }),
       Discussion.countDocuments(),
       AccountVerification.countDocuments({ isReviewed: false }),
       PromotionRequest.countDocuments({ isApproved: false }),
@@ -51,12 +51,12 @@ class AdminUseCase {
         { $sort: { "_id.year": 1, "_id.month": 1 } }
       ]),
       Event.aggregate([
-        { $match: { createdAt: { $gte: sixMonthsAgo } } },
+        { $match: { eventDate: { $gte: sixMonthsAgo } } },
         {
           $group: {
             _id: {
-              month: { $month: "$createdAt" },
-              year: { $year: "$createdAt" }
+              month: { $month: "$eventDate" },
+              year: { $year: "$eventDate" }
             },
             count: { $sum: 1 }
           }

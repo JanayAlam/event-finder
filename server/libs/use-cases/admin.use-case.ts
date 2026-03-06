@@ -1,5 +1,9 @@
 import { Types } from "mongoose";
-import { TAdminEventListResponseDto } from "../../../common/types";
+import {
+  TAdminEventListResponseDto,
+  TAdminPaymentListResponseDto,
+  TAdminPaymentStatsDto
+} from "../../../common/types";
 import { EVENT_STATUS, PAYMENT_STATUS, USER_ROLE } from "../../enums";
 import AccountVerification from "../../models/account-verification.model";
 import Discussion from "../../models/discussion.model";
@@ -308,6 +312,102 @@ class AdminUseCase {
       .select("_id status")
       .lean<{ _id: Types.ObjectId; status: EVENT_STATUS }>()
       .exec();
+  }
+
+  static async getPaymentStats(): Promise<TAdminPaymentStatsDto> {
+    const [successfulPayments, failedPayments, collected] = await Promise.all([
+      Payment.countDocuments({ status: PAYMENT_STATUS.SUCCESS }),
+      Payment.countDocuments({ status: PAYMENT_STATUS.FAILED }),
+      Payment.aggregate([
+        { $match: { status: PAYMENT_STATUS.SUCCESS } },
+        { $group: { _id: null, total: { $sum: "$amount" } } }
+      ])
+    ]);
+
+    return {
+      successfulPayments,
+      failedPayments,
+      totalCollected: collected[0]?.total ?? 0
+    };
+  }
+
+  static async listPaymentsForAdmin(param: {
+    page: number;
+    limit: number;
+  }): Promise<TAdminPaymentListResponseDto> {
+    const { page, limit } = param;
+    const skip = (page - 1) * limit;
+
+    const [payments, total] = await Promise.all([
+      Payment.find({})
+        .select("amount tranId status createdAt user event")
+        .populate({
+          path: "user",
+          select: "_id email",
+          populate: {
+            path: "profile",
+            select: "_id firstName lastName"
+          }
+        })
+        .populate({
+          path: "event",
+          select: "_id title"
+        })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean<
+          Array<{
+            _id: Types.ObjectId;
+            amount: number;
+            tranId: string;
+            status: PAYMENT_STATUS;
+            createdAt: Date;
+            user: {
+              _id: Types.ObjectId;
+              email: string;
+              profile?: {
+                _id: Types.ObjectId;
+                firstName: string;
+                lastName: string;
+              } | null;
+            } | null;
+            event: { _id: Types.ObjectId; title: string } | null;
+          }>
+        >()
+        .exec(),
+      Payment.countDocuments({})
+    ]);
+
+    return {
+      payments: payments
+        .filter((payment) => payment.user && payment.event)
+        .map((payment) => ({
+          _id: payment._id,
+          amount: payment.amount,
+          tranId: payment.tranId,
+          status: payment.status,
+          createdAt: payment.createdAt,
+          user: {
+            _id: payment.user!._id,
+            email: payment.user!.email,
+            profile: payment.user!.profile
+              ? {
+                  _id: payment.user!.profile._id,
+                  firstName: payment.user!.profile.firstName,
+                  lastName: payment.user!.profile.lastName
+                }
+              : null
+          },
+          event: {
+            _id: payment.event!._id,
+            title: payment.event!.title
+          }
+        })),
+      total,
+      page,
+      limit
+    };
   }
 }
 

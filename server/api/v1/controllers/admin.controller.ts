@@ -57,6 +57,35 @@ class AdminController {
       next(err);
     }
   }
+
+  static async getPaymentStats(
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const stats = await AdminUseCase.getPaymentStats();
+      res.status(200).json(stats);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getPaymentList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+
+      const payments = await AdminUseCase.listPaymentsForAdmin({
+        page,
+        limit
+      });
+
+      res.status(200).json(payments);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default AdminController;

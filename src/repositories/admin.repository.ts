@@ -1,6 +1,8 @@
 import {
   TAdminEventListResponseDto,
-  TAdminEventListItemDto
+  TAdminEventListItemDto,
+  TAdminPaymentListResponseDto,
+  TAdminPaymentStatsDto
 } from "../../common/types";
 import BaseRepository from "./base.repository";
 
@@ -57,6 +59,21 @@ class AdminRepository extends BaseRepository {
       url,
       "patch"
     );
+  }
+
+  static async getPaymentStats() {
+    const url = `${this.apiRoute}/payments/stats`;
+    return this.request<undefined, TAdminPaymentStatsDto>(url, "get");
+  }
+
+  static async getPayments(params: { page?: number; limit?: number }) {
+    const query = new URLSearchParams({
+      page: String(params.page || 1),
+      limit: String(params.limit || 10)
+    });
+
+    const url = `${this.apiRoute}/payments?${query.toString()}`;
+    return this.request<undefined, TAdminPaymentListResponseDto>(url, "get");
   }
 }
 

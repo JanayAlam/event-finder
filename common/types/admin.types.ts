@@ -32,3 +32,30 @@ export type TAdminEventListResponseDto = {
   page: number;
   limit: number;
 };
+
+type TAdminPaymentUserDto = Pick<TUser, "_id" | "email"> & {
+  profile: TAdminProfileSummaryDto | null;
+};
+
+type TAdminPaymentEventDto = Pick<TEvent, "_id" | "title">;
+
+export type TAdminPaymentListItemDto = Omit<
+  TPayment,
+  "user" | "event" | "gatewayResponse" | "valId" | "updatedAt"
+> & {
+  user: TAdminPaymentUserDto;
+  event: TAdminPaymentEventDto;
+};
+
+export type TAdminPaymentListResponseDto = {
+  payments: TAdminPaymentListItemDto[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+export type TAdminPaymentStatsDto = {
+  successfulPayments: number;
+  failedPayments: number;
+  totalCollected: number;
+};

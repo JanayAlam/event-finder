@@ -11,6 +11,7 @@ import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE } from "@/routes";
 import {
   Calendar,
   ChevronDown,
+  Coins,
   Facebook,
   LayoutDashboard,
   PanelLeft,
@@ -67,6 +68,12 @@ const NAV_ITEMS: AdminNavItem[] = [
   },
   {
     key: "3",
+    label: "Payments",
+    icon: <Coins />,
+    href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.PAYMENTS
+  },
+  {
+    key: "4",
     label: "Facebook Management",
     icon: <Facebook />,
     href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.FACEBOOK_INTEGRATION

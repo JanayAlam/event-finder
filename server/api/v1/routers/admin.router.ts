@@ -20,6 +20,8 @@ adminRouter.patch(
   inputValidator(null, IdParamsSchema),
   AdminController.blockEvent
 );
+adminRouter.get("/payments/stats", AdminController.getPaymentStats);
+adminRouter.get("/payments", AdminController.getPaymentList);
 adminRouter.get("/facebook-token", FacebookTokenController.getToken);
 adminRouter.post("/facebook-token", FacebookTokenController.updateToken);
 adminRouter.delete("/facebook-token", FacebookTokenController.disconnect);

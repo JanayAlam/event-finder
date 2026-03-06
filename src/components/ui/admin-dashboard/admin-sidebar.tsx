@@ -9,6 +9,7 @@ import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { cn } from "@/lib/utils";
 import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE } from "@/routes";
 import {
+  Calendar,
   ChevronDown,
   Facebook,
   LayoutDashboard,
@@ -60,6 +61,12 @@ const NAV_ITEMS: AdminNavItem[] = [
   },
   {
     key: "2",
+    label: "Events",
+    icon: <Calendar />,
+    href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.EVENTS
+  },
+  {
+    key: "3",
     label: "Facebook Management",
     icon: <Facebook />,
     href: PRIVATE_ADMIN_ONLY_PAGE_ROUTE.FACEBOOK_INTEGRATION

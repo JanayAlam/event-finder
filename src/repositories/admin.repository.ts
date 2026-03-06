@@ -1,3 +1,7 @@
+import {
+  TAdminEventListResponseDto,
+  TAdminEventListItemDto
+} from "../../common/types";
 import BaseRepository from "./base.repository";
 
 export type TDashboardStatistics = {
@@ -28,6 +32,25 @@ class AdminRepository extends BaseRepository {
     );
     return data;
   }
+
+  static async getEvents(params: { page?: number; limit?: number }) {
+    const query = new URLSearchParams({
+      page: String(params.page || 1),
+      limit: String(params.limit || 10)
+    });
+
+    const url = `${this.apiRoute}/events?${query.toString()}`;
+    return this.request<undefined, TAdminEventListResponseDto>(url, "get");
+  }
+
+  static async blockEvent(eventId: string) {
+    const url = `${this.apiRoute}/events/${eventId}/block`;
+    return this.request<undefined, { message: string; status: string }>(
+      url,
+      "patch"
+    );
+  }
 }
 
 export default AdminRepository;
+export type { TAdminEventListItemDto };

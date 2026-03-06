@@ -17,7 +17,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { TCreateEventForm } from "../../../../../../../common/types";
 import { TGenerateEventPlanResponse } from "../../../../../../../common/types/ai.types";
-import CreateEventForm from "../create-event-form";
+import { CreateEventForm } from "../create-event-form";
 import { AIEventPlanQuerySection } from "./ai-event-plan-query-section";
 
 export const CreateEventMultiStageForm: React.FC = () => {
@@ -42,16 +42,20 @@ export const CreateEventMultiStageForm: React.FC = () => {
     );
   };
 
+  const onBack = () => {
+    if (stage === PAGE_STAGE.AI_INPUT) {
+      router.back();
+      return;
+    }
+    setStage(PAGE_STAGE.AI_INPUT);
+  };
+
   return (
     <div>
       <Button
         variant="link"
         className="text-primary-foreground hover:no-underline! p-0"
-        onClick={() =>
-          stage === PAGE_STAGE.AI_INPUT
-            ? router.back()
-            : setStage(PAGE_STAGE.AI_INPUT)
-        }
+        onClick={onBack}
       >
         <Paragraph className="text-sm flex gap-2 items-center p-0!">
           <ArrowLeft className="size-4" />
@@ -67,7 +71,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
         <MultiStageFormHeader currentStage={stage} />
 
         {stage === PAGE_STAGE.AI_INPUT && (
-          <Card className="overflow-hidden border-none shadow-xl bg-gradient-to-br from-background to-muted/30">
+          <Card className="overflow-hidden border-none shadow-xl bg-linear-to-br from-background to-muted/30">
             <CardContent className="h-[70vh]">
               <AISearchResultContent<TGenerateEventPlanResponse>
                 className="h-full"
@@ -99,7 +103,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
                 details below.
               </Paragraph>
             </div>
-            <CreateEventForm initialData={aiGeneratedData} />
+            <CreateEventForm initialData={aiGeneratedData} onCancel={onBack} />
           </div>
         )}
       </div>

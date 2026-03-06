@@ -67,11 +67,15 @@ const FormCard: React.FC<
   );
 };
 
-export default function CreateEventForm({
-  initialData
-}: {
+interface ICreateEventFormProps {
   initialData?: Partial<TCreateEventForm>;
-}) {
+  onCancel?: () => void;
+}
+
+export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
+  initialData,
+  onCancel
+}) => {
   const router = useRouter();
 
   const [placeOptions, setPlaceOptions] = useState<TPlaceOption[]>(
@@ -189,6 +193,10 @@ export default function CreateEventForm({
   }, []);
 
   const handleGoToHomepageAction = () => {
+    if (onCancel) {
+      onCancel();
+      return;
+    }
     router.push(PUBLIC_PAGE_ROUTE.HOME);
   };
 
@@ -463,4 +471,4 @@ export default function CreateEventForm({
       }}
     />
   );
-}
+};

@@ -33,11 +33,19 @@ class AdminRepository extends BaseRepository {
     return data;
   }
 
-  static async getEvents(params: { page?: number; limit?: number }) {
+  static async getEvents(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
     const query = new URLSearchParams({
       page: String(params.page || 1),
       limit: String(params.limit || 10)
     });
+
+    if (params.search?.trim()) {
+      query.set("search", params.search.trim());
+    }
 
     const url = `${this.apiRoute}/events?${query.toString()}`;
     return this.request<undefined, TAdminEventListResponseDto>(url, "get");

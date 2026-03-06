@@ -5,6 +5,7 @@ import AccountVerification from "../../models/account-verification.model";
 import Discussion from "../../models/discussion.model";
 import Event from "../../models/event.model";
 import Payment from "../../models/payment.model";
+import Profile from "../../models/profile.model";
 import PromotionRequest from "../../models/promotion-request.model";
 import User from "../../models/user.model";
 
@@ -112,12 +113,50 @@ class AdminUseCase {
   static async eventListForAdmin(param: {
     page: number;
     limit: number;
+    search?: string;
   }): Promise<TAdminEventListResponseDto> {
-    const { page, limit } = param;
+    const { page, limit, search } = param;
     const skip = (page - 1) * limit;
+    const normalizedSearch = search?.trim();
+
+    let query: Record<string, any> = {};
+
+    if (normalizedSearch) {
+      const searchRegex = { $regex: normalizedSearch, $options: "i" };
+      const [matchingProfiles, matchingUsers] = await Promise.all([
+        Profile.find({
+          $or: [{ firstName: searchRegex }, { lastName: searchRegex }]
+        })
+          .select("user")
+          .lean<Array<{ user: Types.ObjectId }>>()
+          .exec(),
+        User.find({ email: searchRegex })
+          .select("_id")
+          .lean<Array<{ _id: Types.ObjectId }>>()
+          .exec()
+      ]);
+
+      const hostIds = [
+        ...new Set([
+          ...matchingProfiles.map((profile) => profile.user.toString()),
+          ...matchingUsers.map((user) => user._id.toString())
+        ])
+      ].map((id) => new Types.ObjectId(id));
+
+      const orFilters: Record<string, any>[] = [
+        { title: searchRegex },
+        { placeName: searchRegex }
+      ];
+
+      if (hostIds.length) {
+        orFilters.push({ host: { $in: hostIds } });
+      }
+
+      query = { $or: orFilters };
+    }
 
     const [events, total] = await Promise.all([
-      Event.find({})
+      Event.find(query)
         .select("title placeName entryFee status createdAt host members")
         .populate({
           path: "host",
@@ -151,7 +190,7 @@ class AdminUseCase {
           }>
         >()
         .exec(),
-      Event.countDocuments({})
+      Event.countDocuments(query)
     ]);
 
     const eventIds = events.map((event) => event._id);

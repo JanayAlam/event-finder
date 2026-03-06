@@ -197,7 +197,7 @@ export default function AdminEventsMonitor() {
                               colSpan={4}
                               className="text-muted-foreground"
                             >
-                              <EmptyList message="No members found" />
+                              <EmptyList message="No members" />
                             </TableCell>
                           </TableRow>
                         )}

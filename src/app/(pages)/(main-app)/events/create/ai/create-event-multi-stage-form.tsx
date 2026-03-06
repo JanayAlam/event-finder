@@ -16,7 +16,10 @@ import { useRouter } from "nextjs-toploader/app";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { TCreateEventForm } from "../../../../../../../common/types";
-import { TGenerateEventPlanResponse } from "../../../../../../../common/types/ai.types";
+import {
+  TAIConversationContextItemDto,
+  TGenerateEventPlanResponse
+} from "../../../../../../../common/types/ai.types";
 import { CreateEventForm } from "../create-event-form";
 import { AIEventPlanQuerySection } from "./ai-event-plan-query-section";
 
@@ -26,11 +29,28 @@ export const CreateEventMultiStageForm: React.FC = () => {
   const [stage, setStage] = useState<TPageStage>(PAGE_STAGE.AI_INPUT);
   const [aiGeneratedData, setAiGeneratedData] =
     useState<Partial<TCreateEventForm> | null>(null);
+  const [conversationHistory, setConversationHistory] = useState<
+    TAIConversationContextItemDto[]
+  >([]);
 
   const executeSearch = async (prompt: string) => {
     const { result } = await AIRepository.generateEventPlan({
-      prompt
+      prompt,
+      conversationHistory
     });
+
+    const responseSummary = [
+      `Title: ${result.title}`,
+      `Place: ${result.placeName}`,
+      `Event Date: ${result.eventDate}`,
+      `Duration: ${result.dayCount} day(s), ${result.nightCount} night(s)`
+    ].join(" | ");
+
+    setConversationHistory((prev) => [
+      ...prev.slice(-9),
+      { prompt, response: responseSummary }
+    ]);
+
     return result;
   };
 

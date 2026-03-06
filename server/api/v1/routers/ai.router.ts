@@ -8,7 +8,7 @@ import AIController from "../controllers/ai.controller";
 
 const aiRouter = Router({ mergeParams: true });
 
-aiRouter.post("/", inputValidator(PromptSchema), AIController.executePromt);
+aiRouter.post("/", inputValidator(PromptSchema), AIController.executePrompt);
 
 aiRouter.post(
   "/generate-event",

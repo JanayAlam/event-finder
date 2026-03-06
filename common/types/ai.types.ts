@@ -25,6 +25,10 @@ export interface IAIQueryItem {
 
 export type TAIEventCreationSchemaDto = z.infer<typeof AIEventCreationSchema>;
 
+export type TAIConversationContextItemDto = NonNullable<
+  TAIEventCreationSchemaDto["conversationHistory"]
+>[number];
+
 export type TGenerateEventPlanResponse = z.infer<
   typeof EventCreatorAgentOutputSchema
 >;

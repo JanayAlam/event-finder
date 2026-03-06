@@ -5,7 +5,7 @@ import {
 } from "../../../../common/types/ai.types";
 import runEventSearchAgent, { runEventCreatorAgent } from "../../../ai/run";
 
-type TExecutePromtRequest = Request<unknown, unknown, TPromptRequestDto>;
+type TExecutePromptRequest = Request<unknown, unknown, TPromptRequestDto>;
 type TGenerateEventPlanRequest = Request<
   unknown,
   unknown,
@@ -13,8 +13,8 @@ type TGenerateEventPlanRequest = Request<
 >;
 
 class AIController {
-  static async executePromt(
-    req: TExecutePromtRequest,
+  static async executePrompt(
+    req: TExecutePromptRequest,
     res: Response,
     next: NextFunction
   ) {
@@ -34,8 +34,11 @@ class AIController {
     next: NextFunction
   ) {
     try {
-      const { prompt } = req.body;
-      const result = await runEventCreatorAgent(prompt);
+      const { prompt, conversationHistory } = req.body;
+      const result = await runEventCreatorAgent(
+        prompt,
+        conversationHistory || []
+      );
       res.json({ result: result.finalOutput });
     } catch (err) {
       next(err);

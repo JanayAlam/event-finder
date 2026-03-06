@@ -1,4 +1,5 @@
 import {
+  TAIEventCreationSchemaDto,
   TAIPromptResponse,
   TGenerateEventPlanResponse,
   TPromptRequestDto
@@ -16,9 +17,9 @@ class AIRepository extends BaseRepository {
     );
   }
 
-  static generateEventPlan(body: TPromptRequestDto) {
+  static generateEventPlan(body: TAIEventCreationSchemaDto) {
     return this.request<
-      TPromptRequestDto,
+      TAIEventCreationSchemaDto,
       { result: TGenerateEventPlanResponse }
     >(`${this.apiRouter}/generate-event`, "post", body);
   }

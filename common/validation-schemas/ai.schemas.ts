@@ -44,7 +44,16 @@ export const SearchAgentOutputSchema = z.object({
 });
 
 export const AIEventCreationSchema = z.object({
-  prompt: z.string().min(1, "Prompt is required")
+  prompt: z.string().min(1, "Prompt is required"),
+  conversationHistory: z
+    .array(
+      z.object({
+        prompt: z.string().min(1),
+        response: z.string().min(1)
+      })
+    )
+    .max(10)
+    .optional()
 });
 
 export const GenerateEventToolSchema = z.object({

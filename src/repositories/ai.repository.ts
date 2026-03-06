@@ -1,24 +1,24 @@
 import {
+  TAIPromptResponse,
   TGenerateEventPlanResponse,
-  TAIPromtResponse,
-  TPromtRequestDto
+  TPromptRequestDto
 } from "../../common/types/ai.types";
 import BaseRepository from "./base.repository";
 
 class AIRepository extends BaseRepository {
   static readonly apiRouter = "/ai";
 
-  static executePrompt(body: TPromtRequestDto) {
-    return this.request<TPromtRequestDto, { result: TAIPromtResponse }>(
+  static executePrompt(body: TPromptRequestDto) {
+    return this.request<TPromptRequestDto, { result: TAIPromptResponse }>(
       this.apiRouter,
       "post",
       body
     );
   }
 
-  static generateEventPlan(body: TPromtRequestDto) {
+  static generateEventPlan(body: TPromptRequestDto) {
     return this.request<
-      TPromtRequestDto,
+      TPromptRequestDto,
       { result: TGenerateEventPlanResponse }
     >(`${this.apiRouter}/generate-event`, "post", body);
   }

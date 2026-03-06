@@ -19,11 +19,11 @@ export const startEventCronJobs = () => {
         { $set: { status: EVENT_STATUS.FINISHED } }
       );
       if (result.modifiedCount > 0) {
-        logger.info(`Auto-finished ${result.modifiedCount} passed events.`);
+        logger.info(`Auto-finished ${result.modifiedCount} passed events`);
       }
     } catch (error) {
       logger.error(`Error in event auto-finish cronjob: ${error}`);
     }
   });
-  logger.info("Event cron jobs initialized.");
+  logger.info("Event cron jobs initialized");
 };

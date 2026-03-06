@@ -1,5 +1,5 @@
 import { tool } from "@openai/agents";
-import { TAIPromtResponse } from "../../../common/types/ai.types";
+import { TAIPromptResponse } from "../../../common/types/ai.types";
 import { EventSearchToolSchema } from "../../../common/validation-schemas";
 import AIUseCase from "../../libs/use-cases/ai.use-case";
 import logger from "../../utils/winston.util";
@@ -8,7 +8,7 @@ export const getEventsTool = tool({
   name: "get_events",
   description: "Get the events for a given search prompt",
   parameters: EventSearchToolSchema,
-  async execute(params): Promise<TAIPromtResponse> {
+  async execute(params): Promise<TAIPromptResponse> {
     try {
       const events = await AIUseCase.searchEvents(params);
       return { message: "Events found", events };

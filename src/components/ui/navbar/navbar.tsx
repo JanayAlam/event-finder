@@ -203,7 +203,7 @@ const Navbar: React.FC = () => {
                       <Link
                         href={PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD}
                       >
-                        <DropdownMenuItem>Admin portal</DropdownMenuItem>
+                        <DropdownMenuItem>Admin Portal</DropdownMenuItem>
                       </Link>
                     ) : null}
                     <Link

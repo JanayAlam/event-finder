@@ -8,7 +8,7 @@ import {
   CardTitle
 } from "@/components/shared/shadcn-components/card";
 import { PRIVATE_ADMIN_ONLY_PAGE_ROUTE } from "@/routes";
-import { ClipboardList, MapPin, ShieldCheck, Users } from "lucide-react";
+import { ClipboardList, Facebook, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 
 export function QuickActions() {
@@ -71,7 +71,7 @@ export function QuickActions() {
           className="justify-start h-14 hover:bg-primary/5 border-primary/20 group"
         >
           <Link href={PRIVATE_ADMIN_ONLY_PAGE_ROUTE.FACEBOOK_INTEGRATION}>
-            <MapPin className="mr-3 h-5 w-5 text-emerald-500 group-hover:scale-110 transition-transform" />
+            <Facebook className="mr-3 h-5 w-5 text-sky-500 group-hover:scale-110 transition-transform" />
             <div className="flex flex-col items-start">
               <span className="text-sm">Social Integration</span>
               <span className="text-[10px] text-muted-foreground">

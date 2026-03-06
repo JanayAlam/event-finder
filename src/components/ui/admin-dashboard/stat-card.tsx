@@ -64,7 +64,7 @@ export const StatCard: React.FC<IStatCardProps> = ({
           <Link
             href={link}
             className={cn(
-              "mt-4 flex items-center text-xs font-bold text-primary opacity-0 transform translate-x-[-10px] transition-all duration-300",
+              "mt-4 flex items-center text-xs font-bold text-primary opacity-0 transform -translate-x-2.5 transition-all duration-300",
               "group-hover:opacity-100 group-hover:translate-x-0"
             )}
           >

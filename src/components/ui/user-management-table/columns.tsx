@@ -138,7 +138,7 @@ export const createColumns = (
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                 </Link>
               )}
-              {user.role === USER_ROLE.ADMIN && (
+              {user.role !== USER_ROLE.ADMIN && (
                 <>
                   {user.isBlocked ? (
                     <DropdownMenuItem

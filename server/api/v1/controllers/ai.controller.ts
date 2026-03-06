@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import {
   TAIEventCreationSchemaDto,
-  TPromtRequestDto
+  TPromptRequestDto
 } from "../../../../common/types/ai.types";
 import runEventSearchAgent, { runEventCreatorAgent } from "../../../ai/run";
 
-type TExecutePromtRequest = Request<unknown, unknown, TPromtRequestDto>;
+type TExecutePromtRequest = Request<unknown, unknown, TPromptRequestDto>;
 type TGenerateEventPlanRequest = Request<
   unknown,
   unknown,

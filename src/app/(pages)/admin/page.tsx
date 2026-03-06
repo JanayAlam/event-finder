@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Calendar,
   ClipboardList,
-  MapPin,
+  LayoutList,
   MessageSquare,
   ShieldCheck,
   TrendingUp,
@@ -118,7 +118,7 @@ export default function AdminDashboardPage() {
       title: "Promotion Requests",
       value: stats?.pendingPromotions || 0,
       description: "Host applications",
-      icon: MapPin,
+      icon: LayoutList,
       color: "text-fuchsia-500",
       bg: "bg-fuchsia-500/10",
       bgFullOpacity: "bg-fuchsia-500",

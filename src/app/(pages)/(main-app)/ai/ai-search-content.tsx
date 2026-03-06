@@ -9,7 +9,7 @@ import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
 import { useCallback } from "react";
-import { TAIPromtResponse } from "../../../../../common/types/ai.types";
+import { TAIPromptResponse } from "../../../../../common/types/ai.types";
 import { AIQuerySection } from "./ai-query-section";
 
 export const AISearchResultContentWrapper = () => {
@@ -24,7 +24,7 @@ export const AISearchResultContentWrapper = () => {
   }, []);
 
   return (
-    <SharedAISearchResultContent<TAIPromtResponse>
+    <SharedAISearchResultContent<TAIPromptResponse>
       initialPrompt={initialPrompt}
       requireInitialPrompt
       onMissingInitialPrompt={() => router.push(PUBLIC_PAGE_ROUTE.HOME)}
@@ -32,7 +32,7 @@ export const AISearchResultContentWrapper = () => {
       renderQuery={({
         key,
         ...query
-      }: IAIResultQueryItem<TAIPromtResponse>) => (
+      }: IAIResultQueryItem<TAIPromptResponse>) => (
         <AIQuerySection id={key} {...query} />
       )}
     />

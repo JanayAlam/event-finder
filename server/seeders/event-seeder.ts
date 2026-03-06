@@ -13,7 +13,7 @@ const seedEvents = async () => {
   try {
     logger.info("Connecting to MongoDB...");
     await connectMongoDB();
-    logger.info("Connected successfully.");
+    logger.info("Connected successfully");
 
     // Ensure Profile model is registered
     void Profile;
@@ -23,7 +23,7 @@ const seedEvents = async () => {
 
     const users = await User.find({ role: USER_ROLE.HOST }).populate("profile");
 
-    logger.info(`Fetched ${users.length} users successfully.`);
+    logger.info(`Fetched ${users.length} users successfully`);
 
     const potentialHosts = users;
 
@@ -33,7 +33,7 @@ const seedEvents = async () => {
       );
     }
 
-    logger.info(`Found ${potentialHosts.length} potential hosts.`);
+    logger.info(`Found ${potentialHosts.length} potential hosts`);
 
     logger.info(`Seeding ${eventsData.length} events...`);
 
@@ -54,13 +54,13 @@ const seedEvents = async () => {
       createdEvents.push(event);
     }
 
-    logger.info(`Successfully seeded ${createdEvents.length} events.`);
+    logger.info(`Successfully seeded ${createdEvents.length} events`);
   } catch (error) {
     logger.error("Error seeding events:", error);
     process.exit(1);
   } finally {
     await mongoose.disconnect();
-    logger.info("Disconnected from MongoDB.");
+    logger.info("Disconnected from MongoDB");
   }
 };
 

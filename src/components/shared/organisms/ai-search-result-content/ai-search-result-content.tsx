@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TPromtRequestDto } from "../../../../../common/types/ai.types";
+import { TPromptRequestDto } from "../../../../../common/types/ai.types";
 import { Empty, EmptyContent, EmptyMedia } from "../../shadcn-components/empty";
 
 const generateKey = () => dayjs().valueOf().toString();
@@ -26,6 +26,7 @@ interface IAISearchResultContentProps<TResult> {
   onResult?: (result: TResult, prompt: string) => void;
   onError?: (error: unknown, prompt: string) => void;
   className?: string;
+  inputPlaceholder?: string;
 }
 
 export function AISearchResultContent<TResult>({
@@ -33,12 +34,14 @@ export function AISearchResultContent<TResult>({
   renderQuery,
   initialPrompt = "",
   requireInitialPrompt = false,
+  inputPlaceholder,
   onMissingInitialPrompt,
   onResult,
   onError,
   className
 }: IAISearchResultContentProps<TResult>) {
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const [queries, setQueries] = useState<IAIResultQueryItem<TResult>[]>([]);
 
   useEffect(() => {
@@ -77,7 +80,7 @@ export function AISearchResultContent<TResult>({
     }
   }, [initialPrompt, queries.length, runSearch]);
 
-  const onSubmit = ({ prompt }: TPromtRequestDto) => {
+  const onSubmit = ({ prompt }: TPromptRequestDto) => {
     const key = generateKey();
     setQueries((prev) => [...prev, { prompt, key, isLoading: true }]);
     runSearch(prompt, key);
@@ -121,7 +124,11 @@ export function AISearchResultContent<TResult>({
         </div>
       </div>
 
-      <AIPromptForm onSubmit={onSubmit} isGlobalLoading={isGlobalLoading} />
+      <AIPromptForm
+        onSubmit={onSubmit}
+        isGlobalLoading={isGlobalLoading}
+        placeholder={inputPlaceholder}
+      />
     </div>
   );
 }

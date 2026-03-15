@@ -12,6 +12,7 @@ import {
   initiatePayment,
   validatePayment
 } from "../../../libs/external-services/sslcommerz.service";
+import EventDraftUseCase from "../../../libs/use-cases/event-draft.use-case";
 import EventUseCase from "../../../libs/use-cases/event.use-case";
 import FacebookUseCase from "../../../libs/use-cases/facebook.use-case";
 import PaymentUseCase from "../../../libs/use-cases/payment.use-case";
@@ -35,6 +36,9 @@ class EventController {
         throw new ApiError(401, "Unauthenticated");
       }
 
+      const draftId = req.query.draftId as string | undefined;
+      const draftObjectId = draftId ? convertToObjectId(draftId) : null;
+
       const eventData = {
         ...req.body,
         host: req.user._id,
@@ -57,6 +61,10 @@ class EventController {
           user?.email ||
           "Someone"
       });
+
+      if (draftObjectId) {
+        await EventDraftUseCase.delete(draftObjectId);
+      }
 
       res.status(201).json(event);
     } catch (err) {

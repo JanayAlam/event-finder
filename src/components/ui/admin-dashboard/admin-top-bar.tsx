@@ -28,7 +28,7 @@ const AdminTopBar: React.FC = () => {
   const { toggle } = useSidebarState();
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-topbar-border bg-topbar px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-topbar-border bg-topbar/90 px-4 sm:px-6 backdrop-blur supports-backdrop-filter:bg-topbar/70 shadow-[0_1px_0_0_rgba(0,0,0,0.04)]">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -41,10 +41,8 @@ const AdminTopBar: React.FC = () => {
         <div className={cn(leagueSpartan.className, "flex items-center gap-1")}>
           <Link
             href={PUBLIC_PAGE_ROUTE.HOME}
-            className="text-3xl font-extrabold text-primary select-none"
+            className="text-3xl font-extrabold text-primary select-none flex items-center"
           >
-            <span className="hidden sm:block">eventfinder.</span>
-            <span className="sm:hidden">ef.</span>
             <div className="sm:hidden">
               <Image
                 src={LogoShort.src}
@@ -66,7 +64,7 @@ const AdminTopBar: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <NotificationPopover />
         <ThemeToggleButton />
 

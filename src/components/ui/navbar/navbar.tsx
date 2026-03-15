@@ -43,7 +43,7 @@ import { League_Spartan } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { VERIFICATION_STATUS } from "../../../../common/types";
 import { USER_ROLE } from "../../../../server/enums";
@@ -122,29 +122,50 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const name = useMemo(() => {
+    if (!user) {
+      return "";
+    }
+
+    if (!user.profile) {
+      return user?.email.split("@")[0];
+    }
+
+    const names: string[] = [
+      user.profile.firstName,
+      user.profile.lastName
+    ].filter(Boolean);
+
+    if (!names.length) {
+      return user?.email.split("@")[0];
+    }
+
+    return names.join(" ");
+  }, [user]);
+
   return (
     <>
       <div
         className={cn(
-          "sticky top-0 z-50!",
+          "sticky top-0 z-50",
           "w-full flex justify-center",
           "border-b border-b-borders-1",
-          "bg-background",
-          "z-10"
+          "bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/70",
+          "shadow-[0_1px_0_0_rgba(0,0,0,0.04)]"
         )}
       >
         <div
           className={cn(
             PAGE_WIDTH_CLASS_NAME,
-            "h-16 flex items-center justify-between"
+            "h-16 flex items-center justify-between px-4 sm:px-6"
           )}
         >
           <div
-            className={cn(leagueSpartan.className, "flex items-center gap-1")}
+            className={cn(leagueSpartan.className, "flex items-center gap-2")}
           >
             <Link
               href={"/"}
-              className="text-4xl font-extrabold text-primary select-none"
+              className="text-4xl font-extrabold text-primary select-none flex items-center"
             >
               <div className="sm:hidden">
                 <Image
@@ -167,24 +188,32 @@ const Navbar: React.FC = () => {
           </div>
 
           {isLoggedIn && user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
               <SearchButton />
               <NotificationPopover />
               <ThemeToggleButton />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-input/50 rounded-md">
+                  <div className="flex items-center gap-2 cursor-pointer rounded-full border border-border/60 bg-background/80 px-2 py-1.5 shadow-sm transition-colors hover:bg-accent/60">
                     <Avatar className="h-8 w-8">
                       <AvatarImage
                         src={getImageUrl(user.profile?.profileImage, {
-                          name: user.email
+                          name
                         })}
                         alt="User profile picture"
                       />
                       <AvatarFallback className="text-sm">
-                        {user.email.substring(0, 2).toUpperCase()}
+                        {name.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
+                    <div className="hidden sm:flex flex-col leading-tight">
+                      <span className="text-sm font-medium text-foreground">
+                        {name}
+                      </span>
+                      <span className="text-xs text-muted-foreground capitalize">
+                        {user.role.toLowerCase()}
+                      </span>
+                    </div>
                     <ChevronDownIcon
                       height={18}
                       width={18}
@@ -248,9 +277,13 @@ const Navbar: React.FC = () => {
               </DropdownMenu>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <SearchButton />
-              <Button variant="outline" onClick={handleLoginAction}>
+              <Button
+                variant="outline"
+                className="h-9 rounded-md px-5"
+                onClick={handleLoginAction}
+              >
                 Login/Signup
               </Button>
               <ThemeToggleButton />

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   IAIResultQueryItem,
   AISearchResultContent as SharedAISearchResultContent

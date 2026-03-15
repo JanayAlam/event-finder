@@ -7,7 +7,7 @@ import EventRepository from "@/repositories/event.repository";
 import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { useQuery } from "@tanstack/react-query";
 
-export default function UpcomingTripsSection() {
+export function UpcomingEvents() {
   const { data: events, isLoading: isEventsLoading } = useQuery({
     queryKey: ["upcoming-trips"],
     queryFn: async () => await EventRepository.getUpcomingEvents()

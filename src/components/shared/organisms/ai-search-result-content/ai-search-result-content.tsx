@@ -20,9 +20,6 @@ export interface IAIResultQueryItem<TResult> {
 interface IAISearchResultContentProps<TResult> {
   executeSearch: (prompt: string) => Promise<TResult>;
   renderQuery: (query: IAIResultQueryItem<TResult>) => React.ReactNode;
-  initialPrompt?: string;
-  requireInitialPrompt?: boolean;
-  onMissingInitialPrompt?: () => void;
   onResult?: (result: TResult, prompt: string) => void;
   onError?: (error: unknown, prompt: string) => void;
   className?: string;
@@ -32,10 +29,7 @@ interface IAISearchResultContentProps<TResult> {
 export function AISearchResultContent<TResult>({
   executeSearch,
   renderQuery,
-  initialPrompt = "",
-  requireInitialPrompt = false,
   inputPlaceholder,
-  onMissingInitialPrompt,
   onResult,
   onError,
   className
@@ -43,12 +37,6 @@ export function AISearchResultContent<TResult>({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [queries, setQueries] = useState<IAIResultQueryItem<TResult>[]>([]);
-
-  useEffect(() => {
-    if (requireInitialPrompt && !initialPrompt) {
-      onMissingInitialPrompt?.();
-    }
-  }, [initialPrompt, onMissingInitialPrompt, requireInitialPrompt]);
 
   const runSearch = useCallback(
     async (prompt: string, key: string) => {
@@ -70,15 +58,6 @@ export function AISearchResultContent<TResult>({
     },
     [executeSearch, onError, onResult]
   );
-
-  useEffect(() => {
-    if (initialPrompt && queries.length === 0) {
-      const key = generateKey();
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setQueries([{ prompt: initialPrompt, key, isLoading: true }]);
-      runSearch(initialPrompt, key);
-    }
-  }, [initialPrompt, queries.length, runSearch]);
 
   const onSubmit = ({ prompt }: TPromptRequestDto) => {
     const key = generateKey();

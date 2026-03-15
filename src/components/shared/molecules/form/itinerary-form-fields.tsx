@@ -1,6 +1,6 @@
 "use client";
 
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
   Paragraph,
@@ -58,7 +58,7 @@ export const ItineraryFormFields: React.FC<ItineraryFormFieldsProps> = ({
 
       {/* Empty state */}
       {!fields.length ? (
-        <TMCard bodyClassName="flex flex-col gap-2 items-center">
+        <EFCard bodyClassName="flex flex-col gap-2 items-center">
           <ClipboardList className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
           <TypographyMuted className="text-muted-foreground text-center">
             No activities added yet
@@ -66,11 +66,11 @@ export const ItineraryFormFields: React.FC<ItineraryFormFieldsProps> = ({
           <TypographyMuted className="text-sm text-muted-foreground/60 text-center">
             Click &quot;Add activity&quot; to create your itinerary
           </TypographyMuted>
-        </TMCard>
+        </EFCard>
       ) : (
         <div className="flex flex-col gap-3">
           {fields.map((field, index) => (
-            <TMCard key={field.id} bodyClassName="flex flex-col gap-4">
+            <EFCard key={field.id} bodyClassName="flex flex-col gap-4">
               {/* Activity header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -117,7 +117,7 @@ export const ItineraryFormFields: React.FC<ItineraryFormFieldsProps> = ({
                   className="h-25"
                 />
               </div>
-            </TMCard>
+            </EFCard>
           ))}
         </div>
       )}

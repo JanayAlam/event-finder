@@ -1,7 +1,7 @@
 "use client";
 
 import image from "@/assets/mountain.png";
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { CardContent } from "@/components/shared/shadcn-components/card";
 import {
@@ -28,7 +28,7 @@ export default function CreateEventSection() {
   }
 
   return (
-    <TMCard rootClassName="overflow-hidden rounded-2xl shadow-elevated light:bg-[#EBF0F8]">
+    <EFCard rootClassName="overflow-hidden rounded-2xl shadow-elevated light:bg-[#EBF0F8]">
       <CardContent className="relative z-10 p-4 sm:p-6">
         <div
           className="pointer-events-none absolute top-15 left-0 h-full w-full opacity-10 bg-no-repeat bg-contain max-md:hidden"
@@ -57,6 +57,6 @@ export default function CreateEventSection() {
           </Button>
         </div>
       </CardContent>
-    </TMCard>
+    </EFCard>
   );
 }

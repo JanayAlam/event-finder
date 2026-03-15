@@ -1,4 +1,4 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import {
   Paragraph,
   TypographyMuted
@@ -28,7 +28,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
             key={event._id}
             href={PUBLIC_DYNAMIC_PAGE_ROUTE.EVENT_DETAILS(event._id)}
           >
-            <TMCard
+            <EFCard
               rootClassName="group h-full scale-97 hover:scale-100 transition-all hover:bg-primary/10"
               title={
                 <div className="flex flex-col gap-4">
@@ -60,7 +60,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
                   BDT {event.entryFee}
                 </Paragraph>
               </div>
-            </TMCard>
+            </EFCard>
           </Link>
         ))}
       </div>

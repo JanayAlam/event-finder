@@ -2,7 +2,7 @@
 
 import React from "react";
 import { TEventListItemDto } from "../../../../../common/types";
-import TMCard from "../../molecules/tm-card";
+import EFCard from "../../molecules/ef-card";
 import { Button } from "../../shadcn-components/button";
 import { Empty, EmptyContent } from "../../shadcn-components/empty";
 import { Skeleton } from "../../shadcn-components/skeleton";
@@ -25,7 +25,7 @@ const GRID_CLASSES =
   "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6";
 
 const EventCardSkeleton = ({ dimmed = false }: { dimmed?: boolean }) => (
-  <TMCard
+  <EFCard
     rootClassName="overflow-hidden"
     bodyClassName={`!p-0 flex flex-col ${dimmed ? "opacity-50" : ""}`}
   >
@@ -52,7 +52,7 @@ const EventCardSkeleton = ({ dimmed = false }: { dimmed?: boolean }) => (
       </div>
       <Skeleton className="h-10 w-full rounded-md" />
     </div>
-  </TMCard>
+  </EFCard>
 );
 
 export const EventList: React.FC<IEventListProps> = ({
@@ -102,7 +102,7 @@ export const EventList: React.FC<IEventListProps> = ({
       </div>
 
       {hasNextPage ? (
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6!">
           <Button
             onClick={onLoadMore}
             disabled={isFetching}

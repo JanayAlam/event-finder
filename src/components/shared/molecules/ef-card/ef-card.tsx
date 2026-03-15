@@ -19,7 +19,7 @@ type TSettingsCardProps = PropsWithChildren & {
   descriptionClassName?: string;
 };
 
-const TMCard: React.FC<TSettingsCardProps> = ({
+const EFCard: React.FC<TSettingsCardProps> = ({
   title,
   description,
   children,
@@ -56,4 +56,4 @@ const TMCard: React.FC<TSettingsCardProps> = ({
   );
 };
 
-export default TMCard;
+export default EFCard;

@@ -1,12 +1,12 @@
 "use client";
 
 import ImageInput from "@/components/shared/atoms/inputs/image-input";
+import EFCard from "@/components/shared/molecules/ef-card";
 import {
   InputField,
   ItineraryFormFields,
   TextareaField
 } from "@/components/shared/molecules/form";
-import TMCard from "@/components/shared/molecules/tm-card";
 import Form from "@/components/shared/organisms/form";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
@@ -50,7 +50,7 @@ const FormCard: React.FC<
   }>
 > = ({ icon, title, action, subtitle, children }) => {
   return (
-    <TMCard
+    <EFCard
       title={
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ const FormCard: React.FC<
       description={subtitle}
     >
       {children}
-    </TMCard>
+    </EFCard>
   );
 };
 
@@ -394,7 +394,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
             >
               <div className="flex flex-col gap-4">
                 {additionalPhotosFields.length === 0 ? (
-                  <TMCard bodyClassName="flex flex-col gap-2 items-center">
+                  <EFCard bodyClassName="flex flex-col gap-2 items-center">
                     <Camera className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
                     <TypographyMuted className="text-muted-foreground text-center">
                       No additional photos added
@@ -402,7 +402,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
                     <TypographyMuted className="text-sm text-muted-foreground/60 text-center">
                       Click &quot;Add photo&quot; to add photos
                     </TypographyMuted>
-                  </TMCard>
+                  </EFCard>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     {additionalPhotosFields.map((field, index) => (
@@ -435,7 +435,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
               <ItineraryFormFields control={control} />
             </FormCard>
 
-            <TMCard>
+            <EFCard>
               <div className="flex items-center justify-end gap-3">
                 <Button
                   type="button"
@@ -456,7 +456,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
                   Create
                 </Button>
               </div>
-            </TMCard>
+            </EFCard>
           </div>
         );
       }}

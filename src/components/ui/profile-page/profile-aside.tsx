@@ -1,8 +1,8 @@
 "use client";
 
+import EFCard from "@/components/shared/molecules/ef-card";
 import { EmptyList } from "@/components/shared/molecules/empty";
 import { SliderField, TextareaField } from "@/components/shared/molecules/form";
-import TMCard from "@/components/shared/molecules/tm-card";
 import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Separator } from "@/components/shared/shadcn-components/separator";
@@ -90,14 +90,14 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
     <div className="flex flex-col gap-4">
       {/* Bio Section */}
       {bio && (
-        <TMCard bodyClassName="flex flex-col gap-3">
+        <EFCard bodyClassName="flex flex-col gap-3">
           <H4>Bio</H4>
           <TypographyMuted className="text-sm">{bio}</TypographyMuted>
-        </TMCard>
+        </EFCard>
       )}
 
       {/* Reviews Section */}
-      <TMCard bodyClassName="flex flex-col gap-6">
+      <EFCard bodyClassName="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <H4>Reviews</H4>
           {isLoggedIn && !isOwnProfile && (
@@ -146,7 +146,7 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
             ))}
           </div>
         )}
-      </TMCard>
+      </EFCard>
 
       {/* Review Dialog */}
 

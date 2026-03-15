@@ -1,6 +1,6 @@
 "use client";
 
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Textarea } from "@/components/shared/shadcn-components/textarea";
 import {
@@ -46,7 +46,7 @@ export default function AISearchSection() {
   };
 
   return (
-    <TMCard rootClassName="bg-primary/3 rounded-xl border-0">
+    <EFCard rootClassName="bg-primary/3 rounded-xl border-0">
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-md gradient-warm flex items-center justify-center shadow-soft ">
@@ -98,6 +98,6 @@ export default function AISearchSection() {
           </div>
         </div>
       </div>
-    </TMCard>
+    </EFCard>
   );
 }

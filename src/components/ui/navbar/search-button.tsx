@@ -1,7 +1,7 @@
 "use client";
 
+import EFCard from "@/components/shared/molecules/ef-card";
 import { InputField } from "@/components/shared/molecules/form";
-import TMCard from "@/components/shared/molecules/tm-card";
 import {
   Button,
   TButtonProps
@@ -118,7 +118,7 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
                   form.reset();
                 }}
               >
-                <TMCard bodyClassName="!p-4 hover:bg-muted/50 transition-colors">
+                <EFCard bodyClassName="!p-4 hover:bg-muted/50 transition-colors">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex flex-col gap-1">
                       <p className="text-sm font-semibold">{event.title}</p>
@@ -128,7 +128,7 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
                     </div>
                     <ChevronRight className="size-4 text-muted-foreground" />
                   </div>
-                </TMCard>
+                </EFCard>
               </Link>
             ))
           ) : (

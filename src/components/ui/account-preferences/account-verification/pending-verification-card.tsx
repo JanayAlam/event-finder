@@ -1,11 +1,11 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, Clock } from "lucide-react";
 
 const PendingVerificationCard: React.FC = () => {
   return (
-    <TMCard
+    <EFCard
       rootClassName={cn(
         "border border-warning",
         "bg-warning/10",
@@ -51,7 +51,7 @@ const PendingVerificationCard: React.FC = () => {
           </Paragraph>
         </div>
       </div>
-    </TMCard>
+    </EFCard>
   );
 };
 

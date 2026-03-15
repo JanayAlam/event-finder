@@ -1,7 +1,7 @@
 "use client";
 
 import { LinkText } from "@/components/shared/atoms/link/link-text";
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import EventCard from "@/components/shared/organisms/event-card";
 import { Skeleton } from "@/components/shared/shadcn-components/skeleton";
 import {
@@ -36,7 +36,7 @@ export default function UpcomingTripsSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {isEventsLoading ? (
           Array.from({ length: 4 }).map((_, idx) => (
-            <TMCard
+            <EFCard
               key={idx}
               rootClassName={cn(
                 "overflow-hidden",
@@ -69,16 +69,16 @@ export default function UpcomingTripsSection() {
                 </div>
                 <Skeleton className="h-10 w-full rounded-md" />
               </div>
-            </TMCard>
+            </EFCard>
           ))
         ) : !events?.length ? (
-          <TMCard
+          <EFCard
             rootClassName="h-48 col-span-4"
             bodyClassName="h-full flex flex-col gap-2 items-center justify-center"
           >
             <CalendarX className="size-12 text-muted-foreground" />
             <TypographyMuted>No trips found</TypographyMuted>
-          </TMCard>
+          </EFCard>
         ) : (
           events.map((event) => (
             <EventCard key={event._id.toString()} event={event} />

@@ -117,7 +117,7 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
             onClick={() => fileInputRef.current?.click()}
             disabled={isUpdating || isUploading}
             isLoading={isUploading}
-            className="bg-primary/60"
+            className="bg-primary/60 dark:text-white!"
           >
             <ImageIcon className="size-4" />
             Change

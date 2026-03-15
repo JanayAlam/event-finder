@@ -11,7 +11,7 @@ import { Clock3, MapPin, MoveDown, Users } from "lucide-react";
 import Link from "next/link";
 import { TEventListItemDto } from "../../../../../common/types";
 import { EVENT_STATUS } from "../../../../../server/enums";
-import TMCard from "../../molecules/tm-card";
+import EFCard from "../../molecules/ef-card";
 import { Badge } from "../../shadcn-components/badge";
 import { Button } from "../../shadcn-components/button";
 import { H4, Paragraph } from "../../shadcn-components/typography";
@@ -40,7 +40,7 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
   }
 
   return (
-    <TMCard
+    <EFCard
       rootClassName="min-h-48 overflow-hidden"
       bodyClassName="!p-0 flex flex-col"
     >
@@ -113,6 +113,6 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
           </Link>
         </div>
       </div>
-    </TMCard>
+    </EFCard>
   );
 }

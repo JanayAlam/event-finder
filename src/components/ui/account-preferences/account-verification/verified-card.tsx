@@ -1,11 +1,11 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
 
 const VerifiedCard: React.FC = () => {
   return (
-    <TMCard
+    <EFCard
       rootClassName={cn(
         "border border-success",
         "bg-success/10",
@@ -50,7 +50,7 @@ const VerifiedCard: React.FC = () => {
           </Paragraph>
         </div>
       </div>
-    </TMCard>
+    </EFCard>
   );
 };
 

@@ -1,4 +1,4 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import {
   PersonalInfoForm,
   ProfileImageForm
@@ -12,12 +12,12 @@ export const metadata = {
 const PersonalInfoPage = () => {
   return (
     <div className="flex flex-col gap-4 sm:gap-6">
-      <TMCard title="Profile Image">
+      <EFCard title="Profile Image">
         <ProfileImageForm />
-      </TMCard>
-      <TMCard title="Personal Information">
+      </EFCard>
+      <EFCard title="Personal Information">
         <PersonalInfoForm />
-      </TMCard>
+      </EFCard>
     </div>
   );
 };

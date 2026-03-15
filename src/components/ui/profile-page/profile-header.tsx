@@ -1,4 +1,4 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import {
   Avatar,
   AvatarFallback,
@@ -54,7 +54,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const joinedDate = dayjs(profile.user.createdAt).format("MMM YYYY");
 
   return (
-    <TMCard>
+    <EFCard>
       <div
         className={cn(
           "py-4 sm:py-10",
@@ -133,6 +133,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
         </div>
       </div>
-    </TMCard>
+    </EFCard>
   );
 };

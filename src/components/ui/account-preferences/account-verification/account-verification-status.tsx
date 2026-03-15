@@ -1,7 +1,7 @@
 "use client";
 
+import EFCard from "@/components/shared/molecules/ef-card";
 import { PageLoader } from "@/components/shared/molecules/page-loader";
-import TMCard from "@/components/shared/molecules/tm-card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
 import DeclinedVerificationCard from "@/components/ui/account-preferences/account-verification/declined-verification-card";
 import PendingVerificationCard from "@/components/ui/account-preferences/account-verification/pending-verification-card";
@@ -39,7 +39,7 @@ const AccountVerificationStatus: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <TMCard
+      <EFCard
         rootClassName={cn(
           "border border-info",
           "bg-info-foreground",
@@ -53,7 +53,7 @@ const AccountVerificationStatus: React.FC = () => {
             both
           </Paragraph>
         </div>
-      </TMCard>
+      </EFCard>
 
       <AccountVerificationForm />
     </div>

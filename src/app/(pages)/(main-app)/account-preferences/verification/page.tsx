@@ -1,4 +1,4 @@
-import TMCard from "@/components/shared/molecules/tm-card";
+import EFCard from "@/components/shared/molecules/ef-card";
 import { AccountVerificationStatus } from "../../../../../components/ui/account-preferences/account-verification";
 
 export const metadata = {
@@ -8,9 +8,9 @@ export const metadata = {
 
 const VerificationPage = () => {
   return (
-    <TMCard title="Verification">
+    <EFCard title="Verification">
       <AccountVerificationStatus />
-    </TMCard>
+    </EFCard>
   );
 };
 

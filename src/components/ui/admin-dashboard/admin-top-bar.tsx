@@ -1,11 +1,16 @@
 "use client";
 
+import LogoDark from "@/assets/logos/event-finder-full-dark.png";
+import LogoLight from "@/assets/logos/event-finder-full-light.png";
+import LogoShort from "@/assets/logos/event-finder-short.png";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { cn } from "@/lib/utils";
 import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { Menu } from "lucide-react";
+import { useTheme } from "next-themes";
 import { League_Spartan } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { NotificationPopover } from "../navbar/notification-popover";
@@ -19,6 +24,7 @@ const leagueSpartan = League_Spartan({
 });
 
 const AdminTopBar: React.FC = () => {
+  const { theme } = useTheme();
   const { toggle } = useSidebarState();
 
   return (
@@ -37,8 +43,25 @@ const AdminTopBar: React.FC = () => {
             href={PUBLIC_PAGE_ROUTE.HOME}
             className="text-3xl font-extrabold text-primary select-none"
           >
-            <span className="hidden sm:block">tripmate.</span>
-            <span className="sm:hidden">tm.</span>
+            <span className="hidden sm:block">eventfinder.</span>
+            <span className="sm:hidden">ef.</span>
+            <div className="sm:hidden">
+              <Image
+                src={LogoShort.src}
+                alt="Logo"
+                width={40}
+                height={40}
+                className="sm:hidden"
+              />
+            </div>
+            <div className="hidden sm:block">
+              <Image
+                src={theme === "light" ? LogoLight.src : LogoDark.src}
+                alt="Logo"
+                width={120}
+                height={60}
+              />
+            </div>
           </Link>
         </div>
       </div>

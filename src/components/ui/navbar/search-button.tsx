@@ -71,7 +71,7 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
             <SearchIcon />
           </div>
           <div className="hidden sm:flex justify-between items-center gap-4">
-            <span className="text-gray-400">Search Trips</span>
+            <span className="text-gray-400">Search Events</span>
             <span>
               <Kbd>Ctrl</Kbd>
               <span className="text-gray-400">+</span>

@@ -13,10 +13,10 @@ const inter = Inter({
 
 export const metadata = {
   title: {
-    default: "TripMate",
-    template: "%s | TripMate"
+    default: "EventFinder",
+    template: "%s | EventFinder"
   },
-  description: "TripMate — Find the best group trips around you"
+  description: "EventFinder — Find the best group trips around you"
 };
 
 export default function RootLayout({

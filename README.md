@@ -1,4 +1,4 @@
-# Trip Mate
+# Event Finder
 
 ## Getting Started
 
@@ -12,16 +12,6 @@ Install dependencies:
 
 ```bash
 yarn
-```
-
-Prisma:
-
-```bash
-yarn prisma generate
-```
-
-```bash
-yarn prisma migrate deploy
 ```
 
 Run the development server:

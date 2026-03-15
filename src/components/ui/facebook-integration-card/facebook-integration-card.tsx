@@ -99,7 +99,7 @@ const FacebookIntegrationCard: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center py-10 px-4 w-full bg-muted/5 gap-4">
         <div className="relative mb-6">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full blur opacity-25" />
+          <div className="absolute -inset-1 bg-linear-to-r from-blue-600 to-cyan-500 rounded-full blur opacity-25" />
           <div className="relative bg-background rounded-full p-5 border border-blue-100 dark:border-blue-900">
             <Facebook className="size-12 text-[#1877F2]" />
           </div>
@@ -113,7 +113,7 @@ const FacebookIntegrationCard: React.FC = () => {
             Connect Facebook Account
           </Paragraph>
           <TypographyMuted>
-            Allow TripMate to automatically post your travel events to your
+            Allow EventFinder to automatically post your travel events to your
             Facebook Page feed.
           </TypographyMuted>
         </div>
@@ -177,7 +177,8 @@ const FacebookIntegrationCard: React.FC = () => {
           </div>
 
           <TypographyMuted className="text-sm italic">
-            Tip: TripMate will only post to the facebook page you select below.
+            Tip: EventFinder will only post to the facebook page you select
+            below.
           </TypographyMuted>
         </div>
 

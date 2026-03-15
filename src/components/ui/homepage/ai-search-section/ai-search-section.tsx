@@ -54,7 +54,7 @@ export default function AISearchSection() {
           </div>
           <div>
             <H2 className="text-xl md:text-2xl font-semibold text-foreground">
-              AI Trip Finder
+              AI Event Finder
             </H2>
             <TypographyMuted>
               Describe your dream trip and we&apos;ll find matching events

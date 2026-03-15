@@ -39,7 +39,7 @@ export default function CreateEventSection() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left flex flex-col gap-2">
             <H2 className="font-display font-extrabold text-primary">
-              Start a trip
+              Start an event
             </H2>
             <TypographyMuted>
               Create an event and invite others to join your adventure

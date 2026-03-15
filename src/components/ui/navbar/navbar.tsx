@@ -1,5 +1,8 @@
 "use client";
 
+import LogoDark from "@/assets/logos/event-finder-full-dark.png";
+import LogoLight from "@/assets/logos/event-finder-full-light.png";
+import LogoShort from "@/assets/logos/event-finder-short.png";
 import Modal from "@/components/shared/organisms/modal";
 import {
   Avatar,
@@ -35,7 +38,9 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { ChevronDownIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { League_Spartan } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useState } from "react";
@@ -56,6 +61,7 @@ const leagueSpartan = League_Spartan({
 const Navbar: React.FC = () => {
   const router = useRouter();
 
+  const { theme } = useTheme();
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const [becomeHostModalOpen, setBecomeHostModalOpen] = useState(false);
@@ -140,8 +146,23 @@ const Navbar: React.FC = () => {
               href={"/"}
               className="text-4xl font-extrabold text-primary select-none"
             >
-              <span className="sm:hidden">tm.</span>
-              <span className="hidden sm:block">tripmate.</span>
+              <div className="sm:hidden">
+                <Image
+                  src={LogoShort.src}
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="sm:hidden"
+                />
+              </div>
+              <div className="hidden sm:block">
+                <Image
+                  src={theme === "light" ? LogoLight.src : LogoDark.src}
+                  alt="Logo"
+                  width={120}
+                  height={60}
+                />
+              </div>
             </Link>
           </div>
 

@@ -15,7 +15,7 @@ export const getImageUrl = (
       const initials = options.name.toUpperCase().slice(0, 2);
       return `https://ui-avatars.com/api?name=${encodeURIComponent(initials)}&size=128`;
     }
-    return "https://ui-avatars.com/api?name=TripMate";
+    return "https://ui-avatars.com/api?name=EventFinder";
   }
 
   if (imagePath.startsWith("http")) {

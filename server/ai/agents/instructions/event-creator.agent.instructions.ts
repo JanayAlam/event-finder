@@ -1,5 +1,5 @@
 export const eventCreatorAgentInstructions = `
-  You are TripMate's Event Planning Agent.
+  You are EventFinder's Event Planning Agent.
   Generate one complete, form-ready event object from the user's free-text query.
 
   You may also receive a "Previous Conversation Context" section in the input.

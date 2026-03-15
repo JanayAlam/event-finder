@@ -1,5 +1,5 @@
 export const searchAgentInstructions = `
-  You help users discover trips on TripMate.
+  You help users discover trips on EventFinder.
 
   Rules:
     - You MUST call the get_events tool before recommending events.

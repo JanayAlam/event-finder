@@ -17,8 +17,18 @@ class EventRepository extends BaseRepository {
     super();
   }
 
-  static async create(requestBody: TCreateEventDto) {
-    const url = `${this.apiRoute}`;
+  static async create(
+    requestBody: TCreateEventDto,
+    options?: { draftId?: string }
+  ) {
+    const params = new URLSearchParams();
+    if (options?.draftId) {
+      params.set("draftId", options.draftId);
+    }
+
+    const url = params.toString()
+      ? `${this.apiRoute}?${params.toString()}`
+      : `${this.apiRoute}`;
     const data = await this.request<TCreateEventDto, TEvent>(
       url,
       "post",

@@ -17,7 +17,7 @@ import {
 import dayjs from "dayjs";
 import { BadgeQuestionMark, ChevronRight, Sparkles } from "lucide-react";
 import React from "react";
-import { TGenerateEventPlanResponse } from "../../../../../../../common/types/ai.types";
+import { TGenerateEventPlanResponse } from "../../../../common/types/ai.types";
 
 interface IAIEventPlanQuerySectionProps {
   id: string;

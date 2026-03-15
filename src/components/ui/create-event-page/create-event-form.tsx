@@ -35,11 +35,8 @@ import { useRouter } from "nextjs-toploader/app";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  TCreateEventDto,
-  TCreateEventForm
-} from "../../../../../../common/types";
-import { CreateEventSchema } from "../../../../../../common/validation-schemas";
+import { TCreateEventDto, TCreateEventForm } from "../../../../common/types";
+import { CreateEventSchema } from "../../../../common/validation-schemas";
 
 const FormCard: React.FC<
   PropsWithChildren<{
@@ -70,11 +67,13 @@ const FormCard: React.FC<
 interface ICreateEventFormProps {
   initialData?: Partial<TCreateEventForm>;
   onCancel?: () => void;
+  draftId?: string;
 }
 
 export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
   initialData,
-  onCancel
+  onCancel,
+  draftId
 }) => {
   const router = useRouter();
 
@@ -111,7 +110,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
 
   const { mutateAsync: createEvent, isPending: isCreating } = useMutation({
     mutationFn: async (data: TCreateEventDto) => {
-      const result = await EventRepository.create(data);
+      const result = await EventRepository.create(data, { draftId });
       return result;
     },
     onSuccess: (data) => {

@@ -15,13 +15,13 @@ import { ArrowLeft, Sparkles } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { TCreateEventForm } from "../../../../../../../common/types";
+import { TCreateEventForm } from "../../../../common/types";
 import {
   TAIConversationContextItemDto,
   TGenerateEventPlanResponse
-} from "../../../../../../../common/types/ai.types";
-import { CreateEventForm } from "../create-event-form";
+} from "../../../../common/types/ai.types";
 import { AIEventPlanQuerySection } from "./ai-event-plan-query-section";
+import { CreateEventForm } from "./create-event-form";
 
 export const CreateEventMultiStageForm: React.FC = () => {
   const router = useRouter();

@@ -7,8 +7,8 @@ import { PUBLIC_PAGE_ROUTE } from "@/routes";
 import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { CreateEventForm } from "./create-event-form";
-import { CreateWithAIButton } from "./create-with-ai-button";
+import { CreateEventForm } from "../../../../../components/ui/create-event-page/create-event-form";
+import { CreateWithAIButton } from "../../../../../components/ui/create-event-page/create-with-ai-button";
 
 export const metadata: Metadata = {
   title: "Create event"

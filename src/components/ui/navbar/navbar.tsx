@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
           "sticky top-0 z-50",
           "w-full flex justify-center",
           "border-b border-b-borders-1",
-          "bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/70",
+          "bg-background",
           "shadow-[0_1px_0_0_rgba(0,0,0,0.04)]"
         )}
       >

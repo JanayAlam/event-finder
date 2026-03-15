@@ -8,58 +8,53 @@ import { Empty, EmptyContent } from "../../shadcn-components/empty";
 import { Skeleton } from "../../shadcn-components/skeleton";
 import { Spinner } from "../../shadcn-components/spinner";
 import { TypographyMuted } from "../../shadcn-components/typography";
-import EventCard from "../event-card";
+import EventItem from "../event-item";
 
 interface IEventListProps {
-  events: TEventListItemDto[];
-  isLoading: boolean;
-  isFetching: boolean;
-  isFetchingNextPage: boolean;
+  events?: TEventListItemDto[];
+  isLoading?: boolean;
+  isFetching?: boolean;
+  isFetchingNextPage?: boolean;
   hasNextPage?: boolean;
-  onLoadMore: () => void;
+  onLoadMore?: () => void;
   emptyTitle?: string;
   emptyDescription?: string;
 }
 
-const GRID_CLASSES =
-  "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6";
+const LIST_CLASSES = "flex flex-col gap-3";
 
-const EventCardSkeleton = ({ dimmed = false }: { dimmed?: boolean }) => (
-  <EFCard
-    rootClassName="overflow-hidden"
-    bodyClassName={`!p-0 flex flex-col ${dimmed ? "opacity-50" : ""}`}
+const EventItemSkeleton = ({ dimmed = false }: { dimmed?: boolean }) => (
+  <div
+    className={`rounded-xl border border-border/50 bg-background/80 p-4 ${
+      dimmed ? "opacity-50" : ""
+    }`}
   >
-    <Skeleton className="h-44 w-full rounded-none" />
-    <div className="flex flex-col gap-4 p-4">
-      <Skeleton className="h-6 w-3/4" />
-      <div className="rounded-lg border p-3">
-        <div className="flex flex-col items-center gap-2">
-          <Skeleton className="h-4 w-40" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="size-4 rounded-full" />
-            <Skeleton className="h-3 w-14" />
-            <Skeleton className="size-4 rounded-full" />
-          </div>
-          <Skeleton className="h-3 w-10" />
+    <div className="flex flex-col gap-4 md:flex-row md:items-center">
+      <Skeleton className="h-20 w-full rounded-lg md:h-24 md:w-24 md:flex-none" />
+      <div className="flex flex-1 flex-col gap-3">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-2/3" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+        <div className="flex flex-wrap gap-4">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-24" />
         </div>
       </div>
-      <Skeleton className="h-4 w-2/3" />
-      <div className="rounded-md bg-muted/40 px-3 py-2">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-14" />
-        </div>
+      <div className="flex w-full flex-col items-start gap-3 md:w-40 md:items-end">
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-6 w-24" />
+        <Skeleton className="h-10 w-full rounded-md" />
       </div>
-      <Skeleton className="h-10 w-full rounded-md" />
     </div>
-  </EFCard>
+  </div>
 );
 
 export const EventList: React.FC<IEventListProps> = ({
-  events,
-  isLoading,
-  isFetching,
-  isFetchingNextPage,
+  events = [],
+  isLoading = false,
+  isFetching = false,
+  isFetchingNextPage = false,
   hasNextPage,
   onLoadMore,
   emptyTitle = "No upcoming trips found",
@@ -67,9 +62,9 @@ export const EventList: React.FC<IEventListProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className={GRID_CLASSES}>
-        {Array.from({ length: 8 }).map((_, idx) => (
-          <EventCardSkeleton key={idx} />
+      <div className={LIST_CLASSES}>
+        {Array.from({ length: 4 }).map((_, idx) => (
+          <EventItemSkeleton key={idx} />
         ))}
       </div>
     );
@@ -90,18 +85,18 @@ export const EventList: React.FC<IEventListProps> = ({
 
   return (
     <>
-      <div className={GRID_CLASSES}>
+      <div className={LIST_CLASSES}>
         {events.map((event) => (
-          <EventCard key={event._id.toString()} event={event} />
+          <EventItem key={event._id.toString()} event={event} />
         ))}
         {isFetchingNextPage
-          ? Array.from({ length: 4 }).map((_, idx) => (
-              <EventCardSkeleton key={`loading-${idx}`} dimmed />
+          ? Array.from({ length: 2 }).map((_, idx) => (
+              <EventItemSkeleton key={`loading-${idx}`} dimmed />
             ))
           : null}
       </div>
 
-      {hasNextPage ? (
+      {hasNextPage && onLoadMore ? (
         <div className="flex justify-center mt-6!">
           <Button
             onClick={onLoadMore}

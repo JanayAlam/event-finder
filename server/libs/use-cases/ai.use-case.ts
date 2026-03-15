@@ -4,7 +4,8 @@ import {
   TEventSearchToolDto
 } from "../../../common/types/ai.types";
 import { EVENT_STATUS } from "../../enums";
-import Event, { IEventDoc } from "../../models/event.model";
+import Event from "../../models/event.model";
+import { IEventDoc } from "../../models/schemas/event.schema";
 
 class AIUseCase {
   static async searchEvents(

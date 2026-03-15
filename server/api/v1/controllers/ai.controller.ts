@@ -24,6 +24,21 @@ class AIController {
       const result = await runEventSearchAgent(prompt);
       res.json({ result: result.finalOutput });
     } catch (err) {
+      if (
+        err instanceof Error &&
+        (err.name === "InputGuardrailTripwireTriggered" ||
+          err.message.includes("Input guardrail triggered"))
+      ) {
+        res.status(200).json({
+          result: {
+            message:
+              "I can help you discover trips. Tell me where you want to go, your dates, group size, or budget.",
+            events: []
+          }
+        });
+        return;
+      }
+
       next(err);
     }
   }

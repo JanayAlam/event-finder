@@ -6,11 +6,8 @@ import {
   UpdateQuery
 } from "mongoose";
 import { TSearchEventResultResponse } from "../../../common/types";
-import Event, {
-  IEventDoc,
-  TEvent,
-  TEventDetail
-} from "../../models/event.model";
+import Event, { TEvent, TEventDetail } from "../../models/event.model";
+import { IEventDoc } from "../../models/schemas/event.schema";
 
 type TGetAllEventParamDto = {
   filter?: FilterQuery<IEventDoc>;

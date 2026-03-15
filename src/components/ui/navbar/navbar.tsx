@@ -43,7 +43,7 @@ import { League_Spartan } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { VERIFICATION_STATUS } from "../../../../common/types";
 import { USER_ROLE } from "../../../../server/enums";
@@ -61,10 +61,17 @@ const leagueSpartan = League_Spartan({
 const Navbar: React.FC = () => {
   const router = useRouter();
 
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const { isLoggedIn, user, clearAuth } = useAuthStore();
 
   const [becomeHostModalOpen, setBecomeHostModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentTheme = resolvedTheme || theme;
 
   const { data: accountVerificationStatus, isLoading } = useQuery({
     queryKey: ["account-verification-status"],
@@ -177,12 +184,20 @@ const Navbar: React.FC = () => {
                 />
               </div>
               <div className="hidden sm:block">
-                <Image
-                  src={theme === "light" ? LogoLight.src : LogoDark.src}
-                  alt="Logo"
-                  width={120}
-                  height={60}
-                />
+                {mounted ? (
+                  <Image
+                    src={
+                      currentTheme === "light"
+                        ? LogoLight.src
+                        : LogoDark.src
+                    }
+                    alt="Logo"
+                    width={120}
+                    height={60}
+                  />
+                ) : (
+                  <div className="h-[60px] w-[120px]" />
+                )}
               </div>
             </Link>
           </div>

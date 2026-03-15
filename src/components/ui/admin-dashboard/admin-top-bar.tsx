@@ -12,7 +12,7 @@ import { useTheme } from "next-themes";
 import { League_Spartan } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NotificationPopover } from "../navbar/notification-popover";
 import ThemeToggleButton from "../theme-toggle-button";
 import UserDropdown from "./user-dropdown";
@@ -24,8 +24,16 @@ const leagueSpartan = League_Spartan({
 });
 
 const AdminTopBar: React.FC = () => {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const { toggle } = useSidebarState();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  const currentTheme = resolvedTheme || theme;
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-topbar-border bg-topbar/90 px-4 sm:px-6 backdrop-blur supports-backdrop-filter:bg-topbar/70 shadow-[0_1px_0_0_rgba(0,0,0,0.04)]">
@@ -53,12 +61,16 @@ const AdminTopBar: React.FC = () => {
               />
             </div>
             <div className="hidden sm:block">
-              <Image
-                src={theme === "light" ? LogoLight.src : LogoDark.src}
-                alt="Logo"
-                width={120}
-                height={60}
-              />
+              {mounted ? (
+                <Image
+                  src={currentTheme === "light" ? LogoLight.src : LogoDark.src}
+                  alt="Logo"
+                  width={120}
+                  height={60}
+                />
+              ) : (
+                <div className="h-[60px] w-[120px]" />
+              )}
             </div>
           </Link>
         </div>

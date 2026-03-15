@@ -34,12 +34,10 @@ export const AIPromptForm: React.FC<IAIPromptFormProps> = ({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="relative">
         <InputField
           name="prompt"
+          autoComplete="off"
           control={form.control}
           disabled={isGlobalLoading}
-          placeholder={
-            placeholder ??
-            "What would you like to discover, plan, or personalize?"
-          }
+          placeholder={placeholder ?? "What would you like to do?"}
           className="h-16 rounded-full px-8 bg-background/60 backdrop-blur-2xl border-primary/20 focus:border-primary transition-all text-xl shadow-2xl w-full pr-20"
         />
         <button

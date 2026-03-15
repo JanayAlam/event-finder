@@ -22,7 +22,7 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
   return (
     <div className="flex flex-col gap-2">
       <Paragraph className="px-1.5">{message}</Paragraph>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {events.map((event) => (
           <Link
             key={event._id}

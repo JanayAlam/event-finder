@@ -15,6 +15,7 @@ interface IAIQuerySectionProps {
   id: string;
   prompt: string;
   isLoading: boolean;
+  showQuestion?: boolean;
   result?: TAIPromptResponse;
 }
 
@@ -22,17 +23,20 @@ export const AIQuerySection: React.FC<IAIQuerySectionProps> = ({
   id,
   prompt,
   isLoading,
+  showQuestion = true,
   result
 }) => {
   return (
     <div id={id} className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <H4 className="flex items-center gap-2 flex-wrap">
-          <BadgeQuestionMark className="size-6" />
-          {prompt}
-        </H4>
-        <Separator />
-      </div>
+      {showQuestion ? (
+        <div className="flex flex-col gap-2">
+          <H4 className="flex items-center gap-2 flex-wrap">
+            <BadgeQuestionMark className="size-6" />
+            {prompt}
+          </H4>
+          <Separator />
+        </div>
+      ) : null}
       {isLoading ? (
         <PageLoader />
       ) : !result ? (

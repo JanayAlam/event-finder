@@ -11,7 +11,7 @@ import { CalendarCheck, Compass, Sparkles } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import { AIFeatureCard } from "./ai-feature-card";
 
-export function AISection() {
+export function AIWorkplaceCard() {
   const router = useRouter();
 
   const handleLaunch = () => {

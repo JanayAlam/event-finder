@@ -5,12 +5,12 @@ import { Input } from "@/components/shared/shadcn-components/input";
 import UserRepository from "@/repositories/user.repository";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
-import { createColumns } from "./columns";
+import { createUserManagementTableColumns } from "./columns";
 
-export default function UserManagementTable() {
+export const UserManagementTable: React.FC = () => {
   const queryClient = useQueryClient();
 
   const [search, setSearch] = useState("");
@@ -62,7 +62,7 @@ export default function UserManagementTable() {
 
   const columns = useMemo(
     () =>
-      createColumns({
+      createUserManagementTableColumns({
         onBlock: (id) => mutateBlock(id),
         onUnblock: (id) => mutateUnblock(id)
       }),
@@ -101,4 +101,4 @@ export default function UserManagementTable() {
       />
     </div>
   );
-}
+};

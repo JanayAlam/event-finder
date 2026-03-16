@@ -23,7 +23,7 @@ export type TColumnHandlers = {
   onUnblock: (userId: string) => void;
 };
 
-export const createColumns = (
+export const createUserManagementTableColumns = (
   handlers: TColumnHandlers
 ): IDataTableColumn<TUserWithProfileAndAccountVerification>[] => [
   {

@@ -1,6 +1,7 @@
 "use client";
 
 import { AISearchResultContent } from "@/components/shared/organisms/ai-search-result-content";
+import { AIEventCreateResultView } from "@/components/shared/organisms/ai-workspace";
 import { Button } from "@/components/shared/shadcn-components/button";
 import { Card, CardContent } from "@/components/shared/shadcn-components/card";
 import { Paragraph } from "@/components/shared/shadcn-components/typography";
@@ -20,7 +21,6 @@ import {
   TAIConversationContextItemDto,
   TGenerateEventPlanResponse
 } from "../../../../common/types/ai.types";
-import { AIEventPlanQuerySection } from "./ai-event-plan-query-section";
 import { CreateEventForm } from "./create-event-form";
 
 export const CreateEventMultiStageForm: React.FC = () => {
@@ -99,7 +99,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
                 onError={onError}
                 inputPlaceholder="Describe the event you want to create"
                 renderQuery={({ key, ...query }) => (
-                  <AIEventPlanQuerySection
+                  <AIEventCreateResultView
                     id={key}
                     prompt={query.prompt}
                     isLoading={query.isLoading}

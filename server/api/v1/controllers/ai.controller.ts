@@ -20,7 +20,6 @@ class AIController {
   ) {
     try {
       const { prompt } = req.body;
-
       const result = await runWorkplaceAgent(prompt);
       res.json({ result: result.finalOutput });
     } catch (err) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form/ai-prompt-form";
+import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Sparkles } from "lucide-react";

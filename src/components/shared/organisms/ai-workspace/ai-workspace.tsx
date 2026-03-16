@@ -1,11 +1,21 @@
 "use client";
 
-import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form/ai-prompt-form";
-import { Tabs, TabsList, TabsTrigger } from "@/components/shared/shadcn-components/tabs";
+import { AIPromptForm } from "@/components/shared/organisms/ai-prompt-form";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger
+} from "@/components/shared/shadcn-components/tabs";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Sparkles } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import { TPromptRequestDto } from "../../../../../common/types/ai.types";
 import { Empty, EmptyContent, EmptyMedia } from "../../shadcn-components/empty";
 import { TypographyMuted } from "../../shadcn-components/typography";
@@ -76,7 +86,9 @@ export function AIWorkspace<TResult>({
   const activeQuery = useMemo(() => {
     if (!queries.length) return null;
     if (!activeKey) return queries[queries.length - 1];
-    return queries.find((q) => q.key === activeKey) ?? queries[queries.length - 1];
+    return (
+      queries.find((q) => q.key === activeKey) ?? queries[queries.length - 1]
+    );
   }, [activeKey, queries]);
 
   const isGlobalLoading = queries.some((q) => q.isLoading);

@@ -1,7 +1,7 @@
 import { run } from "@openai/agents";
 import { TAIConversationContextItemDto } from "../../common/types/ai.types";
 import { eventCreatorAgentWithInputGuardrail } from "./agents/event-creator.agent";
-import { workplaceAgent } from "./agents/event-finder-workplace.agent";
+import { workplaceAgent } from "./agents/workplace.agent";
 
 export async function runWorkplaceAgent(query: string) {
   const result = await run(workplaceAgent, query);

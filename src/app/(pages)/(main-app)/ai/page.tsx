@@ -1,11 +1,10 @@
-import { PageLoader } from "@/components/shared/molecules/page-loader";
-import { Suspense } from "react";
+import { Metadata } from "next";
 import { AIContent } from "./ai-content";
 
+export const metadata: Metadata = {
+  title: "AI Workplace"
+};
+
 export default function AISearchPage() {
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <AIContent />
-    </Suspense>
-  );
+  return <AIContent />;
 }

@@ -11,7 +11,7 @@ import { BadgeQuestionMark } from "lucide-react";
 import React from "react";
 import { TAISearchEventResponse } from "../../../../../common/types/ai.types";
 
-interface IAIQuerySectionProps {
+interface IAIEventSearchResultProps {
   id: string;
   prompt: string;
   isLoading: boolean;
@@ -19,7 +19,7 @@ interface IAIQuerySectionProps {
   result?: TAISearchEventResponse;
 }
 
-export const AIQuerySection: React.FC<IAIQuerySectionProps> = ({
+export const AIEventSearchResultView: React.FC<IAIEventSearchResultProps> = ({
   id,
   prompt,
   isLoading,

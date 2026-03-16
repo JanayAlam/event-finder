@@ -17,9 +17,9 @@ import {
 import dayjs from "dayjs";
 import { BadgeQuestionMark, ChevronRight, Sparkles } from "lucide-react";
 import React from "react";
-import { TGenerateEventPlanResponse } from "../../../../common/types/ai.types";
+import { TGenerateEventPlanResponse } from "../../../../../common/types/ai.types";
 
-interface IAIEventPlanQuerySectionProps {
+interface IAIEventCreateResultViewProps {
   id: string;
   prompt: string;
   isLoading: boolean;
@@ -28,8 +28,8 @@ interface IAIEventPlanQuerySectionProps {
   onNext: (result: TGenerateEventPlanResponse) => void;
 }
 
-export const AIEventPlanQuerySection: React.FC<
-  IAIEventPlanQuerySectionProps
+export const AIEventCreateResultView: React.FC<
+  IAIEventCreateResultViewProps
 > = ({ id, prompt, isLoading, result, showQuestion = true, onNext }) => {
   return (
     <div id={id} className="flex flex-col gap-4 w-full">

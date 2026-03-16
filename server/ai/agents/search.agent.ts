@@ -1,5 +1,4 @@
-import { Agent, InputGuardrail, run } from "@openai/agents";
-import z from "zod";
+import { Agent } from "@openai/agents";
 import { SearchAgentOutputSchema } from "../../../common/validation-schemas";
 import { getEventsTool } from "../tools/search.tools";
 
@@ -65,32 +64,9 @@ const searchAgentInstructions = `
   Do NOT ask follow-up questions. Return structured output only.
 `;
 
-const inputGuardRailAgent = new Agent({
-  name: "search_agent_input_guardrail_agent",
-  instructions:
-    "Check if the user is searching trips and not doing any other operations.",
-  outputType: z.object({
-    isSearching: z.boolean(),
-    reasoning: z.string()
-  })
-});
-
-const searchTripsGuardrail: InputGuardrail = {
-  name: "search_agent_input_guardrail",
-  runInParallel: false,
-  execute: async ({ input, context }) => {
-    const result = await run(inputGuardRailAgent, input, { context });
-    return {
-      outputInfo: result.finalOutput,
-      tripwireTriggered: result.finalOutput?.isSearching === false
-    };
-  }
-};
-
 export const searchAgent = new Agent({
-  name: "event_finder_event_search_agent",
+  name: "event_search_agent",
   instructions: searchAgentInstructions,
-  inputGuardrails: [searchTripsGuardrail],
   outputType: SearchAgentOutputSchema,
   tools: [getEventsTool]
 });

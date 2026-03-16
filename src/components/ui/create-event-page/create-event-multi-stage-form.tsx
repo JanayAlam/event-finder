@@ -40,10 +40,10 @@ export const CreateEventMultiStageForm: React.FC = () => {
     });
 
     const responseSummary = [
-      `Title: ${result.title}`,
-      `Place: ${result.placeName}`,
-      `Event Date: ${result.eventDate}`,
-      `Duration: ${result.dayCount} day(s), ${result.nightCount} night(s)`
+      `Title: ${result.eventToCreate.title}`,
+      `Place: ${result.eventToCreate.placeName}`,
+      `Event Date: ${result.eventToCreate.eventDate}`,
+      `Duration: ${result.eventToCreate.dayCount} day(s), ${result.eventToCreate.nightCount} night(s)`
     ].join(" | ");
 
     setConversationHistory((prev) => [
@@ -105,7 +105,7 @@ export const CreateEventMultiStageForm: React.FC = () => {
                     isLoading={query.isLoading}
                     result={query.result}
                     onNext={(result) => {
-                      setAiGeneratedData(result);
+                      setAiGeneratedData(result.eventToCreate);
                       setStage(PAGE_STAGE.USER_INPUT);
                     }}
                   />

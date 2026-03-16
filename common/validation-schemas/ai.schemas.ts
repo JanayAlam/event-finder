@@ -65,7 +65,7 @@ export const GenerateEventToolSchema = z.object({
     .describe("Return/end time provided by user in any readable format")
 });
 
-export const EventCreatorAgentOutputSchema = z.object({
+const EventToCreateSchema = z.object({
   title: z.string().describe("Catchy title for the trip"),
   placeName: z.string().describe("Destination place name"),
   description: z
@@ -97,4 +97,20 @@ export const EventCreatorAgentOutputSchema = z.object({
       })
     )
     .describe("Detailed day-by-day or event-by-event itinerary of the trip")
+});
+
+export const EventCreatorAgentOutputSchema = z.object({
+  message: z.string().max(300),
+  eventToCreate: EventToCreateSchema
+});
+
+export const WorkplaceAgentOutputSchema = z.object({
+  message: z.string().max(300),
+  events: z.array(SearchAgentEventSchema).optional(),
+  eventToCreate: EventToCreateSchema.clone().optional()
+});
+
+export const GuardrailOutputSchema = z.object({
+  isValid: z.boolean(),
+  reasoning: z.string()
 });

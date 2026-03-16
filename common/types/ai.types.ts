@@ -5,7 +5,8 @@ import {
   EventSearchToolSchema,
   PromptSchema,
   SearchAgentEventSchema,
-  SearchAgentOutputSchema
+  SearchAgentOutputSchema,
+  WorkplaceAgentOutputSchema
 } from "../validation-schemas/ai.schemas";
 
 export type TPromptRequestDto = z.infer<typeof PromptSchema>;
@@ -14,14 +15,11 @@ export type TEventSearchToolDto = z.infer<typeof EventSearchToolSchema>;
 
 export type TAISearchEvent = z.infer<typeof SearchAgentEventSchema>;
 
-export type TAIPromptResponse = z.infer<typeof SearchAgentOutputSchema>;
+export type TAISearchEventResponse = z.infer<typeof SearchAgentOutputSchema>;
 
-export interface IAIQueryItem {
-  key: string;
-  prompt: string;
-  result?: TAIPromptResponse;
-  isLoading: boolean;
-}
+export type TAIWorkplacePromptResponse = z.infer<
+  typeof WorkplaceAgentOutputSchema
+>;
 
 export type TAIEventCreationSchemaDto = z.infer<typeof AIEventCreationSchema>;
 

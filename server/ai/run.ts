@@ -1,10 +1,10 @@
 import { run } from "@openai/agents";
 import { TAIConversationContextItemDto } from "../../common/types/ai.types";
-import { eventCreatorAgent } from "./agents/event-creator.agent";
-import { searchAgent } from "./agents/search.agent";
+import { eventCreatorAgentWithInputGuardrail } from "./agents/event-creator.agent";
+import { workplaceAgent } from "./agents/event-finder-workplace.agent";
 
-export default async function runEventSearchAgent(query: string) {
-  const result = await run(searchAgent, query);
+export async function runWorkplaceAgent(query: string) {
+  const result = await run(workplaceAgent, query);
   return result;
 }
 
@@ -27,6 +27,6 @@ Current User Request:
 ${query}`
     : query;
 
-  const result = await run(eventCreatorAgent, contextBlock);
+  const result = await run(eventCreatorAgentWithInputGuardrail, contextBlock);
   return result;
 }

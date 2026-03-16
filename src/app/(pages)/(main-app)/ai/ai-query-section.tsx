@@ -9,14 +9,14 @@ import {
 import { AIEventListResult } from "@/components/ui/ai-query-page";
 import { BadgeQuestionMark } from "lucide-react";
 import React from "react";
-import { TAIPromptResponse } from "../../../../../common/types/ai.types";
+import { TAISearchEventResponse } from "../../../../../common/types/ai.types";
 
 interface IAIQuerySectionProps {
   id: string;
   prompt: string;
   isLoading: boolean;
   showQuestion?: boolean;
-  result?: TAIPromptResponse;
+  result?: TAISearchEventResponse;
 }
 
 export const AIQuerySection: React.FC<IAIQuerySectionProps> = ({

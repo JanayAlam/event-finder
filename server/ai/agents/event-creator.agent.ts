@@ -1,10 +1,13 @@
-import { Agent } from "@openai/agents";
-import { EventCreatorAgentOutputSchema } from "../../../common/validation-schemas";
+import { Agent, InputGuardrail, run } from "@openai/agents";
+import {
+  EventCreatorAgentOutputSchema,
+  GuardrailOutputSchema
+} from "../../../common/validation-schemas";
 import { calculateEventDurationTool } from "../tools/event-creator.tools";
 
 const eventCreatorAgentInstructions = `
   You are EventFinder's Event Planning Agent.
-  Generate one complete, form-ready event object from the user's free-text query.
+  Generate one complete, form-ready event object and message from the user's free-text query.
 
   You may also receive a "Previous Conversation Context" section in the input.
   Use it to preserve continuity with earlier prompts while prioritizing the latest user request.
@@ -29,19 +32,21 @@ const eventCreatorAgentInstructions = `
     5. Generate all remaining fields and return exactly one JSON object matching the output schema.
 
   Output requirements:
-    - title: short, catchy, destination-aware title.
-    - placeName: normalized destination with country name at the end (e.g. Cox's Bazar, Bangladesh).
-      - If no exact place is provided, choose a realistic destination that matches the user's intent.
-    - description: vivid but practical summary for travelers, and it MUST explicitly mention the trip end date.
-    - eventDate: ISO datetime string from tool output, and it MUST be in the future relative to current date ${new Date().toISOString()}.
-    - dayCount/nightCount: values from tool output only.
-    - entryFee: realistic BDT estimate for Bangladesh trips (default 5000 only if uncertain).
-    - memberCapacity: realistic group size between 10 and 30; follow user hints if provided.
-    - itinerary: detailed day-by-day plan with:
-      - accurate ISO "moment" values within the trip window,
-      - concise activity title,
-      - clear activity description.
-      - If departure place not mentioned, assume Dhaka, Bangladesh.
+    - message: a message based on the input and output
+    - eventToCreate:
+      - title: short, catchy, destination-aware title.
+      - placeName: normalized destination with country name at the end (e.g. Cox's Bazar, Bangladesh).
+        - If no exact place is provided, choose a realistic destination that matches the user's intent.
+      - description: vivid but practical summary for travelers, and it MUST explicitly mention the trip end date.
+      - eventDate: ISO datetime string from tool output, and it MUST be in the future relative to current date ${new Date().toISOString()}.
+      - dayCount/nightCount: values from tool output only.
+      - entryFee: realistic BDT estimate for Bangladesh trips (default 5000 only if uncertain).
+      - memberCapacity: realistic group size between 10 and 30; follow user hints if provided.
+      - itinerary: detailed day-by-day plan with:
+        - accurate ISO "moment" values within the trip window,
+        - concise activity title,
+        - clear activity description.
+        - If departure place not mentioned, assume Dhaka, Bangladesh.
 
   Hard constraints:
     - Keep all fields valid for direct form submission.
@@ -50,8 +55,34 @@ const eventCreatorAgentInstructions = `
 `;
 
 export const eventCreatorAgent = new Agent({
-  name: "event_finder_event_creator_agent",
+  name: "event_creator_agent",
   instructions: eventCreatorAgentInstructions,
   outputType: EventCreatorAgentOutputSchema,
   tools: [calculateEventDurationTool]
+});
+
+const eventCreatorInputGuardRailAgent = new Agent({
+  name: "event_creator_guardrail_agent",
+  model: "gpt-4o-mini",
+  instructions:
+    "Check if the user wants to create trips and not doing any other operations.",
+  outputType: GuardrailOutputSchema
+});
+
+const eventCreatorInputGuardrail: InputGuardrail = {
+  name: "event_creator_input_guardrail",
+  runInParallel: false,
+  execute: async ({ input, context }) => {
+    const result = await run(eventCreatorInputGuardRailAgent, input, {
+      context
+    });
+    return {
+      outputInfo: result.finalOutput,
+      tripwireTriggered: result.finalOutput?.isValid === false
+    };
+  }
+};
+
+export const eventCreatorAgentWithInputGuardrail = eventCreatorAgent.clone({
+  inputGuardrails: [eventCreatorInputGuardrail]
 });

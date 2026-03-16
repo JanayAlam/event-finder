@@ -3,7 +3,7 @@ import {
   TAIEventCreationSchemaDto,
   TPromptRequestDto
 } from "../../../../common/types/ai.types";
-import runEventSearchAgent, { runEventCreatorAgent } from "../../../ai/run";
+import { runEventCreatorAgent, runWorkplaceAgent } from "../../../ai/run";
 
 type TExecutePromptRequest = Request<unknown, unknown, TPromptRequestDto>;
 type TGenerateEventPlanRequest = Request<
@@ -21,7 +21,7 @@ class AIController {
     try {
       const { prompt } = req.body;
 
-      const result = await runEventSearchAgent(prompt);
+      const result = await runWorkplaceAgent(prompt);
       res.json({ result: result.finalOutput });
     } catch (err) {
       if (
@@ -32,8 +32,7 @@ class AIController {
         res.status(200).json({
           result: {
             message:
-              "I can help you discover trips. Tell me where you want to go, your dates, group size, or budget.",
-            events: []
+              "I can help you discover trips. Tell me where you want to go, your dates, group size, or budget. You can also generate trips based on your requirements through the AI agent if you are eligible to do so."
           }
         });
         return;
@@ -56,6 +55,20 @@ class AIController {
       );
       res.json({ result: result.finalOutput });
     } catch (err) {
+      if (
+        err instanceof Error &&
+        (err.name === "InputGuardrailTripwireTriggered" ||
+          err.message.includes("Input guardrail triggered"))
+      ) {
+        res.status(200).json({
+          result: {
+            message:
+              "I can help you to create events. Tell me where you want to go, your dates, group size, or budget."
+          }
+        });
+        return;
+      }
+
       next(err);
     }
   }

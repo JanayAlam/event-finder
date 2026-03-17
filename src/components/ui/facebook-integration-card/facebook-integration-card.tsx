@@ -113,7 +113,7 @@ const FacebookIntegrationCard: React.FC = () => {
             Connect Facebook Account
           </Paragraph>
           <TypographyMuted>
-            Allow EventFinder to automatically post your travel events to your
+            Allow Event Finder to automatically post your travel events to your
             Facebook Page feed.
           </TypographyMuted>
         </div>
@@ -177,7 +177,7 @@ const FacebookIntegrationCard: React.FC = () => {
           </div>
 
           <TypographyMuted className="text-sm italic">
-            Tip: EventFinder will only post to the facebook page you select
+            Tip: Event Finder will only post to the facebook page you select
             below.
           </TypographyMuted>
         </div>

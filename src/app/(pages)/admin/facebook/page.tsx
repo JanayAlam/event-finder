@@ -11,7 +11,7 @@ export default function FacebookManagementPage() {
   return (
     <AdminSectionCardLayout
       title="Facebook integration"
-      description="Connect your facebook account to EventFinder to enable automatic posting of your events to your facebook page."
+      description="Connect your facebook account to Event Finder to enable automatic posting of your events to your facebook page."
     >
       <FacebookIntegrationCard />
     </AdminSectionCardLayout>

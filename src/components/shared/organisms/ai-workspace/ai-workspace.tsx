@@ -17,6 +17,7 @@ import React, {
   useState
 } from "react";
 import { TPromptRequestDto } from "../../../../../common/types/ai.types";
+import { EmptyList } from "../../molecules/empty";
 import { Empty, EmptyContent, EmptyMedia } from "../../shadcn-components/empty";
 import { TypographyMuted } from "../../shadcn-components/typography";
 import { IAIResultQueryItem } from "../ai-search-result-content";
@@ -134,7 +135,7 @@ export function AIWorkspace<TResult>({
         <div className="hidden md:flex md:flex-1 md:flex-col md:gap-4">
           <div className="flex items-center justify-between">
             <TypographyMuted className="text-sm">
-              Recent questions
+              Recent activites
             </TypographyMuted>
           </div>
           <div
@@ -152,11 +153,7 @@ export function AIWorkspace<TResult>({
                 />
               ))
             ) : (
-              <div className="rounded-lg border border-dashed border-border/70 bg-muted/20 p-4">
-                <TypographyMuted className="text-sm">
-                  Ask your first question to get started.
-                </TypographyMuted>
-              </div>
+              <EmptyList message="Ask your first question to get started" />
             )}
           </div>
 

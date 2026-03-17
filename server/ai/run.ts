@@ -1,20 +1,20 @@
 import { run } from "@openai/agents";
 import {
   TAIConversationContextItemDto,
-  TWorkplaceAgentUserContext
+  TWorkspaceAgentUserContext
 } from "../../common/types/ai.types";
 import { eventCreatorAgentWithInputGuardrail } from "./agents/event-creator.agent";
-import { workplaceAgent } from "./agents/workplace.agent";
+import { workspaceAgent } from "./agents/workspace.agent";
 
-export async function runWorkplaceAgent(
+export async function runWorkspaceAgent(
   query: string,
-  user?: TWorkplaceAgentUserContext
+  user?: TWorkspaceAgentUserContext
 ) {
   const queryWithContext = user
     ? `User Info: ${JSON.stringify(user)}\n\n${query}`
     : query;
 
-  const result = await run(workplaceAgent, queryWithContext);
+  const result = await run(workspaceAgent, queryWithContext);
   return result;
 }
 
@@ -22,7 +22,7 @@ export async function runEventCreatorAgent(
   query: string,
   context: {
     conversationHistory: TAIConversationContextItemDto[];
-    userInfo?: TWorkplaceAgentUserContext | null;
+    userInfo?: TWorkspaceAgentUserContext | null;
   } = { conversationHistory: [] }
 ) {
   const recentHistory = context.conversationHistory.slice(-5);

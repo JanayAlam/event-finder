@@ -1,5 +1,5 @@
 import { Agent } from "@openai/agents";
-import { WorkplaceAgentOutputSchema } from "../../../common/validation-schemas";
+import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { getEventsTool } from "../tools/search.tools";
 import { eventCreatorAgent } from "./event-creator.agent";
 
@@ -70,7 +70,7 @@ const SEARCH_AGENT_INSTRUCTIONS = `
 export const searchAgent = new Agent({
   name: "event_search_agent",
   instructions: SEARCH_AGENT_INSTRUCTIONS,
-  outputType: WorkplaceAgentOutputSchema,
+  outputType: WorkspaceAgentOutputSchema,
   tools: [
     getEventsTool,
     eventCreatorAgent.asTool({

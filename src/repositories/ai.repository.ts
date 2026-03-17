@@ -1,6 +1,6 @@
 import {
   TAIEventCreationSchemaDto,
-  TAIWorkplacePromptResponse,
+  TAIWorkspacePromptResponse,
   TGenerateEventPlanResponse,
   TPromptRequestDto
 } from "../../common/types/ai.types";
@@ -12,7 +12,7 @@ class AIRepository extends BaseRepository {
   static executePrompt(body: TPromptRequestDto) {
     return this.request<
       TPromptRequestDto,
-      { result: TAIWorkplacePromptResponse }
+      { result: TAIWorkspacePromptResponse }
     >(this.apiRouter, "post", body);
   }
 

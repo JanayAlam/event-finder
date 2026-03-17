@@ -7,7 +7,7 @@ import {
   PromptSchema,
   SearchAgentEventSchema,
   SearchAgentOutputSchema,
-  WorkplaceAgentOutputSchema
+  WorkspaceAgentOutputSchema
 } from "../validation-schemas/ai.schemas";
 
 export type TPromptRequestDto = z.infer<typeof PromptSchema>;
@@ -18,8 +18,8 @@ export type TAISearchEvent = z.infer<typeof SearchAgentEventSchema>;
 
 export type TAISearchEventResponse = z.infer<typeof SearchAgentOutputSchema>;
 
-export type TAIWorkplacePromptResponse = z.infer<
-  typeof WorkplaceAgentOutputSchema
+export type TAIWorkspacePromptResponse = z.infer<
+  typeof WorkspaceAgentOutputSchema
 >;
 
 export type TAIEventCreationSchemaDto = z.infer<typeof AIEventCreationSchema>;
@@ -32,4 +32,4 @@ export type TGenerateEventPlanResponse = z.infer<
   typeof EventCreatorAgentOutputSchema
 >;
 
-export type TWorkplaceAgentUserContext = { name: string; role: TUserRole };
+export type TWorkspaceAgentUserContext = { name: string; role: TUserRole };

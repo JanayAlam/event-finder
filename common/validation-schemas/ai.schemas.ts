@@ -111,7 +111,7 @@ export const EventCreatorAgentOutputSchema = z.object({
   eventToCreate: EventToCreateSchema
 });
 
-export const WorkplaceAgentOutputSchema = z.object({
+export const WorkspaceAgentOutputSchema = z.object({
   message: z.string().max(300),
   events: z.array(SearchAgentEventSchema).optional(),
   eventToCreate: EventToCreateSchema.clone().nullable().optional()

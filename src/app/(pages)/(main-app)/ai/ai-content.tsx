@@ -8,7 +8,7 @@ import {
   AIWorkspace
 } from "@/components/shared/organisms/ai-workspace";
 import AIRepository from "@/repositories/ai.repository";
-import { TAIWorkplacePromptResponse } from "../../../../../common/types/ai.types";
+import { TAIWorkspacePromptResponse } from "../../../../../common/types/ai.types";
 
 export const AIContent = () => {
   const executeSearch = async (prompt: string) => {
@@ -17,12 +17,12 @@ export const AIContent = () => {
   };
 
   return (
-    <AIWorkspace<TAIWorkplacePromptResponse>
+    <AIWorkspace<TAIWorkspacePromptResponse>
       executeSearch={executeSearch}
       renderQuery={({
         key,
         ...query
-      }: IAIResultQueryItem<TAIWorkplacePromptResponse>) =>
+      }: IAIResultQueryItem<TAIWorkspacePromptResponse>) =>
         query.result?.events?.length ? (
           <AIEventSearchResultView
             id={key}

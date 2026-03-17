@@ -164,7 +164,7 @@ const Navbar: React.FC = () => {
         <div
           className={cn(
             PAGE_WIDTH_CLASS_NAME,
-            "h-16 flex items-center justify-between px-4 sm:px-6"
+            "h-16 flex items-center justify-between"
           )}
         >
           <div
@@ -187,9 +187,7 @@ const Navbar: React.FC = () => {
                 {mounted ? (
                   <Image
                     src={
-                      currentTheme === "light"
-                        ? LogoLight.src
-                        : LogoDark.src
+                      currentTheme === "light" ? LogoLight.src : LogoDark.src
                     }
                     alt="Logo"
                     width={120}

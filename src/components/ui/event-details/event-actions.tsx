@@ -167,33 +167,6 @@ export const EventActions: React.FC<IEventActionsProps> = ({
   return (
     <>
       <div className="flex items-center gap-2 flex-wrap">
-        {showFacebookButton && (
-          <Button
-            id="post-to-facebook-btn"
-            size="lg"
-            variant="outline"
-            className="gap-2"
-            onClick={handleFacebookPost}
-            disabled={isPosting || postedToFacebook || !isJoinable}
-            title={
-              !isJoinable
-                ? "Cannot post when event is passed, closed, or blocked"
-                : postedToFacebook
-                  ? "Already posted to Facebook"
-                  : "Post this event to your connected Facebook page"
-            }
-          >
-            {isPosting ? (
-              <Spinner className="size-4" />
-            ) : (
-              <Facebook className="size-4" />
-            )}
-            <span className="hidden sm:inline">
-              {postedToFacebook ? "Posted to Facebook" : "Post on Facebook"}
-            </span>
-          </Button>
-        )}
-
         <Button
           id="join-event-btn"
           size="lg"
@@ -222,6 +195,33 @@ export const EventActions: React.FC<IEventActionsProps> = ({
           )}
           <span>{getJoinButtonLabel()}</span>
         </Button>
+
+        {showFacebookButton && (
+          <Button
+            id="post-to-facebook-btn"
+            size="lg"
+            variant="outline"
+            className="gap-2"
+            onClick={handleFacebookPost}
+            disabled={isPosting || postedToFacebook || !isJoinable}
+            title={
+              !isJoinable
+                ? "Cannot post when event is passed, closed, or blocked"
+                : postedToFacebook
+                  ? "Already posted to Facebook"
+                  : "Post this event to your connected Facebook page"
+            }
+          >
+            {isPosting ? (
+              <Spinner className="size-4" />
+            ) : (
+              <Facebook className="size-4" />
+            )}
+            <span className="hidden sm:inline">
+              {postedToFacebook ? "Posted to Facebook" : "Post on Facebook"}
+            </span>
+          </Button>
+        )}
 
         {isHost && (
           <Button

@@ -133,11 +133,13 @@ export function AIWorkspace<TResult>({
         </div>
 
         <div className="hidden md:flex md:flex-1 md:flex-col md:gap-4">
-          <div className="flex items-center justify-between">
-            <TypographyMuted className="text-sm">
-              Recent activites
-            </TypographyMuted>
-          </div>
+          {queries.length ? (
+            <div className="flex items-center justify-between">
+              <TypographyMuted className="text-sm">
+                Recent activites
+              </TypographyMuted>
+            </div>
+          ) : null}
           <div
             ref={listRef}
             className="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-2 pr-1"

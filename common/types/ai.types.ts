@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TUserRole } from "../../server/enums";
 import {
   AIEventCreationSchema,
   EventCreatorAgentOutputSchema,
@@ -30,3 +31,5 @@ export type TAIConversationContextItemDto = NonNullable<
 export type TGenerateEventPlanResponse = z.infer<
   typeof EventCreatorAgentOutputSchema
 >;
+
+export type TWorkplaceAgentUserContext = { name: string; role: TUserRole };

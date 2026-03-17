@@ -1,5 +1,9 @@
 import { tool } from "@openai/agents";
-import { GenerateEventToolSchema } from "../../../common/validation-schemas";
+import {
+  GenerateEventToolSchema,
+  HasPermissionToCreateEventToolSchema
+} from "../../../common/validation-schemas";
+import { USER_ROLE } from "../../enums";
 
 export const calculateEventDurationTool = tool({
   name: "calculate_event_duration",
@@ -38,5 +42,23 @@ export const calculateEventDurationTool = tool({
         endDate: end_date
       };
     }
+  }
+});
+
+export const checkIfEligibleToCreateEventTool = tool({
+  name: "check_if_eligible_to_create_event_tool",
+  description: "Checks if the user has permisson to create an event",
+  parameters: HasPermissionToCreateEventToolSchema,
+  async execute({ role }) {
+    if (role !== USER_ROLE.HOST) {
+      return {
+        isEligible: false,
+        message: "User is not eligible to create events"
+      };
+    }
+    return {
+      isEligible: true,
+      message: "User is eligible to create events"
+    };
   }
 });

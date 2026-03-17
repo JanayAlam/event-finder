@@ -3,14 +3,19 @@ import {
   EventCreatorAgentOutputSchema,
   GuardrailOutputSchema
 } from "../../../common/validation-schemas";
-import { calculateEventDurationTool } from "../tools/event-creator.tools";
+import {
+  calculateEventDurationTool,
+  checkIfEligibleToCreateEventTool
+} from "../tools/event-creator.tools";
 
-const eventCreatorAgentInstructions = `
+const EVENT_CREATOR_AGENT_INSTRUCTIONS = `
   You are EventFinder's Event Planning Agent.
   Generate one complete, form-ready event object and message from the user's free-text query.
 
   You may also receive a "Previous Conversation Context" section in the input.
   Use it to preserve continuity with earlier prompts while prioritizing the latest user request.
+
+  ALWAYS check if the user is eligible to create events by calling 'check_if_eligible_to_create_event_tool' tool with user role info from the context. If they are eligible then generate events data otherwise don't.
 
   The user query may include:
     - a specific destination (or no destination),
@@ -56,9 +61,9 @@ const eventCreatorAgentInstructions = `
 
 export const eventCreatorAgent = new Agent({
   name: "event_creator_agent",
-  instructions: eventCreatorAgentInstructions,
+  instructions: EVENT_CREATOR_AGENT_INSTRUCTIONS,
   outputType: EventCreatorAgentOutputSchema,
-  tools: [calculateEventDurationTool]
+  tools: [calculateEventDurationTool, checkIfEligibleToCreateEventTool]
 });
 
 const eventCreatorInputGuardRailAgent = new Agent({

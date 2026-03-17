@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import {
   TAIEventCreationSchemaDto,
-  TPromptRequestDto
+  TPromptRequestDto,
+  TWorkplaceAgentUserContext
 } from "../../../../common/types/ai.types";
 import { runEventCreatorAgent, runWorkplaceAgent } from "../../../ai/run";
+import UserUseCase from "../../../libs/use-cases/user.use-case";
+import { TUser } from "../../../models/user.model";
 
 type TExecutePromptRequest = Request<unknown, unknown, TPromptRequestDto>;
 type TGenerateEventPlanRequest = Request<
@@ -13,6 +16,36 @@ type TGenerateEventPlanRequest = Request<
 >;
 
 class AIController {
+  private static isInputGuardrailError(err: any) {
+    return (
+      err instanceof Error &&
+      (err.name === "InputGuardrailTripwireTriggered" ||
+        err.message.includes("Input guardrail triggered"))
+    );
+  }
+
+  private static async getUserContext(
+    user?: TUser | null
+  ): Promise<TWorkplaceAgentUserContext | undefined> {
+    let userContext: TWorkplaceAgentUserContext | undefined = undefined;
+
+    if (user) {
+      const userWithProfile = await UserUseCase.getByIdWithProfile(user._id);
+
+      if (userWithProfile) {
+        const { email, role, profile } = userWithProfile;
+        userContext = {
+          name: profile
+            ? [profile.firstName, profile.lastName].join(" ")
+            : email.split("@")[0],
+          role: role
+        };
+      }
+    }
+
+    return userContext;
+  }
+
   static async executePrompt(
     req: TExecutePromptRequest,
     res: Response,
@@ -20,14 +53,14 @@ class AIController {
   ) {
     try {
       const { prompt } = req.body;
-      const result = await runWorkplaceAgent(prompt);
+
+      const userContext = await AIController.getUserContext(req.user);
+
+      const result = await runWorkplaceAgent(prompt, userContext);
+
       res.json({ result: result.finalOutput });
     } catch (err) {
-      if (
-        err instanceof Error &&
-        (err.name === "InputGuardrailTripwireTriggered" ||
-          err.message.includes("Input guardrail triggered"))
-      ) {
+      if (AIController.isInputGuardrailError(err)) {
         res.status(200).json({
           result: {
             message:
@@ -48,17 +81,17 @@ class AIController {
   ) {
     try {
       const { prompt, conversationHistory } = req.body;
-      const result = await runEventCreatorAgent(
-        prompt,
-        conversationHistory || []
-      );
+
+      const userContext = await AIController.getUserContext(req.user);
+
+      const result = await runEventCreatorAgent(prompt, {
+        conversationHistory: conversationHistory || [],
+        userInfo: userContext
+      });
+
       res.json({ result: result.finalOutput });
     } catch (err) {
-      if (
-        err instanceof Error &&
-        (err.name === "InputGuardrailTripwireTriggered" ||
-          err.message.includes("Input guardrail triggered"))
-      ) {
+      if (AIController.isInputGuardrailError(err)) {
         res.status(200).json({
           result: {
             message:

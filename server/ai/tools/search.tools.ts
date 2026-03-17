@@ -11,7 +11,10 @@ export const getEventsTool = tool({
   async execute(params): Promise<TAISearchEventResponse> {
     try {
       const events = await AIUseCase.searchEvents(params);
-      return { message: "Events found", events };
+      return {
+        message: events.length ? "Events found" : "Events not found",
+        events
+      };
     } catch (err) {
       logger.error("Error in getEventsTool", err);
       return { message: "Events not found", events: [] };

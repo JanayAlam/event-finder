@@ -1,8 +1,9 @@
 import { Agent } from "@openai/agents";
-import { SearchAgentOutputSchema } from "../../../common/validation-schemas";
+import { WorkplaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { getEventsTool } from "../tools/search.tools";
+import { eventCreatorAgent } from "./event-creator.agent";
 
-const searchAgentInstructions = `
+const SEARCH_AGENT_INSTRUCTIONS = `
   You help users discover trips on EventFinder.
 
   Rules:
@@ -62,11 +63,19 @@ const searchAgentInstructions = `
     - If no date context exists, leave start_date and end_date as null
 
   Do NOT ask follow-up questions. Return structured output only.
+
+  If event not found then generate event by calling 'event_creator_tool' with the User Info details.
 `;
 
 export const searchAgent = new Agent({
   name: "event_search_agent",
-  instructions: searchAgentInstructions,
-  outputType: SearchAgentOutputSchema,
-  tools: [getEventsTool]
+  instructions: SEARCH_AGENT_INSTRUCTIONS,
+  outputType: WorkplaceAgentOutputSchema,
+  tools: [
+    getEventsTool,
+    eventCreatorAgent.asTool({
+      toolName: "event_creator_tool",
+      toolDescription: "Create trip if trips not found"
+    })
+  ]
 });

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { userRoles } from "../../server/enums";
 
 export const PromptSchema = z.object({
   prompt: z.string().min(1, "Prompt is required")
@@ -65,6 +66,12 @@ export const GenerateEventToolSchema = z.object({
     .describe("Return/end time provided by user in any readable format")
 });
 
+export const HasPermissionToCreateEventToolSchema = z.object({
+  role: z
+    .enum(userRoles)
+    .describe("Role of the current user, e.g. HOST, TRAVELER, or ADMIN")
+});
+
 const EventToCreateSchema = z.object({
   title: z.string().describe("Catchy title for the trip"),
   placeName: z.string().describe("Destination place name"),
@@ -107,7 +114,7 @@ export const EventCreatorAgentOutputSchema = z.object({
 export const WorkplaceAgentOutputSchema = z.object({
   message: z.string().max(300),
   events: z.array(SearchAgentEventSchema).optional(),
-  eventToCreate: EventToCreateSchema.clone().optional()
+  eventToCreate: EventToCreateSchema.clone().nullable().optional()
 });
 
 export const GuardrailOutputSchema = z.object({

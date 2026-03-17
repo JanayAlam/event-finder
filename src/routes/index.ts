@@ -1,7 +1,6 @@
 export const PUBLIC_PAGE_ROUTE = {
   HOME: "/",
-  EXPLORE: "/explore",
-  AI: "/ai"
+  EXPLORE: "/explore"
 };
 
 export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
@@ -13,7 +12,8 @@ export const PUBLIC_DYNAMIC_PAGE_ROUTE = {
 
 export const PRIVATE_PAGE_ROUTE = {
   SETTINGS_PERSONAL_INFO: "/account-preferences/personal-info",
-  PAYMENTS: "/payments"
+  PAYMENTS: "/payments",
+  AI: "/ai"
 };
 
 export const PRIVATE_ADMIN_ONLY_PAGE_ROUTE: Record<string, string> = {

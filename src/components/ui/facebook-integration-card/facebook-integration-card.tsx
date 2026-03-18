@@ -234,7 +234,7 @@ const FacebookIntegrationCard: React.FC = () => {
       <Modal
         isOpen={isDisconnectModalOpen}
         closeHandler={() => setIsDisconnectModalOpen(false)}
-        title="Unlink Facebook Account"
+        title="Unlink facebook account"
         footer={
           <div className="flex justify-end gap-3 p-2">
             <Button

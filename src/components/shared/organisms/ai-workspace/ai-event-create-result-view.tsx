@@ -25,12 +25,23 @@ interface IAIEventCreateResultViewProps {
   isLoading: boolean;
   result?: TGenerateEventPlanResponse;
   showQuestion?: boolean;
+  nextButtonText?: string;
+  isNextButtonLoading?: boolean;
   onNext: (result: TGenerateEventPlanResponse) => void;
 }
 
 export const AIEventCreateResultView: React.FC<
   IAIEventCreateResultViewProps
-> = ({ id, prompt, isLoading, result, showQuestion = true, onNext }) => {
+> = ({
+  id,
+  prompt,
+  isLoading,
+  result,
+  showQuestion = true,
+  isNextButtonLoading,
+  nextButtonText = "Next",
+  onNext
+}) => {
   return (
     <div id={id} className="flex flex-col gap-4 w-full">
       {showQuestion ? (
@@ -115,9 +126,12 @@ export const AIEventCreateResultView: React.FC<
                 <Button
                   onClick={() => onNext(result)}
                   className="w-full sm:w-auto gap-1"
+                  isLoading={isNextButtonLoading}
                 >
-                  Next
-                  <ChevronRight className="size-4" />
+                  {nextButtonText}
+                  {!isNextButtonLoading ? (
+                    <ChevronRight className="size-4" />
+                  ) : null}
                 </Button>
               </div>
             </CardContent>

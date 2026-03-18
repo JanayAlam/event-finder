@@ -114,7 +114,7 @@ export const CreatePostCard: React.FC<ICreatePostCardProps> = ({ eventId }) => {
       <Modal
         isOpen={isOpen}
         closeHandler={handleCloseModal}
-        title="Create Post"
+        title="Create post"
         footer={
           <div className="flex items-center justify-between w-full">
             <div>
@@ -139,7 +139,7 @@ export const CreatePostCard: React.FC<ICreatePostCardProps> = ({ eventId }) => {
               <Button
                 onClick={handlePost}
                 isLoading={isPosting}
-                className="hover:bg-secondary/80 bg-secondary/50 min-w-[80px]"
+                className="hover:bg-secondary/80 bg-secondary/50 min-w-20"
               >
                 Post
               </Button>

@@ -30,6 +30,7 @@ import AuthRepository from "@/repositories/auth.repository";
 import PromotionRequestRepository from "@/repositories/promotion-request.repository";
 import {
   PRIVATE_ADMIN_ONLY_PAGE_ROUTE,
+  PRIVATE_HOST_ONLY_PAGE_ROUTE,
   PRIVATE_PAGE_ROUTE,
   PRIVATE_TRAVELER_ONLY_PAGE_ROUTE,
   PUBLIC_DYNAMIC_PAGE_ROUTE
@@ -267,6 +268,13 @@ const Navbar: React.FC = () => {
                         href={PRIVATE_ADMIN_ONLY_PAGE_ROUTE.ADMIN_DASHBOARD}
                       >
                         <DropdownMenuItem>Admin Portal</DropdownMenuItem>
+                      </Link>
+                    ) : null}
+                    {user.role === USER_ROLE.HOST ? (
+                      <Link
+                        href={PRIVATE_HOST_ONLY_PAGE_ROUTE.DRAFT_EVENTS}
+                      >
+                        <DropdownMenuItem>Draft events</DropdownMenuItem>
                       </Link>
                     ) : null}
                     <Link

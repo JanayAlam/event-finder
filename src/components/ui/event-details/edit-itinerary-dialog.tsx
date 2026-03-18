@@ -100,7 +100,7 @@ export const EditItineraryDialog: React.FC<EditItineraryDialogProps> = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Itinerary</DialogTitle>
+            <DialogTitle>Edit itinerary</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-1">

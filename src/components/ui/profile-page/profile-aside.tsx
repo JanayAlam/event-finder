@@ -153,7 +153,7 @@ export const ProfileAside: React.FC<ProfileAsideProps> = ({
       <Modal
         isOpen={isReviewDialogOpen}
         closeHandler={() => setIsReviewDialogOpen(false)}
-        title="Write a Review"
+        title="Write a review"
         showFooter={false}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

@@ -169,7 +169,7 @@ export const EventAbout = ({ event }: EventAboutProps) => {
         <Dialog open={descriptionOpen} onOpenChange={setDescriptionOpen}>
           <DialogContent className="max-w-lg w-full">
             <DialogHeader>
-              <DialogTitle>Edit Description</DialogTitle>
+              <DialogTitle>Edit description</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-4 pt-1">
               <Textarea

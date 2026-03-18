@@ -48,7 +48,8 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
         : undefined,
       dayCount: event.dayCount,
       nightCount: event.nightCount,
-      entryFee: event.entryFee
+      entryFee: event.entryFee,
+      memberCapacity: event.memberCapacity
     }
   });
 
@@ -96,7 +97,8 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
                     : undefined,
                   dayCount: event.dayCount,
                   nightCount: event.nightCount,
-                  entryFee: event.entryFee
+                  entryFee: event.entryFee,
+                  memberCapacity: event.memberCapacity
                 });
                 setOpen(true);
               }}
@@ -117,7 +119,7 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="max-w-lg w-full">
             <DialogHeader>
-              <DialogTitle>Edit Event Details</DialogTitle>
+              <DialogTitle>Edit event details</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-1">
@@ -166,14 +168,23 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
                 />
               </div>
 
-              <InputField
-                isRequired
-                control={form.control}
-                type="number"
-                label="Entry Fee (BDT)"
-                name="entryFee"
-                placeholder="e.g., 2500  (enter 0 for free)"
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  isRequired
+                  control={form.control}
+                  type="number"
+                  label="Entry Fee (BDT)"
+                  name="entryFee"
+                  placeholder="e.g., 2500  (enter 0 for free)"
+                />
+                <InputField
+                  control={form.control}
+                  type="number"
+                  label="Members"
+                  name="memberCapacity"
+                  placeholder="e.g., 20"
+                />
+              </div>
 
               <div className="flex items-center justify-end gap-3 pt-1">
                 <Button

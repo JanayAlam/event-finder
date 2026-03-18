@@ -45,7 +45,7 @@ export const JoinEventModal: React.FC<IJoinEventModalProps> = ({
       closeHandler={onClose}
       okHandler={() => joinEvent()}
       loading={isPending}
-      title="Join Event"
+      title="Join event"
       okText={event.entryFee > 0 ? "Proceed Payment" : "Join Now"}
     >
       <div className="flex flex-col gap-6">

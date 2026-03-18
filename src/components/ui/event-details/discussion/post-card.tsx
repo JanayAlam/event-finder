@@ -233,7 +233,7 @@ export const PostCard: React.FC<IPostCardProps> = ({ eventId, post }) => {
       <Modal
         isOpen={isDeleteDialogOpen}
         closeHandler={toggleDelete}
-        title="Delete Post"
+        title="Delete post"
         okText="Delete"
         okHandler={onConfirmDelete}
         loading={isDeleting}

@@ -104,12 +104,12 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
               size="icon"
               onClick={handleRemove}
               disabled={isUpdating || isUploading}
-              className="bg-background/50 hover:bg-background/80"
+              className="group bg-destructive/60! hover:bg-background/80 dark:bg-white! dark:hover:bg-white!"
             >
               {isUpdating && !isUploading ? (
                 <Spinner className="size-4" color="text-destructive!" />
               ) : (
-                <Trash2 className="size-4 text-destructive" />
+                <Trash2 className="size-4 group-hover:text-white! dark:text-destructive! dark:group-hover:text-destructive!" />
               )}
             </Button>
           )}
@@ -117,7 +117,7 @@ export const EventCoverPhoto: React.FC<IEventCoverPhotoProps> = ({ event }) => {
             onClick={() => fileInputRef.current?.click()}
             disabled={isUpdating || isUploading}
             isLoading={isUploading}
-            className="bg-primary/60 dark:text-white!"
+            className="bg-primary/60 text-white! hover:bg-primary/60! hover:text-white! dark:bg-white! dark:text-primary! dark:hover:bg-white! dark:hover:text-primary!"
           >
             <ImageIcon className="size-4" />
             Change

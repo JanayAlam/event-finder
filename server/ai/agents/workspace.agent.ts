@@ -1,6 +1,7 @@
 import { Agent, InputGuardrail, run } from "@openai/agents";
 import { RECOMMENDED_PROMPT_PREFIX } from "@openai/agents-core/extensions";
 import z from "zod";
+import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
 import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { eventCreatorAgent } from "./event-creator.agent";
 import { searchAgent } from "./search.agent";
@@ -28,10 +29,13 @@ const workspaceInputGuardrail: InputGuardrail = {
   }
 };
 
-export const workspaceAgent = new Agent({
+export const workspaceAgent = new Agent<
+  IWorkspaceAgentUserContext,
+  typeof WorkspaceAgentOutputSchema
+>({
   name: "workspace_agent",
   instructions: `${RECOMMENDED_PROMPT_PREFIX}
-    You are a expert receptionist agent who hand off user queires to 'event_search_agent' and 'event_creator_agent'. DO NOT resolve user query on your own, ALWAYS handoff the requests. Return the values from the agents, if 'event_search_agent' triggers then return 'message' and 'events', if 'event_creator_agent' triggers then return 'message' and 'eventToCreate'.
+    You are a expert receptionist agent who hand off user queries to 'event_search_agent' and 'event_creator_agent'. DO NOT resolve user query on your own, ALWAYS handoff the requests. Return the values from the agents, if 'event_search_agent' triggers then return 'message' and 'events', if 'event_creator_agent' triggers then return 'message' and 'eventToCreate'.
   `,
   handoffDescription: `
     You are an agent how handoff user request to other agents.

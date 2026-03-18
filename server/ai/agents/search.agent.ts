@@ -1,4 +1,5 @@
 import { Agent } from "@openai/agents";
+import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
 import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { getEventsTool } from "../tools/search.tools";
 import { eventCreatorAgent } from "./event-creator.agent";
@@ -64,10 +65,13 @@ const SEARCH_AGENT_INSTRUCTIONS = `
 
   Do NOT ask follow-up questions. Return structured output only.
 
-  If event not found then generate event by calling 'event_creator_tool' with the User Info details.
+  If event not found then generate event by calling 'event_creator_tool' with the user context.
 `;
 
-export const searchAgent = new Agent({
+export const searchAgent = new Agent<
+  IWorkspaceAgentUserContext,
+  typeof WorkspaceAgentOutputSchema
+>({
   name: "event_search_agent",
   instructions: SEARCH_AGENT_INSTRUCTIONS,
   outputType: WorkspaceAgentOutputSchema,

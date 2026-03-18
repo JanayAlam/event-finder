@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { userRoles } from "../../server/enums";
 
 export const PromptSchema = z.object({
   prompt: z.string().min(1, "Prompt is required")
@@ -64,12 +63,6 @@ export const GenerateEventToolSchema = z.object({
   end_date: z
     .string()
     .describe("Return/end time provided by user in any readable format")
-});
-
-export const HasPermissionToCreateEventToolSchema = z.object({
-  role: z
-    .enum(userRoles)
-    .describe("Role of the current user, e.g. HOST, TRAVELER, or ADMIN")
 });
 
 const EventToCreateSchema = z.object({

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  IWorkspaceAgentUserContext,
   TAIEventCreationSchemaDto,
-  TPromptRequestDto,
-  TWorkspaceAgentUserContext
+  TPromptRequestDto
 } from "../../../../common/types/ai.types";
 import { runEventCreatorAgent, runWorkspaceAgent } from "../../../ai/run";
 import UserUseCase from "../../../libs/use-cases/user.use-case";
@@ -26,8 +26,8 @@ class AIController {
 
   private static async getUserContext(
     user?: TUser | null
-  ): Promise<TWorkspaceAgentUserContext | undefined> {
-    let userContext: TWorkspaceAgentUserContext | undefined = undefined;
+  ): Promise<IWorkspaceAgentUserContext | undefined> {
+    let userContext: IWorkspaceAgentUserContext | undefined = undefined;
 
     if (user) {
       const userWithProfile = await UserUseCase.getByIdWithProfile(user._id);

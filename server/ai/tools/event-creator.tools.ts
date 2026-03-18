@@ -1,8 +1,7 @@
-import { tool } from "@openai/agents";
-import {
-  GenerateEventToolSchema,
-  HasPermissionToCreateEventToolSchema
-} from "../../../common/validation-schemas";
+import { RunContext, tool } from "@openai/agents";
+import z from "zod";
+import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
+import { GenerateEventToolSchema } from "../../../common/validation-schemas";
 import { USER_ROLE } from "../../enums";
 
 export const calculateEventDurationTool = tool({
@@ -47,10 +46,12 @@ export const calculateEventDurationTool = tool({
 
 export const checkIfEligibleToCreateEventTool = tool({
   name: "check_if_eligible_to_create_event_tool",
-  description: "Checks if the user has permisson to create an event",
-  parameters: HasPermissionToCreateEventToolSchema,
-  async execute({ role }) {
-    if (role !== USER_ROLE.HOST) {
+  description: "Checks if the user has permission to create an event",
+  parameters: z.object({}),
+  async execute(_args, runContext?: RunContext<IWorkspaceAgentUserContext>) {
+    const contextRole = runContext?.context?.role ?? USER_ROLE.TRAVELER;
+
+    if (contextRole !== USER_ROLE.HOST) {
       return {
         isEligible: false,
         message: "User is not eligible to create events"

@@ -32,4 +32,7 @@ export type TGenerateEventPlanResponse = z.infer<
   typeof EventCreatorAgentOutputSchema
 >;
 
-export type TWorkspaceAgentUserContext = { name: string; role: TUserRole };
+export interface IWorkspaceAgentUserContext {
+  name: string;
+  role: TUserRole;
+}

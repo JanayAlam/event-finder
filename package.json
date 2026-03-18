@@ -1,5 +1,6 @@
 {
   "name": "event-finder",
+  "description": "An intelligent event and trip discovery platform powered by agentic AI. Search, plan, and create events effortlessly with AI-assisted recommendations, real-time collaboration, and seamless booking management.",
   "version": "1.0.0",
   "private": true,
   "scripts": {

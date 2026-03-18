@@ -54,13 +54,33 @@ export function AIWorkspace<TResult>({
 
         setQueries((prev) =>
           prev.map((q) =>
-            q.key === key ? { ...q, result, isLoading: false } : q
+            q.key === key
+              ? { ...q, result, isLoading: false, error: undefined }
+              : q
           )
         );
         onResult?.(result, prompt);
       } catch (error) {
+        let errorMessage = "An error occurred while processing your request";
+
+        if (error instanceof Error) {
+          errorMessage = error.message;
+          (error as any).isHandled = true;
+        } else if (
+          typeof error === "object" &&
+          error !== null &&
+          "message" in error
+        ) {
+          errorMessage = String((error as any).message);
+          (error as any).isHandled = true;
+        } else if (typeof error === "string") {
+          errorMessage = error;
+        }
+
         setQueries((prev) =>
-          prev.map((q) => (q.key === key ? { ...q, isLoading: false } : q))
+          prev.map((q) =>
+            q.key === key ? { ...q, isLoading: false, error: errorMessage } : q
+          )
         );
         onError?.(error, prompt);
       }
@@ -70,7 +90,10 @@ export function AIWorkspace<TResult>({
 
   const onSubmit = ({ prompt }: TPromptRequestDto) => {
     const key = generateKey();
-    setQueries((prev) => [...prev, { prompt, key, isLoading: true }]);
+    setQueries((prev) => [
+      ...prev,
+      { prompt, key, isLoading: true, result: undefined, error: undefined }
+    ]);
     setActiveKey(key);
     runSearch(prompt, key);
   };

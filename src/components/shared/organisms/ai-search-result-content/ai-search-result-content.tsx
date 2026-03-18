@@ -15,6 +15,7 @@ export interface IAIResultQueryItem<TResult> {
   prompt: string;
   result?: TResult;
   isLoading: boolean;
+  error?: string;
 }
 
 interface IAISearchResultContentProps<TResult> {

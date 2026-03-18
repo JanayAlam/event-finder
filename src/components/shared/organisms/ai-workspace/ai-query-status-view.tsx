@@ -1,21 +1,39 @@
-import { Info } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
 import { PageLoader } from "../../molecules/page-loader";
 import { Empty, EmptyContent, EmptyMedia } from "../../shadcn-components/empty";
+import { Paragraph } from "../../shadcn-components/typography";
 
 interface IAIQueryStatusViewProps {
   isLoading: boolean;
   message?: string;
+  error?: string;
 }
 
 export const AIQueryStatusView: React.FC<IAIQueryStatusViewProps> = ({
   isLoading,
-  message
+  message,
+  error
 }) => {
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <PageLoader />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Empty className="gap-2 py-8">
+        <EmptyMedia variant="icon">
+          <AlertCircle className="size-5 text-destructive" />
+        </EmptyMedia>
+        <EmptyContent>
+          <Paragraph className="text-destructive font-medium">
+            {error}
+          </Paragraph>
+        </EmptyContent>
+      </Empty>
     );
   }
 

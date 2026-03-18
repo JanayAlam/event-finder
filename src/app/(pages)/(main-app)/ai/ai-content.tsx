@@ -87,6 +87,7 @@ export const AIContent = () => {
           <AIQueryStatusView
             isLoading={query.isLoading}
             message={query.result?.message}
+            error={query.error}
           />
         )
       }

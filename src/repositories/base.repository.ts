@@ -114,6 +114,14 @@ class BaseRepository {
           }
         }
 
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          const userError = new Error(
+            "You're making requests too quickly. Please wait a moment before trying again."
+          );
+          (userError as any).isHandled = true;
+          return Promise.reject(userError);
+        }
+
         return Promise.reject(error);
       }
     );

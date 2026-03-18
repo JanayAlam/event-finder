@@ -1,13 +1,8 @@
 "use client";
 
 import { ItineraryFormFields } from "@/components/shared/molecules/form";
+import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import EventRepository from "@/repositories/event.repository";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -97,31 +92,40 @@ export const EditItineraryDialog: React.FC<EditItineraryDialogProps> = ({
         <Pencil className="size-4" />
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit itinerary</DialogTitle>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-1">
-            <ItineraryFormFields control={form.control} />
-
-            <div className="flex items-center justify-end gap-3 pt-1 border-t">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={isPending}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" isLoading={isPending}>
-                Save Changes
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <Modal
+        isOpen={open}
+        closeHandler={() => setOpen(false)}
+        title="Edit itinerary"
+        showFooter
+        contentClassName="sm:max-w-2xl"
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="edit-itinerary-form"
+              isLoading={isPending}
+            >
+              Save Changes
+            </Button>
+          </div>
+        }
+      >
+        <form
+          id="edit-itinerary-form"
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5 pt-1"
+        >
+          <ItineraryFormFields control={form.control} />
+        </form>
+      </Modal>
     </>
   );
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
   Carousel,
@@ -8,12 +9,6 @@ import {
   CarouselNext,
   CarouselPrevious
 } from "@/components/shared/shadcn-components/carousel";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import { Spinner } from "@/components/shared/shadcn-components/spinner";
 import { Textarea } from "@/components/shared/shadcn-components/textarea";
 import {
@@ -166,40 +161,28 @@ export const EventAbout = ({ event }: EventAboutProps) => {
 
       {/* Edit description dialog */}
       {isHost && (
-        <Dialog open={descriptionOpen} onOpenChange={setDescriptionOpen}>
-          <DialogContent className="max-w-lg w-full">
-            <DialogHeader>
-              <DialogTitle>Edit description</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col gap-4 pt-1">
-              <Textarea
-                value={descriptionDraft}
-                onChange={(e) => setDescriptionDraft(e.target.value)}
-                placeholder="Describe your trip event..."
-                className="h-40 resize-none"
-                maxLength={1000}
-              />
-              <p className="text-xs text-muted-foreground text-right">
-                {descriptionDraft.length} / 1000
-              </p>
-              <div className="flex items-center justify-end gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setDescriptionOpen(false)}
-                  disabled={isSavingDescription}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => updateDescription(descriptionDraft)}
-                  isLoading={isSavingDescription}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Modal
+          isOpen={descriptionOpen}
+          closeHandler={() => setDescriptionOpen(false)}
+          okHandler={() => updateDescription(descriptionDraft)}
+          loading={isSavingDescription}
+          title="Edit description"
+          cancelText="Cancel"
+          okText="Save Changes"
+        >
+          <div className="flex flex-col gap-4 pt-1">
+            <Textarea
+              value={descriptionDraft}
+              onChange={(e) => setDescriptionDraft(e.target.value)}
+              placeholder="Describe your trip event..."
+              className="h-40 resize-none"
+              maxLength={1000}
+            />
+            <TypographyMuted className="text-xs text-right">
+              {descriptionDraft.length} / 1000
+            </TypographyMuted>
+          </div>
+        </Modal>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">

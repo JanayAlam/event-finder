@@ -1,13 +1,8 @@
 "use client";
 
 import { InputField } from "@/components/shared/molecules/form";
+import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import { H1 } from "@/components/shared/shadcn-components/typography";
 import EventRepository from "@/repositories/event.repository";
 import { useAuthStore } from "@/stores/auth-store";
@@ -124,92 +119,100 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
 
       {/* Edit dialog — only rendered for host */}
       {isHost && (
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="max-w-lg w-full">
-            <DialogHeader>
-              <DialogTitle>Edit event details</DialogTitle>
-            </DialogHeader>
+        <Modal
+          isOpen={open}
+          closeHandler={() => setOpen(false)}
+          title="Edit event details"
+          footer={
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                isLoading={isPending}
+                form="edit-event-title-form"
+              >
+                Save Changes
+              </Button>
+            </div>
+          }
+          contentClassName="sm:max-w-lg"
+        >
+          <form
+            onSubmit={handleSubmit}
+            id="edit-event-title-form"
+            className="flex flex-col gap-5 pt-1"
+          >
+            <InputField
+              isRequired
+              control={form.control}
+              type="text"
+              label="Event Title"
+              name="title"
+              placeholder="e.g., Weekend Mountain Hiking Adventure"
+            />
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-1">
+            <InputField
+              isRequired
+              control={form.control}
+              type="text"
+              label="Location"
+              name="placeName"
+              placeholder="e.g., Saint Martin Island, Bangladesh"
+            />
+
+            <InputField
+              isRequired
+              control={form.control}
+              type="datetime-local"
+              label="Event Date"
+              name="eventDate"
+            />
+
+            <div className="grid grid-cols-2 gap-4">
               <InputField
                 isRequired
                 control={form.control}
-                type="text"
-                label="Event Title"
-                name="title"
-                placeholder="e.g., Weekend Mountain Hiking Adventure"
+                type="number"
+                label="Days"
+                name="dayCount"
+                placeholder="e.g., 2"
               />
-
               <InputField
                 isRequired
                 control={form.control}
-                type="text"
-                label="Location"
-                name="placeName"
-                placeholder="e.g., Saint Martin Island, Bangladesh"
+                type="number"
+                label="Nights"
+                name="nightCount"
+                placeholder="e.g., 1"
               />
+            </div>
 
+            <div className="grid grid-cols-2 gap-4">
               <InputField
                 isRequired
                 control={form.control}
-                type="datetime-local"
-                label="Event Date"
-                name="eventDate"
+                type="number"
+                label="Entry Fee (BDT)"
+                name="entryFee"
+                placeholder="e.g., 2500  (enter 0 for free)"
               />
-
-              <div className="grid grid-cols-2 gap-4">
-                <InputField
-                  isRequired
-                  control={form.control}
-                  type="number"
-                  label="Days"
-                  name="dayCount"
-                  placeholder="e.g., 2"
-                />
-                <InputField
-                  isRequired
-                  control={form.control}
-                  type="number"
-                  label="Nights"
-                  name="nightCount"
-                  placeholder="e.g., 1"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <InputField
-                  isRequired
-                  control={form.control}
-                  type="number"
-                  label="Entry Fee (BDT)"
-                  name="entryFee"
-                  placeholder="e.g., 2500  (enter 0 for free)"
-                />
-                <InputField
-                  control={form.control}
-                  type="number"
-                  label="Members"
-                  name="memberCapacity"
-                  placeholder="e.g., 20"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-1">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  disabled={isPending}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" isLoading={isPending}>
-                  Save Changes
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+              <InputField
+                control={form.control}
+                type="number"
+                label="Members"
+                name="memberCapacity"
+                placeholder="e.g., 20"
+              />
+            </div>
+          </form>
+        </Modal>
       )}
     </>
   );

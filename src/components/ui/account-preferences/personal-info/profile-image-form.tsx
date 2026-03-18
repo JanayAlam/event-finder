@@ -1,14 +1,7 @@
 "use client";
 
+import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/shared/shadcn-components/dialog";
 import {
   H4,
   TypographyMuted
@@ -333,16 +326,17 @@ const ProfileImageForm: React.FC = () => {
         </div>
       </div>
 
-      <Dialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Remove Profile Image</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to remove your profile image? This action
-              cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+      <Modal
+        isOpen={showRemoveDialog}
+        closeHandler={() => setShowRemoveDialog(false)}
+        okHandler={handleConfirmRemove}
+        loading={removeMutation.isPending}
+        title="Remove profile image"
+        cancelText="Cancel"
+        okText="Remove"
+        buttonDisabled={removeMutation.isPending}
+        footer={
+          <div className="flex justify-end gap-2">
             <Button
               variant="outline"
               onClick={() => setShowRemoveDialog(false)}
@@ -358,9 +352,14 @@ const ProfileImageForm: React.FC = () => {
             >
               Remove
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <TypographyMuted className="text-sm">
+          Are you sure you want to remove your profile image? This action cannot
+          be undone.
+        </TypographyMuted>
+      </Modal>
     </>
   );
 };

@@ -6,13 +6,7 @@ import {
   Button,
   TButtonProps
 } from "@/components/shared/shadcn-components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "@/components/shared/shadcn-components/dialog";
+import Modal from "@/components/shared/organisms/modal";
 import {
   Empty,
   EmptyContent,
@@ -64,26 +58,31 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
   });
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" {...props}>
-          <div className="sm:hidden">
-            <SearchIcon />
-          </div>
-          <div className="hidden sm:flex justify-between items-center gap-4">
-            <span className="text-gray-400">Search Events</span>
-            <span>
-              <Kbd>Ctrl</Kbd>
-              <span className="text-gray-400">+</span>
-              <Kbd>k</Kbd>
-            </span>
-          </div>
-        </Button>
-      </DialogTrigger>
-      <DialogContent hideClose className="pt-2">
-        <DialogHeader>
-          <DialogTitle></DialogTitle>
-        </DialogHeader>
+    <>
+      <Button
+        variant="outline"
+        {...props}
+        onClick={() => setIsOpen(true)}
+      >
+        <div className="sm:hidden">
+          <SearchIcon />
+        </div>
+        <div className="hidden sm:flex justify-between items-center gap-4">
+          <span className="text-gray-400">Search Events</span>
+          <span>
+            <Kbd>Ctrl</Kbd>
+            <span className="text-gray-400">+</span>
+            <Kbd>k</Kbd>
+          </span>
+        </div>
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        closeHandler={() => setIsOpen(false)}
+        showFooter={false}
+        isCrossButtonVisible={false}
+        contentClassName="sm:max-w-lg"
+      >
         <InputField
           autoFocus
           autoComplete="off"
@@ -153,8 +152,8 @@ const SearchButton: React.FC<TButtonProps> = (props) => {
             </Empty>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </Modal>
+    </>
   );
 };
 

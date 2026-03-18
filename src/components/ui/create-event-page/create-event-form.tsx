@@ -91,8 +91,8 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
       eventDate: initialData?.eventDate || undefined,
       entryFee: initialData?.entryFee || undefined,
       memberCapacity: initialData?.memberCapacity || undefined,
-      dayCount: initialData?.dayCount || undefined,
-      nightCount: initialData?.nightCount || undefined,
+      dayCount: initialData?.dayCount ?? undefined,
+      nightCount: initialData?.nightCount ?? undefined,
       itinerary: initialData?.itinerary || [],
       coverPhoto: initialData?.coverPhoto || undefined,
       additionalPhotos: initialData?.additionalPhotos || []

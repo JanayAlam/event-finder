@@ -77,13 +77,12 @@ export const CreateEventSchema = z.object({
           .optional()
       })
     )
-    .optional()
-    .default([]),
+    .optional(),
   coverPhoto: z.string().optional(),
   additionalPhotos: z
     .array(z.object({ path: z.string() }))
-    .default([])
     .transform((items) => items.map((i) => i.path))
+    .optional()
 });
 
 export const UpdateEventSchema = CreateEventSchema.partial();

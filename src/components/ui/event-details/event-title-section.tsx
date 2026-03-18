@@ -55,7 +55,15 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
 
   const { mutate: updateEvent, isPending } = useMutation({
     mutationFn: (data: TUpdateEventForm) =>
-      EventRepository.update(event._id.toString(), data as any),
+      EventRepository.update(event._id.toString(), {
+        title: data.title,
+        placeName: data.placeName,
+        eventDate: new Date(data.eventDate as string),
+        dayCount: data.dayCount as number,
+        nightCount: data.nightCount as number,
+        entryFee: data.entryFee as number,
+        memberCapacity: data.memberCapacity as number
+      }),
     onSuccess: () => {
       toast.success("Event updated successfully");
       setOpen(false);

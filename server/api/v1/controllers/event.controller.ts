@@ -45,7 +45,7 @@ class EventController {
         members: [req.user._id]
       };
 
-      const event = await EventUseCase.create(eventData as any);
+      const event = await EventUseCase.create(eventData);
 
       if (!event) {
         throw new ApiError(500, "Failed to create event");
@@ -145,9 +145,15 @@ class EventController {
         throw new ApiError(403, "Only event creator can update event");
       }
 
+      const updatePayload = Object.fromEntries(
+        Object.entries(req.body || {}).filter(
+          ([, value]) => value !== undefined
+        )
+      );
+
       const updatedEvent = await EventUseCase.update(
         convertToObjectId(id)!,
-        req.body
+        updatePayload
       );
 
       if (!updatedEvent) {

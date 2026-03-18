@@ -151,8 +151,8 @@ yarn dev
 
 This will:
 
-- Start Next.js frontend on `http://localhost:3000`
-- Start Express backend on `http://localhost:3000` (via proxy)
+- Start Next.js frontend on `http://localhost:5000`
+- Start Express backend on `http://localhost:5000/api/v1`
 
 ## Available Scripts
 
@@ -373,8 +373,8 @@ The application includes comprehensive error handling:
 ### Port Already in Use
 
 ```bash
-# Kill process on port 3000
-lsof -ti:3000 | xargs kill -9
+# Kill process on port 5000
+lsof -ti:5000 | xargs kill -9
 ```
 
 ### MongoDB Connection Failed

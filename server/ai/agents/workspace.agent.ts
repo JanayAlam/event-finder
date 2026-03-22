@@ -1,7 +1,7 @@
-import { Agent, InputGuardrail, run } from "@openai/agents";
+import { Agent, InputGuardrail, run, RunContext } from "@openai/agents";
 import { RECOMMENDED_PROMPT_PREFIX } from "@openai/agents-core/extensions";
 import z from "zod";
-import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
+import { IWorkspaceAgentContext } from "../../../common/types/ai.types";
 import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { eventCreatorAgent } from "./event-creator.agent";
 import { searchAgent } from "./search.agent";
@@ -20,8 +20,17 @@ const inputGuardRailAgent = new Agent({
 const workspaceInputGuardrail: InputGuardrail = {
   name: "workspace_input_guardrail",
   runInParallel: false,
-  execute: async ({ input, context }) => {
-    const result = await run(inputGuardRailAgent, input, { context });
+  execute: async ({ input, context: runContext }) => {
+    const chats = (runContext as RunContext<IWorkspaceAgentContext> | undefined)
+      ?.context.chats;
+
+    const inputWithContext = chats?.length
+      ? `${chats.map((c) => c.prompt).join(" ")} ${input}`
+      : input;
+
+    const result = await run(inputGuardRailAgent, inputWithContext, {
+      context: runContext
+    });
     return {
       outputInfo: result.finalOutput,
       tripwireTriggered: result.finalOutput?.isValid === false
@@ -30,7 +39,7 @@ const workspaceInputGuardrail: InputGuardrail = {
 };
 
 export const workspaceAgent = new Agent<
-  IWorkspaceAgentUserContext,
+  IWorkspaceAgentContext,
   typeof WorkspaceAgentOutputSchema
 >({
   name: "workspace_agent",

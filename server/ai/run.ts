@@ -5,14 +5,25 @@ import {
 } from "../../common/types/ai.types";
 import { eventCreatorAgentWithInputGuardrail } from "./agents/event-creator.agent";
 import { workspaceAgent } from "./agents/workspace.agent";
+import { ChatConversationShortMemory } from "./memory/chat-conversation-short-memory";
 
 export async function runWorkspaceAgent(
   query: string,
-  user?: IWorkspaceAgentUserContext
+  userContext?: IWorkspaceAgentUserContext
 ) {
+  const chatsContext = ChatConversationShortMemory.getInstance().get();
+
   const result = await run(workspaceAgent, query, {
-    context: user
+    context: { user: userContext, chats: chatsContext }
   });
+
+  if (result.finalOutput) {
+    ChatConversationShortMemory.getInstance().add({
+      prompt: query,
+      output: result.finalOutput
+    });
+  }
+
   return result;
 }
 

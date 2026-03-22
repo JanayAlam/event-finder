@@ -1,6 +1,6 @@
 import { RunContext, tool } from "@openai/agents";
 import z from "zod";
-import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
+import { IWorkspaceAgentContext } from "../../../common/types/ai.types";
 import { GenerateEventToolSchema } from "../../../common/validation-schemas";
 import { USER_ROLE } from "../../enums";
 
@@ -48,8 +48,8 @@ export const checkIfEligibleToCreateEventTool = tool({
   name: "check_if_eligible_to_create_event_tool",
   description: "Checks if the user has permission to create an event",
   parameters: z.object({}),
-  async execute(_args, runContext?: RunContext<IWorkspaceAgentUserContext>) {
-    const contextRole = runContext?.context?.role ?? USER_ROLE.TRAVELER;
+  async execute(_args, runContext?: RunContext<IWorkspaceAgentContext>) {
+    const contextRole = runContext?.context.user?.role ?? USER_ROLE.TRAVELER;
 
     if (contextRole !== USER_ROLE.HOST) {
       return {

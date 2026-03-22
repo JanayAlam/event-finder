@@ -1,5 +1,5 @@
 import { Agent } from "@openai/agents";
-import { IWorkspaceAgentUserContext } from "../../../common/types/ai.types";
+import { IWorkspaceAgentContext } from "../../../common/types/ai.types";
 import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
 import { getEventsTool } from "../tools/search.tools";
 import { eventCreatorAgent } from "./event-creator.agent";
@@ -69,7 +69,7 @@ const SEARCH_AGENT_INSTRUCTIONS = `
 `;
 
 export const searchAgent = new Agent<
-  IWorkspaceAgentUserContext,
+  IWorkspaceAgentContext,
   typeof WorkspaceAgentOutputSchema
 >({
   name: "event_search_agent",

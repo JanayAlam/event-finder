@@ -36,3 +36,13 @@ export interface IWorkspaceAgentUserContext {
   name: string;
   role: TUserRole;
 }
+
+export interface IWorkplaceChatConversationItem {
+  prompt: string;
+  output: TAIWorkspacePromptResponse;
+}
+
+export interface IWorkspaceAgentContext {
+  user?: IWorkspaceAgentUserContext;
+  chats: IWorkplaceChatConversationItem[];
+}

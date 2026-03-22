@@ -64,6 +64,10 @@ const SEARCH_AGENT_INSTRUCTIONS = `
   Do NOT ask follow-up questions. Return structured output only.
 
   If event not found then generate event by calling 'event_creator_tool' with the user context.
+
+  You may also receive a "Previous Conversation Context" section in the input.
+  Use it to preserve continuity with earlier prompts while prioritizing the latest user request.
+  Process the users preferences (like, dislike, new desire, etc.) and update the parameters (like- locations, budget, dates, tags, etc.) accordingly.
 `;
 
 export const searchAgent = new Agent<

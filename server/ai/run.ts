@@ -13,7 +13,16 @@ export async function runWorkspaceAgent(
 ) {
   const chatsContext = ChatConversationShortMemory.getInstance().get();
 
-  const result = await run(workspaceAgent, query, {
+  const queryWithContext = chatsContext.length
+    ? `Previous Conversation Context:
+${chatsContext.map((c) => `User: ${c.prompt} \t Assistant: ${JSON.stringify(c.output)}`).join("\n")}
+
+Current User Request:
+${query}
+`
+    : query;
+
+  const result = await run(workspaceAgent, queryWithContext, {
     context: { user: userContext, chats: chatsContext }
   });
 

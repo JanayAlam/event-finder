@@ -47,6 +47,7 @@ const mapDraftToForm = (draft: TEvent): Partial<TCreateEventForm> => {
         title: item.title,
         description: item.description ?? ""
       })) ?? [],
+    tags: draft.tags ?? [],
     coverPhoto: draft.coverPhoto ?? undefined,
     additionalPhotos: draft.additionalPhotos?.map((path) => ({ path })) ?? []
   };

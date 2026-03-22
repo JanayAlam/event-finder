@@ -10,11 +10,18 @@ import {
 import Form from "@/components/shared/organisms/form";
 import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
+import { Input } from "@/components/shared/shadcn-components/input";
+import { Label } from "@/components/shared/shadcn-components/label";
 import {
   H4,
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import {
+  EVENT_TAG_VALUES,
+  formatEventTagLabel,
+  parseEventTagInput
+} from "@/lib/event-tags";
 import EventRepository from "@/repositories/event.repository";
 import LocationRepository from "@/repositories/location.repository";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE, PUBLIC_PAGE_ROUTE } from "@/routes";
@@ -22,13 +29,6 @@ import { TPlaceOption } from "@/types/location/location.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { Input } from "@/components/shared/shadcn-components/input";
-import { Label } from "@/components/shared/shadcn-components/label";
-import {
-  formatEventTagLabel,
-  parseEventTagInput,
-  EVENT_TAG_VALUES
-} from "@/lib/event-tags";
 import {
   CalendarClockIcon,
   Camera,
@@ -91,6 +91,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
     LocationRepository.getCuratedPlaceOptions()
   );
   const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
+  const [tagInput, setTagInput] = useState("");
 
   const form = useForm<TCreateEventForm>({
     resolver: zodResolver(CreateEventSchema),
@@ -110,8 +111,7 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
     }
   });
 
-  const [tagInput, setTagInput] = useState("");
-  React.useEffect(() => {
+  useEffect(() => {
     if (!initialData) return;
     if (form.formState.isDirty) return;
     form.reset({

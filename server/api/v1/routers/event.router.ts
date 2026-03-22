@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   CreateEventSchema,
+  EventIdTagParamsSchema,
+  EventTagBodySchema,
   IdParamsSchema,
   SearchSchema,
   UpdateEventSchema
@@ -101,6 +103,22 @@ eventRouter.patch(
   authenticate([USER_ROLE.HOST]),
   inputValidator(UpdateEventSchema, IdParamsSchema),
   EventController.update
+);
+
+// Add single tag - only creator (HOST)
+eventRouter.post(
+  "/:id/tags",
+  authenticate([USER_ROLE.HOST]),
+  inputValidator(EventTagBodySchema, IdParamsSchema),
+  EventController.addTag
+);
+
+// Remove single tag - only creator (HOST)
+eventRouter.delete(
+  "/:id/tags/:tag",
+  authenticate([USER_ROLE.HOST]),
+  inputValidator(null, EventIdTagParamsSchema),
+  EventController.removeTag
 );
 
 // Delete event - only creator (HOST) can delete

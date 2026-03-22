@@ -3,6 +3,7 @@ import {
   EventCreatorAgentOutputSchema,
   GuardrailOutputSchema
 } from "../../../common/validation-schemas";
+import { getEventTagsTool } from "../tools/common.tools";
 import {
   calculateEventDurationTool,
   checkIfEligibleToCreateEventTool
@@ -47,6 +48,7 @@ const EVENT_CREATOR_AGENT_INSTRUCTIONS = `
       - dayCount/nightCount: values from tool output only.
       - entryFee: realistic BDT estimate for Bangladesh trips (default 5000 only if uncertain).
       - memberCapacity: realistic group size between 10 and 30; follow user hints if provided.
+      - tags: 3-8 values from avaialble event tags only, chosen from place type, activities, mood, budget level, transport, users preferences, and audience implied by the query. ALWAYS get event tags by calling 'get_event_tags' tool. Never use strings outside those tags.
       - itinerary: detailed day-by-day plan with:
         - accurate ISO "moment" values within the trip window,
         - concise activity title,
@@ -63,7 +65,11 @@ export const eventCreatorAgent = new Agent({
   name: "event_creator_agent",
   instructions: EVENT_CREATOR_AGENT_INSTRUCTIONS,
   outputType: EventCreatorAgentOutputSchema,
-  tools: [calculateEventDurationTool, checkIfEligibleToCreateEventTool]
+  tools: [
+    getEventTagsTool,
+    calculateEventDurationTool,
+    checkIfEligibleToCreateEventTool
+  ]
 });
 
 const eventCreatorInputGuardRailAgent = new Agent({

@@ -5,6 +5,7 @@ import {
   AvatarImage
 } from "@/components/shared/shadcn-components/avatar";
 import { getImageUrl } from "@/lib/utils";
+import { formatEventTagLabel } from "@/lib/event-tags";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import dayjs from "dayjs";
 import { Clock3, MapPin, MoveDown, Users } from "lucide-react";
@@ -60,6 +61,25 @@ export default function EventCard({ event }: { event: TEventListItemDto }) {
         >
           {event.title}
         </H4>
+
+        {event.tags && event.tags.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {event.tags.slice(0, 5).map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-[10px] font-normal px-1.5 py-0 h-5 border-primary/25"
+              >
+                {formatEventTagLabel(tag)}
+              </Badge>
+            ))}
+            {event.tags.length > 5 ? (
+              <span className="text-[10px] text-muted-foreground self-center">
+                +{event.tags.length - 5}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
           <div className="flex flex-col items-center gap-2 text-center">

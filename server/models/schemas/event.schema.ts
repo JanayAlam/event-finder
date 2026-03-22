@@ -1,5 +1,6 @@
 import { Document, Schema, Types } from "mongoose";
 import { EVENT_STATUS } from "../../enums";
+import { EVENT_TAG } from "../../enums/event-tags.enum";
 import { ITimestamps } from "../../types/common";
 import User from "../user.model";
 
@@ -26,6 +27,7 @@ export interface EventBase extends ITimestamps {
   facebookPostId?: string;
   isPostedToFacebook: boolean;
   status: EVENT_STATUS;
+  tags: EVENT_TAG[];
 }
 
 export interface IEventDoc extends EventBase, Document {
@@ -67,6 +69,10 @@ export const eventSchema = new Schema<IEventDoc>(
       type: String,
       enum: Object.values(EVENT_STATUS),
       default: EVENT_STATUS.OPEN
+    },
+    tags: {
+      type: [{ type: String, enum: Object.values(EVENT_TAG) }],
+      default: []
     }
   },
   { timestamps: true }

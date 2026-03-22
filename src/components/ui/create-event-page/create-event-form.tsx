@@ -8,6 +8,7 @@ import {
   TextareaField
 } from "@/components/shared/molecules/form";
 import Form from "@/components/shared/organisms/form";
+import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
   H4,
@@ -21,6 +22,13 @@ import { TPlaceOption } from "@/types/location/location.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { Input } from "@/components/shared/shadcn-components/input";
+import { Label } from "@/components/shared/shadcn-components/label";
+import {
+  formatEventTagLabel,
+  parseEventTagInput,
+  EVENT_TAG_VALUES
+} from "@/lib/event-tags";
 import {
   CalendarClockIcon,
   Camera,
@@ -29,7 +37,9 @@ import {
   Map,
   NotebookText,
   PiggyBank,
-  PlusIcon
+  PlusIcon,
+  Tags,
+  X
 } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import React, { PropsWithChildren, useEffect, useState } from "react";
@@ -95,9 +105,30 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
       nightCount: initialData?.nightCount ?? undefined,
       itinerary: initialData?.itinerary || [],
       coverPhoto: initialData?.coverPhoto || undefined,
-      additionalPhotos: initialData?.additionalPhotos || []
+      additionalPhotos: initialData?.additionalPhotos || [],
+      tags: initialData?.tags ?? []
     }
   });
+
+  const [tagInput, setTagInput] = useState("");
+  React.useEffect(() => {
+    if (!initialData) return;
+    if (form.formState.isDirty) return;
+    form.reset({
+      title: initialData?.title || "",
+      description: initialData?.description || "",
+      placeName: initialData?.placeName || "",
+      eventDate: initialData?.eventDate || undefined,
+      entryFee: initialData?.entryFee || undefined,
+      memberCapacity: initialData?.memberCapacity || undefined,
+      dayCount: initialData?.dayCount ?? undefined,
+      nightCount: initialData?.nightCount ?? undefined,
+      itinerary: initialData?.itinerary || [],
+      coverPhoto: initialData?.coverPhoto || undefined,
+      additionalPhotos: initialData?.additionalPhotos || [],
+      tags: initialData?.tags ?? []
+    });
+  }, [form, initialData]);
 
   const {
     fields: additionalPhotosFields,
@@ -432,6 +463,96 @@ export const CreateEventForm: React.FC<ICreateEventFormProps> = ({
               subtitle="Add activities and schedule for your trip (optional)"
             >
               <ItineraryFormFields control={control} />
+            </FormCard>
+
+            <FormCard
+              icon={<Tags />}
+              title="Tags"
+              subtitle="Describe your trip with preset tags (Shift+Enter to add). Only listed tags are accepted."
+            >
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="event-tag-input">Add tags</Label>
+                  <Input
+                    id="event-tag-input"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && e.shiftKey) {
+                        e.preventDefault();
+                        const parsed = parseEventTagInput(tagInput);
+                        if (!parsed) {
+                          toast.error(
+                            "Unknown tag. Pick a value from the suggestions list."
+                          );
+                          return;
+                        }
+                        const current = form.getValues("tags") ?? [];
+                        if (current.includes(parsed)) {
+                          setTagInput("");
+                          return;
+                        }
+                        form.setValue("tags", [...current, parsed]);
+                        setTagInput("");
+                      }
+                    }}
+                    placeholder="e.g. beach, trekking, budget"
+                    autoComplete="off"
+                  />
+                  <div className="flex flex-wrap gap-1.5">
+                    {EVENT_TAG_VALUES.filter((t) => {
+                      if (!tagInput.trim()) return true;
+                      const normalized = tagInput
+                        .trim()
+                        .toLowerCase()
+                        .replace(/\s+/g, "_");
+                      return t.includes(normalized);
+                    })
+                      .slice(0, 12)
+                      .map((t) => (
+                        <button
+                          key={t}
+                          type="button"
+                          className="text-xs rounded-md border border-muted-foreground/20 px-2 py-1 hover:bg-muted"
+                          onClick={() => {
+                            const current = form.getValues("tags") ?? [];
+                            if (current.includes(t)) return;
+                            form.setValue("tags", [...current, t]);
+                          }}
+                        >
+                          {formatEventTagLabel(t)}
+                        </button>
+                      ))}
+                  </div>
+                  <TypographyMuted className="text-xs">
+                    Type or choose a tag, then press Shift+Enter to add it.
+                  </TypographyMuted>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(form.watch("tags") ?? []).map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="gap-1 pr-1 py-1"
+                    >
+                      {formatEventTagLabel(tag)}
+                      <button
+                        type="button"
+                        className="rounded-sm hover:bg-muted p-0.5"
+                        onClick={() => {
+                          const next = (form.getValues("tags") ?? []).filter(
+                            (x) => x !== tag
+                          );
+                          form.setValue("tags", next);
+                        }}
+                        aria-label={`Remove ${tag}`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
             </FormCard>
 
             <EFCard>

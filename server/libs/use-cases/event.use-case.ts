@@ -6,6 +6,7 @@ import {
   UpdateQuery
 } from "mongoose";
 import { TSearchEventResultResponse } from "../../../common/types";
+import { EVENT_TAG } from "../../enums/event-tags.enum";
 import Event, { TEvent, TEventDetail } from "../../models/event.model";
 import { IEventDoc } from "../../models/schemas/event.schema";
 
@@ -34,6 +35,7 @@ class EventUseCase {
     coverPhoto?: string;
     additionalPhotos?: string[];
     members?: Types.ObjectId[];
+    tags?: EVENT_TAG[];
   }): Promise<TEvent | null> {
     const event = new Event(data);
     const savedEvent = await event.save();
@@ -92,6 +94,36 @@ class EventUseCase {
     data: UpdateQuery<IEventDoc>
   ): Promise<TEvent | null> {
     return Event.findByIdAndUpdate(id, data, { new: true })
+      .populate("host", "firstName lastName email _id")
+      .populate("members", "firstName lastName email _id")
+      .lean<TEvent>()
+      .exec();
+  }
+
+  static async addTag(
+    id: Types.ObjectId,
+    tag: EVENT_TAG
+  ): Promise<TEvent | null> {
+    return Event.findByIdAndUpdate(
+      id,
+      { $addToSet: { tags: tag } },
+      { new: true }
+    )
+      .populate("host", "firstName lastName email _id")
+      .populate("members", "firstName lastName email _id")
+      .lean<TEvent>()
+      .exec();
+  }
+
+  static async removeTag(
+    id: Types.ObjectId,
+    tag: EVENT_TAG
+  ): Promise<TEvent | null> {
+    return Event.findByIdAndUpdate(
+      id,
+      { $pull: { tags: tag } },
+      { new: true }
+    )
       .populate("host", "firstName lastName email _id")
       .populate("members", "firstName lastName email _id")
       .lean<TEvent>()

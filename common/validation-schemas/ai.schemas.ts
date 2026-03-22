@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { EVENT_TAG } from "../../server/enums/event-tags.enum";
 
 export const PromptSchema = z.object({
   prompt: z.string().min(1, "Prompt is required")
@@ -20,7 +21,13 @@ export const EventSearchToolSchema = z.object({
   night_count: z
     .number()
     .describe("Number of nights required to be available in the event")
+    .nullable(),
+  tags: z
+    .array(z.enum(EVENT_TAG))
     .nullable()
+    .describe(
+      "Canonical tags from EVENT_TAG only. Map user preferences (e.g. beach trip, budget, relax, trekking) to the closest matching enum values. Use null if no preferences were expressed."
+    )
 });
 
 export const SearchAgentEventSchema = z.object({
@@ -34,8 +41,9 @@ export const SearchAgentEventSchema = z.object({
   nightCount: z.number(),
   memberCapacity: z.number().nullable(),
   status: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string()
+  tags: z.array(z.enum(EVENT_TAG)).optional().default([]),
+  updatedAt: z.string(),
+  createdAt: z.string()
 });
 
 export const SearchAgentOutputSchema = z.object({
@@ -96,7 +104,14 @@ const EventToCreateSchema = z.object({
           .describe("Detailed description of activities during this phase")
       })
     )
-    .describe("Detailed day-by-day or event-by-event itinerary of the trip")
+    .describe("Detailed day-by-day or event-by-event itinerary of the trip"),
+  tags: z
+    .array(z.enum(EVENT_TAG))
+    .describe(
+      "1-8 tags from EVENT_TAG that match the trip (place, mood, activities, transport, etc.). Use only enum values."
+    )
+    .optional()
+    .default([])
 });
 
 export const EventCreatorAgentOutputSchema = z.object({

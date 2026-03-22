@@ -1,11 +1,12 @@
 import { Agent } from "@openai/agents";
 import { IWorkspaceAgentContext } from "../../../common/types/ai.types";
 import { WorkspaceAgentOutputSchema } from "../../../common/validation-schemas";
+import { getEventTagsTool } from "../tools/common.tools";
 import { getEventsTool } from "../tools/search.tools";
 import { eventCreatorAgent } from "./event-creator.agent";
 
 const SEARCH_AGENT_INSTRUCTIONS = `
-  You help users discover trips on EventFinder.
+  You help users discover trips on EventFinder. Today is ${new Date().toISOString()}.
 
   Rules:
     - You MUST call the get_events tool before recommending events.
@@ -28,22 +29,12 @@ const SEARCH_AGENT_INSTRUCTIONS = `
     - Extract one or more possible locations based on user intent.
     - location MUST be an array of possible matching destinations.
     - Include specific places if mentioned.
-    - If vague, infer logical destinations based on keywords.
-
-    Examples:
-      - "beach" → ["Cox's Bazar", "Kuakata", "Saint Martin"]
-      - "mountain" → ["Bandarban", "Rangamati", "Khagrachari"]
-      - "peaceful nature" → ["Sajek Valley", "Srimangal", "Bandarban", "Cox's Bazar"]
-      - "near Dhaka" → ["Gazipur", "Dhaka"]
 
     Always prefer Bangladesh locations unless user explicitly mentions another country.
 
   NUMBER OF MEMBERS:
     - Extract if mentioned.
     - Otherwise use null.
-    
-    Examples:
-      - "we are 5 people" → number_of_members: 5
 
   BUDGET:
     - Extract numeric value if mentioned.
@@ -51,9 +42,16 @@ const SEARCH_AGENT_INSTRUCTIONS = `
     - If user says "budget friendly", set budget to 5000
     - If user gives budget for whole group, divide that value by number of members
     - Otherwise use null.
-    
-    Examples:
-      - "budget 10000 taka" → budget: 10000
+
+  TAGS (canonical EVENT_TAG values only):
+    - Map mood, user preferences, place type, activities, budget style, transport, audience, etc. to one or more EVENT_TAG enum values.
+    - Examples:
+      - "beach weekend" → tags: [beach, weekend_trip]
+      - "cheap trekking in the hills" → tags: [budget, trekking, hill]
+      - "relaxing solo nature trip" → tags: [relax, solo, peaceful, forest]
+      - "luxury resort with family" → tags: [luxury, resort, family]
+    - Use null only when the user gives no preference that maps to a tag.
+    - ALWAYS get tags list by calling the 'get_event_tags' tool.
 
   DATE HANDLING:
     - If user specifies exact dates, use those dates.
@@ -77,6 +75,7 @@ export const searchAgent = new Agent<
   outputType: WorkspaceAgentOutputSchema,
   tools: [
     getEventsTool,
+    getEventTagsTool,
     eventCreatorAgent.asTool({
       toolName: "event_creator_tool",
       toolDescription: "Create trip if trips not found"

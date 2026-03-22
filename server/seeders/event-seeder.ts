@@ -35,6 +35,10 @@ const seedEvents = async () => {
 
     logger.info(`Found ${potentialHosts.length} potential hosts`);
 
+    logger.info("Removing existing events...");
+    const deleteResult = await Event.deleteMany({});
+    logger.info(`Removed ${deleteResult.deletedCount} events`);
+
     logger.info(`Seeding ${eventsData.length} events...`);
 
     const createdEvents = [];

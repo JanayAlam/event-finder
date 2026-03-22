@@ -3,11 +3,13 @@ import {
   TEvent,
   TEventDetailDto,
   TEventListItemDto,
+  TEventTagBodyDto,
   TPaymentResponseDto,
   TSearchEventResultResponse,
   TSearchRequestDto,
   TUpdateEventDto
 } from "../../common/types";
+import { EVENT_TAG } from "../../server/enums/event-tags.enum";
 import BaseRepository from "./base.repository";
 
 class EventRepository extends BaseRepository {
@@ -45,6 +47,16 @@ class EventRepository extends BaseRepository {
       requestBody
     );
     return data;
+  }
+
+  static async addTag(eventId: string, body: TEventTagBodyDto) {
+    const url = `${this.apiRoute}/${eventId}/tags`;
+    return this.request<TEventTagBodyDto, TEvent>(url, "post", body);
+  }
+
+  static async removeTag(eventId: string, tag: EVENT_TAG) {
+    const url = `${this.apiRoute}/${eventId}/tags/${encodeURIComponent(tag)}`;
+    return this.request<undefined, TEvent>(url, "delete");
   }
 
   static async getAll(

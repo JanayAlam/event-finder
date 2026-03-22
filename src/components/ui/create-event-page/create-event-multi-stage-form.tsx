@@ -43,8 +43,13 @@ export const CreateEventMultiStageForm: React.FC = () => {
       `Title: ${result.eventToCreate.title}`,
       `Place: ${result.eventToCreate.placeName}`,
       `Event Date: ${result.eventToCreate.eventDate}`,
-      `Duration: ${result.eventToCreate.dayCount} day(s), ${result.eventToCreate.nightCount} night(s)`
-    ].join(" | ");
+      `Duration: ${result.eventToCreate.dayCount} day(s), ${result.eventToCreate.nightCount} night(s)`,
+      result.eventToCreate.tags?.length
+        ? `Tags: ${result.eventToCreate.tags.join(", ")}`
+        : ""
+    ]
+      .filter(Boolean)
+      .join(" | ");
 
     setConversationHistory((prev) => [
       ...prev.slice(-9),

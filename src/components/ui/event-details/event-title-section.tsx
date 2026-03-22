@@ -3,19 +3,29 @@
 import { InputField } from "@/components/shared/molecules/form";
 import Modal from "@/components/shared/organisms/modal";
 import { Button } from "@/components/shared/shadcn-components/button";
+import { Badge } from "@/components/shared/shadcn-components/badge";
+import { Input } from "@/components/shared/shadcn-components/input";
+import { Label } from "@/components/shared/shadcn-components/label";
 import { H1 } from "@/components/shared/shadcn-components/typography";
+import { TypographyMuted } from "@/components/shared/shadcn-components/typography";
+import {
+  EVENT_TAG_VALUES,
+  formatEventTagLabel,
+  parseEventTagInput
+} from "@/lib/event-tags";
 import EventRepository from "@/repositories/event.repository";
 import { useAuthStore } from "@/stores/auth-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { Pencil } from "lucide-react";
+import { Pencil, Tags, X } from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { TUpdateEventForm } from "../../../../common/types";
 import { UpdateEventSchema } from "../../../../common/validation-schemas";
+import { EVENT_TAG } from "../../../../server/enums";
 import { TEventDetail } from "../../../../server/models/event.model";
 import { EventActions } from "./event-actions";
 import { EventMetaList } from "./event-meta-list";
@@ -32,6 +42,15 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
   const isHost = event.host._id.toString() === user?._id.toString();
 
   const [open, setOpen] = React.useState(false);
+  const [tagsOpen, setTagsOpen] = React.useState(false);
+  const [tagInput, setTagInput] = React.useState("");
+  const [localTags, setLocalTags] = React.useState<EVENT_TAG[]>(
+    event.tags ?? []
+  );
+
+  React.useEffect(() => {
+    setLocalTags(event.tags ?? []);
+  }, [event.tags]);
 
   const form = useForm<TUpdateEventForm>({
     resolver: zodResolver(UpdateEventSchema),
@@ -69,6 +88,47 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
         ? err.response?.data?.message || "Failed to update event"
         : "Failed to update event";
       toast.error(message);
+    }
+  });
+
+  const [removingTag, setRemovingTag] = React.useState<EVENT_TAG | null>(null);
+
+  const { mutate: addTag, isPending: isAddingTag } = useMutation({
+    mutationFn: (tag: EVENT_TAG) =>
+      EventRepository.addTag(event._id.toString(), { tag }),
+    onSuccess: (_, tag) => {
+      toast.success("Tag added");
+      setLocalTags((prev) => (prev.includes(tag) ? prev : [...prev, tag]));
+      setTagInput("");
+      router.refresh();
+    },
+    onError: (err) => {
+      const message = isAxiosError(err)
+        ? err.response?.data?.message || "Failed to add tag"
+        : "Failed to add tag";
+      toast.error(message);
+    }
+  });
+
+  const { mutate: removeTag, isPending: isRemovingTag } = useMutation({
+    mutationFn: (tag: EVENT_TAG) =>
+      EventRepository.removeTag(event._id.toString(), tag),
+    onMutate: (tag) => {
+      setRemovingTag(tag);
+    },
+    onSuccess: (_, tag) => {
+      toast.success("Tag removed");
+      setLocalTags((prev) => prev.filter((t) => t !== tag));
+      router.refresh();
+    },
+    onError: (err) => {
+      const message = isAxiosError(err)
+        ? err.response?.data?.message || "Failed to remove tag"
+        : "Failed to remove tag";
+      toast.error(message);
+    },
+    onSettled: () => {
+      setRemovingTag(null);
     }
   });
 
@@ -114,6 +174,36 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
         </div>
 
         <EventMetaList event={event} />
+
+        <div className="flex flex-wrap items-center gap-2">
+          {localTags.length ? (
+            <div className="flex flex-wrap gap-1.5">
+              {localTags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="py-0.5">
+                  {formatEventTagLabel(tag)}
+                </Badge>
+              ))}
+            </div>
+          ) : (
+            <TypographyMuted className="text-xs">
+              No tags added yet.
+            </TypographyMuted>
+          )}
+
+          {isHost && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+              onClick={() => setTagsOpen(true)}
+              aria-label="Edit tags"
+            >
+              <Tags className="size-4" />
+              Edit tags
+            </Button>
+          )}
+        </div>
         <EventActions event={event} />
       </div>
 
@@ -212,6 +302,114 @@ export const EventTitleSection: React.FC<EventTitleSectionProps> = ({
               />
             </div>
           </form>
+        </Modal>
+      )}
+
+      {/* Tag editor — only rendered for host */}
+      {isHost && (
+        <Modal
+          isOpen={tagsOpen}
+          closeHandler={() => setTagsOpen(false)}
+          title="Edit tags"
+          footer={
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setTagsOpen(false)}
+                disabled={isAddingTag || isRemovingTag}
+              >
+                Close
+              </Button>
+            </div>
+          }
+          contentClassName="sm:max-w-lg"
+        >
+          <div className="flex flex-col gap-4 pt-1">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="event-tag-input">Add tags</Label>
+              <Input
+                id="event-tag-input"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.shiftKey) {
+                    e.preventDefault();
+                    const parsed = parseEventTagInput(tagInput);
+                    if (!parsed) {
+                      toast.error(
+                        "Unknown tag. Pick a value from the suggestions list."
+                      );
+                      return;
+                    }
+                    if (localTags.includes(parsed)) {
+                      setTagInput("");
+                      return;
+                    }
+                    addTag(parsed);
+                  }
+                }}
+                placeholder="e.g. beach, trekking, budget"
+                autoComplete="off"
+                disabled={isAddingTag || isRemovingTag}
+              />
+              <div className="flex flex-wrap gap-1.5">
+                {EVENT_TAG_VALUES.filter((t) => {
+                  if (!tagInput.trim()) return true;
+                  const normalized = tagInput
+                    .trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, "_");
+                  return t.includes(normalized);
+                })
+                  .slice(0, 12)
+                  .map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className="text-xs rounded-md border border-muted-foreground/20 px-2 py-1 hover:bg-muted"
+                      onClick={() => {
+                        if (localTags.includes(t)) return;
+                        addTag(t);
+                      }}
+                      disabled={isAddingTag || isRemovingTag}
+                    >
+                      {formatEventTagLabel(t)}
+                    </button>
+                  ))}
+              </div>
+              <TypographyMuted className="text-xs">
+                Type or choose a tag, then press Shift+Enter to add it.
+              </TypographyMuted>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {localTags.length ? (
+                localTags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="gap-1 pr-1">
+                    {formatEventTagLabel(tag)}
+                    <button
+                      type="button"
+                      className="rounded-sm hover:bg-muted p-0.5"
+                      onClick={() => removeTag(tag)}
+                      disabled={
+                        isAddingTag ||
+                        isRemovingTag ||
+                        removingTag === tag
+                      }
+                      aria-label={`Remove ${tag}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))
+              ) : (
+                <TypographyMuted className="text-xs">
+                  No tags added yet.
+                </TypographyMuted>
+              )}
+            </div>
+          </div>
         </Modal>
       )}
     </>

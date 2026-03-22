@@ -1,5 +1,17 @@
 import { z } from "zod";
+import { EVENT_TAG } from "../../server/enums/event-tags.enum";
+import { IdParamsSchema } from "./common.schemas";
 import { stringRequired } from "./utils";
+
+const eventTagSchema = z.enum(EVENT_TAG);
+
+export const EventTagBodySchema = z.object({
+  tag: eventTagSchema
+});
+
+export const EventIdTagParamsSchema = IdParamsSchema.extend({
+  tag: z.enum(EVENT_TAG)
+});
 
 export const CreateEventSchema = z.object({
   title: stringRequired("Event title").max(
@@ -82,7 +94,8 @@ export const CreateEventSchema = z.object({
   additionalPhotos: z
     .array(z.object({ path: z.string() }))
     .transform((items) => items.map((i) => i.path))
-    .optional()
+    .optional(),
+  tags: z.array(eventTagSchema).optional().default([])
 });
 
 export const UpdateEventSchema = CreateEventSchema.partial();

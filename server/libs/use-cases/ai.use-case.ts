@@ -18,15 +18,22 @@ class AIUseCase {
       end_date,
       budget,
       day_count,
-      night_count
+      night_count,
+      tags
     } = params;
 
     const filter: FilterQuery<IEventDoc> = {
       status: EVENT_STATUS.OPEN
     };
 
+    const tagOrLocation: FilterQuery<IEventDoc>[] = [];
+
+    if (tags?.length) {
+      tagOrLocation.push({ tags: { $in: tags } });
+    }
+
     if (locations?.length) {
-      filter.$or = locations.flatMap((loc) => {
+      const locationOr = locations.flatMap((loc) => {
         const regex = loc
           .replace(/[^a-zA-Z0-9]/g, "")
           .split("")
@@ -38,6 +45,13 @@ class AIUseCase {
           { title: { $regex: regex, $options: "i" } }
         ];
       });
+
+      tagOrLocation.push({ $or: locationOr });
+    }
+
+    if (tagOrLocation.length) {
+      filter.$and = filter.$and || [];
+      filter.$and.push({ $or: tagOrLocation });
     }
 
     if (number_of_members) {
@@ -96,8 +110,9 @@ class AIUseCase {
       nightCount: true,
       memberCapacity: true,
       status: true,
-      createdAt: true,
-      updatedAt: true
+      tags: true,
+      updatedAt: true,
+      createdAt: true
     })
       .lean<TAISearchEvent[]>()
       .exec();

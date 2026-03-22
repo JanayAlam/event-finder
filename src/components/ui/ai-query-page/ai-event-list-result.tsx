@@ -1,8 +1,10 @@
 import EFCard from "@/components/shared/molecules/ef-card";
+import { Badge } from "@/components/shared/shadcn-components/badge";
 import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import { formatEventTagLabel } from "@/lib/event-tags";
 import { PUBLIC_DYNAMIC_PAGE_ROUTE } from "@/routes";
 import dayjs from "dayjs";
 import { Calendar, MapPin, Signpost } from "lucide-react";
@@ -59,6 +61,19 @@ export const AIEventListResult: React.FC<IAIEventListResultProps> = ({
                 <Paragraph className="font-semibold text-lg lg:text-xl group-hover:text-primary">
                   BDT {event.entryFee}
                 </Paragraph>
+                {event.tags?.length ? (
+                  <div className="flex flex-wrap gap-1">
+                    {event.tags.slice(0, 4).map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className="text-xs font-normal px-2.5 py-0.5"
+                      >
+                        {formatEventTagLabel(tag)}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </EFCard>
           </Link>

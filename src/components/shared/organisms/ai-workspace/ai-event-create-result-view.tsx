@@ -1,6 +1,7 @@
 "use client";
 
 import { PageLoader } from "@/components/shared/molecules/page-loader";
+import { Badge } from "@/components/shared/shadcn-components/badge";
 import { Button } from "@/components/shared/shadcn-components/button";
 import {
   Card,
@@ -14,6 +15,7 @@ import {
   Paragraph,
   TypographyMuted
 } from "@/components/shared/shadcn-components/typography";
+import { formatEventTagLabel } from "@/lib/event-tags";
 import dayjs from "dayjs";
 import { BadgeQuestionMark, ChevronRight, Sparkles } from "lucide-react";
 import React from "react";
@@ -70,6 +72,19 @@ export const AIEventCreateResultView: React.FC<
               <TypographyMuted className="text-sm">
                 {result.eventToCreate.placeName}
               </TypographyMuted>
+              {result.eventToCreate.tags?.length ? (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {result.eventToCreate.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="text-xs font-normal"
+                    >
+                      {formatEventTagLabel(tag)}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <Paragraph className="text-sm leading-5">

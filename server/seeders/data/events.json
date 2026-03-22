@@ -1,331 +1,448 @@
 [
   {
     "title": "Mountain Hiking Adventure",
-    "description": "A thrilling 3-day hike through the Himalayan foothills.",
+    "description": "A three-day ridge hike through the Himalayan foothills with warm homestays, panoramic viewpoints, and guided safety briefings. Expect steady climbs, cool mornings, and a celebratory summit sunrise.",
     "placeName": "Kathmandu, Nepal",
-    "eventDate": "2026-03-01T08:00:00Z",
-    "entryFee": 25000,
+    "eventDate": "2026-03-05T06:30:00Z",
+    "entryFee": 28000,
     "dayCount": 3,
     "nightCount": 2,
     "memberCapacity": 20,
+    "tags": ["mountain", "hiking", "trek_event", "adventure", "multi_day", "moderate", "guided", "sunrise"],
     "itinerary": [
       {
-        "moment": "2026-03-01T08:00:00Z",
-        "title": "Base Camp Meetup",
-        "description": "Meet at the base camp and start the trek."
+        "moment": "2026-03-05T06:30:00Z",
+        "title": "Trailhead Briefing",
+        "description": "Gear check, safety instructions, and a gentle warm-up walk to acclimate before the first climb."
       },
       {
-        "moment": "2026-03-02T08:00:00Z",
-        "title": "Summit Attempt",
-        "description": "Reach the peak and enjoy the view."
+        "moment": "2026-03-06T05:00:00Z",
+        "title": "Summit Ridge Push",
+        "description": "Early start to reach the ridge for sunrise, with breaks at viewpoints and hot tea at a local lodge."
       },
       {
-        "moment": "2026-03-03T08:00:00Z",
-        "title": "Descent",
-        "description": "Return to the base camp."
+        "moment": "2026-03-07T08:00:00Z",
+        "title": "Descent & Farewell",
+        "description": "Return via forest trail, group photos, and a relaxed lunch back in town."
       }
     ]
   },
   {
     "title": "Beach Party Weekend",
-    "description": "Enjoy the sun, sand, and surf at our annual beach bash.",
+    "description": "A lively coastal weekend with a sunset bonfire, beach games, and a relaxed brunch by the sea. Designed for friends who want music, waves, and a quick recharge.",
     "placeName": "Cox's Bazar, Bangladesh",
-    "eventDate": "2026-04-10T14:00:00Z",
-    "entryFee": 5000,
+    "eventDate": "2026-03-28T10:00:00Z",
+    "entryFee": 7500,
     "dayCount": 2,
     "nightCount": 1,
     "memberCapacity": 50,
+    "tags": ["beach", "sea", "party", "weekend_trip", "friends", "bonfire", "live_music"],
     "itinerary": [
       {
-        "moment": "2026-04-10T14:00:00Z",
-        "title": "Arrival & Check-in",
-        "description": "Welcome drinks and room allotment."
+        "moment": "2026-03-28T10:00:00Z",
+        "title": "Arrival & Beach Setup",
+        "description": "Check-in, room allocation, and a casual beach walk to pick activity zones."
       },
       {
-        "moment": "2026-04-10T19:00:00Z",
-        "title": "Beach Bonfire",
-        "description": "Live music and BBQ by the shore."
+        "moment": "2026-03-28T18:00:00Z",
+        "title": "Sunset Bonfire",
+        "description": "Live acoustic set, BBQ dinner, and fireside hangout on the shore."
+      },
+      {
+        "moment": "2026-03-29T09:00:00Z",
+        "title": "Brunch & Farewell Swim",
+        "description": "Seaside brunch, group photos, and a final swim before checkout."
       }
     ]
   },
   {
     "title": "Historical City Tour",
-    "description": "Explore the ancient ruins and cultural heritage of Old Dhaka.",
+    "description": "A guided walk through Old Dhaka’s iconic alleys, heritage sites, and bustling bazaars. Includes museum stops, artisan workshops, and a curated lunch of local favorites.",
     "placeName": "Dhaka, Bangladesh",
-    "eventDate": "2026-05-05T09:00:00Z",
-    "entryFee": 2000,
+    "eventDate": "2026-03-12T08:30:00Z",
+    "entryFee": 4500,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 30,
+    "tags": ["city", "tour", "cultural", "sightseeing", "day_trip", "local_food", "guided"],
     "itinerary": [
       {
-        "moment": "2026-05-05T09:00:00Z",
-        "title": "Lalbagh Fort Visit",
-        "description": "Rich history of Mughal architecture."
+        "moment": "2026-03-12T08:30:00Z",
+        "title": "Heritage Kickoff",
+        "description": "Meet at a central landmark, tour Lalbagh Fort, and learn the Mughal-era timeline."
       },
       {
-        "moment": "2026-05-05T13:00:00Z",
-        "title": "Traditional Lunch",
-        "description": "Famous biryani in Old Dhaka."
+        "moment": "2026-03-12T12:30:00Z",
+        "title": "Old Dhaka Food Trail",
+        "description": "Curated lunch with biryani and traditional sweets at renowned local spots."
+      },
+      {
+        "moment": "2026-03-12T15:30:00Z",
+        "title": "Artisan Alley Walk",
+        "description": "Visit small craft shops and riverfront views before closing remarks."
       }
     ]
   },
   {
     "title": "Wildlife Safari",
-    "description": "Witness the majestic Royal Bengal Tigers in the Sundarbans.",
+    "description": "Explore the Sundarbans by boat and foot with expert guides. Expect mangrove creeks, birdwatching, and a chance to spot the Royal Bengal Tiger from safe observation points.",
     "placeName": "Sundarbans, Bangladesh",
-    "eventDate": "2026-02-15T06:00:00Z",
-    "entryFee": 30000,
+    "eventDate": "2026-02-20T05:30:00Z",
+    "entryFee": 36000,
     "dayCount": 4,
     "nightCount": 3,
     "memberCapacity": 12,
+    "tags": ["jungle", "national_park", "safari", "adventure", "multi_day", "guided", "boat_ride", "eco"],
     "itinerary": [
       {
-        "moment": "2026-02-15T06:00:00Z",
-        "title": "Boat Journey Starts",
-        "description": "Set sail into the mangrove forest."
+        "moment": "2026-02-20T05:30:00Z",
+        "title": "Mangrove Departure",
+        "description": "Early boat departure with safety briefing, breakfast onboard, and wildlife orientation."
       },
       {
-        "moment": "2026-02-17T05:00:00Z",
-        "title": "Deep Forest Trek",
-        "description": "Quiet walk through the jungle."
+        "moment": "2026-02-21T06:00:00Z",
+        "title": "Creek Exploration",
+        "description": "Quiet creek navigation for birdwatching, deer spotting, and photography."
+      },
+      {
+        "moment": "2026-02-22T16:00:00Z",
+        "title": "Forest Walk",
+        "description": "Guided trek through approved trails with ranger support and strict safety protocol."
+      },
+      {
+        "moment": "2026-02-23T07:00:00Z",
+        "title": "Return Journey",
+        "description": "Breakfast, debrief, and scenic cruise back to the dock."
       }
     ]
   },
   {
     "title": "Serene Tea Garden Retreat",
-    "description": "Relax and rejuvenate amidst the rolling hills of tea gardens.",
+    "description": "A calm two-day escape in rolling tea gardens with tastings, nature walks, and quiet sunset viewpoints. Great for couples and small groups seeking slow travel.",
     "placeName": "Srimangal, Bangladesh",
-    "eventDate": "2026-06-12T10:00:00Z",
-    "entryFee": 30000,
+    "eventDate": "2026-04-06T09:30:00Z",
+    "entryFee": 24000,
     "dayCount": 2,
     "nightCount": 1,
     "memberCapacity": 15,
+    "tags": ["countryside", "relax", "peaceful", "wellness", "weekend_trip", "sunset"],
     "itinerary": [
       {
-        "moment": "2026-06-12T10:00:00Z",
-        "title": "Tea Tasting Session",
-        "description": "Sample various blends of local tea."
+        "moment": "2026-04-06T09:30:00Z",
+        "title": "Tea Estate Welcome",
+        "description": "Check-in and guided walk through the estate, followed by a tasting session."
       },
       {
-        "moment": "2026-06-13T09:00:00Z",
-        "title": "Nature Walk",
-        "description": "Explore the Lawachara National Park."
+        "moment": "2026-04-06T17:30:00Z",
+        "title": "Sunset Viewpoint",
+        "description": "Short drive to a lookout point with warm snacks and tea."
+      },
+      {
+        "moment": "2026-04-07T08:30:00Z",
+        "title": "Forest Walk",
+        "description": "Easy morning walk in Lawachara National Park and local breakfast."
       }
     ]
   },
   {
     "title": "Monsoon Rain Festival",
-    "description": "Celebrate the beauty of rain with music and traditional food.",
+    "description": "A one-day celebration of the monsoon with live folk music, rain-friendly street food, and cultural performances under covered pavilions.",
     "placeName": "Sylhet, Bangladesh",
-    "eventDate": "2026-07-20T11:00:00Z",
-    "entryFee": 4000,
+    "eventDate": "2026-06-20T10:00:00Z",
+    "entryFee": 6000,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 100,
+    "tags": ["festival", "cultural", "monsoon", "live_music", "city", "day_trip"],
     "itinerary": [
       {
-        "moment": "2026-07-20T11:00:00Z",
+        "moment": "2026-06-20T10:00:00Z",
         "title": "Opening Ceremony",
-        "description": "Songs and dances dedicated to the monsoon."
+        "description": "Traditional drum welcome and introduction to the day’s performances."
+      },
+      {
+        "moment": "2026-06-20T14:00:00Z",
+        "title": "Food & Craft Market",
+        "description": "Regional cuisine, artisan stalls, and rain photo booths."
       }
     ]
   },
   {
     "title": "Winter Trekking",
-    "description": "Experience the cold winter in the mountains.",
+    "description": "A crisp winter day trek through open fields and wooded trails with warm tea breaks and a gentle pace. Great for beginners wanting a cold-season outing.",
     "placeName": "Chawkbazar, Bangladesh",
-    "eventDate": "2025-12-15T10:00:00Z",
-    "entryFee": 3000,
+    "eventDate": "2026-02-08T07:30:00Z",
+    "entryFee": 5500,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 30,
+    "tags": ["hiking", "trek_event", "winter", "easy", "day_trip", "friends"],
     "itinerary": [
       {
-        "moment": "2025-12-15T10:00:00Z",
-        "title": "Trek Commencement",
-        "description": "Walking through the fog."
+        "moment": "2026-02-08T07:30:00Z",
+        "title": "Trail Start",
+        "description": "Warm-up stretches, route overview, and a steady walk through winter fog."
+      },
+      {
+        "moment": "2026-02-08T11:00:00Z",
+        "title": "Tea Stop",
+        "description": "Local tea break and photo session at the viewpoint."
       }
     ]
   },
   {
     "title": "Island Hopping Cruise",
-    "description": "Discover hidden beaches and crystal-clear waters.",
+    "description": "A three-day island cruise with beach stops, snorkeling, and seafood dinners. Includes guided excursions and plenty of downtime by the water.",
     "placeName": "Saint Martin's Island, Bangladesh",
-    "eventDate": "2026-11-01T07:00:00Z",
-    "entryFee": 25000,
+    "eventDate": "2026-04-18T06:00:00Z",
+    "entryFee": 32000,
     "dayCount": 3,
     "nightCount": 2,
     "memberCapacity": 25,
+    "tags": ["island", "sea", "cruise", "snorkeling", "boat_ride", "multi_day", "seafood"],
     "itinerary": [
       {
-        "moment": "2026-11-01T07:00:00Z",
+        "moment": "2026-04-18T06:00:00Z",
         "title": "Ferry Departure",
-        "description": "Journey across the Bay of Bengal."
+        "description": "Boarding and safety briefing with breakfast onboard."
       },
       {
-        "moment": "2026-11-02T10:00:00Z",
-        "title": "Snorkeling @ Chera Dwip",
-        "description": "Explore coral reefs."
+        "moment": "2026-04-19T09:30:00Z",
+        "title": "Chera Dwip Snorkeling",
+        "description": "Shallow reef exploration with guides and safety floats."
+      },
+      {
+        "moment": "2026-04-20T08:30:00Z",
+        "title": "Sunrise Walk & Return",
+        "description": "Early beach stroll, breakfast, and return ferry."
       }
     ]
   },
   {
     "title": "Cycling Expedition",
-    "description": "A 50km bike ride through scenic countryside routes.",
+    "description": "A 50km countryside cycling route with rest stops, hydration support, and a picnic finish. Ideal for riders with basic endurance.",
     "placeName": "Gazipur, Bangladesh",
-    "eventDate": "2026-01-25T06:30:00Z",
-    "entryFee": 1500,
+    "eventDate": "2026-03-18T06:00:00Z",
+    "entryFee": 7000,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 40,
+    "tags": ["cycling", "bike_ride", "countryside", "sports", "day_trip", "moderate"],
     "itinerary": [
       {
-        "moment": "2026-01-25T06:30:00Z",
-        "title": "Trek Start",
-        "description": "Cycling marathon begins."
+        "moment": "2026-03-18T06:00:00Z",
+        "title": "Route Briefing",
+        "description": "Helmet checks, route map review, and group warm-up ride."
+      },
+      {
+        "moment": "2026-03-18T09:30:00Z",
+        "title": "Midway Rest Stop",
+        "description": "Snacks, hydration, and quick bike tune-ups before the final stretch."
       }
     ]
   },
   {
     "title": "Photography Workshop",
-    "description": "Learn the art of landscape photography from professionals.",
+    "description": "A hands-on landscape photography workshop with golden hour sessions, composition coaching, and guided editing tips.",
     "placeName": "Rangamati, Bangladesh",
-    "eventDate": "2026-08-15T15:00:00Z",
-    "entryFee": 12000,
+    "eventDate": "2026-05-10T14:00:00Z",
+    "entryFee": 18000,
     "dayCount": 2,
     "nightCount": 1,
     "memberCapacity": 10,
+    "tags": ["photography", "workshop", "lake", "sunset", "guided", "weekend_trip"],
     "itinerary": [
       {
-        "moment": "2026-08-15T15:00:00Z",
-        "title": "Golden Hour Session",
-        "description": "Capturing sunset at Kaptai Lake."
+        "moment": "2026-05-10T14:00:00Z",
+        "title": "Lighting & Composition",
+        "description": "Afternoon session on framing, exposure, and lens choices."
+      },
+      {
+        "moment": "2026-05-10T17:30:00Z",
+        "title": "Golden Hour Shoot",
+        "description": "Sunset capture at Kaptai Lake with mentor feedback."
+      },
+      {
+        "moment": "2026-05-11T09:00:00Z",
+        "title": "Editing Clinic",
+        "description": "Post-processing workflow, presets, and portfolio selection."
       }
     ]
   },
   {
     "title": "Cultural Exchange Fair",
-    "description": "Experience different cultures through food, music, and art.",
+    "description": "A vibrant day of global flavors, performances, and art showcases with community groups and student associations.",
     "placeName": "Chittagong, Bangladesh",
-    "eventDate": "2026-09-01T10:00:00Z",
-    "entryFee": 1000,
+    "eventDate": "2026-03-25T10:00:00Z",
+    "entryFee": 5000,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 200,
+    "tags": ["festival", "cultural", "city", "day_trip", "students", "family"],
     "itinerary": [
       {
-        "moment": "2026-09-01T10:00:00Z",
+        "moment": "2026-03-25T10:00:00Z",
         "title": "Exhibition Opens",
-        "description": "Global stalls are ready for visitors."
+        "description": "International stalls open with music and cultural introductions."
+      },
+      {
+        "moment": "2026-03-25T16:00:00Z",
+        "title": "Main Stage Performances",
+        "description": "Dance and music showcases from invited groups."
       }
     ]
   },
   {
     "title": "Winter Camping Night",
-    "description": "Cozy up by the fire and sleep under the stars.",
+    "description": "A cozy overnight camp in Bandarban with a guided hike, bonfire dinner, and stargazing. Perfect for friends who want a short mountain escape.",
     "placeName": "Bandarban, Bangladesh",
-    "eventDate": "2026-12-20T16:00:00Z",
-    "entryFee": 8000,
+    "eventDate": "2026-02-28T14:30:00Z",
+    "entryFee": 15000,
     "dayCount": 2,
     "nightCount": 1,
     "memberCapacity": 20,
+    "tags": ["camping", "tent", "bonfire", "stargazing", "hill", "winter", "weekend_trip"],
     "itinerary": [
       {
-        "moment": "2026-12-20T16:00:00Z",
-        "title": "Tents Setup",
-        "description": "Preparing the camp site."
+        "moment": "2026-02-28T14:30:00Z",
+        "title": "Camp Setup",
+        "description": "Pitch tents, safety briefing, and a short acclimation walk."
       },
       {
-        "moment": "2026-12-20T20:00:00Z",
-        "title": "Dinner & Storytelling",
-        "description": "Traditional meals and local myths."
+        "moment": "2026-02-28T19:30:00Z",
+        "title": "Bonfire Dinner",
+        "description": "Warm meal, local stories, and acoustic music by the fire."
+      },
+      {
+        "moment": "2026-02-28T22:00:00Z",
+        "title": "Stargazing Session",
+        "description": "Skywatch with guide and light refreshments."
       }
     ]
   },
   {
     "title": "River Cruise Dinner",
-    "description": "A romantic evening on the Shitalakshya river.",
+    "description": "An evening river cruise with candlelit seating, live music, and a curated dinner menu along the Shitalakshya.",
     "placeName": "Narayanganj, Bangladesh",
-    "eventDate": "2026-10-05T18:00:00Z",
-    "entryFee": 3000,
+    "eventDate": "2026-03-30T17:30:00Z",
+    "entryFee": 9000,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 30,
+    "tags": ["river", "cruise", "romantic", "nightlife", "live_music", "city"],
     "itinerary": [
       {
-        "moment": "2026-10-05T18:00:00Z",
-        "title": "Boarding",
-        "description": "Welcome on board."
+        "moment": "2026-03-30T17:30:00Z",
+        "title": "Boarding & Welcome",
+        "description": "Check-in, welcome drinks, and table assignments."
+      },
+      {
+        "moment": "2026-03-30T19:00:00Z",
+        "title": "Dinner Service",
+        "description": "Multi-course dinner with soft live music and river views."
       }
     ]
   },
   {
     "title": "Yoga and Wellness Camp",
-    "description": "Unlock your inner peace in a tranquil environment.",
+    "description": "A three-day wellness retreat with sunrise yoga, mindful walks, and clean, nourishing meals in a quiet setting.",
     "placeName": "Panchagarh, Bangladesh",
-    "eventDate": "2026-04-20T06:00:00Z",
-    "entryFee": 4000,
+    "eventDate": "2026-04-12T05:30:00Z",
+    "entryFee": 14000,
     "dayCount": 3,
     "nightCount": 2,
     "memberCapacity": 15,
+    "tags": ["wellness", "spiritual", "peaceful", "multi_day", "relax", "guided"],
     "itinerary": [
       {
-        "moment": "2026-04-20T06:00:00Z",
-        "title": "Morning Meditation",
-        "description": "Starting the day with mindfulness."
+        "moment": "2026-04-12T05:30:00Z",
+        "title": "Sunrise Yoga",
+        "description": "Breathwork, gentle flow, and intention setting for the retreat."
+      },
+      {
+        "moment": "2026-04-13T08:00:00Z",
+        "title": "Mindful Nature Walk",
+        "description": "Slow walk through fields with reflection prompts."
+      },
+      {
+        "moment": "2026-04-14T07:30:00Z",
+        "title": "Closing Circle",
+        "description": "Group sharing, tea ceremony, and departure guidance."
       }
     ]
   },
   {
     "title": "Street Food Crawl",
-    "description": "Taste the various flavors of city life.",
+    "description": "An evening street-food tour highlighting regional favorites, dessert stalls, and the stories behind each dish.",
     "placeName": "Rajshahi, Bangladesh",
-    "eventDate": "2026-03-20T17:00:00Z",
-    "entryFee": 2500,
+    "eventDate": "2026-03-21T16:30:00Z",
+    "entryFee": 6500,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 25,
+    "tags": ["street_food", "food_tour", "city", "nightlife", "guided", "day_trip"],
     "itinerary": [
       {
-        "moment": "2026-03-20T17:00:00Z",
-        "title": "Food Tour Starts",
-        "description": "Visiting the best local stalls."
+        "moment": "2026-03-21T16:30:00Z",
+        "title": "Market Meet-Up",
+        "description": "Welcome briefing, first bites, and a short walk through the main food lanes."
+      },
+      {
+        "moment": "2026-03-21T19:30:00Z",
+        "title": "Dessert Crawl",
+        "description": "Local sweets, tea stop, and group photo wrap-up."
       }
     ]
   },
   {
     "title": "New Year Celebration",
-    "description": "Welcome 2026 with a blast.",
+    "description": "Ring in the new year with a beachfront countdown, fireworks, and a late-night feast. Ideal for groups who want a festive coastal night.",
     "placeName": "Cox's Bazar, Bangladesh",
-    "eventDate": "2025-12-31T22:00:00Z",
-    "entryFee": 7000,
+    "eventDate": "2025-12-31T19:00:00Z",
+    "entryFee": 12000,
     "dayCount": 1,
     "nightCount": 1,
     "memberCapacity": 100,
     "status": "finished",
+    "tags": ["beach", "party", "nightlife", "festival", "friends", "bonfire"],
     "itinerary": [
       {
-        "moment": "2025-12-31T22:00:00Z",
-        "title": "Countdown Begins",
-        "description": "Be ready for the fireworks."
+        "moment": "2025-12-31T19:00:00Z",
+        "title": "Beachfront Welcome",
+        "description": "Check-in, dinner service, and live DJ warm-up set."
+      },
+      {
+        "moment": "2025-12-31T23:30:00Z",
+        "title": "Countdown & Fireworks",
+        "description": "Midnight celebration with fireworks and group photos."
       }
     ]
   },
   {
     "title": "Archeological Exploration",
-    "description": "Visit the world heritage site of Paharpur.",
+    "description": "A guided heritage trip to the Somapura Mahavihara with story-rich walkthroughs, museum time, and a relaxed local lunch.",
     "placeName": "Naogaon, Bangladesh",
-    "eventDate": "2026-05-30T09:00:00Z",
-    "entryFee": 3500,
+    "eventDate": "2026-04-02T08:00:00Z",
+    "entryFee": 8000,
     "dayCount": 1,
     "nightCount": 0,
     "memberCapacity": 20,
+    "tags": ["tour", "cultural", "sightseeing", "day_trip", "guided", "city"],
     "itinerary": [
       {
-        "moment": "2026-05-30T09:00:00Z",
-        "title": "Guided Tour",
-        "description": "Learning about Buddhist Vihara."
+        "moment": "2026-04-02T08:00:00Z",
+        "title": "Site Briefing",
+        "description": "Overview of the site history and walking route."
+      },
+      {
+        "moment": "2026-04-02T11:30:00Z",
+        "title": "Museum Visit",
+        "description": "Artifacts, exhibits, and Q&A with the guide."
+      },
+      {
+        "moment": "2026-04-02T13:00:00Z",
+        "title": "Local Lunch",
+        "description": "Regional meal and wrap-up before departure."
       }
     ]
   }

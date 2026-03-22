@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import {
   TCreateEventDto,
+  TEventIdTagParams,
+  TEventTagBodyDto,
   TIdParam,
   TUpdateEventDto
 } from "../../../../common/types";
@@ -24,6 +26,8 @@ import { convertToObjectId } from "../../../utils/object-id.util";
 type TEventCreateRequest = Request<any, any, TCreateEventDto>;
 type TEventUpdateRequest = Request<TIdParam, any, TUpdateEventDto>;
 type TEventIdRequest = Request<TIdParam>;
+type TEventAddTagRequest = Request<TIdParam, any, TEventTagBodyDto>;
+type TEventRemoveTagRequest = Request<TEventIdTagParams>;
 
 class EventController {
   static async create(
@@ -166,6 +170,81 @@ class EventController {
     }
   }
 
+  static async addTag(
+    req: TEventAddTagRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthenticated");
+      }
+
+      const { id } = req.params;
+      const { tag } = req.body;
+
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (!event.host._id.equals(req.user._id)) {
+        throw new ApiError(403, "Only event creator can update tags");
+      }
+
+      const updatedEvent = await EventUseCase.addTag(
+        convertToObjectId(id)!,
+        tag
+      );
+
+      if (!updatedEvent) {
+        throw new ApiError(500, "Failed to add tag");
+      }
+
+      res.status(200).json(updatedEvent);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removeTag(
+    req: TEventRemoveTagRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthenticated");
+      }
+
+      const { id, tag } = req.params;
+
+      const event = await EventUseCase.getById(convertToObjectId(id)!);
+
+      if (!event) {
+        throw new ApiError(404, "Event not found");
+      }
+
+      if (!event.host._id.equals(req.user._id)) {
+        throw new ApiError(403, "Only event creator can update tags");
+      }
+
+      const updatedEvent = await EventUseCase.removeTag(
+        convertToObjectId(id)!,
+        tag
+      );
+
+      if (!updatedEvent) {
+        throw new ApiError(500, "Failed to remove tag");
+      }
+
+      res.status(200).json(updatedEvent);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async getUpcoming(_req: Request, res: Response, next: NextFunction) {
     try {
       const response = await EventUseCase.getAll({
@@ -188,6 +267,7 @@ class EventController {
           host: 1,
           coverPhoto: 1,
           status: 1,
+          tags: 1,
           createdAt: 1
         } as any,
         options: { sort: { eventDate: 1 }, limit: 4 }
@@ -239,6 +319,7 @@ class EventController {
           host: 1,
           coverPhoto: 1,
           status: 1,
+          tags: 1,
           createdAt: 1
         } as any,
         options: {
@@ -280,6 +361,7 @@ class EventController {
           host: 1,
           coverPhoto: 1,
           status: 1,
+          tags: 1,
           createdAt: 1
         } as any,
         options: { sort: { createdAt: -1 }, limit: 2 }
@@ -311,6 +393,7 @@ class EventController {
           host: 1,
           coverPhoto: 1,
           status: 1,
+          tags: 1,
           createdAt: 1
         } as any,
         options: { sort: { createdAt: -1 }, limit: 2 }

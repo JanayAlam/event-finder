@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { TEvent, TEventDetail } from "../../server/models/event.model";
-import { CreateEventSchema, UpdateEventSchema } from "../validation-schemas";
+import {
+  CreateEventSchema,
+  EventIdTagParamsSchema,
+  EventTagBodySchema,
+  UpdateEventSchema
+} from "../validation-schemas";
 
 export type { TEvent };
 
@@ -18,6 +23,7 @@ export type TEventListItemDto = Pick<
   | "coverPhoto"
   | "status"
   | "createdAt"
+  | "tags"
 >;
 
 export type TEventDetailDto = TEventDetail;
@@ -26,6 +32,9 @@ export type TCreateEventDto = z.output<typeof CreateEventSchema>;
 export type TCreateEventForm = z.input<typeof CreateEventSchema>;
 export type TUpdateEventDto = z.output<typeof UpdateEventSchema>;
 export type TUpdateEventForm = z.input<typeof UpdateEventSchema>;
+
+export type TEventTagBodyDto = z.infer<typeof EventTagBodySchema>;
+export type TEventIdTagParams = z.infer<typeof EventIdTagParamsSchema>;
 
 export type TSearchEventResultResponse = {
   _id: string;

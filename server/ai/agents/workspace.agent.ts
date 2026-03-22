@@ -10,7 +10,7 @@ const inputGuardRailAgent = new Agent({
   name: "workspace_input_guardrail_agent",
   model: "gpt-4o-mini",
   instructions:
-    "Check if the user is searching trips or want to create trips/events/tours and not doing any other operations.",
+    "Check if the user is searching trips/events/tours and describing their preferences or want to create trips/events/tours and not doing any other operations.",
   outputType: z.object({
     isValid: z.boolean(),
     reasoning: z.string()

@@ -64,38 +64,6 @@ When a user is interested in visiting a specific location, the AI-powered search
 
 **Watch**: [ai-workplace-for-user.mp4](./assets/ai-workplace-for-user.mp4)
 
----
-
-Below are embedded demo videos. GitHub supports HTML5 video tags in README; use the controls to play.
-
-<details>
-<summary><strong>Host demo — Smart Trip Generation (click to expand)</strong></summary>
-
-<p>
-<video controls width="720" preload="none" poster="./assets/ai-workplace-for-host.mp4">
-  <source src="./assets/ai-workplace-for-host.mp4" type="video/mp4">
-  Your browser does not support the video tag. You can <a href="./assets/ai-workplace-for-host.mp4">download or open the video</a> directly.
-</video>
-</p>
-
-Host flow: when a host searches and no matching trips exist, the system hands off to the Event Creator Agent which generates a complete, form-ready trip proposal for the host to publish.
-
-</details>
-
-<details>
-<summary><strong>Traveler demo — Intelligent Trip Discovery (click to expand)</strong></summary>
-
-<p>
-<video controls width="720" preload="none" poster="./assets/ai-workplace-for-user.mp4">
-  <source src="./assets/ai-workplace-for-user.mp4" type="video/mp4">
-  Your browser does not support the video tag. You can <a href="./assets/ai-workplace-for-user.mp4">download or open the video</a> directly.
-</video>
-</p>
-
-Traveler flow: users submit natural language queries; the Search Agent finds similar trips and returns personalized recommendations.
-
-</details>
-
 ## AI Agent Architecture
 
 Event Finder uses an **agentic AI system** powered by OpenAI's Agents SDK, enabling dynamic decision-making and intelligent tool usage:

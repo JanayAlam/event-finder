@@ -45,7 +45,11 @@ When a host searches for available trips and the system cannot find any matching
 - When no suitable events are found, **Event Creator Agent** automatically generates a new event
 - Event is presented with complete details ready for publication
 
-**Watch**: [ai-workplace-for-host.mp4](./assets/ai-workplace-for-host.mp4)
+**Watch**:
+
+https://github.com/user-attachments/assets/38910ca5-335f-4ab2-b6a1-076fc926a69e
+
+
 
 ---
 
@@ -62,7 +66,11 @@ When a user is interested in visiting a specific location, the AI-powered search
 - System queries all available events and filters matches
 - Personalized recommendations are returned with matching trip suggestions
 
-**Watch**: [ai-workplace-for-user.mp4](./assets/ai-workplace-for-user.mp4)
+**Watch**:
+
+https://github.com/user-attachments/assets/e70644de-edb7-4b0c-96d4-5226ec4be82e
+
+
 
 ## AI Agent Architecture
 
